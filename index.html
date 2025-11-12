@@ -756,7 +756,7 @@
         .msg-row {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             gap: 8px;
         }
 
@@ -3027,7 +3027,7 @@ padding-bottom: 12px; /* 增加一点下内边距 */
 
         /* --- 2. 可折叠的内容区 (核心) --- */
         .group-content {
-            background-color: rgba(253, 242, 248, 0.7);
+       
             border: 1px solid var(--color-ui-glass-border);
             border-top: none;
             border-radius: 0 0 16px 16px;
@@ -6668,19 +6668,112 @@ padding: 6px;
 }
 
 /* 5. 激活设置面板的样式 */
-#wb-activation-settings {
-    background-color: var(--color-ui-subtle);
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书-全局设置专属样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 自定义下拉菜单的容器，用于定位 */
+.custom-wb-select-container {
+    position: relative;
+}
+
+/* 2. 下拉选项列表的容器 */
+.custom-wb-options {
+    position: absolute;
+    top: 105%; /* 定位在触发器的正下方 */
+    left: 0;
+    right: 0;
+    background-color: var(--color-ui-base);
     border: 1px solid var(--color-ui-border);
     border-radius: 8px;
-    padding: 12px;
-    display: none; /* 默认隐藏 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 200px; /* 给一个最大高度，超出可滚动 */
+    overflow-y: auto;
+    z-index: 10;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
 }
-#wb-activation-settings.visible {
-    display: flex; /* 激活时显示 */
+
+.custom-wb-select-container.open .custom-wb-options {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* 3. 下拉列表中的单个条目 */
+.wb-option-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-ui-border);
+}
+.wb-option-item:last-child {
+    border-bottom: none;
+}
+.wb-option-item:hover {
+    background-color: var(--color-ui-subtle);
+}
+
+/* 4. 条目前面的“对号”图标 */
+.wb-option-item .check-icon {
+    font-size: 16px;
+    color: var(--color-primary-accent);
+    width: 20px; /* 占据固定宽度，保持对齐 */
+    text-align: center;
+    visibility: hidden; /* 默认隐藏 */
+}
+.wb-option-item.active .check-icon {
+    visibility: visible; /* 激活时显示 */
+}
+
+/* 5. ✨ 核心修改：将旧的激活设置面板样式，改造为手风琴菜单的内容区样式 */
+#global-wb-settings-accordion .group-content-inner {
+    background-color: var(--color-ui-subtle);
+    border: 1px solid var(--color-ui-border);
+    border-top: none; 
+    border-radius: 0 0 8px 8px;
+    padding: 12px;
+    display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+
+/* 6. 设置面板内部布局 (保持不变) */
+.setting-row {
+    display: flex;
+    gap: 10px;
+}
+.setting-item {
+    flex: 1;
+}
+.setting-item label {
+    font-size: 12px;
+    color: var(--color-secondary-accent);
+    display: block;
+    margin-bottom: 4px;
+}
+.setting-item .form-input {
+    padding: 6px 8px;
+    font-size: 13px;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    font-size: 13px;
+}
+.checkbox-grid label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 /* 6. 设置面板内部布局 */
 .setting-row {
     display: flex;
@@ -6801,21 +6894,7 @@ padding: 6px;
     grid-template-rows: 1fr; /* 展开时，高度自适应内容 */
 }
 
-/* 4. 内部包装器，防止动画时内容被裁切 */
-.book-entries-inner {
-    overflow: hidden;
-    padding: 5px 10px 10px;
-    border: 1px solid var(--color-ui-border);
-    border-top: none;
-    border-radius: 0 0 12px 12px;
-}
 
-/* 5. 内部条目卡片的微调 (边距更小) */
-.book-entries-inner .world-entry-card {
-    margin-bottom: 8px;
-    padding: 10px 12px;
-}
- 
 /* ========================================================== */
 /* --- ✨✨✨【全新】世界书-手风琴式书本列表样式 ✨✨✨ --- */
 /* ========================================================== */
@@ -6919,7 +6998,92 @@ padding: 6px;
     resize: vertical;
 }
 /* ========================================================== */
-/* ▲▲▲ 粘贴到这里结束 ▲▲▲ */
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书管理器-操作栏与删除弹窗专属样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 顶部操作栏容器 */
+#wb-manager-action-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: var(--color-ui-subtle);
+    border-radius: 12px;
+}
+
+/* 2. 操作栏内部的按钮 */
+#wb-manager-action-bar .btn {
+    flex: 1; /* 让按钮平分宽度 */
+    font-size: 13px;
+    padding: 6px 0; /* 减小垂直内边距，让按钮更紧凑 */
+}
+
+/* 3. 删除弹窗内的列表项 */
+.wb-delete-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid var(--color-ui-border);
+}
+.wb-delete-item:last-child {
+    border-bottom: none;
+}
+
+.wb-delete-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.wb-delete-item label {
+    font-weight: 500;
+}
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书-手风琴内部操作栏样式 ✨✨✨ --- */
+/* ========================================================== */
+.book-actions-bar {
+    display: flex;
+    gap: 8px;
+    padding: 8px 10px 12px;
+    border-bottom: 1px solid var(--color-ui-border);
+    background-color: var(--color-ui-subtle);
+}
+
+.book-actions-bar .btn {
+    flex: 1;
+    font-size: 12px;
+    padding: 4px 8px;
+}
+/* ========================================================== */
+/* --- ✨✨✨【层级修复】提升世界书条目编辑器的 Z-Index ✨✨✨ --- */
+/* ========================================================== */
+#world-entry-editor-modal {
+    z-index: 1015; /* 确保它能覆盖世界书管理弹窗 (1010) */
+}
+
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书-条目删除弹窗专属样式 ✨✨✨ --- */
+/* ========================================================== */
+.wb-entry-delete-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid var(--color-ui-border);
+}
+.wb-entry-delete-item:last-child {
+    border-bottom: none;
+}
+.wb-entry-delete-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+.wb-entry-delete-item label {
+    font-weight: 500;
+}
 
 
     </style>
@@ -8305,19 +8469,7 @@ padding: 6px;
                                 <input id="world-entry-keywords" type="text" placeholder="用逗号分隔，例如：龙,神话,创世"
                                     class="form-input">
                             </div>
-                            <!-- ▼▼▼ 请将这个全新的 div 代码块，粘贴到“关键词”和“条目类型”之间 ▼▼▼ -->
-                            <div
-                                style="margin-bottom: 16px; background: var(--color-ui-border); padding: 10px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
-                                <label for="world-entry-is-global" class="form-label" style="margin-bottom: 0;">
-                                    <i class="fa-solid fa-book-atlas"></i> 设为全局设定
-                                    <p style="font-size: 11px; color: #a1a1aa; margin: 4px 0 0; font-weight: normal;">
-                                        开启后，此条目将作为基础设定对所有角色生效。</p>
-                                </label>
-                                <input type="checkbox" id="world-entry-is-global" class="toggle-switch">
-                            </div>
-
-
-
+  
                             <!-- 内容 -->
                             <div style="margin-bottom: 16px;">
                                 <label for="world-entry-content" class="form-label">内容 (Content):</label>
@@ -9825,7 +9977,29 @@ padding: 6px;
         <!-- 可滚动的主内容区 -->
         <main class="page-content" style="padding: 10px; display: flex; flex-direction: column; gap: 15px; background-color: var(--color-ui-border);">
 
-<!-- ▼▼▼ 请用这一整块全新的代码，替换旧的“全局世界书”<section> ▼▼▼ -->
+
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】世界书管理器-顶部操作栏 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="wb-manager-action-bar">
+    <button id="wb-manager-add-book" class="btn btn-secondary buttonlike">
+        <i class="fa-solid fa-plus"></i> 添加
+    </button>
+    <button id="wb-manager-delete-book" class="btn btn-secondary buttonlike">
+        <i class="fa-solid fa-trash-can"></i> 删除
+    </button>
+    <button id="wb-manager-import-books" class="btn btn-secondary buttonlike">
+        <i class="fa-solid fa-upload"></i> 导入
+    </button>
+    <button id="wb-manager-export-books" class="btn btn-secondary buttonlike">
+        <i class="fa-solid fa-download"></i> 导出
+    </button>
+</div>
+<input type="file" id="wb-manager-import-input" accept=".json" class="hidden">
+<!-- ========================================================== -->
+
+
+            
 <section class="world-book-section">
     <!-- 这是我们改造后的自定义下拉菜单 -->
     <div id="global-wb-select-container" class="custom-wb-select-container">
@@ -9835,63 +10009,72 @@ padding: 6px;
             <i class="fa-solid fa-chevron-down"></i>
         </div>
         <!-- 下拉选项列表 (默认隐藏) -->
- <div id="global-wb-options-container" class="custom-wb-options">
+        <div id="global-wb-options-container" class="custom-wb-options">
             <!-- 世界书条目将由JS动态生成到这里 -->
         </div>
     </div>
 
-    <!-- 激活设置面板 (参考SillyTavern) -->
-    <div id="wb-activation-settings">
-        <div class="setting-row">
-            <div class="setting-item">
-                <label>扫描深度</label>
-                <input type="number" class="form-input" value="2">
-            </div>
-            <div class="setting-item">
-                <label>上下文百分比</label>
-                <input type="number" class="form-input" value="25">
+    <!-- ✨ 核心修改：全新的手风琴式设置菜单 -->
+    <div class="customization-group" id="global-wb-settings-accordion">
+        <div class="group-header">
+            <span class="icon"><i class="fa-solid fa-sliders"></i></span>
+            <span class="label">全局激活设置</span>
+            <span class="arrow">&lt;</span>
+        </div>
+        <div id="wb-activation-settings" class="group-content">
+            <div class="group-content-inner">
+                <div class="setting-row">
+                    <div class="setting-item">
+                        <label>扫描深度</label>
+                        <input type="number" class="form-input" value="2">
+                    </div>
+                    <div class="setting-item">
+                        <label>上下文百分比</label>
+                        <input type="number" class="form-input" value="25">
+                    </div>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-item">
+                        <label>Token预算上限</label>
+                        <input type="number" class="form-input" value="0">
+                    </div>
+                    <div class="setting-item">
+                        <label>最小参数</label>
+                        <input type="number" class="form-input" value="0">
+                    </div>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-item">
+                        <label>最大深度</label>
+                        <input type="number" class="form-input" value="0">
+                    </div>
+                    <div class="setting-item">
+                        <label>最大递归深度</label>
+                        <input type="number" class="form-input" value="0">
+                    </div>
+                </div>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox"> 包括名称</label>
+                    <label><input type="checkbox"> 递归扫描</label>
+                    <label><input type="checkbox"> 区分大小写</label>
+                    <label><input type="checkbox"> 匹配整个单词</label>
+                    <label><input type="checkbox"> 使用群组评分</label>
+                    <label><input type="checkbox"> 淡出警报</label>
+                </div>
+                <select class="form-input" style="margin-top: 10px;">
+                    <option>角色定义之前</option>
+                    <option>角色定义之后</option>
+                </select>
             </div>
         </div>
-        <div class="setting-row">
-            <div class="setting-item">
-                <label>Token预算上限</label>
-                <input type="number" class="form-input" value="0">
-            </div>
-            <div class="setting-item">
-                <label>最小参数</label>
-                <input type="number" class="form-input" value="0">
-            </div>
-        </div>
-         <div class="setting-row">
-            <div class="setting-item">
-                <label>最大深度</label>
-                <input type="number" class="form-input" value="0">
-            </div>
-            <div class="setting-item">
-                <label>最大递归深度</label>
-                <input type="number" class="form-input" value="0">
-            </div>
-        </div>
-        <div class="checkbox-grid">
-            <label><input type="checkbox"> 包括名称</label>
-            <label><input type="checkbox"> 递归扫描</label>
-            <label><input type="checkbox"> 区分大小写</label>
-            <label><input type="checkbox"> 匹配整个单词</label>
-            <label><input type="checkbox"> 使用群组评分</label>
-            <label><input type="checkbox"> 淡出警报</label>
-        </div>
-        <select class="form-input" style="margin-top: 10px;">
-            <option>角色定义之前</option>
-            <option>角色定义之后</option>
-        </select>
     </div>
+    <!-- 修改结束 -->
 
     <!-- 已启用的全局条目列表 (保持不变) -->
     <div class="wb-entry-list">
         <div class="wb-entry-item-placeholder">已启用的全局世界书将显示在这里...</div>
     </div>
 </section>
-<!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
 
             <!-- 区域 2: 角色世界书 -->
 <!-- ▼▼▼ 请用这一整块全新的代码，替换旧的“角色世界书”<section> ▼▼▼ -->
@@ -9913,7 +10096,45 @@ padding: 6px;
     </div>
 </div>
 <!-- ========================================================== -->
-<!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】世界书-批量删除弹窗 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="wb-delete-books-modal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-height: 70%;">
+        <header class="page-header">
+            <span>选择要删除的书本</span>
+            <button id="wb-delete-books-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
+        </header>
+        <main id="wb-delete-books-list" class="page-content">
+            <!-- 书本列表将由JS动态生成 -->
+        </main>
+        <footer class="page-footer">
+            <button id="wb-delete-books-confirm-btn" class="btn btn-primary buttonlike btn-full-width" style="background-color: #ef4444;">确认删除</button>
+        </footer>
+    </div>
+</div>
+<!-- ========================================================== -->
+
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】世界书-条目批量删除弹窗 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="wb-delete-entries-modal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-height: 70%;">
+        <header class="page-header">
+            <span>选择要删除的条目</span>
+            <button id="wb-delete-entries-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
+        </header>
+        <main id="wb-delete-entries-list" class="page-content">
+            <!-- 条目列表将由JS动态生成 -->
+        </main>
+        <footer class="page-footer">
+            <button id="wb-delete-entries-confirm-btn" class="btn btn-primary buttonlike btn-full-width" style="background-color: #ef4444;">确认删除所选项</button>
+        </footer>
+    </div>
+</div>
+<!-- ========================================================== -->
+
+
     <script>
 
         const db = new Dexie("QQAppDB");
@@ -12919,110 +13140,100 @@ async function openMusicPlayerModal() {
                 catalyst_frequency: document.getElementById('catalyst_frequency_select'),
             };
 
-            /**
-             * 核心函数：打开世界书条目编辑器
-             */
-            async function openWorldEntryEditor(entry = null) {
-                const entryType = entry ? entry.type : 'worldview';
+async function openWorldEntryEditor(entry = null, bookId = null) {
+    const modal = document.getElementById('world-entry-editor-modal');
+    const titleEl = document.getElementById('world-editor-title');
+    const entryIdInput = document.getElementById('world-entry-id');
+    const entryTitleInput = document.getElementById('world-entry-title');
+    const keywordsInput = document.getElementById('world-entry-keywords');
+    const contentTextarea = document.getElementById('world-entry-content');
 
-                if (entry) { // 编辑模式
-                    titleEl.textContent = '编辑条目';
-                    entryIdInput.value = entry.id;
-                    entryTitleInput.value = entry.title || '';
-                    keywordsInput.value = entry.keywords || '';
-               
-                    contentTextarea.value = entry.content || '';
-                    isGlobalToggle.checked = !!entry.isGlobal;
+    modal.dataset.bookId = bookId || '';
 
-                    for (const key in adminInputs) {
-                        if (adminInputs[key]) {
-                            adminInputs[key].value = entry[key] || '';
-                        }
-                    }
-                    if (entry.chronicle_content) {
-                        chronicleSection.classList.remove('hidden'); // 如果有内容则显示
-                        chronicleContent.textContent = entry.chronicle_content;
-                    }
+    if (entry) { // 编辑模式
+        titleEl.textContent = '编辑条目';
+        entryIdInput.value = entry.id;
+        entryTitleInput.value = entry.title || '';
+        keywordsInput.value = entry.keywords || '';
+        contentTextarea.value = entry.content || '';
+    } else { // 创建新条目模式
+        titleEl.textContent = '创建新条目';
+        entryIdInput.value = '';
+        entryTitleInput.value = '';
+        keywordsInput.value = '';
+        contentTextarea.value = '';
+    }
+    showModal('world-entry-editor-modal');
+}
+window.openWorldEntryEditor = openWorldEntryEditor;
 
-                } else { // 创建新条目模式
-                    titleEl.textContent = '创建新条目';
-                    entryIdInput.value = '';
-                    entryTitleInput.value = '';
-                    keywordsInput.value = '';
-
-                    contentTextarea.value = '';
-
-
-
-                    isGlobalToggle.checked = false;
-
-                    for (const key in adminInputs) {
-                        if (adminInputs[key]) {
-                            adminInputs[key].value = '';
-                        }
-                    }
-                    if (adminInputs.catalyst_frequency) adminInputs.catalyst_frequency.value = 'medium';
-                }
-
-                showModal('world-entry-editor-modal');
-            }
-
-            window.openWorldEntryEditor = openWorldEntryEditor;
+          
 
             // --- 事件绑定 ---
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => hideModal('world-entry-editor-modal'));
             }
+// ▼▼▼ 请用这个【最终修复版】的代码，替换旧的 saveBtn 点击事件 ▼▼▼
+if (saveBtn) {
+    saveBtn.addEventListener('click', async () => {
+        const id = entryIdInput.value ? parseInt(entryIdInput.value, 10) : null;
+        const bookId = modal.dataset.bookId ? parseInt(modal.dataset.bookId, 10) : null;
 
-            if (saveBtn) {
-                // (保存按钮的逻辑与之前完全一样，无需修改)
-                saveBtn.addEventListener('click', async () => {
-                    const id = entryIdInput.value ? parseInt(entryIdInput.value, 10) : null;
-                    const entryData = {
-                        userId: 'system-public',
-                        title: entryTitleInput.value.trim(),
-                        keywords: keywordsInput.value.trim(),
-                        type: typeSelect.value,
-                        content: contentTextarea.value.trim(),
-                        isGlobal: isGlobalToggle.checked ? 1 : 0,
-                        createdAt: id ? undefined : new Date().toISOString()
-                    };
+        const entryData = {
+            title: entryTitleInput.value.trim(),
+            keywords: keywordsInput.value.trim(),
+            content: contentTextarea.value.trim(),
+            isGlobal: 0,
+        };
 
-                    if (!entryData.title) {
-                        alert("标题不能为空！");
-                        return;
+        if (!entryData.title) {
+            alert("标题不能为空！");
+            return;
+        }
+
+        try {
+            if (id) {
+                // 编辑模式（这部分逻辑不变）
+                await db.world_entries.update(id, entryData);
+            } else {
+                // --- 创建新条目模式 ---
+                entryData.bookId = bookId;
+                entryData.createdAt = new Date().toISOString();
+                
+                // 1. ✨ 核心修改：add() 方法会返回新条目的ID，我们需要接收它
+                const newEntryId = await db.world_entries.add(entryData);
+
+                // 2. ✨ 核心新增：更新当前角色的 linkedEntries 数组
+                if (window.currentChat) {
+                    const character = window.currentChat;
+                    // a. 确保 linkedEntries 是一个数组
+                    if (!Array.isArray(character.linkedEntries)) {
+                        character.linkedEntries = [];
                     }
-
-                    if (entryData.type === 'worldview') {
-                        for (const key in adminInputs) {
-                            if (adminInputs[key]) {
-                                entryData[key] = adminInputs[key].value.trim();
-                            }
-                        }
-                    }
-
-                    try {
-                        if (id) {
-                            await db.world_entries.update(id, entryData);
-                        } else {
-                            await db.world_entries.add(entryData);
-                        }
-
-                        hideModal('world-entry-editor-modal');
-                        showNotification("世界书条目已保存！");
-
-                        if (typeof window.renderWorldEntries === 'function') {
-                            window.renderWorldEntries();
-                        }
-
-                    } catch (error) {
-                        console.error("保存世界书条目失败:", error);
-                        alert("保存失败，请稍后再试。");
-                    }
-                });
+                    // b. 创建新条目的配置，并添加到数组中
+                    const newConfig = { id: newEntryId, enabled: true, depth: 100, order: 100 };
+                    character.linkedEntries.push(newConfig);
+                    
+                    // c. 将更新后的整个数组存回数据库
+                    await db.characters.update(character.id, { linkedEntries: character.linkedEntries });
+                }
             }
 
-            if (typeSelect) {
+            hideModal('world-entry-editor-modal');
+            showNotification("世界书条目已保存！");
+            
+            // 3. 刷新UI（现在它能读到包含新条目的清单了）
+            if (typeof window.renderCharacterWbList === 'function' && window.currentChat) {
+                await window.renderCharacterWbList(window.currentChat);
+            }
+
+        } catch (error) {
+            console.error("保存世界书条目失败:", error);
+            alert("保存失败，请稍后再试。");
+        }
+    });
+}
+if (typeSelect) {
                 // ✨ 核心修正 3：下拉框的事件监听也改为操作 classList
                 typeSelect.addEventListener('change', (e) => {
                     adminSection.classList.toggle('hidden', e.target.value !== 'worldview');
@@ -17193,10 +17404,9 @@ const contact = window.currentChat;
         document.getElementById('cancel-wb-selection').addEventListener('click', () => {
             selectionModal.classList.add('hidden');
         });
-// ▼▼▼ 请用这一整块全新的【最终修复版】代码，替换旧的 'confirm-wb-selection' 事件监听器 ▼▼▼
-// ▼▼▼ 请用这一整块全新的【最终修复版】代码，替换旧的 'confirm-wb-selection' 事件监听器 ▼▼▼
+// ▼▼▼ 请用这一整块【最终修复版】的代码，替换所有旧的 'confirm-wb-selection' 事件监听器 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【V4 - 直接传递版】世界书关联保存引擎 ✨✨✨ ---
+// --- ✨✨✨【V5 - 最终修复版】世界书关联保存引擎 ✨✨✨ ---
 // ==========================================================
 document.getElementById('confirm-wb-selection').addEventListener('click', async () => {
     const selectedBookIds = [];
@@ -17205,17 +17415,20 @@ document.getElementById('confirm-wb-selection').addEventListener('click', async 
     });
 
     const characterToUpdate = window.currentChat;
-    if (!characterToUpdate) return;
+    if (!characterToUpdate) {
+        console.error("确认关联失败：无法获取当前聊天角色。");
+        return;
+    }
 
     try {
         const currentConfigs = characterToUpdate.linkedEntries || [];
         const entriesFromSelectedBooks = await db.world_entries.where('bookId').anyOf(selectedBookIds).toArray();
         const newConfigs = [];
         
-        // 保留仍在选中书本中的旧条目设置
+        // 逻辑：保留仍在选中书本中的旧条目设置
         currentConfigs.forEach(config => {
             const entryDetail = entriesFromSelectedBooks.find(e => e.id === config.id);
-            if (entryDetail) { // 只要这个条目还在选中的书里，就保留它的设置
+            if (entryDetail) {
                 newConfigs.push(config);
             }
         });
@@ -17227,7 +17440,7 @@ document.getElementById('confirm-wb-selection').addEventListener('click', async 
             }
         });
 
-        // ✨ 核心修改 1: 直接更新内存中的 characterToUpdate 对象
+        // 1. 直接更新内存中的 characterToUpdate 对象
         characterToUpdate.linkedEntries = newConfigs;
         
         // 2. 将更新后的角色对象保存到数据库
@@ -17236,8 +17449,12 @@ document.getElementById('confirm-wb-selection').addEventListener('click', async 
         // 3. 关闭选择弹窗
         document.getElementById('world-book-selection-modal').classList.add('hidden');
         
-        // ✨ 核心修改 2: 调用改造后的渲染函数，并直接把内存中最新的 characterToUpdate 对象传进去！
-        await renderCharacterWbList(characterToUpdate);
+        // 4. ✨✨✨ 核心修复：调用正确拼写的函数，并直接传入内存中最新的 characterToUpdate 对象！
+        if (typeof renderCharacterWbList === 'function') {
+            await renderCharacterWbList(characterToUpdate);
+        } else {
+            console.error("渲染函数 renderCharacterWbList 未定义！");
+        }
 
         showNotification("角色的关联书本已成功更新！");
 
@@ -17247,7 +17464,6 @@ document.getElementById('confirm-wb-selection').addEventListener('click', async 
     }
 });
 // ==========================================================
-// ▲▲▲ 替换到这里结束 ▲▲▲
 // ▲▲▲ 替换到这里结束 ▲▲▲
         /**
          * ✨ 核心函数：分析图片Blob的平均亮度，并决定使用深色还是浅色文字
@@ -21185,7 +21401,52 @@ ${videoTranscript}
             else showNotification("保存失败，请稍后再试。");
         }
     }
+// ==========================================================
+// --- ✨✨✨【全新补完】气泡CSS预设“保存改动”核心引擎 ✨✨✨ ---
+// ==========================================================
+/**
+ * 核心函数: 保存对当前选中气泡预设的修改
+ */
+window.saveBubblePresetChanges = async function() {
+    // 1. 智能地找到当前可见的下拉菜单和输入框
+    const presetSelect = document.getElementById('profile-bubble-preset-selector') || document.getElementById('bubble-css-preset-select');
+    const cssInput = document.getElementById('bubble-css-input');
+    
+    if (!presetSelect || !cssInput) {
+        showNotification("操作失败：找不到必要的编辑器组件。");
+        return;
+    }
 
+    const selectedId = presetSelect.value;
+    const cssCode = cssInput.value;
+
+    // 2. 安全检查：防止用户意外修改“默认样式”这个占位选项
+    if (!selectedId || selectedId === "") {
+        showNotification("不能修改默认样式哦！", "请使用“另存为”来创建您自己的新方案。");
+        return;
+    }
+
+    const presetName = presetSelect.options[presetSelect.selectedIndex].text;
+
+    // 3. 弹窗确认，防止误操作覆盖
+    showDeleteDialog(`确定要用当前代码覆盖预设「${presetName}」吗？`, async () => {
+        try {
+            // 4. 核心：使用 update 方法，精确地更新数据库中对应ID的记录
+            await db.bubble_css_presets.update(parseInt(selectedId, 10), {
+                cssCode: cssCode
+            });
+
+            // 5. 给出成功的反馈
+            showNotification(`气泡方案「${presetName}」已成功更新！`);
+
+        } catch (error) {
+            console.error("更新气泡预设失败:", error);
+            showNotification("保存失败，请稍后再试。");
+        }
+    });
+}
+// ==========================================================
+// ▲▲▲ 粘贴到这里结束 ▲▲▲
     /**
      * 核心函数 4: "删除选中的预设"
      */
@@ -25981,26 +26242,31 @@ if (deleteBtn) {
         }
     });
 })();
-// ==========================================================
-// ▼▼▼ 请用这一整块全新的【最终版】代码，替换旧的“世界书管理中心” (function(){...}) 代码块 ▼▼▼
-// ==========================================================
-// --- ✨✨✨【V3 - 功能完整版】世界书管理中心核心引擎 ✨✨✨ ---
+// --- ✨✨✨【V5 - 全功能最终版】世界书管理中心核心引擎 ✨✨✨ ---
 // ==========================================================
 (function () {
-    // 1. 获取所有相关的 DOM 元素
+    // 1. 获取所有相关的 DOM 元素 (新增了条目删除弹窗的元素)
     const worldBookBtn = document.getElementById('statusbar-world-book-btn');
     const modal = document.getElementById('world-book-manager-modal');
     const closeBtn = document.getElementById('wb-manager-close-btn');
+    const addBtn = document.getElementById('wb-manager-add-book');
+    const deleteBookBtn = document.getElementById('wb-manager-delete-book');
+    const importBtn = document.getElementById('wb-manager-import-books');
+    const exportBtn = document.getElementById('wb-manager-export-books');
+    const importFileInput = document.getElementById('wb-manager-import-input');
+    const deleteBooksModal = document.getElementById('wb-delete-books-modal');
+    const deleteBooksList = document.getElementById('wb-delete-books-list');
+    const deleteBooksCloseBtn = document.getElementById('wb-delete-books-close-btn');
+    const deleteBooksConfirmBtn = document.getElementById('wb-delete-books-confirm-btn');
 
-    // 全局世界书相关 (不变)
+    // ✨ 新增：条目删除弹窗元素
+    const deleteEntriesModal = document.getElementById('wb-delete-entries-modal');
+    const deleteEntriesList = document.getElementById('wb-delete-entries-list');
+    const deleteEntriesCloseBtn = document.getElementById('wb-delete-entries-close-btn');
+    const deleteEntriesConfirmBtn = document.getElementById('wb-delete-entries-confirm-btn');
+
+    // (其他旧的DOM元素获取保持不变)
     const globalSelectContainer = document.getElementById('global-wb-select-container');
-    const globalSelectorValue = document.getElementById('global-wb-selector-value');
-    const globalActiveNames = document.getElementById('global-wb-active-names');
-    const globalOptionsContainer = document.getElementById('global-wb-options-container');
-    const globalActivationSettings = document.getElementById('wb-activation-settings');
-    const globalActiveEntriesList = document.querySelector('#world-book-manager-modal .world-book-section:first-child .wb-entry-list');
-
-    // ✨ 核心新增：角色世界书相关元素
     const characterTitleEl = document.getElementById('character-wb-title');
     const manageCharacterWbBtn = document.getElementById('manage-character-wb-btn');
     const characterWbListContainer = document.getElementById('character-wb-entry-list');
@@ -26018,14 +26284,11 @@ if (deleteBtn) {
         // 渲染上半部分：全局世界书
         await renderGlobalWbSelector();
         // ✨ 核心新增：渲染下半部分：角色世界书
-        await renderCharacterWbList();
+await renderCharacterWbList(window.currentChat);
 
         showModal('world-book-manager-modal');
     }
-// ▼▼▼ 请用这一整块全新的代码，替换旧的 renderGlobalWbSelector 函数 ▼▼▼
-// ==========================================================
-// --- ✨✨✨【V2 - 书本激活版】全局世界书选择与渲染引擎 ✨✨✨ ---
-// ==========================================================
+
 async function renderGlobalWbSelector() {
     // (获取所有DOM元素的代码保持不变)
     const globalSelectContainer = document.getElementById('global-wb-select-container');
@@ -26033,7 +26296,8 @@ async function renderGlobalWbSelector() {
     const globalActiveNames = document.getElementById('global-wb-active-names');
     const globalOptionsContainer = document.getElementById('global-wb-options-container');
     const globalActivationSettings = document.getElementById('wb-activation-settings');
-    const globalActiveEntriesList = document.querySelector('#world-book-manager-modal .world-book-section:first-child .wb-entry-list');
+// ✨ 核心修复：使用 :first-of-type 来精确查找第一个 <section>，忽略前面的操作栏
+const globalActiveEntriesList = document.querySelector('#world-book-manager-modal .world-book-section:first-of-type .wb-entry-list');
 
     // ✨ 核心修改 1: 从数据库获取的是“书本”，而不是“条目”
     const allBooks = await db.world_books.toArray();
@@ -26102,12 +26366,11 @@ async function renderGlobalWbSelector() {
          globalActiveEntriesList.innerHTML = '<div class="wb-entry-item-placeholder">没有已启用的全局世界书...</div>';
     }
 }
-// ▼▼▼ 请用这个【全新 V3 - 参数化版】的代码进行替换 ▼▼▼
-async function renderCharacterWbList(character) { // ✨ 核心修改：增加了 character 参数
+// ▼▼▼ 请用这个【V4 - 带书本操作栏版】的代码进行替换 ▼▼▼
+async function renderCharacterWbList(character) { 
     const characterTitleEl = document.getElementById('character-wb-title');
     const listContainer = document.getElementById('character-wb-entry-list');
 
-    // 安全检查，如果传入的 character 无效则退出
     if (!character) {
         console.error("renderCharacterWbList 失败：未提供有效的角色对象。");
         return;
@@ -26143,6 +26406,8 @@ async function renderCharacterWbList(character) { // ✨ 核心修改：增加�
 
         const group = document.createElement('div');
         group.className = 'book-group';
+        group.dataset.bookId = book.id; // ✨ 核心新增：为整个组添加book-id
+
         group.innerHTML = `
             <button class="settings-item buttonlike">
                 <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
@@ -26150,7 +26415,14 @@ async function renderCharacterWbList(character) { // ✨ 核心修改：增加�
                 <span class="arrow">></span>
             </button>
             <div class="book-entries-container">
-                <div class="book-entries-inner"></div>
+                <div class="book-entries-inner">
+                    <!-- ✨ 核心新增：在这里注入操作栏 -->
+                    <div class="book-actions-bar">
+                        <button class="btn btn-secondary buttonlike btn-add-entry">增加条目</button>
+                        <button class="btn btn-secondary buttonlike btn-delete-entry">删除条目</button>
+                        <button class="btn btn-secondary buttonlike btn-rename-book">重命名</button>
+                    </div>
+                </div>
             </div>`;
         
         const header = group.querySelector('.settings-item');
@@ -26159,7 +26431,6 @@ async function renderCharacterWbList(character) { // ✨ 核心修改：增加�
         header.addEventListener('click', () => {
             group.classList.toggle('open');
             if (group.classList.contains('open') && contentInner.dataset.loaded !== 'true') {
-                contentInner.innerHTML = '';
                 entriesInThisBook.forEach(entry => {
                     const entryCard = createCharacterWbItemCard(entry);
                     contentInner.appendChild(entryCard);
@@ -26170,8 +26441,8 @@ async function renderCharacterWbList(character) { // ✨ 核心修改：增加�
         listContainer.appendChild(group);
     }
 }
-// ▲▲▲ 替换到这里结束 ▲▲▲
-// ▼▼▼ 请用这一整块全新的代码，替换旧的 createCharacterWbItemCard 函数 ▼▼▼
+  window.renderCharacterWbList = renderCharacterWbList;
+
 // ==========================================================
 // --- ✨✨✨【V2 - 内联编辑器版】条目设置卡片创建引擎 ✨✨✨ ---
 // ==========================================================
@@ -26326,64 +26597,283 @@ async function saveWbEntryDetails(itemEl) {
         if (e.target === modal) hideModal('world-book-manager-modal');
     });
 
-    // 全局世界书下拉菜单
-    globalSelectorValue.addEventListener('click', (e) => { e.stopPropagation(); globalSelectContainer.classList.toggle('open'); });
-    document.addEventListener('click', () => { if (globalSelectContainer.classList.contains('open')) globalSelectContainer.classList.remove('open'); });
+   // --- ✨✨✨ 全新的功能函数 ---
 
-    // ✨ 核心新增：为角色世界书区域绑定事件委托
-    manageCharacterWbBtn.addEventListener('click', () => {
-        // 直接调用我们早已写好的“关联档案”弹窗
-        if (typeof openWorldBookSelectionModal === 'function') {
-            openWorldBookSelectionModal();
-        }
-    });
-
-    characterWbListContainer.addEventListener('change', (e) => {
-        if (e.target.classList.contains('wb-entry-toggle') || e.target.classList.contains('form-input')) {
-            saveCharacterWbSettings(e.target);
-        }
-    });
-
-    // ✨ 核心改造：升级“确认关联”按钮的功能
-    const confirmSelectionBtn = document.getElementById('confirm-wb-selection');
-    if (confirmSelectionBtn) {
-        confirmSelectionBtn.onclick = async () => {
-            const selectedIds = new Set();
-            document.querySelectorAll('#wb-selection-list input[type="checkbox"]:checked').forEach(checkbox => {
-                selectedIds.add(parseInt(checkbox.value, 10));
-            });
-
-            const character = window.currentChat;
-            const currentConfigs = character.linkedEntries || [];
-            
-            const newConfigs = [];
-            // 1. 保留已有的设置
-            currentConfigs.forEach(config => {
-                if (selectedIds.has(config.id)) {
-                    newConfigs.push(config);
+    /**
+     * 核心函数 1: 添加一本新书
+     */
+    async function handleAddBook() {
+        const newBookName = await showInputDialog("请输入新书本的名称：", "");
+        if (newBookName && newBookName.trim()) {
+            try {
+                const trimmedName = newBookName.trim();
+                const existing = await db.world_books.where('name').equals(trimmedName).first();
+                if (existing) {
+                    showNotification("已存在同名的书本！");
+                    return;
                 }
-            });
-            
-            // 2. 为新添加的条目设置默认值
-            selectedIds.forEach(id => {
-                if (!newConfigs.some(c => c.id === id)) {
-                    newConfigs.push({ id: id, enabled: true, depth: 100, order: 100 });
-                }
-            });
-
-            await db.characters.update(character.id, { linkedEntries: newConfigs });
-            window.currentChat.linkedEntries = newConfigs; // 同步内存
-
-            hideModal('world-book-selection-modal');
-            await renderCharacterWbList(); // 刷新UI
-            showNotification("角色档案关联已更新！");
-        };
+                await db.world_books.add({ name: trimmedName });
+                await renderGlobalWbSelector(); // 刷新UI
+                showNotification(`书本「${trimmedName}」已成功创建！`);
+            } catch (error) {
+                console.error("创建新书本失败:", error);
+                showNotification("创建失败，请稍后再试。");
+            }
+        }
     }
 
+/**
+ * 核心函数 2: 打开删除书本的选择弹窗
+ */
+async function openDeleteBookModal() {
+    // 修正：使用正确的变量名 deleteBooksList
+    deleteBooksList.innerHTML = '<p>加载中...</p>';
+    showModal('wb-delete-books-modal');
+
+    const allBooks = await db.world_books.toArray();
+    // 修正：使用正确的变量名 deleteBooksList
+    deleteBooksList.innerHTML = '';
+    if (allBooks.length === 0) {
+        // 修正：使用正确的变量名 deleteBooksList
+        deleteBooksList.innerHTML = '<p style="text-align: center; padding: 20px;">没有可供删除的书本。</p>';
+        return;
+    }
+
+    allBooks.forEach(book => {
+        const item = document.createElement('div');
+        item.className = 'wb-delete-item';
+        item.innerHTML = `
+            <input type="checkbox" id="del-book-${book.id}" value="${book.id}">
+            <label for="del-book-${book.id}">${escapeHtml(book.name)}</label>
+        `;
+        // 修正：使用正确的变量名 deleteBooksList
+        deleteBooksList.appendChild(item);
+    });
+}
+
+    /**
+     * 核心函数 3: 确认并执行删除操作
+     */
+    async function handleDeleteBooks() {
+        const idsToDelete = Array.from(deleteListContainer.querySelectorAll('input:checked')).map(cb => parseInt(cb.value, 10));
+
+        if (idsToDelete.length === 0) {
+            showNotification("您没有选择任何要删除的书本。");
+            return;
+        }
+
+        showDeleteDialog(`确定要删除选中的 ${idsToDelete.length} 本书以及其中【所有】的条目吗？此操作不可恢复！`, async () => {
+            showLoadingModal("正在删除...");
+            try {
+                await db.transaction('rw', db.world_books, db.world_entries, async () => {
+                    await db.world_entries.where('bookId').anyOf(idsToDelete).delete();
+                    await db.world_books.bulkDelete(idsToDelete);
+                });
+                
+                hideModal('wb-delete-books-modal');
+                await renderGlobalWbSelector();
+                await window.renderCharacterWbList(window.currentChat);
+                showNotification("所选书本已成功删除。");
+
+            } catch (error) {
+                console.error("删除书本失败:", error);
+                showNotification("删除失败，请重试。");
+            } finally {
+                hideLoadingModal();
+            }
+        });
+    }
+
+    /**
+     * 核心函数 4: 导出所有书本和条目
+     */
+    async function handleExportBooks() {
+        showLoadingModal("正在打包所有世界书...");
+        try {
+            const dataToExport = {
+                books: await db.world_books.toArray(),
+                entries: await db.world_entries.toArray()
+            };
+            const jsonString = JSON.stringify(dataToExport, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Auing_WorldBooks_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            showNotification(`导出失败: ${error.message}`);
+        } finally {
+            hideLoadingModal();
+        }
+    }
+
+    /**
+     * 核心函数 5: 从文件导入书本和条目
+     */
+    function handleImportBooks(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            showLoadingModal("正在导入世界书...");
+            try {
+                const data = JSON.parse(e.target.result);
+                if (!data.books || !data.entries) throw new Error("文件格式不正确。");
+                await db.transaction('rw', db.world_books, db.world_entries, async () => {
+                    await db.world_books.bulkPut(data.books);
+                    await db.world_entries.bulkPut(data.entries);
+                });
+                await renderGlobalWbSelector();
+                await window.renderCharacterWbList(window.currentChat);
+                showNotification("世界书数据导入成功！");
+            } catch (error) {
+                showNotification(`导入失败: ${error.message}`);
+            } finally {
+                hideLoadingModal();
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    /**
+     * ✨ 核心新增 1: 打开删除【条目】的选择弹窗
+     */
+    async function openDeleteEntryModal(bookId) {
+        deleteEntriesList.innerHTML = '<p>加载中...</p>';
+        showModal('wb-delete-entries-modal');
+
+        const entries = await db.world_entries.where({ bookId: bookId }).toArray();
+        deleteEntriesList.innerHTML = '';
+        if (entries.length === 0) {
+            deleteEntriesList.innerHTML = '<p style="text-align: center; padding: 20px;">这本书里没有可供删除的条目。</p>';
+            return;
+        }
+
+        entries.forEach(entry => {
+            const item = document.createElement('div');
+            item.className = 'wb-entry-delete-item'; // 复用样式
+            item.innerHTML = `
+                <input type="checkbox" id="del-entry-${entry.id}" value="${entry.id}">
+                <label for="del-entry-${entry.id}">${escapeHtml(entry.title)}</label>
+            `;
+            deleteEntriesList.appendChild(item);
+        });
+
+        // ✨ 核心新增：为确认按钮绑定一个【一次性】的点击事件，并把 bookId 传进去
+        deleteEntriesConfirmBtn.onclick = () => handleDeleteEntries(bookId);
+    }
+
+    /**
+     * ✨ 核心新增 2: 确认并执行删除【条目】的操作
+     */
+    async function handleDeleteEntries(bookId) {
+        const idsToDelete = Array.from(deleteEntriesList.querySelectorAll('input:checked')).map(cb => parseInt(cb.value, 10));
+
+        if (idsToDelete.length === 0) {
+            showNotification("您没有选择任何要删除的条目。");
+            return;
+        }
+
+        showDeleteDialog(`确定要永久删除这 ${idsToDelete.length} 个条目吗？`, async () => {
+            showLoadingModal("正在删除条目...");
+            try {
+                // 1. 从 world_entries 表中删除条目本身
+                await db.world_entries.bulkDelete(idsToDelete);
+
+                // 2. 从当前角色的 linkedEntries 数组中移除这些条目的配置
+                const character = window.currentChat;
+                if (character && character.linkedEntries) {
+                    const newLinkedEntries = character.linkedEntries.filter(config => !idsToDelete.includes(config.id));
+                    await db.characters.update(character.id, { linkedEntries: newLinkedEntries });
+                    // 同步更新内存中的数据
+                    window.currentChat.linkedEntries = newLinkedEntries;
+                }
+                
+                hideModal('wb-delete-entries-modal');
+                await window.renderCharacterWbList(window.currentChat); // 刷新UI
+                showNotification("所选条目已成功删除。");
+
+            } catch (error) {
+                console.error("删除条目失败:", error);
+                showNotification("删除失败，请重试。");
+            } finally {
+                hideLoadingModal();
+            }
+        });
+    }
+
+
+
+
+    // --- 事件绑定 ---
+    worldBookBtn.addEventListener('click', openWorldBookManager);
+    closeBtn.addEventListener('click', () => hideModal('world-book-manager-modal'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) hideModal('world-book-manager-modal'); });
+
+    // ✨ 新增：为操作栏按钮绑定功能
+    addBtn.addEventListener('click', handleAddBook);
+deleteBookBtn.addEventListener('click', openDeleteBookModal);
+    exportBtn.addEventListener('click', handleExportBooks);
+    importBtn.addEventListener('click', () => importFileInput.click());
+    importFileInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) handleImportBooks(e.target.files[0]);
+        e.target.value = '';
+    });
+
+    // ✨ 新增：为删除弹窗绑定功能
+deleteBooksCloseBtn.addEventListener('click', () => hideModal('wb-delete-books-modal'));
+ deleteBooksConfirmBtn.addEventListener('click', handleDeleteBooks);
+   // ✨ 新增：为条目删除弹窗绑定关闭事件
+    deleteEntriesCloseBtn.addEventListener('click', () => {
+        hideModal('wb-delete-entries-modal');
+        deleteEntriesConfirmBtn.onclick = null; // 清理一次性事件
+    });
+    // (旧的事件绑定保持不变)
+    globalSelectContainer.addEventListener('click', (e) => { e.stopPropagation(); globalSelectContainer.classList.toggle('open'); });
+    document.addEventListener('click', () => { if (globalSelectContainer.classList.contains('open')) globalSelectContainer.classList.remove('open'); });
+    manageCharacterWbBtn.addEventListener('click', () => { if (typeof openWorldBookSelectionModal === 'function') openWorldBookSelectionModal(); });
+    characterWbListContainer.addEventListener('change', (e) => { if (e.target.classList.contains('wb-entry-toggle') || e.target.classList.contains('form-input')) saveCharacterWbSettings(e.target); });
+
+   // ✨ 核心修改：将“删除条目”按钮的占位符逻辑，替换为调用新函数
+    characterWbListContainer.addEventListener('click', async (e) => {
+        const bookGroup = e.target.closest('.book-group');
+        if (!bookGroup) return;
+        const bookId = parseInt(bookGroup.dataset.bookId, 10);
+        if (!bookId) return;
+
+
+    // --- 逻辑1: 点击“增加条目” ---
+    if (e.target.matches('.btn-add-entry')) {
+        if (typeof window.openWorldEntryEditor === 'function') {
+            // 调用编辑器，并传入这本书的ID
+            window.openWorldEntryEditor(null, bookId);
+        }
+        return;
+    }
+
+    // --- 逻辑2: 点击“世界书重命名” ---
+    if (e.target.matches('.btn-rename-book')) {
+        const book = await db.world_books.get(bookId);
+        if (!book) return;
+        
+        const newName = await showInputDialog("请输入新的书本名称：", book.name);
+        if (newName && newName.trim() && newName.trim() !== book.name) {
+            await db.world_books.update(bookId, { name: newName.trim() });
+            await window.renderCharacterWbList(window.currentChat); // 刷新UI
+            showNotification("书本已重命名！");
+        }
+        return;
+    }
+
+        // ✨ 核心修改在这里
+        if (e.target.matches('.btn-delete-entry')) {
+            openDeleteEntryModal(bookId); // 调用我们新的函数
+            return;
+        }
+    });
 })();
-// ==========================================================
-// ▲▲▲ 替换到这里结束 ▲▲▲
-// ▲▲▲ 替换到这里结束 ▲▲▲
+
 
     </script>
 
