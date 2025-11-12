@@ -5221,7 +5221,7 @@ color: rgb(0, 0, 0);
         .statusbar-right {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 1px;
             /* 图标之间的间距 */
         }
 
@@ -5260,14 +5260,6 @@ color: rgb(0, 0, 0);
         /* --- ✨✨✨【核心修复】恢复状态栏内部按钮的可点击性 ✨✨✨ --- */
         /* ========================================================== */
 
-        /*
-  问题根源：
-  为了让状态栏不遮挡下方的App图标，我们给整个 .statusbar 容器设置了 "pointer-events: none;"。
-  这导致了内部的所有元素，包括我们新加的API按钮，都无法响应点击。
-
-  解决方案：
-  为状态栏内部需要交互的区域，单独将 pointer-events 恢复为默认的 "auto"。
-*/
         .statusbar-left,
         .statusbar-center,
         .statusbar-right {
@@ -5610,209 +5602,7 @@ color: rgb(0, 0, 0);
             /* 确保图片独占一行 */
         }
 
-        /* ========================================================== */
-        /* --- ✨✨✨【全新】红包卡片消息专属样式 ✨✨✨ --- */
-        /* ========================================================== */
 
-        /* --- 1. 红包卡片的基础样式 --- */
-        .msg.red-packet-message {
-            width: 240px;
-            /* 给卡片一个固定的宽度 */
-            max-width: 80%;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            cursor: pointer;
-            border-radius: 8px;
-            /* 统一的圆角 */
-            color: white;
-            transition: filter 0.2s ease;
-        }
-
-        /* --- 2. 未领取状态 (默认) --- */
-        .red-packet-message.unclaimed {
-            background-color: #FA9D3B;
-            /* 温暖的橙色 */
-        }
-
-        /* --- 3. 已领取状态 --- */
-        .red-packet-message.claimed {
-            background-color: #F8C387;
-            /* 领取后颜色变淡 */
-            filter: brightness(0.95);
-        }
-
-        /* --- 4. 卡片内部布局 --- */
-        .red-packet-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-        }
-
-        .red-packet-icon {
-            font-size: 36px;
-            flex-shrink: 0;
-        }
-
-        .red-packet-info {
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .red-packet-remark {
-            font-weight: 500;
-            font-size: 16px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .red-packet-status-text {
-            font-size: 12px;
-            opacity: 0.9;
-            margin-top: 4px;
-        }
-
-        /* --- 5. 卡片底部的“Auing 红包”标识 --- */
-        .red-packet-footer {
-            padding: 5px 15px;
-            font-size: 11px;
-            background-color: white;
-            color: #a1a1aa;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        /* ========================================================== */
-        /* --- ✨✨✨【全新 V2】红包功能 - 极简墨白主题样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* --- 1. “发红包”弹窗样式 --- */
-        .red-packet-modal-content {
-            background: var(--color-ui-subtle);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            width: 320px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .red-packet-modal-content .page-header {
-            background: var(--color-ui-base);
-            /* 弹窗头部用干净的白色 */
-        }
-
-        .red-packet-modal-content .page-content {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding: 25px 20px;
-        }
-
-        .amount-input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .amount-input-group label {
-            font-size: 16px;
-            color: var(--color-secondary-accent);
-        }
-
-        .amount-input-wrapper {
-            position: relative;
-            flex-grow: 1;
-        }
-
-        .amount-input-wrapper span {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-            color: var(--color-tertiary-accent);
-        }
-
-        #red-packet-amount-input {
-            padding-left: 40px;
-            font-size: 32px;
-            font-weight: bold;
-            background: var(--color-ui-base);
-            border: 1px solid var(--color-ui-border);
-            color: var(--color-tertiary-accent);
-        }
-
-        #red-packet-remark-input {
-            background: var(--color-ui-base);
-            border: 1px solid var(--color-ui-border);
-        }
-
-        .red-packet-modal-content .page-footer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .total-amount-display {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--color-tertiary-accent);
-        }
-
-        #send-red-packet-btn {
-            width: 100%;
-            font-size: 16px;
-            /* 按钮将自动继承 .btn-primary 的墨黑色样式 */
-        }
-
-        /* --- 2. 聊天气泡中的红包卡片样式 --- */
-        .msg.red-packet-message {
-            border: 1px solid var(--color-ui-border);
-            color: var(--color-tertiary-accent);
-            /* 文字改为深色 */
-        }
-
-        .red-packet-message.unclaimed {
-            background-color: #FFFFFF;
-            /* 未领取时是白色 */
-        }
-
-        .red-packet-message.claimed {
-            background-color: #F3F4F6;
-            /* 领取后是淡灰色 */
-            filter: none;
-            /* 移除旧的亮度滤镜 */
-        }
-
-        .red-packet-content {
-            padding: 12px 15px;
-        }
-
-        .red-packet-icon {
-            color: #FBBF24;
-            /* 图标用一个柔和的金色 */
-        }
-
-        .red-packet-remark {
-            color: var(--color-tertiary-accent);
-        }
-
-        .red-packet-status-text {
-            color: #9CA3AF;
-            /* 状态文字用灰色 */
-        }
-
-        .red-packet-footer {
-            background-color: transparent;
-            /* 底部标识的背景透明 */
-            color: #D1D5DB;
-            /* 文字颜色更淡 */
-            border-top: 1px solid var(--color-ui-border);
-        }
 
         /* ========================================================== */
         /* --- ✨✨✨【V2 - 多状态版】转账凭证卡片专属样式 ✨✨✨ --- */
@@ -6671,28 +6461,362 @@ padding: 6px;
     justify-content: space-around;
     width: 100%;
 }
+
+
 /* ========================================================== */
-/* 3. ✨ 魔法核心：把所有弹窗内的页脚都用“图钉”钉在最底部 */
-.modal-content .page-footer {
-    position: absolute; /* 绝对定位，脱离文档流 */
-    bottom: 0;          /* 钉在底部 */
-    left: 0;            /* 左边贴边 */
-    width: 100%;        /* 宽度撑满 */
-}
+        /* --- ✨✨✨【全新修复】转账弹窗专属样式 ✨✨✨ --- */
+        /* ========================================================== */
+
+        .transfer-modal-content {
+            background: var(--color-ui-subtle);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .transfer-modal-content .page-header {
+            background: var(--color-ui-base); /* 弹窗头部用干净的白色 */
+        }
+
+        .transfer-modal-content .page-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 25px 20px;
+        }
+
+        .transfer-modal-content .amount-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .transfer-modal-content .amount-input-group label {
+            font-size: 16px;
+            color: var(--color-secondary-accent);
+        }
+
+        .transfer-modal-content .amount-input-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .transfer-modal-content .amount-input-wrapper span {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: var(--color-tertiary-accent);
+        }
+
+        .transfer-modal-content #transfer-amount-input {
+            padding-left: 40px;
+            font-size: 32px;
+            font-weight: bold;
+            background: var(--color-ui-base);
+            border: 1px solid var(--color-ui-border);
+            color: var(--color-tertiary-accent);
+        }
+
+        .transfer-modal-content #transfer-remark-input {
+            background: var(--color-ui-base);
+            border: 1px solid var(--color-ui-border);
+        }
+
+        .transfer-modal-content .page-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transfer-modal-content .total-amount-display {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--color-tertiary-accent);
+        }
+
+        .transfer-modal-content #send-transfer-btn {
+            width: 100%;
+            font-size: 16px;
+        }
+/* ▼▼▼ 请将这一整块全新的代码，粘贴到 <style> 的末尾 ▼▼▼ */
 /* ========================================================== */
-/* --- ✨✨✨【新增】修复角色主页弹窗滚动遮挡问题 ✨✨✨ --- */
+/* --- ✨✨✨【全新】世界书管理弹窗专属样式 ✨✨✨ --- */
 /* ========================================================== */
 
-#contact-profile-modal .page-content {
-    /* 
-      核心修复：
-      为可滚动的内容区增加一个足够大的底部内边距（例如80px），
-      这样即使滚动到底部，最后的内容也会停留在被遮挡的页脚上方，
-      从而变得完全可见。
-    */
-    padding-bottom: 80px;
+/* 1. 每个区域的卡片样式 */
+.world-book-section {
+    background-color: var(--color-ui-base);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* 2. 区域的头部样式 */
+.wb-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+}
+
+.wb-section-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--color-secondary-accent);
+}
+
+/* 3. “No worlds active”占位符栏样式 */
+.wb-placeholder-bar {
+    background-color: var(--color-ui-border);
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+/* 4. 条目列表的容器 */
+.wb-entry-list {
+    padding: 8px;
+    border: 1px dashed var(--color-ui-border);
+    border-radius: 8px;
+    min-height: 100px;
+}
+
+/* 5. 列表为空时的占位符文本 */
+.wb-entry-item-placeholder {
+    text-align: center;
+    font-size: 13px;
+    color: #a1a1aa;
+    padding: 20px;
+}
+/* ========================================================== */
+/* ▼▼▼ 请将这一整块全新的代码，粘贴到 <style> 的末尾 ▼▼▼ */
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书-全局设置专属样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 自定义下拉菜单的容器，用于定位 */
+.custom-wb-select-container {
+    position: relative;
+}
+
+/* 2. 下拉选项列表的容器 */
+.custom-wb-options {
+    position: absolute;
+    top: 105%; /* 定位在触发器的正下方 */
+    left: 0;
+    right: 0;
+    background-color: var(--color-ui-base);
+    border: 1px solid var(--color-ui-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 200px; /* 给一个最大高度，超出可滚动 */
+    overflow-y: auto;
+    z-index: 10;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
+.custom-wb-select-container.open .custom-wb-options {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* 3. 下拉列表中的单个条目 */
+.wb-option-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-ui-border);
+}
+.wb-option-item:last-child {
+    border-bottom: none;
+}
+.wb-option-item:hover {
+    background-color: var(--color-ui-subtle);
+}
+
+/* 4. 条目前面的“对号”图标 */
+.wb-option-item .check-icon {
+    font-size: 16px;
+    color: var(--color-primary-accent);
+    width: 20px; /* 占据固定宽度，保持对齐 */
+    text-align: center;
+    visibility: hidden; /* 默认隐藏 */
+}
+.wb-option-item.active .check-icon {
+    visibility: visible; /* 激活时显示 */
+}
+
+/* 5. 激活设置面板的样式 */
+#wb-activation-settings {
+    background-color: var(--color-ui-subtle);
+    border: 1px solid var(--color-ui-border);
+    border-radius: 8px;
+    padding: 12px;
+    display: none; /* 默认隐藏 */
+}
+#wb-activation-settings.visible {
+    display: flex; /* 激活时显示 */
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 6. 设置面板内部布局 */
+.setting-row {
+    display: flex;
+    gap: 10px;
+}
+.setting-item {
+    flex: 1;
+}
+.setting-item label {
+    font-size: 12px;
+    color: var(--color-secondary-accent);
+    display: block;
+    margin-bottom: 4px;
+}
+.setting-item .form-input {
+    padding: 6px 8px;
+    font-size: 13px;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    font-size: 13px;
+}
+.checkbox-grid label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+/* ========================================================== */
+/* ▼▼▼ 请将这一整块全新的代码，粘贴到 <style> 的末尾 ▼▼▼ */
+/* ========================================================== */
+/* --- ✨✨✨【全新】角色世界书-条目设置卡片样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 单个条目卡片的容器 */
+.character-wb-item {
+    background-color: var(--color-ui-subtle);
+    border: 1px solid var(--color-ui-border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: opacity 0.3s ease;
+}
+
+/* 2. 当条目被禁用时的半透明样式 */
+.character-wb-item.disabled {
+    opacity: 0.5;
+}
+
+/* 3. 卡片顶行：开关和标题 */
+.item-main-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-main-info .item-title {
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+/* 4. 卡片底行：参数设置 */
+.item-parameters {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 12px;
+}
+
+.item-parameters .param-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.item-parameters .param-group label {
+    font-size: 11px;
+    color: var(--color-secondary-accent);
+}
+
+.item-parameters .param-group .form-input {
+    padding: 4px 6px;
+    font-size: 12px;
+}
+/* ========================================================== */
+/* ▲▲▲ 粘贴到这里结束 ▲▲▲ */
+/* ▼▼▼ 请将这一整块全新的代码，粘贴到 <style> 的末尾 ▼▼▼ */
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书-手风琴式书本列表样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 书本组的容器 */
+.book-group {
+    margin-bottom: 10px;
+}
+
+/* 2. 书本的头部 (我们复用 settings-item 的样式，只需确保箭头能旋转) */
+.book-group .settings-item .arrow {
+    transition: transform 0.3s ease;
+}
+.book-group.open .settings-item .arrow {
+    transform: rotate(90deg);
+}
+
+/* 3. 容纳条目列表的容器 (核心动画部分) */
+.book-entries-container {
+    display: grid;
+    grid-template-rows: 0fr; /* 默认折叠，高度为0 */
+    transition: grid-template-rows 0.3s ease-out;
+    background-color: var(--color-ui-subtle);
+    border-radius: 0 0 12px 12px;
+}
+.book-group.open .book-entries-container {
+    grid-template-rows: 1fr; /* 展开时，高度自适应内容 */
+}
+
+/* 4. 内部包装器，防止动画时内容被裁切 */
+.book-entries-inner {
+    overflow: hidden;
+    padding: 5px 10px 10px;
+    border: 1px solid var(--color-ui-border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+}
+
+/* 5. 内部条目卡片的微调 (边距更小) */
+.book-entries-inner .world-entry-card {
+    margin-bottom: 8px;
+    padding: 10px 12px;
+}
+/* ========================================================== */
+/* ▲▲▲ 粘贴到这里结束 ▲▲▲ */
     </style>
 
     <!-- 【请将这个新的 style 标签粘贴到旧 style 标签的紧后方】 -->
@@ -6770,7 +6894,11 @@ padding: 6px;
                 <!-- ✨✨✨ 核心修改就在这里！ ✨✨✨ -->
                 <div id="statusbar-left" class="statusbar-left">
                     <span id="statusbar-time">00:00</span>
-                    <!-- 这是我们新添加的“音乐”按钮 -->
+                  <!-- ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ -->
+    <button id="statusbar-world-book-btn" class="btn-icon buttonlike" title="世界书" style="display: none;">
+        <i class="fa-solid fa-book-atlas"></i>
+    </button>
+    <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
                     <button id="statusbar-listen-together-btn" class="btn-icon buttonlike" title="音乐"
                         style="display: none;">
                         <i class="fa-solid fa-headphones"></i>
@@ -7313,10 +7441,6 @@ padding: 6px;
                                 <button id="quick-btn-picture" class="quick-action-btn buttonlike" title="图片">
                                     <i class="fa-solid fa-image"></i>
                                 </button>
-                                <!-- 红包 -->
-                                <button id="quick-btn-redpacket" class="quick-action-btn buttonlike" title="红包">
-                                    <i class="fa-solid fa-coins"></i>
-                                </button>
                                 <!-- 转账 -->
                                 <button id="quick-btn-transfer" class="quick-action-btn buttonlike" title="转账">
                                     <i class="fa-solid fa-dollar-sign"></i>
@@ -7518,7 +7642,7 @@ padding: 6px;
                             </header>
 
                             <main id="profile-content-panel-modal" class="page-content"
-                                style="flex-grow: 1; padding: 0 2px 36px; background: transparent; overflow-y: auto;">
+                                style="flex-grow: 1; padding: 0 ; background: transparent; overflow-y: auto;">
 
                                 <div id="profile-main-view">
 
@@ -7983,81 +8107,32 @@ padding: 6px;
                 </div>
 
 
-                <!-- ✨✨✨ 页面 15：世界书 (按钮固定底部版) ✨✨✨ -->
-                <div id="world-book-page" class="page">
-                    <!-- ▼▼▼ 请用这个全新的header，替换旧的 world-book-page 的 header ▼▼▼ -->
-                    <!-- ▼▼▼ 请用这个全新的、图标和布局都已优化的header，替换旧的 world-book-page 的 header ▼▼▼ -->
-                    <header class="page-header">
+<!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 id="world-book-page" 的 <div> ▼▼▼ -->
+<div id="world-book-page" class="page">
+    <header class="page-header">
+        <button id="world-book-back" class="btn-icon btn-back buttonlike" style="width: 32px; height: 32px; border-radius: 50%;"><i class="fa-solid fa-chevron-left"></i></button>
+        <span style="font-weight: bold; font-size: 18px;">世界书</span>
+        <div class="header-right">
+            <button id="manage-books-btn" class="btn-icon buttonlike" title="管理书本"><i class="fa-solid fa-folder-tree"></i></button>
+            <button id="import-world-entries-btn" class="btn-icon buttonlike" title="导入条目"><i class="fa-solid fa-upload"></i></button>
+            <button id="export-world-entries-btn" class="btn-icon buttonlike" title="导出条目"><i class="fa-solid fa-download"></i></button>
+        </div>
+    </header>
 
-                        <!-- 第1栏：左侧返回按钮 -->
-                        <div class="header-left">
-                            <button id="world-book-back" class="btn-icon btn-back buttonlike"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
-                                <i class="fa-solid fa-chevron-left"></i></button>
-                        </div>
+    <input type="file" id="import-world-book-input" accept=".json" class="hidden">
 
-                        <!-- 第2栏：居中标题 -->
-                        <div class="header-center">
-                            <span style="font-weight: bold; font-size: 18px;">世界书</span>
-                        </div>
+    <!-- 这是新的、用于显示“书本列表”的主内容区 -->
+    <main id="world-books-list-container" class="page-content" style="padding: 10px;">
+        <p id="world-book-empty-state" class="hidden" style="text-align: center; color: #a1a1aa; padding-top: 40px;">
+           世界书是空的，<br>点击下方的按钮来创建吧！
+        </p>
+    </main>
 
-                        <!-- 第3栏：右侧所有功能按钮 -->
-                        <div class="header-right">
-                            <!-- 管理分类 -->
-                            <button id="manage-categories-btn" class="btn-icon buttonlike" title="管理分类">
-                                <i class="fa-solid fa-layer-group"></i>
-                            </button>
-                            <!-- 批量管理 -->
-                            <button id="toggle-bulk-manage-btn" class="btn-icon buttonlike" title="批量管理">
-                                <i class="fa-solid fa-list-check"></i>
-                            </button>
-                            <!-- 导入 -->
-                            <button id="import-world-entries-btn" class="btn-icon buttonlike" title="导入世界书条目">
-                                <i class="fa-solid fa-upload"></i>
-                            </button>
-                            <!-- 导出 -->
-                            <button id="export-world-entries-btn" class="btn-icon buttonlike" title="导出世界书条目">
-                                <i class="fa-solid fa-download"></i>
-                            </button>
-                        </div>
-
-                    </header>
-                    <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-
-                    <!-- ✨ 核心新增：为世界书导入功能创建一个专属的文件选择器 -->
-                    <input type="file" id="import-world-book-input" accept=".json" class="hidden">
-                    <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-
-                    <!-- ✨ 核心修改1：可滚动内容区的底部内边距现在是为“固定按钮”留出空间 -->
-                    <main id="world-entries-list" class="page-content" style="padding-bottom: 80px;">
-                        <!-- 条目列表将由 JavaScript 动态生成并插入到这里 -->
-                        <p id="world-book-empty-state" class="hidden"
-                            style="text-align: center; color: #a1a1aa; padding-top: 40px;">
-                            还没有任何世界设定，<br>点击下方的“+”来创建第一条吧！
-                        </p>
-                    </main>
-
-                    <!-- ✨ 核心修改2：将按钮从 main 中移出，放入固定的 footer -->
-                    <!-- ▼▼▼ 这是全新的 Footer ▼▼▼ -->
-                    <footer class="page-footer">
-                        <!-- 默认的添加按钮 -->
-                        <div id="add-entry-footer">
-                            <button id="add-world-entry-btn" class="btn btn-primary buttonlike btn-full-width"
-                                style="font-size: 16px;">+ 添加新条目</button>
-                        </div>
-                        <!-- 批量管理模式下显示的操作栏 -->
-                        <div id="bulk-action-footer" class="hidden"
-                            style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <span id="selection-counter">已选择 0 项</span>
-                            <div style="display: flex; gap: 12px;">
-                                <button id="bulk-move-btn" class="btn btn-secondary buttonlike">移动到...</button>
-                                <button id="bulk-delete-btn" class="btn buttonlike"
-                                    style="background-color: #fecaca; color: #b91c1c;">删除</button>
-                            </div>
-                        </div>
-                    </footer>
-                </div>
-                <!-- ▼▼▼ 请将下面这一整块全新的HTML，粘贴到 id="world-book-page" 的 </div> 之后 ▼▼▼ -->
+    <footer class="page-footer">
+        <button id="add-new-book-btn" class="btn btn-primary buttonlike btn-full-width" style="font-size: 16px;">+ 创建新的书</button>
+    </footer>
+</div>
+<!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
 
                 <!-- ========================================================== -->
                 <!-- --- ✨✨✨【全新】分类管理弹窗 ✨✨✨ --- -->
@@ -9241,6 +9316,14 @@ padding: 6px;
                         <span style="font-weight: bold; color: #000000;">备忘录</span>
                         <div style="width: 32px;"></div>
                     </header>
+<!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 <main>...</main> ▼▼▼ -->
+<main class="page-content" style="padding: 10px; flex-grow: 1; display: flex; flex-direction: column;">
+    
+    <!-- 这是列表视图的容器 -->
+    <div id="memo-list-view">
+        <!-- 备忘录列表和“正在同步”的提示都会被渲染到这里 -->
+    </div>
+
 <!-- --- ✨✨✨【全新】“查手机”备忘录详情视图 ✨✨✨ --- -->
 <!-- ========================================================== -->
 <div id="memo-detail-view" style="display:none; flex: 1; flex-direction: column;">
@@ -9255,9 +9338,9 @@ padding: 6px;
         <p id="memo-detail-content" style="font-size: 15px; line-height: 1.8; color: #000000; white-space: pre-wrap;"></p>
     </main>
 </div>
-                    <main class="page-content" style="padding: 10px; display: flex; flex-direction: column;">
-                        <div id="memo-list-view"></div>
-                    </main>
+
+</main>
+<!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
                 </div>
             </div>
         </div>
@@ -9389,43 +9472,10 @@ padding: 6px;
             </main>
         </div>
     </div>
-    <!-- ========================================================== -->
 
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新 V2 - 墨白主题版】发红包弹窗 ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="red-packet-modal" class="modal-overlay hidden">
-        <!-- ✨ 核心修改：我们不再使用 modal-content，而是创建一个专属的 red-packet-modal-content -->
-        <div class="red-packet-modal-content">
-            <header class="page-header">
-                <span>发红包</span>
-                <button id="red-packet-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
-            </header>
-
-            <main class="page-content">
-                <div class="amount-input-group">
-                    <label for="red-packet-amount-input">金额</label>
-                    <div class="amount-input-wrapper">
-                        <span>¥</span>
-                        <input id="red-packet-amount-input" type="number" class="form-input" placeholder="0.00">
-                    </div>
-                </div>
-                <input id="red-packet-remark-input" type="text" class="form-input" placeholder="恭喜发财，大吉大利！">
-            </main>
-
-            <footer class="page-footer">
-                <div id="red-packet-total-amount" class="total-amount-display">¥ 0.00</div>
-                <button id="send-red-packet-btn" class="btn btn-primary buttonlike">塞钱进红包</button>
-            </footer>
-        </div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新】转账弹窗 ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="transfer-modal" class="modal-overlay hidden">
-        <!-- 我们将复用红包弹窗的样式，并用专属ID进行微调 -->
-        <div class="red-packet-modal-content">
+<div id="transfer-modal" class="modal-overlay hidden">
+    <!-- 我们将复用红包弹窗的样式, 并用专属ID进行微调 -->
+    <div class="transfer-modal-content">
             <header class="page-header">
                 <span>转账</span>
                 <button id="transfer-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
@@ -9433,9 +9483,9 @@ padding: 6px;
 
             <main class="page-content">
                 <div class="amount-input-group">
-                    <label for="transfer-amount-input">金额</label>
+                    <label for="transfer-amount-input">金额 ¥</label>
                     <div class="amount-input-wrapper">
-                        <span>¥</span>
+                     
                         <input id="transfer-amount-input" type="number" class="form-input" placeholder="0.00">
                     </div>
                 </div>
@@ -9655,18 +9705,128 @@ padding: 6px;
     </div>
 </div>
 
+<!-- ▼▼▼ 请将这一整块全新的代码，粘贴到 </body> 的正上方 ▼▼▼ -->
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】世界书管理中心弹窗 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="world-book-manager-modal" class="modal-overlay hidden">
+    <!-- 我们复用一个大尺寸的弹窗样式 -->
+    <div class="modal-content" style="width: 95%; max-width: 420px; height: 85%;">
+        <header class="page-header">
+            <span><i class="fa-solid fa-book-atlas"></i> 世界书管理</span>
+            <button id="wb-manager-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
+        </header>
 
+        <!-- 可滚动的主内容区 -->
+        <main class="page-content" style="padding: 10px; display: flex; flex-direction: column; gap: 15px; background-color: var(--color-ui-border);">
+
+<!-- ▼▼▼ 请用这一整块全新的代码，替换旧的“全局世界书”<section> ▼▼▼ -->
+<section class="world-book-section">
+    <!-- 这是我们改造后的自定义下拉菜单 -->
+    <div id="global-wb-select-container" class="custom-wb-select-container">
+        <!-- 头部：显示当前激活的世界书 -->
+        <div id="global-wb-selector-value" class="wb-placeholder-bar buttonlike">
+            <span id="global-wb-active-names">No Worlds active. Click here to select.</span>
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <!-- 下拉选项列表 (默认隐藏) -->
+ <div id="global-wb-options-container" class="custom-wb-options">
+            <!-- 世界书条目将由JS动态生成到这里 -->
+        </div>
+    </div>
+
+    <!-- 激活设置面板 (参考SillyTavern) -->
+    <div id="wb-activation-settings">
+        <div class="setting-row">
+            <div class="setting-item">
+                <label>扫描深度</label>
+                <input type="number" class="form-input" value="2">
+            </div>
+            <div class="setting-item">
+                <label>上下文百分比</label>
+                <input type="number" class="form-input" value="25">
+            </div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-item">
+                <label>Token预算上限</label>
+                <input type="number" class="form-input" value="0">
+            </div>
+            <div class="setting-item">
+                <label>最小参数</label>
+                <input type="number" class="form-input" value="0">
+            </div>
+        </div>
+         <div class="setting-row">
+            <div class="setting-item">
+                <label>最大深度</label>
+                <input type="number" class="form-input" value="0">
+            </div>
+            <div class="setting-item">
+                <label>最大递归深度</label>
+                <input type="number" class="form-input" value="0">
+            </div>
+        </div>
+        <div class="checkbox-grid">
+            <label><input type="checkbox"> 包括名称</label>
+            <label><input type="checkbox"> 递归扫描</label>
+            <label><input type="checkbox"> 区分大小写</label>
+            <label><input type="checkbox"> 匹配整个单词</label>
+            <label><input type="checkbox"> 使用群组评分</label>
+            <label><input type="checkbox"> 淡出警报</label>
+        </div>
+        <select class="form-input" style="margin-top: 10px;">
+            <option>角色定义之前</option>
+            <option>角色定义之后</option>
+        </select>
+    </div>
+
+    <!-- 已启用的全局条目列表 (保持不变) -->
+    <div class="wb-entry-list">
+        <div class="wb-entry-item-placeholder">已启用的全局世界书将显示在这里...</div>
+    </div>
+</section>
+<!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
+
+            <!-- 区域 2: 角色世界书 -->
+<!-- ▼▼▼ 请用这一整块全新的代码，替换旧的“角色世界书”<section> ▼▼▼ -->
+<section class="world-book-section">
+    <div class="wb-section-header">
+        <h3 id="character-wb-title">角色世界书</h3>
+        <!-- 我们为这个按钮添加一个ID，方便JS调用 -->
+        <button id="manage-character-wb-btn" class="btn btn-secondary buttonlike" style="font-size: 12px; padding: 4px 10px;">管理</button>
+    </div>
+    <!-- 这是新的列表容器，将用来显示带设置的条目卡片 -->
+    <div id="character-wb-entry-list" class="wb-entry-list" style="border: none; padding: 0;">
+        <!-- 角色专属条目将由JS动态生成到这里 -->
+        <div class="wb-entry-item-placeholder">当前角色的专属世界书条目将显示在这里...</div>
+    </div>
+</section>
+<!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
+
+        </main>
+    </div>
+</div>
+<!-- ========================================================== -->
+<!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
     <script>
 
         const db = new Dexie("QQAppDB");
-        // ▼▼▼ 请用这一整块全新的代码，完整替换旧的数据库版本定义 ▼▼▼
-db.version(164).stores({ // ✨ 核心修改 1: 版本号从 162 升级到 163
-    // ✨ 核心修改 2: 在 users 表的末尾，添加了 displayId 字段
+// ▼▼▼ 请用这一整块全新的、包含【自动迁移脚本】的代码，替换旧的 db.version(...) 代码块 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【V166 - “图书库”版】数据库结构升级与数据迁移 ✨✨✨ ---
+// ==========================================================
+db.version(166).stores({ // ✨ 核心修改 1: 版本号从 165 升级到 166
+    // --- 新增的“书本”表 ---
+    world_books: "++id, &name", 
+
+    // --- 修改“条目”表，增加 bookId 索引 ---
+    world_entries: "++id, userId, title, createdAt, keywords, content, isGlobal, categoryId, bookId",
+    
+    // --- 其他所有表的定义保持不变 ---
     users: "id,name,avatar,bio,background,signature,playerCover,gender,birthday,age,displayId",
-    // ... 其他表的定义保持不变 ...
     characters: "id,&name,note,persona,avatar,gender,birthday,age,lastMomentAt,createdAt,status,*linkedEntries,lastCommentAt,sociability,categoryId,customStatusText,*stickerTags,phoneWallpaper,fontColor,userFontColor,bubbleColor,userBubbleColor,chatWallpaper,listenTogetherDuration,bubbleCssPresetId,activeUserPersona,readingNovelId,readingProgress",
     contact_categories: "++id, &name, userId",
-    world_entries: "++id, userId, title, createdAt, keywords, content, isGlobal",
     world_book_categories: "++id, &name, userId",
     memories: "++id,[userId+contactId],contactId,createdAt",
     diaries: "++id, [userId+contactId], contactId, createdAt",
@@ -9680,12 +9840,45 @@ db.version(164).stores({ // ✨ 核心修改 1: 版本号从 162 升级到 163
     global_settings: "&key, value",
     api_presets: "++id, name, isActive, type, apiKey, apiKeys, apiEndpoint, apiModel, temperature, topP, maxOutputTokens, frequencyPenalty, presencePenalty, contextLength",
     favorites: "++id, userId, type, contentId, [userId+type], savedAt",
- 
     global_stickers: "++id, &description, *tags",
     beautify_presets: "++id, &name",
     bubble_css_presets: "++id, &name"
+}).upgrade(async (tx) => {
+    // --- ✨✨✨ 这是自动迁移脚本的核心 ✨✨✨ ---
+    console.log("【数据库升级】: 开始执行从 '分类' 到 '书本' 的自动迁移...");
+
+    const oldCategories = await tx.table("world_book_categories").toArray();
+    const entries = tx.table("world_entries");
+    const newBooks = tx.table("world_books");
+
+    // 1. 创建一个映射表，用于存储旧分类ID和新书本ID的对应关系
+    const categoryToBookIdMap = new Map();
+
+    // 2. 遍历所有旧分类，为它们创建新的“书”
+    for (const category of oldCategories) {
+        const newBookId = await newBooks.add({ name: category.name });
+        categoryToBookIdMap.set(category.id, newBookId);
+        console.log(`  -> 已将分类 "${category.name}" 转换为新的书本 (新ID: ${newBookId})`);
+    }
+
+    // 3. 创建一本“未分类的书”
+    const uncategorizedBookId = await newBooks.add({ name: "未分类" });
+    console.log(`  -> 已创建“未分类”书本 (ID: ${uncategorizedBookId})`);
+
+    // 4. 批量更新所有条目，为它们分配新的 bookId
+    await entries.toCollection().modify(entry => {
+        if (entry.categoryId && categoryToBookIdMap.has(entry.categoryId)) {
+            entry.bookId = categoryToBookIdMap.get(entry.categoryId);
+        } else {
+            // 如果条目没有分类，或者分类找不到了，就统一归入“未分类”
+            entry.bookId = uncategorizedBookId;
+        }
+    });
+
+    console.log("【数据库升级】: 所有条目已成功归类到新的书本中！迁移完成。");
 });
-        // ▼▼▼ 请将这两行新代码，粘贴到 Dexie 定义的后方 ▼▼▼
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
         const USER_FALLBACK_ICON = '<i class="fa-thin fa-user"></i>';
         const CHAR_FALLBACK_ICON = '<i class="fa-solid fa-user-plus"></i>';
@@ -9837,11 +10030,11 @@ const NSFW_LEVELS_DIRECTIVE = `
 *   **心理活动示例**: "TA从里到外，从灵魂到身体，都只能是我的。" / "这种感觉...就算一起堕入地狱也无所谓了。"
 `;
 
+// ▼▼▼ 请用这一整块全新的【最终修复版】代码，替换旧的 buildCoreContext 函数 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【V2.4 - 身份统一版】统一上下文构建核心引擎 ✨✨✨ ---
+// --- ✨✨✨【V2.5 - 兼容升级版】统一上下文构建核心引擎 ✨✨✨ ---
 // ==========================================================
 async function buildCoreContext(characterId, userId, options = {}) {
-    // (函数前半部分，直到获取 userPersona 的逻辑，保持不变)
     if (!characterId || !userId) { return null; }
     const activePreset = await db.api_presets.where({ isActive: 1 }).first();
     let finalContextLength;
@@ -9855,11 +10048,25 @@ async function buildCoreContext(characterId, userId, options = {}) {
     const userPersona = character.activeUserPersona || await db.users.get('default-user');
 
     const [worldBookData, allMessages, recentMomentsData] = await Promise.all([
-        // ... (获取世界书的逻辑不变)
         (async () => {
             const [globalEntries, localEntries] = await Promise.all([
                 db.world_entries.where({ isGlobal: 1 }).toArray(),
-                character.linkedEntries ? db.world_entries.bulkGet(character.linkedEntries) : []
+                // ▼▼▼ ✨✨✨ 核心修复就在这里！ ✨✨✨ ▼▼▼
+                (async () => {
+                    const linked = character.linkedEntries || [];
+                    if (linked.length === 0) return [];
+
+                    // 1. 智能判断：检查数组的第一个元素是对象还是数字
+                    if (typeof linked[0] === 'object' && linked[0] !== null) {
+                        // a. 如果是新格式 (对象数组)，就先用 .map() 提取出所有的 id
+                        const idsToFetch = linked.map(config => config.id);
+                        return db.world_entries.bulkGet(idsToFetch);
+                    } else {
+                        // b. 如果是旧格式 (数字数组)，就直接使用
+                        return db.world_entries.bulkGet(linked);
+                    }
+                })()
+                // ▲▲▲ ✨✨✨ 修复结束 ▲▲▲ ▲▲▲
             ]);
             const allEntriesMap = new Map();
             globalEntries.forEach(entry => entry && allEntriesMap.set(entry.id, entry));
@@ -9867,10 +10074,8 @@ async function buildCoreContext(characterId, userId, options = {}) {
             return Array.from(allEntriesMap.values());
         })(),
         
-        // ... (获取聊天记录的逻辑不变)
         db.messages.where({ userId, chatId: characterId }).sortBy('time'),
 
-        // c. ✨✨✨ 获取动态及其评论 (核心修复在这里！) ✨✨✨
         (async () => {
             const moments = await db.moments.orderBy('createdAt').reverse().limit(5).toArray();
             if (moments.length === 0) return [];
@@ -9888,10 +10093,9 @@ async function buildCoreContext(characterId, userId, options = {}) {
             const participantsMap = new Map(participants.filter(Boolean).map(p => [p.id, p]));
 
             return moments.map(moment => {
-                // ✨ 核心修复 1: 智能判断动态作者的名字
                 let authorName = '未知用户';
                 if (moment.contactId === userId) {
-                    authorName = userPersona.name; // 如果是用户发的，直接用 userPersona 的名字
+                    authorName = userPersona.name;
                 } else {
                     const author = participantsMap.get(moment.contactId);
                     if (author) authorName = author.name;
@@ -9924,7 +10128,6 @@ async function buildCoreContext(characterId, userId, options = {}) {
         })()
     ]);
 
-    // (函数剩余部分保持不变)
     const chatHistory = allMessages.length > finalContextLength 
         ? allMessages.slice(allMessages.length - finalContextLength) 
         : allMessages;
@@ -9937,6 +10140,8 @@ async function buildCoreContext(characterId, userId, options = {}) {
         recentMoments: recentMomentsData
     };
 }
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
         // ▼▼▼ 请将这个全新的工具函数，粘贴到 <script> 的全局作用域 ▼▼▼
         /**
@@ -12717,309 +12922,150 @@ async function openMusicPlayerModal() {
                 });
             }
         })();
-        // ==========================================================
-        // --- ✨✨✨【V2.0 - “图书管理系统”版】世界书核心引擎 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // --- 1. 获取所有相关的 DOM 元素 ---
-            const worldBookPage = document.getElementById('world-book-page');
-            const worldEntriesListEl = document.getElementById('world-entries-list');
-            const worldBookEmptyState = document.getElementById('world-book-empty-state');
-            const addWorldEntryBtn = document.getElementById('add-world-entry-btn');
+// ▼▼▼ 请将这一整块全新的代码，粘贴到刚刚删除旧代码的位置 ▼▼▼
+// ▼▼▼ 请用这一整块全新的【最终版】代码，替换旧的“世界书核心引擎” (function(){...}) 代码块 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【V3.1 - 手风琴版】世界书核心引擎 ✨✨✨ ---
+// ==========================================================
+(function () {
+    // --- 1. 获取所有新UI的 DOM 元素 (不变) ---
+    const page = document.getElementById('world-book-page');
+    const listContainer = document.getElementById('world-books-list-container');
+    const emptyState = document.getElementById('world-book-empty-state');
+    const addNewBookBtn = document.getElementById('add-new-book-btn');
 
-            // 编辑器相关 (保持不变)
-            const openEditorFunc = window.openWorldEntryEditor;
+    if (!page) return;
 
-            // 分类管理相关
-            const manageCategoriesBtn = document.getElementById('manage-categories-btn');
-            const categoryModal = document.getElementById('category-manager-modal');
-            const closeCategoryModalBtn = document.getElementById('category-manager-close-btn');
-            const categoryListContainer = document.getElementById('category-list-container');
-            const newCategoryInput = document.getElementById('new-category-name-input');
-            const addCategoryBtn = document.getElementById('add-new-category-btn');
+    /**
+     * 核心函数 1: 渲染“书本”的手风琴列表 (已重构)
+     */
+    async function renderWorldBookPage() {
+        listContainer.innerHTML = '';
+        const allBooks = await db.world_books.toArray();
 
-            // 批量管理相关
-            const toggleBulkBtn = document.getElementById('toggle-bulk-manage-btn');
-            const addEntryFooter = document.getElementById('add-entry-footer');
-            const bulkActionFooter = document.getElementById('bulk-action-footer');
-            const selectionCounter = document.getElementById('selection-counter');
-            const bulkMoveBtn = document.getElementById('bulk-move-btn');
-            const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
-            const moveModal = document.getElementById('category-selection-modal-for-move');
-            const closeMoveModalBtn = document.getElementById('category-move-close-btn');
-            const moveCategoryList = document.getElementById('category-list-for-move');
+        if (allBooks.length === 0) {
+            listContainer.appendChild(emptyState);
+            emptyState.classList.remove('hidden');
+            return;
+        }
+        emptyState.classList.add('hidden');
 
-            let selectedEntryIds = new Set();
+        for (const book of allBooks) {
+            const entryCount = await db.world_entries.where({ bookId: book.id }).count();
+            
+            // a. 创建手风琴的整体容器
+            const group = document.createElement('div');
+            group.className = 'book-group';
 
+            // b. 创建可点击的头部
+            group.innerHTML = `
+                <button class="settings-item buttonlike">
+                    <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
+                    <span class="label">${escapeHtml(book.name)} (${entryCount})</span>
+                    <span class="arrow">></span>
+                </button>
+                <div class="book-entries-container">
+                    <div class="book-entries-inner">
+                        <p style="text-align:center; font-size:12px; color:#a1a1aa;">加载中...</p>
+                    </div>
+                </div>
+            `;
 
+            // c. 为头部绑定“展开/加载”事件
+            const header = group.querySelector('.settings-item');
+            const contentInner = group.querySelector('.book-entries-inner');
 
+            header.addEventListener('click', async () => {
+                // 切换展开/折叠状态
+                group.classList.toggle('open');
 
-            /**
-             * 核心函数 1: 渲染世界书主页 (手风琴折叠版)
-             */
-            async function renderWorldEntries() {
-                if (!window.currentUser) return;
+                // 智能加载：只在第一次展开时加载内容
+                if (group.classList.contains('open') && contentInner.dataset.loaded !== 'true') {
+                    const entries = await db.world_entries.where({ bookId: book.id }).toArray();
+                    contentInner.innerHTML = ''; // 清空“加载中”
 
-                worldEntriesListEl.innerHTML = '';
-                // ▼▼▼ 请用下面这段【最终修复版】的代码替换 ▼▼▼
-                const [entries, categories] = await Promise.all([
-                    // 条目是公共的 (保持不变)
-                    db.world_entries.toArray(),
-                    // ✨ 核心修正：分类现在也是公共的了！我们不再根据 userId 筛选！
-                    db.world_book_categories.toArray()
-                ]);
-
-                if (entries.length === 0) {
-                    worldEntriesListEl.appendChild(worldBookEmptyState);
-                    worldBookEmptyState.classList.remove('hidden');
-                    return;
-                }
-                worldBookEmptyState.classList.add('hidden');
-
-                const entriesByCategory = new Map();
-                categories.forEach(cat => entriesByCategory.set(cat.id, []));
-                const uncategorized = [];
-
-                entries.forEach(entry => {
-                    if (entry.categoryId && entriesByCategory.has(entry.categoryId)) {
-                        entriesByCategory.get(entry.categoryId).push(entry);
-                    } else {
-                        uncategorized.push(entry);
-                    }
-                });
-
-                // 渲染已分类的条目
-                categories.forEach(cat => {
-                    const entries = entriesByCategory.get(cat.id);
                     if (entries.length > 0) {
-                        worldEntriesListEl.appendChild(createCategoryGroup(cat, entries));
-                    }
-                });
-
-                // 渲染未分类的条目
-                if (uncategorized.length > 0) {
-                    worldEntriesListEl.appendChild(createCategoryGroup({ name: '未分类' }, uncategorized));
-                }
-            }
-            // ✨✨✨ 在这里粘贴下面这行新代码 ✨✨✨
-            window.renderWorldEntries = renderWorldEntries;
-            // ✨✨✨ 粘贴结束 ✨✨✨
-            /**
-             * 辅助函数: 创建一个分类的手风琴组
-             */
-            function createCategoryGroup(category, entries) {
-                const group = document.createElement('div');
-                group.className = 'category-group';
-                group.innerHTML = `
-            <div class="category-header buttonlike">
-                <span>${category.name} (${entries.length})</span>
-                <span class="arrow">&gt;</span>
-            </div>
-            <div class="category-content">
-                <div class="category-content-inner"></div>
-            </div>
-        `;
-                const contentInner = group.querySelector('.category-content-inner');
-                entries.forEach(entry => contentInner.appendChild(createEntryCard(entry)));
-                group.querySelector('.category-header').addEventListener('click', () => group.classList.toggle('open'));
-                return group;
-            }
-
-            /**
-                 * 辅助函数: 创建单个世界书条目卡片 (V2 - 支持全局标识)
-                 */
-            function createEntryCard(entry) {
-                const card = document.createElement('div');
-                card.className = 'world-entry-card buttonlike';
-                card.dataset.id = entry.id;
-
-                // ✨ 核心修改：如果条目是全局的，就在标题前加上地球图标
-                const globalIcon = entry.isGlobal ? '<i class="fa-solid fa-book-atlas"></i> ' : '';
-
-                card.innerHTML = `
-            <input type="checkbox" class="bulk-selection-checkbox">
-            <div class="content">
-                <div class="title">${globalIcon}${entry.title}</div>
-                <div class="keywords">关键词: ${entry.keywords}</div>
-            </div>
-            <button class="delete-btn btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
-        `;
-
-                card.addEventListener('click', (e) => {
-                    if (worldBookPage.classList.contains('bulk-manage-mode')) {
-                        const checkbox = card.querySelector('.bulk-selection-checkbox');
-                        if (e.target !== checkbox) checkbox.checked = !checkbox.checked;
-                        updateSelection(entry.id, checkbox.checked);
-                    } else if (!e.target.classList.contains('delete-btn')) {
-                        openWorldEntryEditor(entry); // ✨ 注意：这里我们传递的是 entry 对象
-                    }
-                });
-
-                card.querySelector('.delete-btn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    showDeleteDialog(`确定要删除条目「${entry.title}」吗？`, async () => {
-                        await db.world_entries.delete(entry.id);
-                        renderWorldEntries();
-                    });
-                });
-
-                return card;
-            }
-
-            // --- 批量管理逻辑 ---
-            function toggleBulkMode() {
-                worldBookPage.classList.toggle('bulk-manage-mode');
-                const isBulkMode = worldBookPage.classList.contains('bulk-manage-mode');
-                addEntryFooter.classList.toggle('hidden', isBulkMode);
-                bulkActionFooter.classList.toggle('hidden', !isBulkMode);
-                if (!isBulkMode) {
-                    selectedEntryIds.clear();
-                    document.querySelectorAll('.bulk-selection-checkbox').forEach(cb => cb.checked = false);
-                    updateSelectionCounter();
-                }
-            }
-
-            function updateSelection(entryId, isSelected) {
-                if (isSelected) {
-                    selectedEntryIds.add(entryId);
-                } else {
-                    selectedEntryIds.delete(entryId);
-                }
-                updateSelectionCounter();
-            }
-
-            function updateSelectionCounter() {
-                const count = selectedEntryIds.size;
-                selectionCounter.textContent = `已选择 ${count} 项`;
-                bulkDeleteBtn.disabled = count === 0;
-                bulkMoveBtn.disabled = count === 0;
-            }
-
-            async function handleBulkDelete() {
-                if (selectedEntryIds.size === 0) return;
-                showDeleteDialog(`确定要删除选中的 ${selectedEntryIds.size} 个条目吗？`, async () => {
-                    await db.world_entries.bulkDelete(Array.from(selectedEntryIds));
-                    toggleBulkMode();
-                    renderWorldEntries();
-                });
-            }
-
-            async function handleBulkMove() {
-                if (selectedEntryIds.size === 0) return;
-                const categories = await db.world_book_categories.where('userId').equals(window.currentUser.id).toArray();
-                moveCategoryList.innerHTML = '';
-
-                const uncategorizedOption = document.createElement('div');
-                uncategorizedOption.className = 'selection-modal-item buttonlike';
-                uncategorizedOption.textContent = '移至 未分类';
-                uncategorizedOption.onclick = () => moveEntriesToCategory(null);
-                moveCategoryList.appendChild(uncategorizedOption);
-
-                categories.forEach(cat => {
-                    const item = document.createElement('div');
-                    item.className = 'selection-modal-item buttonlike';
-                    item.textContent = `移至 ${cat.name}`;
-                    item.onclick = () => moveEntriesToCategory(cat.id);
-                    moveCategoryList.appendChild(item);
-                });
-                showModal('category-selection-modal-for-move');
-            }
-
-            async function moveEntriesToCategory(categoryId) {
-                const idsToUpdate = Array.from(selectedEntryIds);
-                await db.world_entries.where(':id').anyOf(idsToUpdate).modify({ categoryId: categoryId });
-                hideModal('category-selection-modal-for-move');
-                toggleBulkMode();
-                renderWorldEntries();
-                showNotification("条目已成功移动！");
-            }
-
-            // --- 分类管理逻辑 ---
-            async function openCategoryManager() {
-                categoryListContainer.innerHTML = '加载中...';
-                showModal('category-manager-modal');
-                const categories = await db.world_book_categories.where('userId').equals(window.currentUser.id).toArray();
-                categoryListContainer.innerHTML = '';
-                if (categories.length === 0) {
-                    categoryListContainer.innerHTML = '<p style="text-align:center;color:#a1a1aa;">还没有任何分类。</p>';
-                }
-                categories.forEach(cat => {
-                    const item = document.createElement('div');
-                    item.className = 'category-management-item';
-                    item.innerHTML = `<span class="name">${cat.name}</span>
-                              <button class="btn-icon buttonlike" data-action="edit" data-id="${cat.id}"><i class="fa-solid fa-feather"></i></button>
-                              <button class="btn-icon buttonlike" data-action="delete" data-id="${cat.id}"><i class="fa-solid fa-trash-can"></i></button>`;
-                    categoryListContainer.appendChild(item);
-                });
-            }
-
-            async function handleCategoryAction(e) {
-                const action = e.target.dataset.action;
-                const id = parseInt(e.target.dataset.id);
-                if (!action || !id) return;
-
-                const category = await db.world_book_categories.get(id);
-                if (!category) return;
-
-                if (action === 'delete') {
-                    showDeleteDialog(`确定要删除分类「${category.name}」吗？该分类下的所有条目将被移至“未分类”。`, async () => {
-                        await db.transaction('rw', db.world_book_categories, db.world_entries, async () => {
-                            await db.world_entries.where({ categoryId: id }).modify({ categoryId: null });
-                            await db.world_book_categories.delete(id);
+                        entries.forEach(entry => {
+                            // 复用我们最开始的条目卡片创建逻辑
+                            const entryCard = createEntryCard(entry);
+                            contentInner.appendChild(entryCard);
                         });
-                        openCategoryManager(); // 刷新弹窗
-                        renderWorldEntries(); // 刷新主页
-                    });
-                } else if (action === 'edit') {
-                    const newName = await showInputDialog('重命名分类', category.name);
-                    if (newName && newName.trim() !== category.name) {
-                        try {
-                            await db.world_book_categories.update(id, { name: newName.trim() });
-                            openCategoryManager();
-                            renderWorldEntries();
-                        } catch (error) {
-                            if (error.name === 'ConstraintError') showNotification('已存在同名的分类！');
-                        }
+                    } else {
+                        contentInner.innerHTML = '<p style="text-align:center; font-size:12px; color:#a1a1aa;">这本书里还没有任何条目。</p>';
                     }
-                }
-            }
-
-document.getElementById('app-world-book').addEventListener('click', () => {
-    renderWorldEntries();
-    // ✨ 同样将 showPage 修改为 navigateTo
-    navigateTo('world-book-page'); 
-});
-            document.getElementById('world-book-back').addEventListener('click', () => navigateBack());
-
-            // 编辑器 (保持不变)
-            addWorldEntryBtn.addEventListener('click', () => openEditorFunc(null));
-
-            // 批量管理
-            toggleBulkBtn.addEventListener('click', toggleBulkMode);
-            bulkDeleteBtn.addEventListener('click', handleBulkDelete);
-            bulkMoveBtn.addEventListener('click', handleBulkMove);
-            closeMoveModalBtn.addEventListener('click', () => hideModal('category-selection-modal-for-move'));
-
-            // 分类管理
-            manageCategoriesBtn.addEventListener('click', openCategoryManager);
-            closeCategoryModalBtn.addEventListener('click', () => hideModal('category-manager-modal'));
-            categoryListContainer.addEventListener('click', handleCategoryAction);
-            addCategoryBtn.addEventListener('click', async () => {
-                const name = newCategoryInput.value.trim();
-                if (!name) return;
-                try {
-                    // ▼▼▼ 请用下面这段【修改后】的正确代码替换 ▼▼▼
-                    await db.world_book_categories.add({ name: name, userId: 'system-public' });
-                    newCategoryInput.value = '';
-                    openCategoryManager();
-                    renderWorldEntries();
-                } catch (error) {
-                    if (error.name === 'ConstraintError') showNotification('已存在同名的分类！');
+                    contentInner.dataset.loaded = 'true'; // 标记为已加载
                 }
             });
 
-        })();
-        // --- ✨✨✨ 世界书核心逻辑结束 ✨✨✨ ---
+            listContainer.appendChild(group);
+        }
+    }
+
+    /**
+     * 核心函数 2: 创建单个“书页”(条目)的卡片 (从旧版逻辑中复活并改造)
+     */
+    function createEntryCard(entry) {
+        const card = document.createElement('div');
+        card.className = 'world-entry-card buttonlike';
+        card.dataset.id = entry.id;
+
+        const globalIcon = entry.isGlobal ? '<i class="fa-solid fa-globe" title="全局条目"></i> ' : '';
+
+        card.innerHTML = `
+            <div class="content">
+                <div class="title">${globalIcon}${escapeHtml(entry.title)}</div>
+                <div class="keywords">关键词: ${escapeHtml(entry.keywords)}</div>
+            </div>
+            <button class="delete-btn btn-icon buttonlike" title="删除条目"><i class="fa-solid fa-trash-can"></i></button>
+        `;
+
+        // 点击卡片主体 -> 打开编辑器
+        card.addEventListener('click', (e) => {
+            if (!e.target.closest('.delete-btn')) {
+                if (typeof window.openWorldEntryEditor === 'function') {
+                    // (TODO: 改造编辑器，让它能感知到 bookId)
+                    window.openWorldEntryEditor(entry);
+                }
+            }
+        });
+
+        // 点击删除按钮 -> 删除条目
+        card.querySelector('.delete-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            showDeleteDialog(`确定要删除条目「${entry.title}」吗？`, async () => {
+                await db.world_entries.delete(entry.id);
+                // 刷新整个书本列表，以更新条目计数
+                renderWorldBookPage(); 
+            });
+        });
+
+        return card;
+    }
+
+    // --- 事件绑定 (保持不变) ---
+    document.getElementById('app-world-book').addEventListener('click', () => {
+        renderWorldBookPage();
+        navigateTo('world-book-page');
+    });
+
+    document.getElementById('world-book-back').addEventListener('click', () => navigateBack());
+
+    addNewBookBtn.addEventListener('click', async () => {
+        const newBookName = await showInputDialog("请输入新书本的名称：", "");
+        if (newBookName && newBookName.trim()) {
+            try {
+                await db.world_books.add({ name: newBookName.trim() });
+                renderWorldBookPage(); // 刷新列表
+            } catch (error) {
+                if (error.name === 'ConstraintError') showNotification("已存在同名的书本！");
+            }
+        }
+    });
+
+})();
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
+// ▲▲▲ 粘贴到这里结束 ▲▲▲
 
         // --- ✨✨✨ 世界书核心逻辑结束 ✨✨✨
 
@@ -13293,11 +13339,11 @@ function _renderPage(id) {
             // ✨ 核心修改：这里只管理那些【真正需要】根据页面变化的图标
             const promptBtn = document.getElementById('statusbar-prompt-btn');
             const listenTogetherBtn = document.getElementById('statusbar-listen-together-btn');
-
+const worldBookBtn = document.getElementById('statusbar-world-book-btn');
             const displayValue = isChatPage ? 'inline-flex' : 'none';
             if (promptBtn) promptBtn.style.display = displayValue;
             if (listenTogetherBtn) listenTogetherBtn.style.display = displayValue;
-            
+if (worldBookBtn) worldBookBtn.style.display = displayValue;
             // ✨ 关键一步：当进入聊天页面时，主动刷新一次图标状态，确保其正确性
             if (isChatPage) {
                 updateStatusbarFeatureIcons();
@@ -13755,8 +13801,6 @@ ${currentSong.lyrics || '（这首歌没有歌词）'}
   - 使用 <sk>你的表情描述</sk> 来【发送一个符合你当前情绪的表情包】。
   - 使用 <quote id="被引用的消息ID">你的回复内容</quote> 来【引用某条具体的消息】。
   - 使用 <file>[文件类型]文件名|||文件内容</file> 来【发送一个模拟文件】。
-  - 使用 <red_packet amount="数字金额" remark="祝福语"/> 指令【主动给{{user}}发红包】。
-  - 当{{user}}发来红包时，使用 <claim_rp id="红包消息的ID"/> 指令来领取。
   - 使用 <transfer amount="数字金额" remark="附言"/> 指令【主动给{{user}}转账】。
   - 当{{user}}发来转账时，使用 <claim_t id="转账消息的ID"/> 领取，或使用 <return_t id="转账消息的ID"/> 退回。
   - 使用 <loc>地点名称</loc> 来【发送一个位置】。
@@ -15065,6 +15109,47 @@ ${MULTI_BUBBLE_SUFFIX}`;
                 presetSelect.value = savedPresetId;
             }
         }
+        // ==========================================================
+  // ==========================================================
+        // --- ✨✨✨【全新修复】保存角色气泡预设选择的核心函数 ✨✨✨ ---
+        // ==========================================================
+        /**
+         * 核心函数：保存当前角色选择的气泡CSS预设
+         * @param {string} selectorId - 下拉选择器 <select> 元素的 ID
+         */
+        async function saveCharacterPresetSelection(selectorId) {
+            const presetSelect = document.getElementById(selectorId);
+            const character = window.currentProfileContact;
+
+            if (!presetSelect || !character) {
+                console.error("保存预设选择失败：缺少必要的UI元素或角色上下文。");
+                return; // 提前退出，防止后续代码报错
+            }
+
+            // 1. 获取用户选择的预设ID。如果选择的是“默认样式”，值为""，我们将其转为 null
+            const selectedPresetId = presetSelect.value ? parseInt(presetSelect.value, 10) : null;
+
+            try {
+                // 2. 更新数据库中当前角色的 bubbleCssPresetId 字段
+                await db.characters.update(character.id, {
+                    bubbleCssPresetId: selectedPresetId
+                });
+
+                // 3. （可选但推荐）如果当前正在与该角色聊天，同步更新内存中的数据
+                if (window.currentChat && window.currentChat.id === character.id) {
+                    window.currentChat.bubbleCssPresetId = selectedPresetId;
+                    // 重新应用一下样式，确保立即生效
+                    await applyCharacterSpecificBubbleCss(window.currentChat);
+                }
+
+                console.log(`✅ 已为角色「${character.name}」保存气泡预设选择: ${selectedPresetId || '默认'}`);
+
+            } catch (error) {
+                console.error("保存角色气泡预设选择失败:", error);
+                showNotification("预设选择保存失败，请稍后再试。");
+            }
+        }
+        window.saveCharacterPresetSelection = saveCharacterPresetSelection; // 将函数挂载到全局
         // ==========================================================
         // ▲▲▲ 粘贴到这里结束 ▲▲▲
 
@@ -18611,32 +18696,7 @@ async function renderStickerPanel() {
                 // ▲▲▲ ✨✨✨ 新增结束 ✨✨✨ ▲▲▲
 
                 // ▼▼▼ ✨✨✨ 核心新增就在这里！ ✨✨✨ ▼▼▼
-            } else if (msg.type === 'red_packet' && msg.redPacketData) {
-                const data = msg.redPacketData;
-                bubble.classList.add('red-packet-message');
-                bubble.classList.add(data.isClaimed ? 'claimed' : 'unclaimed');
-
-                let statusText = '查看红包';
-                if (data.isClaimed) {
-                    statusText = msg.senderId === window.currentUser.id
-                        ? `红包已被 ${data.claimedBy} 领取`
-                        : '红包已被领取';
-                }
-
-                bubble.innerHTML = `
-            <div class="red-packet-content">
-                <div class="red-packet-icon"><i class="fa-solid fa-coins"></i></div>
-                <div class="red-packet-info">
-                    <div class="red-packet-remark">${escapeHtml(data.remark)}</div>
-                    <div class="red-packet-status-text">${statusText}</div>
-                </div>
-            </div>
-            <div class="red-packet-footer">Auing 红包</div>
-        `;
-                contentRendered = true;
-
-                // ▲▲▲ ✨✨✨ 新增结束 ✨✨✨ ▲▲▲
-            } else if (msg.type === 'transfer' && msg.transferData) {
+            }  else if (msg.type === 'transfer' && msg.transferData) {
                 const data = msg.transferData;
                 bubble.classList.add('transfer-message');
 
@@ -19006,31 +19066,6 @@ async function renderStickerPanel() {
         </div>
         <div class="location-card-footer">Auing 位置分享</div>
     `;
-                    contentRendered = true;
-                }
-                else if (updatedMsg.type === 'red_packet' && updatedMsg.redPacketData) {
-                    const data = updatedMsg.redPacketData;
-                    oldBubble.classList.add('red-packet-message');
-                    oldBubble.classList.toggle('claimed', data.isClaimed);
-                    oldBubble.classList.toggle('unclaimed', !data.isClaimed);
-
-                    // ▼▼▼ ✨✨✨ 核心修改就在这里！ ✨✨✨ ▼▼▼
-                    let statusText = '';
-                    const isSentByMe = msg.senderId === window.currentUser.id;
-
-                    if (data.isClaimed) {
-                        // 如果已领取
-                        statusText = isSentByMe
-                            ? `红包已被 ${data.claimedBy} 领取`
-                            : '红包已被领取';
-                    } else {
-                        // 如果未领取
-                        statusText = isSentByMe
-                            ? '查看红包'
-                            : '领取红包'; // ✨ AI发的红包，会显示“领取红包”
-                    }
-                    // ▲▲▲ ✨✨✨ 修改结束 ✨✨✨ ▲▲▲
-                    oldBubble.innerHTML += `<div class="red-packet-content"><div class="red-packet-icon"><i class="fa-solid fa-coins"></i></div><div class="red-packet-info"><div class="red-packet-remark">${escapeHtml(data.remark)}</div><div class="red-packet-status-text">${statusText}</div></div></div><div class="red-packet-footer">Auing 红包</div>`;
                     contentRendered = true;
                 }
 
@@ -22850,25 +22885,35 @@ async function generateMemoData() {
 // ==========================================================
 function renderMemoData(data) {
     const list = document.getElementById('memo-list-view');
-    if (list) list.innerHTML = '';
+    if (!list) return; // 安全检查
+
+    // ▼▼▼ ✨✨✨ 核心修改就在这里！ ✨✨✨ ▼▼▼
+
+    // 1. 首先，检查AI返回的数据是否为空
+    if (!data || data.length === 0) {
+        // 2. 如果为空，就显示“备忘录是空的...”，然后直接结束函数
+        list.innerHTML = `<p class="char-app-loading">备忘录是空的...</p>`;
+        return;
+    }
+
+    // 3. 只有在确认有数据的情况下，才清空列表，准备渲染新内容
+    list.innerHTML = ''; 
+
+    // ▲▲▲ ✨✨✨ 修改结束 ✨✨✨ ▲▲▲
 
     (data || []).forEach(item => {
         const itemEl = document.createElement('div');
         itemEl.className = 'memo-item-preview buttonlike';
 
-        // ✨ 核心修改 1: 获取正确的“用户”名称 (与购物车/详情页逻辑一致)
         const character = window.currentChat;
         const userPersona = character ? character.activeUserPersona : window.currentUser;
         const userName = userPersona ? userPersona.name : "你";
 
-        // ✨ 核心修改 2: 在渲染列表项之前，对标题进行替换操作
         const finalTitle = item.title.replace(/{{user}}/g, userName);
 
-        // 将原始（未替换的）数据存入dataset，让详情页自己处理替换
         itemEl.dataset.title = item.title;
         itemEl.dataset.content = item.content;
 
-        // ✨ 核心修改 3: 使用处理过后的 finalTitle 进行渲染，并进行HTML转义
         itemEl.innerHTML = `<h3>${escapeHtml(finalTitle)}</h3><small>${item.timestamp}</small>`;
 
         itemEl.addEventListener('click', () => showMemoDetailView(itemEl));
@@ -22876,7 +22921,6 @@ function renderMemoData(data) {
         list.appendChild(itemEl);
     });
 }
-
 // ==========================================================
 // --- ✨✨✨ E. 备忘录 (V2.1 - 占位符修复版) ✨✨✨ ---
 // ==========================================================
@@ -23702,15 +23746,8 @@ async function processAndRenderAiResponse(aiResponseText, user, chat, quotedMess
             const match = content.match(/<loc>(.*?)<\/loc>/s);
             if (match && match[1]) renderingQueue.push({ type: 'location', name: match[1].trim() });
         }
-        else if (content.startsWith('<red_packet')) {
-            renderingQueue.push({ type: 'red_packet_send', raw: content });
-        }
         else if (content.startsWith('<transfer')) {
             renderingQueue.push({ type: 'transfer_send', raw: content });
-        }
-        else if (content.startsWith('<claim_rp')) {
-            const match = content.match(/id="(\d+)"/);
-            if (match && match[1]) renderingQueue.push({ type: 'red_packet_claim', id: parseInt(match[1], 10) });
         }
         else if (content.startsWith('<claim_t')) {
             const match = content.match(/id="(\d+)"/);
@@ -23886,21 +23923,6 @@ case 'video_call_start': {
                         break;
                     }
 
-                    case 'red_packet_send': {
-                        const amountMatch = task.raw.match(/amount="([^"]+)"/);
-                        const remarkMatch = task.raw.match(/remark="([^"]*)"/);
-                        const amount = amountMatch ? parseFloat(amountMatch[1]).toFixed(2) : '0.00';
-                        const remark = remarkMatch ? remarkMatch[1] : '恭喜发财，大吉大利！';
-                        const redPacketMsg = {
-                            userId: user.id, chatId: chat.id, senderId: chat.id, type: 'red_packet',
-                            content: `[向你发送了红包] ${remark}`,
-                            redPacketData: { amount, remark, isClaimed: false, claimedBy: null },
-                            time: new Date().toISOString(),
-                        };
-                        const newId = await db.messages.add(redPacketMsg);
-                        await addMessageToUI({ id: newId, ...redPacketMsg });
-                        break;
-                    }
 
                     case 'transfer_send': {
                         const amountMatch = task.raw.match(/amount="([^"]+)"/);
@@ -23918,10 +23940,7 @@ case 'video_call_start': {
                         break;
                     }
 
-                    case 'red_packet_claim': {
-                        if (typeof processTransferAction === 'function') await processTransferAction(task.id, 'claimed');
-                        break;
-                    }
+
 
                     case 'transfer_claim': {
                         if (typeof processTransferAction === 'function') await processTransferAction(task.id, 'claimed');
@@ -24155,22 +24174,6 @@ case 'image_description':
         parts.push({ text: `【${senderName}发送了一张图片，画面描述为：${msg.imageData.description}】` });
     }
     break;
-                case 'red_packet':
-                    if (msg.redPacketData) {
-                        const data = msg.redPacketData;
-                        let textForAI = '';
-                        if (msg.senderId === user.id) {
-                            if (data.isClaimed) {
-                                textForAI = `[${personaNameForHistory} 发送的红包已被你领取，金额¥${data.amount}。]`;
-                            } else {
-                                textForAI = `[${personaNameForHistory} 给你发了一个红包，金额¥${data.amount}，备注是“${data.remark}”。你可以使用 <claim_rp id="${msg.id}"/> 指令来领取它。]`;
-                            }
-                        } else {
-                            textForAI = `[你发了一个红包给 ${personaNameForHistory}。]`;
-                        }
-                        parts.push({ text: `[ID:${msg.id}] ${textForAI}` });
-                    }
-                    break;
                 case 'transfer':
                      if (msg.transferData) {
                         const data = msg.transferData;
@@ -24727,172 +24730,7 @@ case 'image_description':
 
         })();
 
-        // ==========================================================
-        // --- ✨✨✨【全新】红包功能核心引擎 V1.0 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // --- 1. 获取所有相关的 DOM 元素 ---
-            const openBtn = document.getElementById('quick-btn-redpacket');
-            const modal = document.getElementById('red-packet-modal');
-            if (!openBtn || !modal) return;
-
-            const closeBtn = document.getElementById('red-packet-close-btn');
-            const amountInput = document.getElementById('red-packet-amount-input');
-            const remarkInput = document.getElementById('red-packet-remark-input');
-            const sendBtn = document.getElementById('send-red-packet-btn');
-            const totalAmountDisplay = document.getElementById('red-packet-total-amount');
-            /**
-             * 核心函数 1: 打开红包编辑器
-             */
-            function openRedPacketModal() {
-                if (!window.currentChat) return;
-                closeAllPanels();
-
-                // 重置输入框
-                amountInput.value = '';
-                remarkInput.value = '恭喜发财，大吉大利！';
-
-                showModal('red-packet-modal');
-                amountInput.focus();
-            }
-
-            /**
-             * 核心函数 2: 发送红包消息
-             */
-            async function sendRedPacket() {
-                const amount = parseFloat(amountInput.value).toFixed(2);
-                if (isNaN(amount) || amount <= 0) {
-                    alert('请输入有效的红包金额！');
-                    return;
-                }
-
-                const remark = remarkInput.value.trim() || '恭喜发财，大吉大利！';
-
-                const user = window.currentUser;
-                const chat = window.currentChat;
-
-                // a. 构造一条全新的 'red_packet' 类型的消息
-                const redPacketMsg = {
-                    userId: user.id,
-                    chatId: chat.id,
-                    senderId: user.id,
-                    type: 'red_packet',
-                    content: `[发送了红包] ${remark}`, // 这是给AI看的记忆
-                    redPacketData: { // 这是给UI渲染用的专属数据
-                        amount: amount,
-                        remark: remark,
-                        isClaimed: false, // 初始状态为“未领取”
-                        claimedBy: null,
-                    },
-                    time: new Date().toISOString(),
-                };
-
-                // b. 保存到数据库并更新UI
-                await db.messages.add(redPacketMsg);
-                addMessageToUI(redPacketMsg);
-
-                // c. 清理并关闭
-                hideModal('red-packet-modal');
-                scrollToBottom(document.getElementById('chat-messages'));
-            }
-
-            /**
-             * 核心函数 3: 处理红包被点击（领取）的逻辑
-             */
-            async function handleRedPacketClick(messageId, bubbleElement) {
-                const message = await db.messages.get(messageId);
-                if (!message || message.type !== 'red_packet') return;
-
-                const isUserSender = message.senderId === window.currentUser.id;
-
-                // a. 判断是否可以领取
-                if (isUserSender) {
-                    // 自己发的红包
-                    if (message.redPacketData.isClaimed) {
-                        showNotification(`你的红包已被 ${message.redPacketData.claimedBy} 领取。`);
-                    } else {
-                        showNotification("你不能领取自己发的红包哦。");
-                    }
-                    return;
-                } else {
-                    // 对方发的红包
-                    if (message.redPacketData.isClaimed) {
-                        showNotification(`红包已被你领取。`);
-                        return;
-                    }
-                }
-
-                // b. 执行领取操作
-                try {
-                    await db.messages.update(messageId, {
-                        'redPacketData.isClaimed': true,
-                        'redPacketData.claimedBy': window.currentUser.name
-                    });
-
-                    // c. 动态更新UI
-                    const statusTextEl = bubbleElement.querySelector('.red-packet-status-text');
-                    bubbleElement.classList.remove('unclaimed');
-                    bubbleElement.classList.add('claimed');
-                    if (statusTextEl) {
-                        statusTextEl.textContent = '红包已被领取';
-                    }
-
-                    // d. 发送一条系统消息
-                    const systemContent = isUserSender
-                        ? `${message.redPacketData.claimedBy} 领取了你的红包`
-                        : `你领取了 ${window.currentChat.name} 的红包`;
-
-                    const systemMsg = {
-                        userId: window.currentUser.id,
-                        chatId: window.currentChat.id,
-                        senderId: 'system',
-                        type: 'system',
-                        content: `[${systemContent}]`,
-                        time: new Date().toISOString()
-                    };
-                    const newMsgId = await db.messages.add(systemMsg);
-                    addMessageToUI({ id: newMsgId, ...systemMsg });
-                    scrollToBottom(document.getElementById('chat-messages'));
-
-                } catch (error) {
-                    console.error("领取红包失败:", error);
-                }
-            }
-
-            // --- 2. 绑定所有事件 ---
-
-            // a. 点击快捷栏按钮，打开红包弹窗
-            openBtn.addEventListener('click', openRedPacketModal);
-
-            // b. 关闭弹窗
-            closeBtn.addEventListener('click', () => hideModal('red-packet-modal'));
-
-            // c. 点击“塞钱进红包”按钮，发送消息
-            sendBtn.addEventListener('click', sendRedPacket);
-
-            // d. ✨ 核心新增：监听金额输入框，实时更新底部总金额显示
-            if (amountInput && totalAmountDisplay) {
-                amountInput.addEventListener('input', () => {
-                    const amount = parseFloat(amountInput.value) || 0;
-                    totalAmountDisplay.textContent = `¥ ${amount.toFixed(2)}`;
-                });
-            }
-
-
-            // e. ✨ 使用事件委托，为所有未来的红包卡片绑定点击（领取）事件
-            document.getElementById('chat-messages').addEventListener('click', (e) => {
-                const bubble = e.target.closest('.msg.red-packet-message');
-                const row = e.target.closest('.msg-row');
-                if (bubble && row) {
-                    const messageId = parseInt(row.dataset.id, 10);
-                    if (messageId) {
-                        handleRedPacketClick(messageId, bubble);
-                    }
-                }
-            });
-
-        })();
-        // ==========================================================
+ 
         // --- ✨✨✨【全新】转账功能核心引擎 V1.0 ✨✨✨ ---
         // ==========================================================
         (function () {
@@ -25958,8 +25796,278 @@ if (deleteBtn) {
     });
 })();
 
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
+// ==========================================================
+// --- ✨✨✨【全新修复】角色主页弹窗关闭按钮交互引擎 ✨✨✨ ---
+// ==========================================================
+(function () {
+    // 1. 获取所有相关的 DOM 元素
+    const modal = document.getElementById('contact-profile-modal');
+    const closeBtn = document.getElementById('contact-profile-modal-close-btn');
+
+    // 安全检查，确保这两个元素都存在
+    if (!modal || !closeBtn) {
+        return;
+    }
+
+    /**
+     * 核心函数：关闭角色主页弹窗
+     */
+    function closeProfileModal() {
+        // 调用我们早已写好的通用 hideModal 函数
+        if (typeof hideModal === 'function') {
+            hideModal('contact-profile-modal');
+        }
+    }
+
+    // 2. 绑定事件
+    // a. 为“X”按钮绑定点击事件
+    closeBtn.addEventListener('click', closeProfileModal);
+
+    // b. (推荐) 为弹窗的灰色背景区域也添加点击关闭功能，提升用户体验
+    modal.addEventListener('click', (e) => {
+        // 只有当点击的是背景本身，而不是弹窗内容时，才关闭
+        if (e.target === modal) {
+            closeProfileModal();
+        }
+    });
+})();
+// ==========================================================
+// ▼▼▼ 请用这一整块全新的【最终版】代码，替换旧的“世界书管理中心” (function(){...}) 代码块 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【V3 - 功能完整版】世界书管理中心核心引擎 ✨✨✨ ---
+// ==========================================================
+(function () {
+    // 1. 获取所有相关的 DOM 元素
+    const worldBookBtn = document.getElementById('statusbar-world-book-btn');
+    const modal = document.getElementById('world-book-manager-modal');
+    const closeBtn = document.getElementById('wb-manager-close-btn');
+
+    // 全局世界书相关 (不变)
+    const globalSelectContainer = document.getElementById('global-wb-select-container');
+    const globalSelectorValue = document.getElementById('global-wb-selector-value');
+    const globalActiveNames = document.getElementById('global-wb-active-names');
+    const globalOptionsContainer = document.getElementById('global-wb-options-container');
+    const globalActivationSettings = document.getElementById('wb-activation-settings');
+    const globalActiveEntriesList = document.querySelector('#world-book-manager-modal .world-book-section:first-child .wb-entry-list');
+
+    // ✨ 核心新增：角色世界书相关元素
+    const characterTitleEl = document.getElementById('character-wb-title');
+    const manageCharacterWbBtn = document.getElementById('manage-character-wb-btn');
+    const characterWbListContainer = document.getElementById('character-wb-entry-list');
+
+    if (!worldBookBtn || !modal) return;
+
+    /**
+     * 核心函数 1: 打开世界书管理弹窗 (已升级)
+     */
+    async function openWorldBookManager() {
+        if (!window.currentChat) {
+            showNotification("请先进入一个聊天", "才能管理与该角色相关的世界书。");
+            return;
+        }
+        // 渲染上半部分：全局世界书
+        await renderGlobalWbSelector();
+        // ✨ 核心新增：渲染下半部分：角色世界书
+        await renderCharacterWbList();
+
+        showModal('world-book-manager-modal');
+    }
+
+    // (renderGlobalWbSelector 函数保持不变，我们直接复用)
+    async function renderGlobalWbSelector() {
+        const allEntries = await db.world_entries.toArray();
+        globalOptionsContainer.innerHTML = '';
+        globalActiveEntriesList.innerHTML = '';
+        const activeEntries = [];
+        allEntries.forEach(entry => {
+            const optionItem = document.createElement('div');
+            optionItem.className = 'wb-option-item buttonlike';
+            optionItem.dataset.id = entry.id;
+            optionItem.innerHTML = `<span class="check-icon"><i class="fa-solid fa-check"></i></span><span class="title">${escapeHtml(entry.title)}</span>`;
+            if (entry.isGlobal) {
+                optionItem.classList.add('active');
+                activeEntries.push(entry);
+            }
+            globalOptionsContainer.appendChild(optionItem);
+            optionItem.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                await db.world_entries.update(entry.id, { isGlobal: entry.isGlobal ? 0 : 1 });
+                await renderGlobalWbSelector();
+            });
+        });
+        if (activeEntries.length > 0) {
+            globalActiveNames.textContent = activeEntries.map(e => e.title).join(', ');
+            globalActivationSettings.classList.add('visible');
+            globalActiveEntriesList.innerHTML = '';
+            activeEntries.forEach(entry => {
+                const activeCard = document.createElement('div');
+                activeCard.className = 'world-entry-card';
+                activeCard.innerHTML = `<div class="content"><div class="title">${escapeHtml(entry.title)}</div></div>`;
+                globalActiveEntriesList.appendChild(activeCard);
+            });
+        } else {
+            globalActiveNames.textContent = 'No Worlds active. Click here to select.';
+            globalActivationSettings.classList.remove('visible');
+            globalActiveEntriesList.innerHTML = '<div class="wb-entry-item-placeholder">没有已启用的全局世界书...</div>';
+        }
+    }
+
+    // ==========================================================
+    // --- ✨✨✨ 以下是为“角色世界书”新增的核心函数 ✨✨✨ ---
+    // ==========================================================
+
+    /**
+     * 核心函数 3: 渲染角色专属的世界书列表 (带设置)
+     */
+    async function renderCharacterWbList() {
+        const character = window.currentChat;
+        characterTitleEl.textContent = `角色世界书 (${character.name})`;
+        characterWbListContainer.innerHTML = '';
+
+        // a. 数据迁移与兼容：检查linkedEntries是旧格式(数字数组)还是新格式(对象数组)
+        let linkedEntriesConfig = character.linkedEntries || [];
+        if (linkedEntriesConfig.length > 0 && typeof linkedEntriesConfig[0] === 'number') {
+            console.log("检测到旧版世界书关联数据，正在自动升级...");
+            linkedEntriesConfig = linkedEntriesConfig.map(id => ({
+                id: id,
+                enabled: true, // 默认全部启用
+                depth: 100,
+                order: 100
+            }));
+            // 将升级后的新格式存回数据库
+            await db.characters.update(character.id, { linkedEntries: linkedEntriesConfig });
+            window.currentChat.linkedEntries = linkedEntriesConfig; // 同步内存
+        }
+
+        if (linkedEntriesConfig.length === 0) {
+            characterWbListContainer.innerHTML = '<div class="wb-entry-item-placeholder">当前角色没有专属的世界书条目...</div>';
+            return;
+        }
+
+        const entryIds = linkedEntriesConfig.map(config => config.id);
+        const entryDetails = await db.world_entries.bulkGet(entryIds);
+
+        entryDetails.forEach((entry, index) => {
+            if (!entry) return; // 如果某个条目被删了，就跳过
+
+            const config = linkedEntriesConfig[index];
+            const itemEl = document.createElement('div');
+            itemEl.className = `character-wb-item ${config.enabled ? '' : 'disabled'}`;
+            itemEl.dataset.entryId = entry.id;
+
+            itemEl.innerHTML = `
+                <div class="item-main-info">
+                    <input type="checkbox" class="toggle-switch wb-entry-toggle" ${config.enabled ? 'checked' : ''}>
+                    <span class="item-title">${escapeHtml(entry.title)}</span>
+                </div>
+                <div class="item-parameters">
+                    <div class="param-group">
+                        <label>深度</label>
+                        <input type="number" class="form-input wb-entry-depth" value="${config.depth || 100}">
+                    </div>
+                    <div class="param-group">
+                        <label>顺序</label>
+                        <input type="number" class="form-input wb-entry-order" value="${config.order || 100}">
+                    </div>
+                </div>
+            `;
+            characterWbListContainer.appendChild(itemEl);
+        });
+    }
+
+    /**
+     * 核心函数 4: 保存角色世界书的设置
+     */
+    async function saveCharacterWbSettings(inputElement) {
+        const itemEl = inputElement.closest('.character-wb-item');
+        const entryId = parseInt(itemEl.dataset.entryId, 10);
+
+        // 从UI读取最新的设置值
+        const newSettings = {
+            enabled: itemEl.querySelector('.wb-entry-toggle').checked,
+            depth: parseInt(itemEl.querySelector('.wb-entry-depth').value, 10),
+            order: parseInt(itemEl.querySelector('.wb-entry-order').value, 10),
+        };
+
+        // 更新内存和数据库
+        const character = window.currentChat;
+        const configIndex = character.linkedEntries.findIndex(c => c.id === entryId);
+        if (configIndex > -1) {
+            // 合并新旧设置
+            Object.assign(character.linkedEntries[configIndex], newSettings);
+            // 一次性更新整个数组
+            await db.characters.update(character.id, { linkedEntries: character.linkedEntries });
+        }
+
+        // 切换禁用时的视觉效果
+        itemEl.classList.toggle('disabled', !newSettings.enabled);
+    }
+
+    // --- 事件绑定 ---
+    worldBookBtn.addEventListener('click', openWorldBookManager);
+    closeBtn.addEventListener('click', () => hideModal('world-book-manager-modal'));
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) hideModal('world-book-manager-modal');
+    });
+
+    // 全局世界书下拉菜单
+    globalSelectorValue.addEventListener('click', (e) => { e.stopPropagation(); globalSelectContainer.classList.toggle('open'); });
+    document.addEventListener('click', () => { if (globalSelectContainer.classList.contains('open')) globalSelectContainer.classList.remove('open'); });
+
+    // ✨ 核心新增：为角色世界书区域绑定事件委托
+    manageCharacterWbBtn.addEventListener('click', () => {
+        // 直接调用我们早已写好的“关联档案”弹窗
+        if (typeof openWorldBookSelectionModal === 'function') {
+            openWorldBookSelectionModal();
+        }
+    });
+
+    characterWbListContainer.addEventListener('change', (e) => {
+        if (e.target.classList.contains('wb-entry-toggle') || e.target.classList.contains('form-input')) {
+            saveCharacterWbSettings(e.target);
+        }
+    });
+
+    // ✨ 核心改造：升级“确认关联”按钮的功能
+    const confirmSelectionBtn = document.getElementById('confirm-wb-selection');
+    if (confirmSelectionBtn) {
+        confirmSelectionBtn.onclick = async () => {
+            const selectedIds = new Set();
+            document.querySelectorAll('#wb-selection-list input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedIds.add(parseInt(checkbox.value, 10));
+            });
+
+            const character = window.currentChat;
+            const currentConfigs = character.linkedEntries || [];
+            
+            const newConfigs = [];
+            // 1. 保留已有的设置
+            currentConfigs.forEach(config => {
+                if (selectedIds.has(config.id)) {
+                    newConfigs.push(config);
+                }
+            });
+            
+            // 2. 为新添加的条目设置默认值
+            selectedIds.forEach(id => {
+                if (!newConfigs.some(c => c.id === id)) {
+                    newConfigs.push({ id: id, enabled: true, depth: 100, order: 100 });
+                }
+            });
+
+            await db.characters.update(character.id, { linkedEntries: newConfigs });
+            window.currentChat.linkedEntries = newConfigs; // 同步内存
+
+            hideModal('world-book-selection-modal');
+            await renderCharacterWbList(); // 刷新UI
+            showNotification("角色档案关联已更新！");
+        };
+    }
+
+})();
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
     </script>
 
