@@ -6544,7 +6544,7 @@ padding: 6px;
             width: 100%;
             font-size: 16px;
         }
-/* ▼▼▼ 请将这一整块全新的代码，粘贴到 <style> 的末尾 ▼▼▼ */
+
 /* ========================================================== */
 /* --- ✨✨✨【全新】世界书管理弹窗专属样式 ✨✨✨ --- */
 /* ========================================================== */
@@ -6603,7 +6603,7 @@ padding: 6px;
     padding: 20px;
 }
 /* ========================================================== */
-/* ▼▼▼ 请将这一整块全新的代码，粘贴到 <style> 的末尾 ▼▼▼ */
+
 /* ========================================================== */
 /* --- ✨✨✨【全新】世界书-全局设置专属样式 ✨✨✨ --- */
 /* ========================================================== */
@@ -6712,7 +6712,7 @@ padding: 6px;
     gap: 6px;
 }
 /* ========================================================== */
-/* ▼▼▼ 请将这一整块全新的代码，粘贴到 <style> 的末尾 ▼▼▼ */
+ 
 /* ========================================================== */
 /* --- ✨✨✨【全新】角色世界书-条目设置卡片样式 ✨✨✨ --- */
 /* ========================================================== */
@@ -6771,7 +6771,51 @@ padding: 6px;
 }
 /* ========================================================== */
 /* ▲▲▲ 粘贴到这里结束 ▲▲▲ */
-/* ▼▼▼ 请将这一整块全新的代码，粘贴到 <style> 的末尾 ▼▼▼ */
+ 
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书-手风琴式书本列表样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 书本组的容器 */
+.book-group {
+    margin-bottom: 10px;
+}
+
+/* 2. 书本的头部 (我们复用 settings-item 的样式，只需确保箭头能旋转) */
+.book-group .settings-item .arrow {
+    transition: transform 0.3s ease;
+}
+.book-group.open .settings-item .arrow {
+    transform: rotate(90deg);
+}
+
+/* 3. 容纳条目列表的容器 (核心动画部分) */
+.book-entries-container {
+    display: grid;
+    grid-template-rows: 0fr; /* 默认折叠，高度为0 */
+    transition: grid-template-rows 0.3s ease-out;
+    background-color: var(--color-ui-subtle);
+    border-radius: 0 0 12px 12px;
+}
+.book-group.open .book-entries-container {
+    grid-template-rows: 1fr; /* 展开时，高度自适应内容 */
+}
+
+/* 4. 内部包装器，防止动画时内容被裁切 */
+.book-entries-inner {
+    overflow: hidden;
+    padding: 5px 10px 10px;
+    border: 1px solid var(--color-ui-border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+}
+
+/* 5. 内部条目卡片的微调 (边距更小) */
+.book-entries-inner .world-entry-card {
+    margin-bottom: 8px;
+    padding: 10px 12px;
+}
+ 
 /* ========================================================== */
 /* --- ✨✨✨【全新】世界书-手风琴式书本列表样式 ✨✨✨ --- */
 /* ========================================================== */
@@ -6816,7 +6860,68 @@ padding: 6px;
     padding: 10px 12px;
 }
 /* ========================================================== */
+
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书条目-内联展开编辑器样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 让卡片主信息行容纳更多按钮 */
+.character-wb-item .item-main-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.character-wb-item .item-main-info .item-title {
+    flex-grow: 1; /* 让标题占据所有剩余空间 */
+    font-weight: 500;
+}
+
+/* 2. “展开/折叠”按钮的样式 */
+.wb-entry-expand-btn {
+    flex-shrink: 0; /* 防止按钮被挤压 */
+    font-size: 14px;
+    color: var(--color-secondary-accent);
+    padding: 4px;
+    transition: transform 0.3s ease;
+}
+.character-wb-item.expanded .wb-entry-expand-btn {
+    transform: rotate(180deg); /* 展开时箭头反转 */
+}
+
+/* 3. 容纳详细内容的可折叠容器 (核心动画) */
+.wb-entry-details-container {
+    display: grid;
+    grid-template-rows: 0fr; /* 默认折叠 */
+    transition: grid-template-rows 0.3s ease-out;
+}
+.character-wb-item.expanded .wb-entry-details-container {
+    grid-template-rows: 1fr; /* 展开 */
+}
+
+/* 4. 内部包装器，负责内边距和布局 */
+.wb-entry-details-inner {
+    overflow: hidden;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 5. 内部的表单元素样式 */
+.wb-entry-details-inner .form-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-secondary-accent);
+    margin-bottom: 4px;
+}
+.wb-entry-details-inner .form-textarea {
+    min-height: 150px; /* 给内容区一个合适的最小高度 */
+    resize: vertical;
+}
+/* ========================================================== */
 /* ▲▲▲ 粘贴到这里结束 ▲▲▲ */
+
+
     </style>
 
     <!-- 【请将这个新的 style 标签粘贴到旧 style 标签的紧后方】 -->
@@ -9812,22 +9917,20 @@ padding: 6px;
     <script>
 
         const db = new Dexie("QQAppDB");
-// ▼▼▼ 请用这一整块全新的、包含【自动迁移脚本】的代码，替换旧的 db.version(...) 代码块 ▼▼▼
+// ▼▼▼ 请用这一整块全新的【最终版】代码，替换旧的 db.version(...) 代码块 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【V166 - “图书库”版】数据库结构升级与数据迁移 ✨✨✨ ---
+// --- ✨✨✨【V168 - 条目独立控制版】数据库结构 ✨✨✨ ---
 // ==========================================================
-db.version(166).stores({ // ✨ 核心修改 1: 版本号从 165 升级到 166
-    // --- 新增的“书本”表 ---
-    world_books: "++id, &name", 
-
-    // --- 修改“条目”表，增加 bookId 索引 ---
-    world_entries: "++id, userId, title, createdAt, keywords, content, isGlobal, categoryId, bookId",
+db.version(168).stores({ // ✨ 核心修改 1: 版本号从 167 升级到 168
+    // --- 修改 characters 表，用 *linkedEntries 替换 *linkedBooks ---
+    characters: "id,&name,note,persona,avatar,gender,birthday,age,lastMomentAt,createdAt,status,*linkedEntries,lastCommentAt,sociability,categoryId,customStatusText,*stickerTags,phoneWallpaper,fontColor,userFontColor,bubbleColor,userBubbleColor,chatWallpaper,listenTogetherDuration,bubbleCssPresetId,activeUserPersona,readingNovelId,readingProgress",
     
     // --- 其他所有表的定义保持不变 ---
+    world_books: "++id, &name", 
+    world_entries: "++id, userId, title, createdAt, keywords, content, isGlobal, categoryId, bookId",
     users: "id,name,avatar,bio,background,signature,playerCover,gender,birthday,age,displayId",
-    characters: "id,&name,note,persona,avatar,gender,birthday,age,lastMomentAt,createdAt,status,*linkedEntries,lastCommentAt,sociability,categoryId,customStatusText,*stickerTags,phoneWallpaper,fontColor,userFontColor,bubbleColor,userBubbleColor,chatWallpaper,listenTogetherDuration,bubbleCssPresetId,activeUserPersona,readingNovelId,readingProgress",
     contact_categories: "++id, &name, userId",
-    world_book_categories: "++id, &name, userId",
+    world_book_categories: "++id, &name, userId", 
     memories: "++id,[userId+contactId],contactId,createdAt",
     diaries: "++id, [userId+contactId], contactId, createdAt",
     bonds: "++id,[userId+contactId],contactId,category,aspectRatio,createdAt",
@@ -9843,39 +9946,27 @@ db.version(166).stores({ // ✨ 核心修改 1: 版本号从 165 升级到 166
     global_stickers: "++id, &description, *tags",
     beautify_presets: "++id, &name",
     bubble_css_presets: "++id, &name"
-}).upgrade(async (tx) => {
-    // --- ✨✨✨ 这是自动迁移脚本的核心 ✨✨✨ ---
-    console.log("【数据库升级】: 开始执行从 '分类' 到 '书本' 的自动迁移...");
-
-    const oldCategories = await tx.table("world_book_categories").toArray();
-    const entries = tx.table("world_entries");
-    const newBooks = tx.table("world_books");
-
-    // 1. 创建一个映射表，用于存储旧分类ID和新书本ID的对应关系
-    const categoryToBookIdMap = new Map();
-
-    // 2. 遍历所有旧分类，为它们创建新的“书”
-    for (const category of oldCategories) {
-        const newBookId = await newBooks.add({ name: category.name });
-        categoryToBookIdMap.set(category.id, newBookId);
-        console.log(`  -> 已将分类 "${category.name}" 转换为新的书本 (新ID: ${newBookId})`);
-    }
-
-    // 3. 创建一本“未分类的书”
-    const uncategorizedBookId = await newBooks.add({ name: "未分类" });
-    console.log(`  -> 已创建“未分类”书本 (ID: ${uncategorizedBookId})`);
-
-    // 4. 批量更新所有条目，为它们分配新的 bookId
-    await entries.toCollection().modify(entry => {
-        if (entry.categoryId && categoryToBookIdMap.has(entry.categoryId)) {
-            entry.bookId = categoryToBookIdMap.get(entry.categoryId);
-        } else {
-            // 如果条目没有分类，或者分类找不到了，就统一归入“未分类”
-            entry.bookId = uncategorizedBookId;
+}).upgrade(async tx => {
+    // ✨ 核心修改 2: 编写数据迁移脚本，自动将旧数据转换为新格式
+    console.log("正在执行数据库升级 (v168): 转换角色世界书关联...");
+    await tx.table('characters').toCollection().modify(async character => {
+        if (character.linkedBooks && Array.isArray(character.linkedBooks)) {
+            const bookIds = character.linkedBooks.filter(Boolean);
+            if (bookIds.length > 0) {
+                // 找到这些书本下的所有条目
+                const entries = await tx.table('world_entries').where('bookId').anyOf(bookIds).toArray();
+                // 将它们转换为新的配置对象格式
+                character.linkedEntries = entries.map(entry => ({
+                    id: entry.id,
+                    enabled: true, // 默认全部启用
+                    depth: 100,
+                    order: 100
+                }));
+            }
+            delete character.linkedBooks; // 删除旧字段
         }
     });
-
-    console.log("【数据库升级】: 所有条目已成功归类到新的书本中！迁移完成。");
+    console.log("数据库升级完成！");
 });
 // ==========================================================
 // ▲▲▲ 替换到这里结束 ▲▲▲
@@ -10049,25 +10140,41 @@ async function buildCoreContext(characterId, userId, options = {}) {
 
     const [worldBookData, allMessages, recentMomentsData] = await Promise.all([
         (async () => {
-            const [globalEntries, localEntries] = await Promise.all([
-                db.world_entries.where({ isGlobal: 1 }).toArray(),
-                // ▼▼▼ ✨✨✨ 核心修复就在这里！ ✨✨✨ ▼▼▼
-                (async () => {
-                    const linked = character.linkedEntries || [];
-                    if (linked.length === 0) return [];
-
-                    // 1. 智能判断：检查数组的第一个元素是对象还是数字
-                    if (typeof linked[0] === 'object' && linked[0] !== null) {
-                        // a. 如果是新格式 (对象数组)，就先用 .map() 提取出所有的 id
-                        const idsToFetch = linked.map(config => config.id);
-                        return db.world_entries.bulkGet(idsToFetch);
-                    } else {
-                        // b. 如果是旧格式 (数字数组)，就直接使用
-                        return db.world_entries.bulkGet(linked);
-                    }
-                })()
-                // ▲▲▲ ✨✨✨ 修复结束 ▲▲▲ ▲▲▲
-            ]);
+const [globalEntries, localEntries] = await Promise.all([
+    (async () => {
+        // a. 从全局设置读取已激活的书本ID列表
+        const globalSettings = await db.global_settings.get('globallyActiveBooks');
+        const activeBookIds = globalSettings ? globalSettings.value : [];
+        
+        // b. 如果没有激活任何书本，直接返回空数组
+        if (activeBookIds.length === 0) return [];
+        
+        // c. 根据书本ID列表，查询出所有相关的条目
+        return db.world_entries.where('bookId').anyOf(activeBookIds).toArray();
+    })(),
+// ▼▼▼ 然后，用下面这块全新的、更智能的代码，完整替换上面那块旧的代码 ▼▼▼
+// ==========================================================
+// --- ✨✨✨ 核心升级：使用新的“条目配置”逻辑来获取角色专属条目 ✨✨✨ ---
+(async () => {
+    // a. 从新的 linkedEntries 字段获取所有配置
+    const linkedEntryConfigs = character.linkedEntries || [];
+    
+    // b. ✨ 关键一步：只筛选出那些 "enabled" 为 true 的条目
+    const enabledEntryIds = linkedEntryConfigs
+        .filter(config => config.enabled)
+        .map(config => config.id);
+        
+    // c. 如果没有启用的条目，直接返回空数组
+    if (enabledEntryIds.length === 0) return [];
+    
+    // d. 使用 bulkGet 高效地获取所有已启用条目的详细内容
+    return (await db.world_entries.bulkGet(enabledEntryIds)).filter(Boolean);
+})()
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
+]);
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
             const allEntriesMap = new Map();
             globalEntries.forEach(entry => entry && allEntriesMap.set(entry.id, entry));
             localEntries.forEach(entry => entry && allEntriesMap.set(entry.id, entry));
@@ -13978,18 +14085,31 @@ ${currentSong.lyrics || '（这首歌没有歌词）'}
             if (seeAllBtn) {
                 switch (seeAllBtn.id) {
 
-                    case 'goto-world-book-links-modal':
-                        switchToProfileDetailView(`${character.name}的档案`, async () => {
-                            const linkedIds = character.linkedEntries || [];
-                            if (linkedIds.length === 0) return '<p style="text-align:center; color:#a1a1aa;">还未关联任何档案。</p>';
-                            const entries = await db.world_entries.bulkGet(linkedIds);
-                            return entries.filter(Boolean).map(entry => `
-                        <div class="world-entry-card" style="margin-bottom:10px; background: rgba(0,0,0,0.1); border:none;">
-                            <div class="title" style="color: rgba(0,0,0,0.9);">${entry.title}</div>
-                            <div class="keywords" style="color: rgba(0,0,0,0.7);">关键词: ${entry.keywords}</div>
-                        </div>`).join('');
-                        }, { actionButton: { text: '管理档案 >', onClick: openWorldBookSelectionModal } });
-                        return;
+case 'goto-world-book-links-modal':
+    switchToProfileDetailView(`${character.name}的档案`, async () => {
+        // ▼▼▼ ✨✨✨ 核心修复就在这里！ ✨✨✨ ▼▼▼
+        // 1. 使用新的 linkedBooks 字段，并过滤掉所有无效值 (如 null, undefined)
+        const linkedBookIds = (character.linkedBooks || []).filter(Boolean);
+        // ▲▲▲ ✨✨✨ 修复结束 ▲▲▲ ▲▲▲
+
+        if (linkedBookIds.length === 0) return '<p style="text-align:center; color:#a1a1aa;">还没有为「' + character.name + '」关联任何书本。</p>';
+
+        // 2. 使用新的查询方式：根据书本ID(bookId)去 world_entries 表中查找所有条目
+        const entries = await db.world_entries.where('bookId').anyOf(linkedBookIds).toArray();
+
+        if (entries.length === 0) {
+            return '<p style="text-align:center; color:#a1a1aa;">关联的书本中还没有任何条目。</p>';
+        }
+        
+        // 3. 后续的渲染逻辑保持不变
+        return entries.map(entry => `
+            <div class="world-entry-card" style="margin-bottom:10px; background: rgba(0,0,0,0.1); border:none;">
+                <div class="title" style="color: rgba(0,0,0,0.9);">${entry.title}</div>
+                <div class="keywords" style="color: rgba(0,0,0,0.7);">关键词: ${entry.keywords}</div>
+            </div>`).join('');
+
+    }, { actionButton: { text: '管理档案 >', onClick: () => { if (typeof openWorldBookSelectionModal === 'function') openWorldBookSelectionModal(); } } });
+    return;
 
                     case 'goto-bonds-page-modal':
                         switchToProfileDetailView(`${character.name}的拾光集`, async () => {
@@ -15503,13 +15623,7 @@ function bindBubbleEditorEvents() {
 
             // 我们在原来的HTML模板中，新增了两个卡片
             bodyContainer.innerHTML = `
-        <!-- 档案 (保持不变) -->
-        <div class="profile-section-glass">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-address-card"></i> 档案</h3>
-                <button id="goto-world-book-links-modal" class="see-all-btn buttonlike">查看全部 ></button>
-            </div>
-        </div>
+
         <!-- 拾光集 (保持不变) -->
        <div class="profile-section-glass">
             <div class="section-header">
@@ -15564,37 +15678,53 @@ function bindBubbleEditorEvents() {
             if (!character) return;
 
 
-            if (e.target.id === 'goto-world-book-links-modal') {
-                // ✨✨✨ 核心修改：在调用时，传入第三个参数 options ✨✨✨
-                switchToProfileDetailView(
-                    `${character.name}的档案`, // 参数1: 标题 (不变)
+// ▼▼▼ 请用这一整块全新的【最终修复版】代码，替换旧的 'goto-world-book-links-modal' 的 if 代码块 ▼▼▼
+if (e.target.id === 'goto-world-book-links-modal') {
+    switchToProfileDetailView(
+        `${character.name}的档案`, // 参数1: 视图标题
 
-                    async () => { // 参数2: 渲染函数 (不变)
-                        const linkedIds = character.linkedEntries || [];
-                        if (linkedIds.length === 0) return '<p style="text-align:center; color:#a1a1aa;">还未关联任何档案。</p>';
-                        const entries = await db.world_entries.bulkGet(linkedIds);
-                        return entries.filter(Boolean).map(entry => `
-                <div class="world-entry-card" style="margin-bottom:10px; background: rgba(0,0,0,0.1); border:none;">
-                    <div class="title" style="color: rgba(0,0,0,0.9);">${entry.title}</div>
-                    <div class="keywords" style="color: rgba(0,0,0,0.7);">关键词: ${entry.keywords}</div>
-                </div>
-            `).join('');
-                    },
+        // 参数2: 异步渲染函数
+        async () => {
+            // ▼▼▼ ✨✨✨ 核心修复就在这里！ ✨✨✨ ▼▼▼
+            // 使用 .filter(Boolean) 来过滤掉数组中所有 null, undefined 等无效值
+            const linkedBookIds = (character.linkedBooks || []).filter(Boolean);
+            // ▲▲▲ ✨✨✨ 修复结束 ▲▲▲ ▲▲▲
 
-                    // ✨✨✨ 参数3: 我们新增的专属操作按钮配置 ✨✨✨
-                    {
-                        actionButton: {
-                            text: '管理档案 >', // 按钮上显示的文字
-                            onClick: () => {
-                                // 点击按钮时，调用我们早已写好的“世界书选择”弹窗函数
-                                if (typeof openWorldBookSelectionModal === 'function') {
-                                    openWorldBookSelectionModal();
-                                }
-                            }
-                        }
-                    }
-                );
+            if (linkedBookIds.length === 0) {
+                return '<p style="text-align:center; color:#a1a1aa; padding-top:40px;">还没有为「' + character.name + '」关联任何书本。</p>';
             }
+
+            // 现在 linkedBookIds 是一个纯净的、只包含有效ID的数组，可以安全地查询
+            const linkedBooks = await db.world_books.bulkGet(linkedBookIds);
+
+            const bookCardsHtml = await Promise.all(linkedBooks.map(async (book) => {
+                if (!book) return '';
+                const entryCount = await db.world_entries.where({ bookId: book.id }).count();
+                return `
+                    <div class="settings-item" style="margin-bottom: 8px;">
+                        <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
+                        <span class="label">${escapeHtml(book.name)} (${entryCount}条)</span>
+                    </div>
+                `;
+            }));
+
+            return bookCardsHtml.join('');
+        },
+
+        // 参数3: 专属操作按钮配置 (保持不变)
+        {
+            actionButton: {
+                text: '管理档案 >',
+                onClick: () => {
+                    if (typeof openWorldBookSelectionModal === 'function') {
+                        openWorldBookSelectionModal();
+                    }
+                }
+            }
+        }
+    );
+}
+// ▲▲▲ 替换到这里结束 ▲▲▲
             else if (e.target.id === 'goto-bonds-page-modal') {
                 switchToProfileDetailView(`${character.name}的拾光集`, async () => {
                     const bonds = await db.bonds.where({ userId: window.currentUser.id, contactId: character.id }).reverse().sortBy('createdAt');
@@ -16983,76 +17113,77 @@ async function addCommentToUI(comment) {
 
         const selectionModal = document.getElementById('world-book-selection-modal');
 
-        /**
-         * 核心函数：打开并渲染与角色关联的世界书条目
-         * @param {object} contact - 要查询的角色对象
-         */
-        async function openLinkedWorldBook(contact) {
-            if (!contact) return;
-            window.currentProfileContact = contact;
+// ▼▼▼ 请用这个【全新版本】替换旧的 openLinkedWorldBook 函数 ▼▼▼
+/**
+ * 【全新】核心函数：打开并渲染与角色关联的【书本】列表
+ */
+async function renderLinkedWorldBooks(contact) {
+    if (!contact) return;
+    window.currentProfileContact = contact;
 
-            const page = document.getElementById('linked-world-book-page');
-            const titleEl = page.querySelector('#linked-wb-title');
-            const listEl = page.querySelector('#linked-wb-list');
+    const page = document.getElementById('linked-world-book-page');
+    const titleEl = page.querySelector('#linked-wb-title');
+    const listEl = page.querySelector('#linked-wb-list');
 
-            titleEl.textContent = `${contact.name}的档案`;
-            listEl.innerHTML = '<p style="text-align:center; color:#a1a1aa;">正在检索档案...</p>';
-            // 【请使用这行新代码】
-            navigateTo('linked-world-book-page', 'contact-profile');
+    titleEl.textContent = `${contact.name}的档案`;
+    listEl.innerHTML = '<p style="text-align:center; color:#a1a1aa;">正在检索已关联的书本...</p>';
+    
+    const linkedBookIds = contact.linkedBooks || [];
 
-            const linkedIds = contact.linkedEntries || [];
+    if (linkedBookIds.length === 0) {
+        listEl.innerHTML = `<p style="text-align:center; color:#a1a1aa; padding-top:40px;">
+            还没有为「${contact.name}」关联任何书本。<br>点击下方的按钮来添加吧！
+        </p>`;
+        return;
+    }
 
-            if (linkedIds.length === 0) {
-                listEl.innerHTML = `<p style="text-align:center; color:#a1a1aa; padding-top:40px;">
-      还没有为「${contact.name}」关联任何档案。<br>点击下方的按钮来添加吧！
-    </p>`;
-                return;
-            }
+    const linkedBooks = await db.world_books.bulkGet(linkedBookIds);
 
-            const linkedEntries = await db.world_entries.bulkGet(linkedIds);
+    listEl.innerHTML = '';
+    for (const book of linkedBooks) {
+        if (!book) continue;
+        const entryCount = await db.world_entries.where({ bookId: book.id }).count();
 
-            listEl.innerHTML = '';
-            linkedEntries.forEach(entry => {
-                if (!entry) return;
-                const card = document.createElement('div');
-                card.className = 'world-entry-card';
-                card.innerHTML = `
-      <div class="content">
-        <div class="title">${entry.title}</div>
-        <div class="keywords">关键词: ${entry.keywords}</div>
-      </div>
-    `;
-                listEl.appendChild(card);
-            });
-        }
+        const card = document.createElement('div');
+        // 复用世界书主页的卡片样式
+        card.className = 'settings-item'; 
+        card.innerHTML = `
+            <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
+            <span class="label">${escapeHtml(book.name)} (${entryCount}条)</span>
+        `;
+        listEl.appendChild(card);
+    }
+}
+// 为了兼容旧的调用，我们重命名一下
+window.openLinkedWorldBook = renderLinkedWorldBooks;
+// ▲▲▲ 替换到这里结束 ▲▲▲
+/**
+ * 【全新】核心函数：打开世界书【书本】选择弹窗
+ */
+async function openWorldBookSelectionModal() {
+const contact = window.currentChat;
+    const listEl = document.getElementById('wb-selection-list');
+    listEl.innerHTML = '加载中...';
+    selectionModal.classList.remove('hidden');
 
-        /**
-         * 新增函数：打开世界书选择弹窗
-         */
-        async function openWorldBookSelectionModal() {
-            const contact = window.currentProfileContact;
-            const listEl = document.getElementById('wb-selection-list');
-            listEl.innerHTML = '加载中...';
-            selectionModal.classList.remove('hidden');
+    // ✨ 核心修改 1: 现在我们查询的是 world_books 表
+    const allBooks = await db.world_books.toArray();
+    const linkedBookIds = contact.linkedBooks || [];
 
-            const allEntries = await db.world_entries.toArray();
-            const linkedIds = contact.linkedEntries || [];
-
-            listEl.innerHTML = '';
-            allEntries.forEach(entry => {
-                const isChecked = linkedIds.includes(entry.id);
-                const item = document.createElement('div');
-                item.className = 'wb-selection-item';
-                item.innerHTML = `
-      <input type="checkbox" id="wb-select-${entry.id}" value="${entry.id}" ${isChecked ? 'checked' : ''}>
-      <label for="wb-select-${entry.id}">${entry.title}</label>
-    `;
-                listEl.appendChild(item);
-            });
-        }
-
-        // --- 绑定所有事件 ---
-
+    listEl.innerHTML = '';
+    allBooks.forEach(book => {
+        const isChecked = linkedBookIds.includes(book.id);
+        const item = document.createElement('div');
+        item.className = 'wb-selection-item';
+        // ✨ 核心修改 2: ID 和 value 现在是 book.id
+        item.innerHTML = `
+            <input type="checkbox" id="wb-select-${book.id}" value="${book.id}" ${isChecked ? 'checked' : ''}>
+            <label for="wb-select-${book.id}">${escapeHtml(book.name)}</label>
+        `;
+        listEl.appendChild(item);
+    });
+}
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
 
 
@@ -17062,43 +17193,62 @@ async function addCommentToUI(comment) {
         document.getElementById('cancel-wb-selection').addEventListener('click', () => {
             selectionModal.classList.add('hidden');
         });
+// ▼▼▼ 请用这一整块全新的【最终修复版】代码，替换旧的 'confirm-wb-selection' 事件监听器 ▼▼▼
+// ▼▼▼ 请用这一整块全新的【最终修复版】代码，替换旧的 'confirm-wb-selection' 事件监听器 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【V4 - 直接传递版】世界书关联保存引擎 ✨✨✨ ---
+// ==========================================================
+document.getElementById('confirm-wb-selection').addEventListener('click', async () => {
+    const selectedBookIds = [];
+    document.querySelectorAll('#wb-selection-list input[type="checkbox"]:checked').forEach(checkbox => {
+        selectedBookIds.push(parseInt(checkbox.value, 10));
+    });
 
-        // 【请用这个添加了成功提示的版本，替换旧的事件监听器】
-        // 5. ✨✨✨ 核心重构：“确认关联”按钮现在直接负责保存！ ✨✨✨
-        document.getElementById('confirm-wb-selection').addEventListener('click', async () => {
-            const selectedIds = [];
-            document.querySelectorAll('#wb-selection-list input[type="checkbox"]:checked').forEach(checkbox => {
-                selectedIds.push(parseInt(checkbox.value, 10));
-            });
+    const characterToUpdate = window.currentChat;
+    if (!characterToUpdate) return;
 
-            try {
-                // a. 直接将新的ID数组更新到数据库
-                await db.characters.update(window.currentProfileContact.id, { linkedEntries: selectedIds });
-
-                // b. 关键：同步更新内存中的角色数据
-                window.currentProfileContact.linkedEntries = selectedIds;
-
-                // c. 关闭弹窗
-                selectionModal.classList.add('hidden');
-
-                // d. 使用最新的数据，重新渲染档案页列表
-                openLinkedWorldBook(window.currentProfileContact);
-
-                // e. ✨✨✨ 核心新增：调用通知函数，显示成功提示！ ✨✨✨
-                showNotification("档案关联已成功保存！");
-
-            } catch (error) {
-                console.error("保存关联失败:", error);
-                // ✨ 优化：在失败时也给用户一个明确的提示
-                showNotification("保存失败，请稍后再试。");
+    try {
+        const currentConfigs = characterToUpdate.linkedEntries || [];
+        const entriesFromSelectedBooks = await db.world_entries.where('bookId').anyOf(selectedBookIds).toArray();
+        const newConfigs = [];
+        
+        // 保留仍在选中书本中的旧条目设置
+        currentConfigs.forEach(config => {
+            const entryDetail = entriesFromSelectedBooks.find(e => e.id === config.id);
+            if (entryDetail) { // 只要这个条目还在选中的书里，就保留它的设置
+                newConfigs.push(config);
+            }
+        });
+        
+        // 为新选中的书本中尚未配置的条目添加默认设置
+        entriesFromSelectedBooks.forEach(entry => {
+            if (!newConfigs.some(c => c.id === entry.id)) {
+                newConfigs.push({ id: entry.id, enabled: true, depth: 100, order: 100 });
             }
         });
 
-        // =====================================================================
-        // --- 关联世界书核心逻辑 V3.0 结束 ---
-        // =====================================================================
+        // ✨ 核心修改 1: 直接更新内存中的 characterToUpdate 对象
+        characterToUpdate.linkedEntries = newConfigs;
+        
+        // 2. 将更新后的角色对象保存到数据库
+        await db.characters.update(characterToUpdate.id, { linkedEntries: newConfigs });
 
+        // 3. 关闭选择弹窗
+        document.getElementById('world-book-selection-modal').classList.add('hidden');
+        
+        // ✨ 核心修改 2: 调用改造后的渲染函数，并直接把内存中最新的 characterToUpdate 对象传进去！
+        await renderCharacterWbList(characterToUpdate);
 
+        showNotification("角色的关联书本已成功更新！");
+
+    } catch (error) {
+        console.error("更新关联书本失败:", error);
+        showNotification("更新失败，请稍后再试。");
+    }
+});
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
+// ▲▲▲ 替换到这里结束 ▲▲▲
         /**
          * ✨ 核心函数：分析图片Blob的平均亮度，并决定使用深色还是浅色文字
          * @param {Blob} imageBlob - 要分析的图片文件
@@ -25872,109 +26022,275 @@ if (deleteBtn) {
 
         showModal('world-book-manager-modal');
     }
+// ▼▼▼ 请用这一整块全新的代码，替换旧的 renderGlobalWbSelector 函数 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【V2 - 书本激活版】全局世界书选择与渲染引擎 ✨✨✨ ---
+// ==========================================================
+async function renderGlobalWbSelector() {
+    // (获取所有DOM元素的代码保持不变)
+    const globalSelectContainer = document.getElementById('global-wb-select-container');
+    const globalSelectorValue = document.getElementById('global-wb-selector-value');
+    const globalActiveNames = document.getElementById('global-wb-active-names');
+    const globalOptionsContainer = document.getElementById('global-wb-options-container');
+    const globalActivationSettings = document.getElementById('wb-activation-settings');
+    const globalActiveEntriesList = document.querySelector('#world-book-manager-modal .world-book-section:first-child .wb-entry-list');
 
-    // (renderGlobalWbSelector 函数保持不变，我们直接复用)
-    async function renderGlobalWbSelector() {
-        const allEntries = await db.world_entries.toArray();
-        globalOptionsContainer.innerHTML = '';
-        globalActiveEntriesList.innerHTML = '';
-        const activeEntries = [];
-        allEntries.forEach(entry => {
-            const optionItem = document.createElement('div');
-            optionItem.className = 'wb-option-item buttonlike';
-            optionItem.dataset.id = entry.id;
-            optionItem.innerHTML = `<span class="check-icon"><i class="fa-solid fa-check"></i></span><span class="title">${escapeHtml(entry.title)}</span>`;
-            if (entry.isGlobal) {
-                optionItem.classList.add('active');
-                activeEntries.push(entry);
+    // ✨ 核心修改 1: 从数据库获取的是“书本”，而不是“条目”
+    const allBooks = await db.world_books.toArray();
+    
+    // ✨ 核心修改 2: 从全局设置中读取当前已激活的书本ID列表
+    const globalSettings = await db.global_settings.get('globallyActiveBooks');
+    const activeBookIds = globalSettings ? globalSettings.value : [];
+
+    // --- 渲染下拉选项列表 (现在是书本列表) ---
+    globalOptionsContainer.innerHTML = '';
+    const activeBooks = [];
+
+    allBooks.forEach(book => {
+        const optionItem = document.createElement('div');
+        optionItem.className = 'wb-option-item buttonlike';
+        optionItem.dataset.id = book.id;
+        optionItem.innerHTML = `<span class="check-icon"><i class="fa-solid fa-check"></i></span><span class="title">${escapeHtml(book.name)}</span>`;
+
+        if (activeBookIds.includes(book.id)) {
+            optionItem.classList.add('active');
+            activeBooks.push(book);
+        }
+
+        globalOptionsContainer.appendChild(optionItem);
+
+        // ✨ 核心修改 3: 为每个选项绑定新的“激活/取消激活书本”逻辑
+        optionItem.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const currentSettings = await db.global_settings.get('globallyActiveBooks');
+            let currentActiveIds = currentSettings ? currentSettings.value : [];
+            const clickedId = book.id;
+
+            if (currentActiveIds.includes(clickedId)) {
+                // 如果已经激活，则取消激活
+                currentActiveIds = currentActiveIds.filter(id => id !== clickedId);
+            } else {
+                // 如果未激活，则激活
+                currentActiveIds.push(clickedId);
             }
-            globalOptionsContainer.appendChild(optionItem);
-            optionItem.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                await db.world_entries.update(entry.id, { isGlobal: entry.isGlobal ? 0 : 1 });
-                await renderGlobalWbSelector();
-            });
+            
+            // 将更新后的ID列表存回数据库
+            await db.global_settings.put({ key: 'globallyActiveBooks', value: currentActiveIds });
+            
+            // 立即刷新整个UI，以显示最新状态
+            await renderGlobalWbSelector();
         });
-        if (activeEntries.length > 0) {
-            globalActiveNames.textContent = activeEntries.map(e => e.title).join(', ');
-            globalActivationSettings.classList.add('visible');
-            globalActiveEntriesList.innerHTML = '';
-            activeEntries.forEach(entry => {
-                const activeCard = document.createElement('div');
-                activeCard.className = 'world-entry-card';
-                activeCard.innerHTML = `<div class="content"><div class="title">${escapeHtml(entry.title)}</div></div>`;
-                globalActiveEntriesList.appendChild(activeCard);
-            });
-        } else {
-            globalActiveNames.textContent = 'No Worlds active. Click here to select.';
-            globalActivationSettings.classList.remove('visible');
-            globalActiveEntriesList.innerHTML = '<div class="wb-entry-item-placeholder">没有已启用的全局世界书...</div>';
-        }
+    });
+
+    // --- 更新顶部激活状态的显示 (现在是显示激活的书本) ---
+    globalActiveEntriesList.innerHTML = '';
+    if (activeBooks.length > 0) {
+        globalActiveNames.textContent = activeBooks.map(b => b.name).join(', ');
+        globalActivationSettings.classList.add('visible'); // 显示参数设置区域
+        
+        activeBooks.forEach(book => {
+             const activeCard = document.createElement('div');
+             activeCard.className = 'settings-item'; // 复用样式
+             activeCard.innerHTML = `
+                <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
+                <span class="label">${escapeHtml(book.name)}</span>`;
+             globalActiveEntriesList.appendChild(activeCard);
+        });
+    } else {
+         globalActiveNames.textContent = 'No Worlds active. Click here to select.';
+         globalActivationSettings.classList.remove('visible'); // 隐藏参数设置
+         globalActiveEntriesList.innerHTML = '<div class="wb-entry-item-placeholder">没有已启用的全局世界书...</div>';
+    }
+}
+// ▼▼▼ 请用这个【全新 V3 - 参数化版】的代码进行替换 ▼▼▼
+async function renderCharacterWbList(character) { // ✨ 核心修改：增加了 character 参数
+    const characterTitleEl = document.getElementById('character-wb-title');
+    const listContainer = document.getElementById('character-wb-entry-list');
+
+    // 安全检查，如果传入的 character 无效则退出
+    if (!character) {
+        console.error("renderCharacterWbList 失败：未提供有效的角色对象。");
+        return;
     }
 
-    // ==========================================================
-    // --- ✨✨✨ 以下是为“角色世界书”新增的核心函数 ✨✨✨ ---
-    // ==========================================================
+    characterTitleEl.textContent = `角色世界书 (${character.name})`;
+    listContainer.innerHTML = '';
 
-    /**
-     * 核心函数 3: 渲染角色专属的世界书列表 (带设置)
-     */
-    async function renderCharacterWbList() {
-        const character = window.currentChat;
-        characterTitleEl.textContent = `角色世界书 (${character.name})`;
-        characterWbListContainer.innerHTML = '';
+    const linkedEntryConfigs = character.linkedEntries || [];
+    if (linkedEntryConfigs.length === 0) {
+        listContainer.innerHTML = '<div class="wb-entry-item-placeholder">当前角色没有专属的世界书...</div>';
+        return;
+    }
+    
+    const entryIds = linkedEntryConfigs.map(config => config.id);
+    const entryDetails = await db.world_entries.bulkGet(entryIds);
 
-        // a. 数据迁移与兼容：检查linkedEntries是旧格式(数字数组)还是新格式(对象数组)
-        let linkedEntriesConfig = character.linkedEntries || [];
-        if (linkedEntriesConfig.length > 0 && typeof linkedEntriesConfig[0] === 'number') {
-            console.log("检测到旧版世界书关联数据，正在自动升级...");
-            linkedEntriesConfig = linkedEntriesConfig.map(id => ({
-                id: id,
-                enabled: true, // 默认全部启用
-                depth: 100,
-                order: 100
-            }));
-            // 将升级后的新格式存回数据库
-            await db.characters.update(character.id, { linkedEntries: linkedEntriesConfig });
-            window.currentChat.linkedEntries = linkedEntriesConfig; // 同步内存
+    const entriesByBook = new Map();
+    entryDetails.forEach(entry => {
+        if (!entry) return;
+        if (!entriesByBook.has(entry.bookId)) {
+            entriesByBook.set(entry.bookId, []);
         }
+        entriesByBook.get(entry.bookId).push(entry);
+    });
 
-        if (linkedEntriesConfig.length === 0) {
-            characterWbListContainer.innerHTML = '<div class="wb-entry-item-placeholder">当前角色没有专属的世界书条目...</div>';
-            return;
+    const bookDetails = await db.world_books.bulkGet(Array.from(entriesByBook.keys()));
+
+    for (const book of bookDetails) {
+        if (!book) continue;
+        const entriesInThisBook = entriesByBook.get(book.id) || [];
+        if (entriesInThisBook.length === 0) continue;
+
+        const group = document.createElement('div');
+        group.className = 'book-group';
+        group.innerHTML = `
+            <button class="settings-item buttonlike">
+                <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
+                <span class="label">${escapeHtml(book.name)} (${entriesInThisBook.length})</span>
+                <span class="arrow">></span>
+            </button>
+            <div class="book-entries-container">
+                <div class="book-entries-inner"></div>
+            </div>`;
+        
+        const header = group.querySelector('.settings-item');
+        const contentInner = group.querySelector('.book-entries-inner');
+
+        header.addEventListener('click', () => {
+            group.classList.toggle('open');
+            if (group.classList.contains('open') && contentInner.dataset.loaded !== 'true') {
+                contentInner.innerHTML = '';
+                entriesInThisBook.forEach(entry => {
+                    const entryCard = createCharacterWbItemCard(entry);
+                    contentInner.appendChild(entryCard);
+                });
+                contentInner.dataset.loaded = 'true';
+            }
+        });
+        listContainer.appendChild(group);
+    }
+}
+// ▲▲▲ 替换到这里结束 ▲▲▲
+// ▼▼▼ 请用这一整块全新的代码，替换旧的 createCharacterWbItemCard 函数 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【V2 - 内联编辑器版】条目设置卡片创建引擎 ✨✨✨ ---
+// ==========================================================
+/**
+ * 辅助函数：创建单个条目的、带内联编辑器的设置卡片
+ */
+function createCharacterWbItemCard(entry) {
+    const character = window.currentChat;
+    const linkedEntriesConfig = character.linkedEntries || [];
+    let config = linkedEntriesConfig.find(c => c.id === entry.id) || { id: entry.id, enabled: true, depth: 100, order: 100 };
+
+    const itemEl = document.createElement('div');
+    itemEl.className = `character-wb-item ${config.enabled ? '' : 'disabled'}`;
+    itemEl.dataset.entryId = entry.id;
+
+    // ✨ 核心修改：使用了全新的、包含内联编辑器的HTML模板
+    itemEl.innerHTML = `
+        <div class="item-main-info">
+            <button class="wb-entry-expand-btn btn-icon buttonlike"><i class="fa-solid fa-chevron-down"></i></button>
+            <input type="checkbox" class="toggle-switch wb-entry-toggle" ${config.enabled ? 'checked' : ''}>
+            <span class="item-title">${escapeHtml(entry.title)}</span>
+        </div>
+        <div class="item-parameters">
+            <div class="param-group">
+                <label>深度</label>
+                <input type="number" class="form-input wb-entry-depth" value="${config.depth}">
+            </div>
+            <div class="param-group">
+                <label>顺序</label>
+                <input type="number" class="form-input wb-entry-order" value="${config.order}">
+            </div>
+        </div>
+        
+        <!-- ▼▼▼ 这是新增的可折叠内容区 ▼▼▼ -->
+        <div class="wb-entry-details-container">
+            <div class="wb-entry-details-inner">
+                <div>
+                    <label class="form-label">关键词 (Keywords):</label>
+                    <input type="text" class="form-input wb-entry-keywords" value="${escapeHtml(entry.keywords || '')}">
+                </div>
+                <div>
+                    <label class="form-label">内容 (Content):</label>
+                    <textarea class="form-input form-textarea wb-entry-content">${escapeHtml(entry.content || '')}</textarea>
+                </div>
+                <button class="btn btn-secondary buttonlike save-entry-details-btn" style="align-self: flex-end;">保存内容改动</button>
+            </div>
+        </div>
+        <!-- ▲▲▲ 新增结束 ▲▲▲ -->
+    `;
+
+    // --- 事件绑定 ---
+
+    // 1. 为开关和参数输入框绑定“自动保存”事件 (保持不变)
+    itemEl.addEventListener('change', (e) => {
+        if (e.target.classList.contains('wb-entry-toggle') || e.target.classList.contains('form-input')) {
+            if (typeof saveCharacterWbSettings === 'function') {
+                saveCharacterWbSettings(e.target);
+            }
         }
-
-        const entryIds = linkedEntriesConfig.map(config => config.id);
-        const entryDetails = await db.world_entries.bulkGet(entryIds);
-
-        entryDetails.forEach((entry, index) => {
-            if (!entry) return; // 如果某个条目被删了，就跳过
-
-            const config = linkedEntriesConfig[index];
-            const itemEl = document.createElement('div');
-            itemEl.className = `character-wb-item ${config.enabled ? '' : 'disabled'}`;
-            itemEl.dataset.entryId = entry.id;
-
-            itemEl.innerHTML = `
-                <div class="item-main-info">
-                    <input type="checkbox" class="toggle-switch wb-entry-toggle" ${config.enabled ? 'checked' : ''}>
-                    <span class="item-title">${escapeHtml(entry.title)}</span>
-                </div>
-                <div class="item-parameters">
-                    <div class="param-group">
-                        <label>深度</label>
-                        <input type="number" class="form-input wb-entry-depth" value="${config.depth || 100}">
-                    </div>
-                    <div class="param-group">
-                        <label>顺序</label>
-                        <input type="number" class="form-input wb-entry-order" value="${config.order || 100}">
-                    </div>
-                </div>
-            `;
-            characterWbListContainer.appendChild(itemEl);
+    });
+    
+    // 2. ✨ 新增：为“展开”按钮绑定点击事件
+    const expandBtn = itemEl.querySelector('.wb-entry-expand-btn');
+    if (expandBtn) {
+        expandBtn.addEventListener('click', () => {
+            itemEl.classList.toggle('expanded');
         });
     }
 
+    // 3. ✨ 新增：为“保存内容改动”按钮绑定点击事件
+    const saveDetailsBtn = itemEl.querySelector('.save-entry-details-btn');
+    if (saveDetailsBtn) {
+        saveDetailsBtn.addEventListener('click', () => {
+            if (typeof saveWbEntryDetails === 'function') {
+                saveWbEntryDetails(itemEl); // 调用我们即将创建的新函数
+            }
+        });
+    }
+
+    return itemEl;
+}
+// ==========================================================
+// ▼▼▼ 请将这个全新的函数，粘贴到 createCharacterWbItemCard 函数的后方 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【全新】世界书条目内联编辑器-保存引擎 ✨✨✨ ---
+// ==========================================================
+/**
+ * 核心函数: 保存对单个世界书条目“关键词”和“内容”的修改
+ * @param {HTMLElement} itemEl - 正在被编辑的条目卡片元素
+ */
+async function saveWbEntryDetails(itemEl) {
+    const entryId = parseInt(itemEl.dataset.entryId, 10);
+    if (!entryId) {
+        showNotification("保存失败：无法识别条目ID。");
+        return;
+    }
+
+    // 1. 从卡片内部的输入框获取最新的数据
+    const newKeywords = itemEl.querySelector('.wb-entry-keywords').value.trim();
+    const newContent = itemEl.querySelector('.wb-entry-content').value.trim();
+
+    try {
+        // 2. 使用 update 方法，将修改更新到 world_entries 表
+        await db.world_entries.update(entryId, {
+            keywords: newKeywords,
+            content: newContent
+        });
+
+        // 3. 给出成功反馈，并自动折叠卡片
+        showNotification("条目内容已成功保存！");
+        itemEl.classList.remove('expanded');
+
+    } catch (error) {
+        console.error("保存世界书条目详情失败:", error);
+        showNotification("保存失败，请稍后再试。");
+    }
+}
+// ==========================================================
+// ▲▲▲ 粘贴到这里结束 ▲▲▲
     /**
      * 核心函数 4: 保存角色世界书的设置
      */
