@@ -315,7 +315,7 @@
         .app-visuals {
             display: grid;
             grid-template-rows: 1fr auto;
-            gap: 5px;
+            gap: 3px;
             place-items: center;
             text-align: center;
             user-select: none;
@@ -333,67 +333,89 @@
         /* ========================================================== */
         /* --- ✨✨✨【全新】桌面拟态玻璃图标专属样式 ✨✨✨ --- */
         /* ========================================================== */
+/* ========================================================== */
+/* --- ✨✨✨【全新】桌面拟态玻璃图标专属样式 ✨✨✨ --- */
+/* ========================================================== */
 
-        /* --- 1. 拟态玻璃图标的基础样式 --- */
-        .app .icon {
-            width: 48px;
-            /* 尺寸可以根据喜好微调 */
-            height: 48px;
-            border-radius: var(--app-icon-border-radius);
-            /* 复用您已有的圆角变量 */
-            display: grid;
-            place-items: center;
-            position: relative;
-            overflow: hidden;
-            /* 确保模糊效果不会溢出 */
-            transition: all 0.2s ease;
+/* --- 1. 拟态玻璃图标的基础样式 --- */
+.app .icon {
+    width: 56px;  /* 尺寸可以根据喜好微调 */
+    height: 56px;
+    border-radius: var(--app-icon-border-radius); /* 复用您已有的圆角变量 */
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden; /* 确保模糊效果不会溢出 */
+    transition: all 0.2s ease;
+    /* a. 玻璃质感基础 (Glassmorphism) */
+    background-color: rgba(255, 255, 255, 0.35); /* 半透明的白色背景 */
+    backdrop-filter: blur(6px); /* 背景模糊滤镜，这是“磨砂”效果的关键 */
+    -webkit-backdrop-filter: blur(12px); /* 兼容 Safari 等浏览器 */
+    border: 1px solid rgba(237, 237, 237, 0.4); /* 优雅的亮色边框，增加玻璃质感 */
+}
 
-            /* a. 玻璃质感基础 (Glassmorphism) */
-            background-color: rgba(255, 255, 255, 0.35);
-            /* 半透明的白色背景 */
-            backdrop-filter: blur(12px);
-            /* 背景模糊滤镜，这是“磨砂”效果的关键 */
-            -webkit-backdrop-filter: blur(12px);
-            /* 兼容 Safari 等浏览器 */
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            /* 优雅的亮色边框，增加玻璃质感 */
+/* --- 2. 玻璃图标内部的矢量图标样式 --- */
+.app .icon i {
+    font-size: 28px; /* 设置一个合适的图标大小 */
+    color: rgba(188, 181, 181, 0.7); /* 半透明的深色，在玻璃上有很好的可读性 */
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3); /* 给图标一点微妙的亮色投影 */
+}
 
-            /* b. 拟态内凹阴影 (Neumorphism) */
-            box-shadow:
-                inset 2px 2px 5px rgba(0, 0, 0, 0.08),
-                /* 右下角的柔和内阴影 */
-                inset -3px -3px 6px rgba(255, 255, 255, 0.5);
-            /* 左上角的柔和内高光 */
-        }
+/* --- 3. 兼容旧的、使用图片作为图标的样式 --- */
+/* 当图标有自定义图片时，我们让它恢复“透明”，只显示图片本身 */
+.app .icon.has-custom-icon {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+}
+/* ========================================================== */
+/* --- ✨✨✨【核心修复】更换自定义图标时，隐藏默认的矢量图标 ✨✨✨ --- */
 
+/* 
+  核心逻辑与主屏幕的修复完全相同：
+  当图标预览容器(.settings-icon-preview)拥有.has-custom-icon这个类时，
+  就将它内部的 <i> 矢量图标也隐藏掉。
+  这样就解决了在预览弹窗中，自定义图片和默认图标互相挤压的问题。
+*/
+.icon-setting-item .settings-icon-preview.has-custom-icon i {
+    display: none;
+}
+/* 
+  核心逻辑：
+  当 .icon 容器拥有 .has-custom-icon 这个类（意味着它内部已经有了一张自定义图片）时，
+  我们就将它内部原始的 <i> 矢量图标彻底隐藏掉。
+  这样可以防止矢量图标和自定义图片同时显示，互相挤压，导致图片变形。
+*/
+.app .icon.has-custom-icon i {
+    display: none;
+}
+.app .icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
+.app .label {
+    font-size: 13px;
+    /* 1. 默认颜色设置为白色 */
+    color: white; 
+    font-weight: 600;
+    /* 2. 为白色文字添加一点阴影，在复杂的壁纸上也能看清 */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); 
+    /* 3. 为颜色和阴影的变化添加平滑的过渡动画 */
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
 
-        /* --- 3. 兼容旧的、使用图片作为图标的样式 --- */
-        /* 当图标有自定义图片时，我们让它恢复“透明”，只显示图片本身 */
-        .app .icon.has-custom-icon {
-            background: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            border: none;
-            box-shadow: none;
-        }
-
-        .app .icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-
-
-        .app .label {
-            font-size: 10px;
-            color: var(--color-secondary-accent);
-            font-weight: 500;
-            /* 可以适当加粗一点点，让标签在不同背景下更清晰 */
-        }
-
-
+/* 4. 这是新的“变色规则”：
+   当图标的父容器(#desktop-container)拥有 'light-mode' 这个类时... */
+#desktop-container.light-mode .app .label {
+    /* ...就把文字颜色覆盖为深灰色 */
+    color: var(--color-secondary-accent); 
+    /* ...同时移除文字阴影 */
+    text-shadow: none; 
+}
         /* ========================================================== */
         /* --- ✨✨✨ 全新桌面：绝对定位坐标系布局 ✨✨✨ --- */
         /* ========================================================== */
@@ -451,62 +473,47 @@
         }
 
 
-        /* 3. (auing) */
+        /*  auing */
         #app-qq {
-            top: 80%;
-            left: 50%;
+            top: 40%;
+            right: 30%;
         }
 
 
-        /* 4. NPC */
+        /*  NPC */
         #app-npc-hub {
-            top: 70%;
-            left: 50%;
+            top: 66%;
+            left: 40%;
         }
 
-        /* 6. 设置 */
-        #app-settings-icon {
-            top: 70%;
-            /* 垂直方向，偏下一点 */
-            left: 80%;
-            /* 水平方向，和上面两个对齐 */
+        /*  设置*/
+        #app-settings {
+            top: 53%;
+            right: 30%;
         }
 
-
-        /* 7. 直播 */
-        #app-live {
-            top: 70%;
-        
-            left: 20%;
-         
-        }
-
-        /* 8. 故事 */
+        /*  故事 */
         #app-novel {
-            top: 80%;
-          
-            left: 20%;
+            top: 66%;
+            left: 15%;
  
         }
 
-        /* 9. 线下 */
+        /* 线下 */
         #app-offline {
-            top: 60%;
+            top: 53%;
             /* 垂直方向：放在中间偏上的位置 */
-            left: 20%;
+            right: 5%;
             /* 水平方向：放在左侧 */
         }
 
-        /* 10. 论坛 */
+        /* 论坛 */
         #app-forum {
-            top: 60%;
+            top: 40%;
             /* 垂直方向：和“线下”在同一行 */
-            left: 50%;
+            right: 5%;
             /* 水平方向：放在正中间 */
         }
-
-
-
 
 
         /* ✨ 全屏模式下，桌面网格也保持透明 */
@@ -1622,76 +1629,6 @@ padding-bottom: 12px; /* 增加一点下内边距 */
             border-radius: 0;
         }
 
-
-
-
-        /* 定义“滑入”动画（从右向左）：从右侧屏幕外滑入到正常位置 */
-        @keyframes slideInFromRight {
-            from {
-                transform: translateX(100%);
-            }
-
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        /* 定义“滑出”动画（从左向右）：从正常位置滑出到右侧屏幕外 */
-        @keyframes slideOutToRight {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(100%);
-            }
-        }
-
-        /* 定义“滑入”动画（从左向右）：从左侧屏幕外滑入到正常位置 */
-        @keyframes slideInFromLeft {
-            from {
-                transform: translateX(-100%);
-            }
-
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        /* 定义“滑出”动画（从右向左）：从正常位置滑出到左侧屏幕外 */
-        @keyframes slideOutToLeft {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(-100%);
-            }
-        }
-
-
-        /* --- 应用于页面的动画类（用于覆盖式切换） --- */
-
-        /* 新页面滑入（从右到左覆盖） */
-        .page.slide-in-right {
-            animation: slideInFromRight 0.3s ease-out forwards;
-        }
-
-        /* 旧页面滑出（向右滑出，被覆盖） */
-        .page.slide-out-right {
-            animation: slideOutToRight 0.3s ease-out forwards;
-        }
-
-        /* 新页面滑入（从左到右覆盖） */
-        .page.slide-in-left {
-            animation: slideInFromLeft 0.3s ease-out forwards;
-        }
-
-        /* 旧页面滑出（向左滑出，被覆盖） */
-        .page.slide-out-left {
-            animation: slideOutToLeft 0.3s ease-out forwards;
-        }
-
         .page {
 
             backface-visibility: hidden;
@@ -1784,60 +1721,6 @@ padding-bottom: 12px; /* 增加一点下内边距 */
             /* 强制长单词或链接换行 */
         }
 
-        /* --- ✨✨✨ 新增：让世界书页面的 footer 固定在底部 ✨✨✨ --- */
-        #world-book-page .page-footer {
-            position: absolute;
-            /* ✨ 这是“粘”在底部的关键 */
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            /* 确保它撑满整个宽度 */
-        }
-
-        /* --- ✨✨✨ 新增：世界书条目列表样式 ✨✨✨ --- */
-        .world-entry-card {
-            background: var(--color-ui-base);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .world-entry-card .content {
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .world-entry-card .title {
-            font-weight: bold;
-
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .world-entry-card .keywords {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .world-entry-card .delete-btn {
-            font-size: 16px;
-            color: #a1a1aa;
-            padding: 4px;
-        }
-
-        .world-entry-card .delete-btn:hover {
-            color: #1f2937;
-        }
-
 
         /* 当 home-grid 元素拥有 .labels-hidden 这个类时... */
         .home-grid.labels-hidden .app .label {
@@ -1868,45 +1751,6 @@ padding-bottom: 12px; /* 增加一点下内边距 */
 
 
 
-
-        /* --- ✨✨✨ 新增：世界书选择列表项样式 ✨✨✨ --- */
-        .wb-selection-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .wb-selection-item:hover {
-            background: var(--color-ui-border);
-        }
-
-        .wb-selection-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .wb-selection-item label {
-
-            font-weight: 600;
-        }
-
-        /* --- ✨✨✨ 新增：“角色档案”预览区样式 ✨✨✨ --- */
-
-        /* ✨ 让底部的按钮并排显示 */
-        .status-menu-footer {
-            display: flex;
-            gap: 12px;
-        }
-
-        .status-menu-footer button {
-            flex: 1;
-            /* 让两个按钮平分宽度 */
-        }
 
         /* ========================================================== */
         /* --- ✨✨✨ 设置页图标预览专属样式 (V2 - 优先级修复版) ✨✨✨ --- */
@@ -1952,19 +1796,17 @@ padding-bottom: 12px; /* 增加一点下内边距 */
             object-fit: cover !important;
         }
 
-        /* ========================================================== */
-        /* --- ✨✨✨ 更换应用图标页面 (网格布局版) ✨✨✨ --- */
-        /* ========================================================== */
 
-        /* --- 1. 网格容器 --- */
-        .icon-settings-grid {
-            display: grid;
-            /* ✨ 核心：创建四列等宽的网格 */
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px 16px;
-            /* 行间距 和 列间距 */
-            padding: 16px;
-        }
+/* ========================================================== */
+/* --- ✨✨✨【布局修复】更换图标弹窗-固定三列网格 ✨✨✨ --- */
+/* ========================================================== */
+.icon-settings-grid {
+    display: grid;
+    /* 核心修改：将 repeat(4, 1fr) 修改为 repeat(3, 1fr)，强制指定为三列 */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 24px 16px; /* (可选) 我们可以稍微增大行间距(第一个值)，让布局更舒展 */
+    padding: 20px;    /* (可选) 也可以稍微增大内边距 */
+}
 
         /* --- 2. 单个图标单元 --- */
         .icon-setting-item {
@@ -2543,37 +2385,6 @@ padding-bottom: 12px; /* 增加一点下内边距 */
 
         /* --- ✨ 新增：回忆录页面滚动修复 --- */
         #memories-page .page-content {
-            position: absolute;
-            top: 50px;
-            bottom: 70px;
-            /* 为底部的 footer 按钮区预留空间 */
-            left: 0;
-            right: 0;
-            width: 100%;
-            overflow-y: auto;
-            padding-bottom: 10px;
-            flex: initial;
-        }
-
-
-        /* --- ✨ 新增：世界书页面滚动修复 --- */
-        #world-book-page .page-content {
-            position: absolute;
-            top: 90px;
-            bottom: 70px;
-            /* 为底部的 footer 按钮区预留空间 */
-            left: 0;
-            right: 0;
-            width: 100%;
-            overflow-y: auto;
-            padding-bottom: 10px;
-            flex: initial;
-        }
-
-
-
-        /* --- ✨ 新增：关联世界书（档案）页面滚动修复 --- */
-        #linked-world-book-page .page-content {
             position: absolute;
             top: 50px;
             bottom: 70px;
@@ -3954,43 +3765,6 @@ color: rgb(0, 0, 0);
         }
 
         /* ========================================================== */
-        /* --- ✨✨✨【全新】音乐频谱可视化工具专属样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        #music-spectrum-visualizer {
-            position: absolute;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 4px;
-            pointer-events: none;
-            z-index: 9;
-            transition: opacity 0.3s ease;
-            opacity: 0.8;
-            /* ✨✨✨ 核心新增：在这里添加，0.7代表70%的不透明度 ✨✨✨ */
-        }
-
-        #music-spectrum-visualizer.hidden {
-            opacity: 0;
-        }
-
-        .spectrum-bar {
-            width: 5px;
-            border-radius: 2px;
-            background: linear-gradient(to top,
-                    rgba(255, 255, 255, 0.5),
-                    var(--color-primary-accent));
-            transition: height 0.1s ease-out;
-            height: 0%;
-        }
-
-        /* 【请将这一整块全新的代码，粘贴到 <style> 的末尾】 */
-        /* ========================================================== */
         /* --- ✨✨✨【全新】三栏式页头布局引擎 ✨✨✨ --- */
         /* ========================================================== */
 /* 【请用这个新版本，替换旧的 .page-header 规则】 */
@@ -4582,10 +4356,6 @@ color: rgb(0, 0, 0);
             /* 垂直居中 */
         }
 
-
-
-
-
         /* ========================================================== */
         /* --- ✨✨✨【全新】心电图绘制动画 ✨✨✨ --- */
         /* ========================================================== */
@@ -4606,85 +4376,6 @@ color: rgb(0, 0, 0);
                 stroke-dashoffset: 0;
             }
         }
-
-        /* ========================================================== */
-        /* --- ✨✨✨【全新】世界书分类与批量管理专属样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* --- 1. 手风琴折叠列表 --- */
-        .category-group {
-            margin-bottom: 12px;
-        }
-
-        .category-header {
-            background: var(--color-ui-subtle);
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-weight: 600;
-            color: var(--color-secondary-accent);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            border: 1px solid var(--color-ui-border);
-        }
-
-        .category-header .arrow {
-            transition: transform 0.3s ease;
-        }
-
-        .category-group.open .category-header .arrow {
-            transform: rotate(90deg);
-        }
-
-        .category-content {
-            display: grid;
-            grid-template-rows: 0fr;
-            /* 默认折叠 */
-            transition: grid-template-rows 0.3s ease-out;
-            padding: 0 5px;
-        }
-
-        .category-group.open .category-content {
-            grid-template-rows: 1fr;
-            /* 展开 */
-        }
-
-        .category-content-inner {
-            overflow: hidden;
-            padding-top: 8px;
-        }
-
-        /* --- 2. 批量管理模式 --- */
-        .world-entry-card {
-            position: relative;
-            /* 为复选框定位 */
-        }
-
-        .bulk-selection-checkbox {
-            position: absolute;
-            left: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            accent-color: var(--color-primary-accent);
-            opacity: 0;
-            /* 默认隐藏 */
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-
-        /* 在批量管理模式下，显示复选框并为卡片腾出空间 */
-        #world-book-page.bulk-manage-mode .world-entry-card {
-            padding-left: 30px;
-        }
-
-        #world-book-page.bulk-manage-mode .bulk-selection-checkbox {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
 
         /* ========================================================== */
         /* --- 新增：NPC页面固定页脚布局 --- */
@@ -5173,11 +4864,6 @@ color: rgb(0, 0, 0);
             color: #464646;
         }
 
-
-
-
-
-
         /* --- 1. 状态栏总容器 --- */
         .statusbar {
             position: absolute;
@@ -5207,14 +4893,12 @@ color: rgb(0, 0, 0);
             transition: color 0.3s ease, text-shadow 0.3s ease;
         }
 
-        /* --- 2. 智能变色逻辑 --- */
-        /* 当状态栏拥有 .light-mode 这个 class 时 (通常在浅色背景的App内)，文字变为深色 */
-        .statusbar.light-mode {
-            color: #4B5563;
-            /* 深灰色文字 */
-            text-shadow: none;
-            /* 移除阴影 */
-        }
+/* --- 2. 智能变色逻辑 --- */
+/* 当状态栏拥有 .light-mode 这个 class 时, 文字变为深色 */
+.statusbar.light-mode {
+    color: #4B5563 !important; /* 深灰色文字 (强制应用) */
+    text-shadow: none !important; /* 强制移除阴影 */
+}
 
         /* --- 3. 左右区域的布局 --- */
         .statusbar-left,
@@ -6015,12 +5699,12 @@ button,
         /* --- 1. 主容器 (毛玻璃效果) --- */
         #ios-style-widget {
             position: absolute;
-            top: 25%;
+            top: 20%;
             left: 50%;
             transform: translate(-50%, -50%);
             /* 尺寸与外观 */
             width: 340px; 
-            height: 220px; 
+            height: 190px; 
             background-color: rgba(255, 255, 255, 0.7); 
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px);
@@ -6032,7 +5716,7 @@ button,
             /* 内部布局：垂直排列 */
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 2px;
         }
 
         /* --- 2. 顶部栏 --- */
@@ -6053,29 +5737,34 @@ button,
             color: #888;
         }
 
-        /* --- 3. 主要内容区 (三栏布局) --- */
-        .widget-main-content {
-            flex-grow: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.widget-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* 控制两个图标之间的距离 */
+}
+
+.widget-top-actions i {
+    font-size: 16px; /* 统一图标大小 */
+    color: #999;     /* 统一图标颜色 */
+}
+
+.widget-main-content {
+    position: relative; /* 新增：为绝对定位的子元素提供锚点 */
+    flex-grow: 1;
+    display: flex;
+    justify-content: center; /* 修改：让唯一的子元素居中 */
+    align-items: center;
+    padding: 0 10px;
+}
 
 
-        .widget-left-column img {
-            width: 56px; 
-            height: 56px; 
-            border-radius: 50%; 
-            object-fit: cover;
-        }
-        .widget-weekday-badge {
-            font-size: 12px; 
-            background-color: rgba(255, 255, 255, 0.6); 
-            padding: 4px 10px; 
-            border-radius: 12px;
-            color: #333;
-        }
-
+      #widget-avatar {
+    /* 核心：将元素的边角变为圆形 */
+    border-radius: 50%;
+    
+    /* 关键：将超出圆形边界的内部内容（方形图片）裁剪掉 */
+    overflow: hidden; 
+}  
 
 /* ✨ 核心新增：为左栏的昵称文本添加样式 ✨ */
         .widget-nickname-text {
@@ -6098,10 +5787,6 @@ button,
             color: #888;
         }
 
-/* ========================================================== */
-        /* --- ✨✨✨【全新】小组件左栏布局优化 ✨✨✨ --- */
-        /* ========================================================== */
-
         /* 1. 移除旧的间距控制，因为我们将使用更精确的方式 */
         .widget-left-column {
             gap: 0; 
@@ -6110,7 +5795,7 @@ button,
         /* 2. 为我们新创建的文本容器添加样式 */
         .widget-user-info-text {
             /* a. 在头像和这个文本块之间，创建一个15px的垂直间距 (您可以按需调整这个值) */
-            margin-top: 16px; 
+            margin-top: 6px; 
 
             /* b. 让内部的“昵称”和“IP地址”垂直堆叠并水平居中 */
             display: flex;
@@ -6121,15 +5806,20 @@ button,
             gap: 4px;
         }
 
-/* c. 右栏 (时间和图标) */
-        .widget-right-column {
-            display: flex; 
-            flex-direction: column; 
-            align-items: flex-end; 
-            height: 100%; 
-            justify-content: space-between;
-        }
-        
+.widget-right-column {
+    position: absolute; /* 新增：脱离文档流，变为浮动层 */
+    right: 1px;        /* 新增：定位到父容器右侧（15px是微调距离） */
+    top: 50%;           /* 新增：垂直居中定位 */
+    transform: translateY(-50%); /* 新增：精确垂直居中 */
+    
+    /* 以下是原有的样式，保持不变 */
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-end; 
+    height: 100%; 
+    justify-content: space-between;
+}
+
         /* ✨ 新增：时间和日期的父容器，负责垂直堆叠 */
         .widget-datetime-container {
             display: flex;
@@ -6138,8 +5828,6 @@ button,
             gap: 4px; /* 时间和日期之间的垂直间距 */
         }
 
-/* ✨ 修改：将时间、日期、星期的样式合并，并减小字号 */
-/* ✨ 修改：将时间、日期、星期、天气的样式合并，并减小字号 */
 .widget-time-group, .widget-date-group, .widget-weekday-group, .widget-weather-group {
     font-size: 10px; /* 字号可以稍微小一点，更精致 */
     color: #555;
@@ -6156,47 +5844,12 @@ button,
 .widget-weather-group #widget-weather-icon i {
     font-size: 15px;
 }
-        .widget-action-icons {
-            display: flex; 
-            gap: 12px; 
-            font-size: 16px; 
-            color: #999;
-        }
-/* ========================================================== */
-/* --- ✨✨✨【新增】iOS小组件-中栏多行文本框样式 ✨✨✨ --- */
-/* ========================================================== */
 
-.widget-multi-line-input {
-    width: 100%;
-    height: 100%; /* 让它填满父容器的高度 */
-    background: transparent;
-    border: none;
-    outline: none;
-    resize: none; /* 禁止用户手动调整大小 */
-    text-align: center; /* 文本居中 */
-    overflow: hidden; /* 隐藏可能出现的滚动条 */
-    
-    /* 复用您之前的字体样式 */
-    font-size: 12px;
-    color: #666;
-    font-weight: 300;
-    
-    /* 确保字体与页面一致 */
-    font-family: inherit;
-    line-height: 1.6; /* 增加行高，让换行更美观 */
-}
-
-/* (可选) 美化占位文字 */
-.widget-multi-line-input::placeholder {
-    color: #999;
-    opacity: 0.8;
-}
-
-        /* --- 3. 重新定义“星期艺术字”容器的样式 --- */
+        /* --- 3. 重新定义“艺术字”容器的样式 --- */
         .weekday-art-container {
             position: absolute;
-            bottom: 20px;
-            right: 5px;
+            bottom: -90px;
+            right: -15px;
             filter: none;
             z-index: 2;
             /* ✨ 确保它的层级高于相纸 (默认 z-index 是 auto 或 0) */
@@ -6215,7 +5868,35 @@ pointer-events: none; /* ✨ 核心新增：让鼠标可以穿透签名 ✨ */
             filter: grayscale(1) brightness(0) invert(0.1);
         }
 
+/* ========================================================== */
+/* --- ✨✨✨【新增】小组件底部签名栏-头像样式 ✨✨✨ --- */
+/* ========================================================== */
 
+/* 1. 头像和签名的父容器：使用Flex布局让它们水平排列 */
+.widget-signature-container {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    gap: 8px; /* 头像和文字之间的间距 */
+    flex-grow: 1; /* 占据左侧所有可用空间 */
+    min-width: 0; /* 防止内容溢出的关键技巧 */
+}
+
+/* 2. 小头像本身的样式 */
+.widget-signature-avatar {
+    width: 28px;  /* 设置一个合适的尺寸 */
+    height: 28px;
+    border-radius: 50%; /* 变为圆形 */
+    overflow: hidden;   /* 裁剪掉图片超出的部分 */
+    flex-shrink: 0;   /* 防止被压缩变形 */
+    background-color: var(--color-ui-border); /* 图片加载前的占位背景色 */
+}
+
+/* 3. (可选优化) 让过长的签名优雅地显示省略号 */
+#widget-signature {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 /* ========================================================== */
 /* --- ✨✨✨【全新】表情包仓库-标签筛选栏专属样式 ✨✨✨ --- */
 /* ========================================================== */
@@ -7086,6 +6767,194 @@ padding: 6px;
 }
 
 
+/* --- ✨✨✨【全新】世界书条目-高级参数卡片样式 V2.0 ✨✨✨ --- */
+.character-wb-item .param-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.character-wb-item .param-group label {
+    font-size: 11px;
+    color: var(--color-secondary-accent);
+    opacity: 0.8;
+}
+.character-wb-item .param-group .form-input {
+    padding: 4px 6px;
+    font-size: 12px;
+}
+.character-wb-item .wb-entry-details-inner .keyword-logic-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.character-wb-item .wb-entry-details-inner .wb-entry-key-logic {
+    flex-shrink: 0; /* 防止被压缩 */
+    width: auto;   /* 宽度自适应内容 */
+}
+/* ========================================================== */
+/* --- ✨✨✨【全新】世界书关联弹窗专属样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 弹窗的整体容器 (Modal Overlay) */
+.modal-overlay[style*="display: flex"] { /* 精确选择可见的弹窗 */
+    /* 核心：应用半透明的黑色背景，模糊化并压暗下方内容，营造沉浸感 */
+    background: rgba(0, 0, 0, 0.6) !important; /* 加大不透明度 */
+    backdrop-filter: blur(8px); /* 轻微模糊背景 */
+    -webkit-backdrop-filter: blur(8px); /* 兼容 Webkit 浏览器 */
+    z-index: 1022 !important; /* 确保弹窗置于顶层 */
+}
+
+/* 2. 弹窗内容卡片 (Modal Content) */
+#world-book-selection-modal .modal-content {
+    /* 核心：继承整体弹窗的毛玻璃效果，使其与系统风格统一 */
+    background-color: var(--color-ui-glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    /* 尺寸和圆角 */
+    width: 90%; /* 适应不同屏幕宽度 */
+    max-width: 380px; /* 限制最大宽度 */
+    height: 70%; /* 限制最大高度 */
+    max-height: 500px;
+
+    /* 内部布局 */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 隐藏超出圆角的内容 */
+    border-radius: 20px; /* 更大的圆角，更柔和 */
+    border: 1px solid var(--color-ui-glass-border); /* 优雅的边框 */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); /* 增加一点立体感 */
+
+    /* 动画效果 */
+    transform: scale(0.95); /* 初始状态略微缩小 */
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.2s ease;
+    pointer-events: none; /* 初始状态下不可交互 */
+}
+
+/* 3. 弹窗可见时的动画状态 */
+#world-book-selection-modal.visible .modal-content {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto; /* 变为可交互 */
+}
+
+/* 4. 弹窗头部 (Header) */
+#world-book-selection-modal .page-header {
+    padding: 12px 20px; /* 增加一点垂直内边距 */
+    border-bottom: 1px solid var(--color-ui-border); /* 使用变量控制边框颜色 */
+    background: var(--color-ui-base); /* 头部使用干净的白色背景 */
+    color: var(--color-secondary-accent); /* 文本颜色 */
+    font-weight: 600;
+    justify-content: space-between; /* 标题和关闭按钮两端对齐 */
+    align-items: center;
+    flex-shrink: 0; /* 防止头部被压缩 */
+    
+}
+
+/* 5. 弹窗的关闭按钮 */
+#category-selection-modal-close-btn { /* 针对移动操作的关闭按钮 */
+    font-size: 18px; /* 图标大小 */
+}
+
+/* 6. 弹窗主体内容区 (Page Content) */
+#world-book-selection-modal .page-content {
+    flex-grow: 1; /* 占据所有剩余空间 */
+    overflow-y: auto; /* 允许内容滚动 */
+    padding: 10px 15px; /* 留出一些内边距 */
+    display: flex;
+    flex-direction: column; /* 内部元素垂直排列 */
+    gap: 8px; /* 元素之间的间距 */
+}
+
+/* 7. 单个世界书条目 (Item) */
+.wb-selection-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--color-ui-subtle); /* 使用次要UI色作为背景 */
+    border-radius: 12px; /* 同样应用圆角 */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: 1px solid var(--color-ui-border); /* 匹配整体边框风格 */
+}
+
+.wb-selection-item:hover {
+    background-color: var(--color-ui-border); /* 悬浮时变色 */
+}
+
+/* 8. 复选框样式 */
+.wb-selection-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    flex-shrink: 0; /* 防止被压缩 */
+    accent-color: var(--color-primary-accent); /* 使用强调色作为选中颜色 */
+}
+
+/* 9. 条目标签文字 */
+.wb-selection-item label {
+    flex: 1; /* 让标签占据剩余空间 */
+    font-weight: 500;
+    color: var(--color-secondary-accent);
+    cursor: pointer; /* 确保整个label区域都可点击 */
+}
+
+/* 10. 弹窗底部 (Footer) */
+#world-book-selection-modal .page-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--color-ui-border);
+    background: var(--color-ui-base);
+    display: flex;
+    justify-content: space-between; /* 按钮左右对齐 */
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* 11. 弹窗内的“取消”和“确认”按钮 */
+#world-book-selection-modal .page-footer button {
+    flex: 1; /* 按钮平分底部区域 */
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#world-book-selection-modal .page-footer button:first-child { /* 取消按钮 */
+    background: var(--color-ui-subtle);
+    color: var(--color-secondary-accent);
+    border: 1px solid var(--color-ui-border);
+}
+
+#world-book-selection-modal .page-footer button:last-child { /* 确认按钮 */
+    background: var(--color-primary-accent);
+    color: white;
+}
+/* ========================================================== */
+/* --- ✨✨✨【全新修复】状态栏所有图标颜色同步 ✨✨✨ --- */
+/* ========================================================== */
+#statusbar .btn-icon {
+    color: currentColor; /* 核心：让按钮及其内部图标的颜色，强制继承自父级(#statusbar)当前的文字颜色 */
+}
+
+/* ========================================================== */
+/* --- ✨✨✨【新增】更换图标-按钮组样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 按钮组的容器：使用Flex布局让按钮并排，并设置间距 */
+.icon-setting-item .button-group {
+    display: flex;
+    justify-content: center; /* 居中对齐 */
+    gap: 8px;           /* 按钮之间的间距 */
+    margin-top: 6px;      /* 与上方名称标签的间距 */
+}
+
+/* 2. 让按钮组里的所有按钮共享统一样式 (复用已有的) */
+.icon-setting-item .button-group .btn {
+    font-size: 12px;
+    padding: 4px 12px;
+    flex-grow: 1; /* (可选) 让按钮平分宽度，更整齐 */
+}
     </style>
 
     <!-- 【请将这个新的 style 标签粘贴到旧 style 标签的紧后方】 -->
@@ -7180,7 +7049,7 @@ padding: 6px;
     <i class="fa-solid fa-masks-theater"></i>
 </button>
 <button id="statusbar-time-weather-btn" class="btn-icon buttonlike" title="情景感知已开启" style="display: none;">
-    <i class="fa-solid fa-clock"></i>
+    <i class="fa-regular fa-clock"></i>
 </button>
                     <button id="statusbar-prompt-btn" class="btn-icon buttonlike" title="查看AI提示词">
                         <i class="fa-solid fa-t"></i>
@@ -7227,24 +7096,23 @@ padding: 6px;
 
 
 
-<!-- ========================================================== -->
+                        <!-- ========================================================== -->
                         <!-- --- ✨✨✨【全新】iOS风格桌面小组件 ✨✨✨ --- -->
                         <!-- ========================================================== -->
                         <div id="ios-style-widget">
-                            <!-- 顶部栏 -->
-<!-- 顶部栏 -->
-                            <div class="widget-top-bar">
-                                <!-- ✨ 核心修改：为span添加buttonlike类，并移除图标 ✨ -->
-                                <span id="widget-signature" class="buttonlike">我の世界本是阴天 直到@署名の出现</span>
-                            </div>
+
 
                             <!-- 主要内容区 -->
                             <div class="widget-main-content">
                                 <!-- 左栏 -->
 
-<!-- 左栏 -->
-<!-- 左栏 -->
-<div class="widget-left-column">
+                            <div class="widget-left-column">
+
+                            </div>
+          
+<!-- 中栏 -->
+                                <div class="widget-center-column">
+
     <div id="widget-avatar" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; cursor: pointer;" title="点击更换头像"></div>
     
     <!-- ▼▼▼ 新增的容器，将昵称和IP打包 ▼▼▼ -->
@@ -7256,28 +7124,18 @@ padding: 6px;
         </div>
     </div>
     <!-- ▲▲▲ 容器结束 ▲▲▲ -->
-</div>
-                                <!-- 中栏 -->
-<!-- 中栏 -->
-                                <div class="widget-center-column">
-<!-- ▼▼▼ 请用这一整块全新的代码，替换掉旧的四行 <span ...> ▼▼▼ -->
-<textarea id="widget-multi-line-text" class="widget-multi-line-input" maxlength="42" placeholder="点击输入文字..."></textarea>
-<!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-
                                 </div>
                                 <!-- 右栏 -->
-<!-- 右栏 -->
                                 <div class="widget-right-column">
                                     <!-- ✨ 核心修改 1: 创建一个新容器包裹时间和日期 -->
                                     <div class="widget-datetime-container">
-
- <!-- ✨ 核心修改：我们将天气组移动到了这里，并添加了星星 ✨ -->
-     <div id="widget-weather-group" class="widget-weather-group">
-            <span id="widget-weather-icon"></span>
-            <span id="widget-weather-city">--</span>
-            <span id="widget-weather-temp">--°</span>
-            <i class="fa-regular fa-star"></i>
-        </div>
+                                    <!-- ✨ 核心修改：我们将天气组移动到了这里，并添加了星星 ✨ -->
+                                        <div id="widget-weather-group" class="widget-weather-group">
+                                                <span id="widget-weather-icon"></span>
+                                                <span id="widget-weather-city">--</span>
+                                                <span id="widget-weather-temp">--°</span>
+                                                <i class="fa-regular fa-star"></i>
+                                            </div>
                                         <!-- ✨ 核心修改 2: 将日期移到此处，并添加星星 -->
                                         <div class="widget-date-group">
                                             <span id="widget-date">2025-11-07</span>
@@ -7288,216 +7146,133 @@ padding: 6px;
                                             <i class="fa-regular fa-star"></i>
                                         </div>
 
- <!-- ✨ 核心新增：将星期移到此处，并添加星星 -->
+ <!-- ✨ 核心新增：移到此处，并添加星星 -->
                                         <div class="widget-weekday-group">
-                                            <span id="widget-weekday">星期五</span>
+                                            <span id="widget-weekday">周五</span>
                                             <i class="fa-regular fa-star"></i>
                                         </div>
 
-
+                                            </div>
+                                    <!-- ▼▼▼ 在这里粘贴我们剪切过来的艺术字容器 ▼▼▼ -->
+                                    <div class="weekday-art-container">
+                                        <img id="weekday-art-image" src="" alt="周艺术字">
                                     </div>
-                            <!-- ▼▼▼ 在这里粘贴我们剪切过来的艺术字容器 ▼▼▼ -->
-                            <div class="weekday-art-container">
-                                <img id="weekday-art-image" src="" alt="星期艺术字">
-                            </div>
-                            <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
-<div class="widget-action-icons">
-    <i id="widget-change-bg-btn" class="fa-regular fa-image buttonlike"></i>
-    <!-- ✨ 核心修改：为指纹图标添加了 id 和 buttonlike class ✨ -->
-    <i id="widget-fingerprint-btn" class="fa-solid fa-fingerprint buttonlike"></i>
-</div>
-<!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
+
                                 </div>
                             </div>
+
+<div class="widget-top-bar">
+    <!-- ▼▼▼ 核心修改：用一个新的 div 容器包裹签名和新头像 ▼▼▼ -->
+    <div class="widget-signature-container">
+        <!-- 这是我们为小头像新增的“画框” -->
+        <div id="widget-signature-avatar" class="widget-signature-avatar"></div>
+        <!-- 原来的签名文本现在放在了新容器内部 -->
+        <span id="widget-signature" class="buttonlike">我の世界本是阴天 直到@署名の出现</span>
+    </div>
+    <!-- ▲▲▲ 修改结束 ▲▲▲ -->
+
+    <div class="widget-top-actions">
+        <i id="widget-change-bg-btn" class="fa-regular fa-image buttonlike"></i>
+        <i id="widget-fingerprint-btn" class="fa-solid fa-fingerprint buttonlike"></i>
+    </div>
+</div>
                         </div>
 <!-- ✨ 核心新增：这是为iOS风格小组件更换头像专用的文件选择器 ✨ -->
                         <input type="file" id="widget-avatar-input" accept="image/*" class="hidden" />
                         <!-- ========================================================== -->
                         <input type="file" id="ios-widget-bg-input" accept="image/*" class="hidden" />
                         <!-- ========================================================== -->
+<!-- QQ / Auing -->
+<button class="app" role="listitem" aria-label="Auing 应用" id="app-qq" data-app-id="qq">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+            <i class="fa-regular fa-comments"></i>
+        </span>
+        <span class="label">Auing</span>
+    </div>
+</button>
 
-                        <!-- ========================================================== -->
+<!-- NPC -->
+<button class="app" role="listitem" aria-label="NPC中心应用" id="app-npc-hub" data-app-id="npc-hub">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+            <i class="fa-solid fa-users-viewfinder"></i>
+        </span>
+        <span class="label">NPC</span>
+    </div>
+</button>
 
-                        <!-- QQ -->
-                        <button class="app" role="listitem" aria-label="QQ 应用" id="app-qq" data-app-id="qq">
-                            <div class="app-visuals">
-                                <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                    <span class="default-icon-content">
-                                        <img src="https://i.postimg.cc/DypZZFRj/QQ.jpg" alt="QQ图标">
-                                    </span>
-                                </span>
-                                <span class="label">Auing</span>
-                            </div>
-                        </button>
+<!-- 线下 -->
+<button class="app" role="listitem" aria-label="线下应用" id="app-offline" data-app-id="offline">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+            <i class="fa-solid fa-heart-pulse"></i>
+        </span>
+        <span class="label">线下</span>
+    </div>
+</button>
+<!-- 设置 -->
+<button class="app" role="listitem" aria-label="设置应用" id="app-settings" data-app-id="settings">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+            <i class="fa-solid fa-gear"></i>
+        </span>
+        <span class="label">设置</span>
+    </div>
+</button>
+<!-- 论坛 -->
+<button class="app" role="listitem" aria-label="论坛应用" id="app-forum" data-app-id="forum">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+           <i class="fa-solid fa-mug-hot"></i>
+        </span>
+        <span class="label">论坛</span>
+    </div>
+</button>
 
-
-                        <!-- NPC -->
-                        <!-- ========================================================== -->
-                        <!-- --- ✨✨✨【全新】NPC中心App图标 ✨✨✨ --- -->
-                        <!-- ========================================================== -->
-                        <button class="app" role="listitem" aria-label="NPC中心应用" id="app-npc-hub" data-app-id="npc-hub">
-                            <div class="app-visuals">
-                                <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                    <span class="default-icon-content">
-                                        <!-- 你可以找一个更合适的NPC图标替换这里的链接 -->
-                                        <img src="https://i.postimg.cc/d193Fz33/npc-icon.png" alt="NPC中心图标">
-                                    </span>
-                                </span>
-                                <span class="label">NPC</span>
-                            </div>
-                        </button>
-
-
-
-                        <!-- ========================================================== -->
-                        <!-- --- ✨✨✨【新增】线下App图标 ✨✨✨ --- -->
-                        <!-- ========================================================== -->
-                        <button class="app" role="listitem" aria-label="线下应用" id="app-offline" data-app-id="offline">
-                            <div class="app-visuals">
-                                <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                    <span class="default-icon-content">
-                                        <!-- 您可以替换为您喜欢的图标图片链接 -->
-                                        <img src="https://i.postimg.cc/k45t52Qp/image.png" alt="线下图标">
-                                    </span>
-                                </span>
-                                <span class="label">线下</span>
-                            </div>
-                        </button>
-
-                        <!-- ========================================================== -->
-                        <!-- --- ✨✨✨【新增】论坛App图标 ✨✨✨ --- -->
-                        <!-- ========================================================== -->
-                        <button class="app" role="listitem" aria-label="论坛应用" id="app-forum" data-app-id="forum">
-                            <div class="app-visuals">
-                                <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                    <span class="default-icon-content">
-                                        <!-- 您可以替换为您喜欢的图标图片链接 -->
-                                        <img src="https://i.postimg.cc/8z0K07ww/image.png" alt="论坛图标">
-                                    </span>
-                                </span>
-                                <span class="label">论坛</span>
-                            </div>
-                        </button>
-
-
-
-
-
-                        <!-- 设置 -->
-                        <button class="app" role="listitem" aria-label="设置应用" id="app-settings-icon"
-                            data-app-id="settings">
-                            <div class="app-visuals">
-                                <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                    <span class="default-icon-content">
-                                        <img src="https://i.postimg.cc/tCvTTy8r/image.jpg" alt="设置图标">
-                                    </span>
-                                </span>
-                                <span class="label">设置</span>
-                            </div>
-                        </button>
-
-
-                        <!-- ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ -->
-
-                        <!-- ========================================================== -->
-                        <!-- --- ✨✨✨【全新】直播App图标 ✨✨✨ --- -->
-                        <!-- ========================================================== -->
-                        <button class="app" role="listitem" aria-label="直播应用" id="app-live" data-app-id="live">
-                            <div class="app-visuals">
-                                <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                    <span class="default-icon-content">
-                                        <img src="https://i.postimg.cc/Pqj85pbr/image.png" alt="直播图标">
-                                    </span>
-                                </span>
-                                <span class="label">直播</span>
-                            </div>
-                        </button>
-
-                        <!-- ========================================================== -->
-                        <!-- --- ✨✨✨【全新】故事App图标 ✨✨✨ --- -->
-                        <!-- ========================================================== -->
-                        <button class="app" role="listitem" aria-label="故事应用" id="app-novel" data-app-id="novel">
-                            <div class="app-visuals">
-                                <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                    <span class="default-icon-content">
-                                        <img src="https://i.postimg.cc/k40cSv23/image.png" alt="故事图标">
-                                    </span>
-                                </span>
-                                <span class="label">故事</span>
-                            </div>
-                        </button>
-
-                        <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
-
-
-                        <!-- 【请将这行新代码，粘贴到 id="desktop-dock" 的正上方】 -->
-                        <div id="music-spectrum-visualizer" class="hidden"></div>
+<!-- 故事 -->
+<button class="app" role="listitem" aria-label="故事应用" id="app-novel" data-app-id="novel">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+           <i class="fa-solid fa-book-open"></i>
+        </span>
+        <span class="label">故事</span>
+    </div>
+</button>
                         <!-- ✨ 核心修改 2：这是一个全新的Dock栏容器 -->
                         <nav id="desktop-dock">
 
-                            <!-- ========================================================== -->
-                            <!-- --- ✨✨✨ Dock栏占位App ✨✨✨ --- -->
-                            <!-- ========================================================== -->
-                            <!-- ========================================================== -->
 
 
+<!-- 美化 -->
+<button class="app" role="listitem" aria-label="美化应用" id="app-beautify" data-app-id="beautify">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </span>
+        <span class="label">美化</span>
+    </div>
+</button>
 
-                            <!-- 世界书  -->
-                            <button class="app" role="listitem" aria-label="世界书应用" id="app-world-book"
-                                data-app-id="world-book">
-                                <div class="app-visuals">
-                                    <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                        <span class="default-icon-content">
-                                            <img src="https://i.postimg.cc/hPZjjgNs/image.jpg" alt="世界书图标">
-                                        </span>
-                                    </span>
-                                    <span class="label">世界书</span>
-                                </div>
-                            </button>
+<!-- 预设 -->
+<button class="app" role="listitem" aria-label="预设应用" id="app-presets" data-app-id="presets">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+            <i class="fa-solid fa-sliders"></i>
+        </span>
+        <span class="label">预设</span>
+    </div>
+</button>
 
-
-                            <button class="app" role="listitem" aria-label="美化应用" id="app-beautify"
-                                data-app-id="beautify">
-                                <div class="app-visuals">
-                                    <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                        <span class="default-icon-content">
-                                            <img src="https://i.postimg.cc/0y6NKFqn/image.jpg" alt="美化图标">
-                                        </span>
-                                    </span>
-                                    <span class="label">美化</span>
-                                </div>
-                            </button>
-
-                            <!-- ========================================================== -->
-                            <button class="app" role="listitem" aria-label="预设应用" id="app-presets"
-                                data-app-id="presets">
-                                <div class="app-visuals">
-                                    <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                        <span class="default-icon-content">
-                                            <!-- 您可以替换为您喜欢的图标图片链接 -->
-                                            <img src="https://i.postimg.cc/hvkY8z4b/image.png" alt="预设图标">
-                                        </span>
-                                    </span>
-                                    <span class="label">预设</span>
-                                </div>
-                            </button>
-
-                            <!-- ========================================================== -->
-                            <!-- --- ✨✨✨【新增】正则App图标 (Dock栏) ✨✨✨ --- -->
-                            <!-- ========================================================== -->
-                            <button class="app" role="listitem" aria-label="正则应用" id="app-regex" data-app-id="regex">
-                                <div class="app-visuals">
-                                    <span class="icon buttonlike has-custom-icon" aria-hidden="true">
-                                        <span class="default-icon-content">
-                                            <!-- 您可以替换为您喜欢的图标图片链接 -->
-                                            <img src="https://i.postimg.cc/sXhM9BqM/image.png" alt="正则图标">
-                                        </span>
-                                    </span>
-                                    <span class="label">正则</span>
-                                </div>
-                            </button>
-
-                            <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
+<!-- 正则 -->
+<button class="app" role="listitem" aria-label="正则应用" id="app-regex" data-app-id="regex">
+    <div class="app-visuals">
+        <span class="icon buttonlike" aria-hidden="true">
+            <i class="fa-solid fa-code"></i>
+        </span>
+        <span class="label">正则</span>
+    </div>
+</button>
 
 
 
@@ -8376,72 +8151,6 @@ padding: 6px;
                 </div>
 
 
-<!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 id="world-book-page" 的 <div> ▼▼▼ -->
-<div id="world-book-page" class="page">
-    <header class="page-header">
-        <button id="world-book-back" class="btn-icon btn-back buttonlike" style="width: 32px; height: 32px; border-radius: 50%;"><i class="fa-solid fa-chevron-left"></i></button>
-        <span style="font-weight: bold; font-size: 18px;">世界书</span>
-        <div class="header-right">
-            <button id="manage-books-btn" class="btn-icon buttonlike" title="管理书本"><i class="fa-solid fa-folder-tree"></i></button>
-            <button id="import-world-entries-btn" class="btn-icon buttonlike" title="导入条目"><i class="fa-solid fa-upload"></i></button>
-            <button id="export-world-entries-btn" class="btn-icon buttonlike" title="导出条目"><i class="fa-solid fa-download"></i></button>
-        </div>
-    </header>
-
-    <input type="file" id="import-world-book-input" accept=".json" class="hidden">
-
-    <!-- 这是新的、用于显示“书本列表”的主内容区 -->
-    <main id="world-books-list-container" class="page-content" style="padding: 10px;">
-        <p id="world-book-empty-state" class="hidden" style="text-align: center; color: #a1a1aa; padding-top: 40px;">
-           世界书是空的，<br>点击下方的按钮来创建吧！
-        </p>
-    </main>
-
-    <footer class="page-footer">
-        <button id="add-new-book-btn" class="btn btn-primary buttonlike btn-full-width" style="font-size: 16px;">+ 创建新的书</button>
-    </footer>
-</div>
-<!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-
-                <!-- ========================================================== -->
-                <!-- --- ✨✨✨【全新】分类管理弹窗 ✨✨✨ --- -->
-                <!-- ========================================================== -->
-                <div id="category-manager-modal" class="modal-overlay hidden">
-                    <div class="modal-content">
-                        <header class="page-header">
-                            <span>管理分类</span>
-                            <button id="category-manager-close-btn" class="btn-icon buttonlike"><i
-                                    class="fa-solid fa-x"></i></button>
-                        </header>
-                        <main class="page-content" style="display: flex; flex-direction: column; gap: 10px;">
-                            <div id="category-list-container" style="flex-grow: 1; overflow-y: auto;">
-                                <!-- 分类列表将由JS动态生成 -->
-                            </div>
-                            <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                                <input type="text" id="new-category-name-input" class="form-input"
-                                    placeholder="输入新分类名称...">
-                                <button id="add-new-category-btn" class="btn btn-primary buttonlike">添加</button>
-                            </div>
-                        </main>
-                    </div>
-                </div>
-
-                <!-- ========================================================== -->
-                <!-- --- ✨✨✨【全新】移动到分类选择弹窗 ✨✨✨ --- -->
-                <!-- ========================================================== -->
-                <div id="category-selection-modal-for-move" class="modal-overlay hidden">
-                    <div class="modal-content" style="max-height: 50%;">
-                        <header class="page-header">
-                            <span>移动到...</span>
-                            <button id="category-move-close-btn" class="btn-icon buttonlike"><i
-                                    class="fa-solid fa-x"></i></button>
-                        </header>
-                        <main id="category-list-for-move" class="page-content">
-                            <!-- 可移动的分类列表将由JS动态生成 -->
-                        </main>
-                    </div>
-                </div>
-
                 <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
                 <!-- ========================================================== -->
                 <!-- --- ✨✨✨【改造后】世界书编辑器弹窗 (V2 - 智能显示版) ✨✨✨ --- -->
@@ -8661,8 +8370,6 @@ padding: 6px;
 
     </main> <!-- ▲▲▲ 步骤 1 在这里将 </div> 修改为 </main> ▲▲▲ -->
 
-
-
     <!-- 消息长按操作菜单 -->
     <div id="message-menu" class="hidden">
         <button id="quote-message-btn" class="message-menu-item">引用</button>
@@ -8696,7 +8403,7 @@ padding: 6px;
         <div style="width: 320px; height: 70%; background: var(--color-ui-base); border-radius: 16px; 
               display: flex; flex-direction: column; overflow: hidden; ">
             <header style="padding: 12px; font-weight: 600;   text-align: center; border-bottom: 1px solid #b4b4b4;">
-                选择要关联的条目
+                选择要关联的世界书
             </header>
             <main id="wb-selection-list" style="flex: 1; overflow-y: auto; padding: 10px;"></main>
             <footer style="padding: 12px; border-top: 1px solid #a8a8a8; display: flex; gap: 12px;">
@@ -8705,8 +8412,6 @@ padding: 6px;
             </footer>
         </div>
     </div>
-
-
 
     <!-- 【请将这个全新的 HTML 弹窗，粘贴到 body 的末尾】 -->
 
@@ -9448,7 +9153,7 @@ padding: 6px;
                         <!-- a. 时间组件 -->
                         <div class="char-phone-time-widget">
                             <div class="time">14:30</div>
-                            <div class="date">10月11日 星期六</div>
+                            <div class="date">10月11日 周六</div>
                         </div>
 
                         <!-- ▼▼▼ 这是新的应用网格 ▼▼▼ -->
@@ -9622,10 +9327,10 @@ padding: 6px;
 
             <!-- 可滚动的主内容区 -->
             <main id="plot-summaries-list" class="page-content" style="flex-grow: 1; overflow-y: auto; padding: 10px;">
-                <!-- 历史梗概列表将由JS动态生成 -->
+                <!-- 历史总结列表将由JS动态生成 -->
                 <p id="plot-summaries-empty-state" class="hidden"
                     style="text-align: center; color: var(--color-secondary-accent); padding-top: 50px;">
-                    还没有任何剧情档案，<br>点击下方按钮生成第一条吧！
+                    还没有任何剧情总结，<br>点击下方按钮生成第一条吧！
                 </p>
             </main>
 
@@ -9639,7 +9344,7 @@ padding: 6px;
     </div>
 
     <!-- ========================================================== -->
-    <!-- --- ✨✨✨【复用】剧情梗概编辑器弹窗 ✨✨✨ --- -->
+    <!-- --- ✨✨✨【复用】剧情总结编辑器弹窗 ✨✨✨ --- -->
     <!-- ========================================================== -->
     <div id="plot-summary-editor-modal" class="modal-overlay hidden">
         <div class="modal-content">
@@ -9648,13 +9353,13 @@ padding: 6px;
                 <button id="plot-summary-editor-back" class="btn-icon btn-back buttonlike"
                     style="width: 32px; height: 32px; border-radius: 50%;">
                     <i class="fa-solid fa-chevron-left"></i></button>
-                <span id="plot-summary-editor-title" style="font-weight: bold; font-size: 18px;">编辑剧情梗概</span>
+                <span id="plot-summary-editor-title" style="font-weight: bold; font-size: 18px;">编辑剧情总结</span>
                 <button id="save-edited-summary-btn" class="btn btn-primary buttonlike"
                     style="font-size: 14px; padding: 6px 12px;">保存</button>
             </header>
             <main class="page-content">
                 <div style="margin-bottom: 16px;">
-                    <label for="summary-text-input" class="form-label">梗概内容:</label>
+                    <label for="summary-text-input" class="form-label">总结内容:</label>
                     <textarea id="summary-text-input" class="form-input form-textarea"
                         style="height: 300px;"></textarea>
                 </div>
@@ -9836,10 +9541,10 @@ padding: 6px;
             </header>
             <main class="page-content" style="display: flex; flex-direction: column; gap: 12px; padding: 20px;">
                 <button id="plot-control-summarize-btn" class="btn btn-primary buttonlike" style="font-size: 16px;">
-                    🧠 生成核心记忆
+                    <i class="fa-solid fa-table"></i> 生成核心记忆
                 </button>
                 <button id="plot-control-fastforward-btn" class="btn btn-secondary buttonlike" style="font-size: 16px;">
-                    ⏩ 触发剧情快进
+                    <i class="fa-solid fa-angles-right"></i> 剧情快进
                 </button>
             </main>
             <footer class="page-footer">
@@ -10138,15 +9843,13 @@ padding: 6px;
     <script>
 
         const db = new Dexie("QQAppDB");
-// ▼▼▼ 请用这一整块全新的【最终版】代码，替换旧的 db.version(...) 代码块 ▼▼▼
+// ▼▼▼ 请用这一整块全新的代码，完整替换旧的 db.version(169) 代码块 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【V168 - 条目独立控制版】数据库结构 ✨✨✨ ---
+// --- ✨✨✨【V170 - 高级参数版】数据库结构 ✨✨✨ ---
 // ==========================================================
-db.version(168).stores({ // ✨ 核心修改 1: 版本号从 167 升级到 168
-    // --- 修改 characters 表，用 *linkedEntries 替换 *linkedBooks ---
+db.version(170).stores({ // ✨ 核心修改 1: 版本号从 169 升级到 170
+    // --- 表结构定义保持不变，Dexie会自动处理 ---
     characters: "id,&name,note,persona,avatar,gender,birthday,age,lastMomentAt,createdAt,status,*linkedEntries,lastCommentAt,sociability,categoryId,customStatusText,*stickerTags,phoneWallpaper,fontColor,userFontColor,bubbleColor,userBubbleColor,chatWallpaper,listenTogetherDuration,bubbleCssPresetId,activeUserPersona,readingNovelId,readingProgress",
-    
-    // --- 其他所有表的定义保持不变 ---
     world_books: "++id, &name", 
     world_entries: "++id, userId, title, createdAt, keywords, content, isGlobal, categoryId, bookId",
     users: "id,name,avatar,bio,background,signature,playerCover,gender,birthday,age,displayId",
@@ -10156,7 +9859,7 @@ db.version(168).stores({ // ✨ 核心修改 1: 版本号从 167 升级到 168
     diaries: "++id, [userId+contactId], contactId, createdAt",
     bonds: "++id,[userId+contactId],contactId,category,aspectRatio,createdAt",
     plot_summaries: '++id, userId, characterId, createdAt',
-    songs: "++id, title, artist, audioData, coverArt, isFavorite, lyrics",
+    songs: "++id, title, artist, audioData, coverArt, isFavorite, lyrics, songUrl",
     novels: "++id, &title, author, createdAt",
     messages: "++id,[userId+chatId],chatId,senderId,time,videoCallHistory,[userId+chatId+isAnalyzed],recalledContent,sceneName",
     moments: "++id,[userId+contactId],contactId,createdAt",
@@ -10166,25 +9869,49 @@ db.version(168).stores({ // ✨ 核心修改 1: 版本号从 167 升级到 168
     favorites: "++id, userId, type, contentId, [userId+type], savedAt",
     global_stickers: "++id, &description, *tags",
     beautify_presets: "++id, &name",
-    bubble_css_presets: "++id, &name"
+    bubble_css_presets: "++id, &name",
+    world_book_settings: "&key, value"
 }).upgrade(async tx => {
-    // ✨ 核心修改 2: 编写数据迁移脚本，自动将旧数据转换为新格式
-    console.log("正在执行数据库升级 (v168): 转换角色世界书关联...");
+    // --- v168 迁移脚本 (必须保留，用于兼容更早的版本) ---
     await tx.table('characters').toCollection().modify(async character => {
         if (character.linkedBooks && Array.isArray(character.linkedBooks)) {
+            console.log(`正在为角色「${character.name}」执行 v168 数据迁移...`);
             const bookIds = character.linkedBooks.filter(Boolean);
             if (bookIds.length > 0) {
-                // 找到这些书本下的所有条目
                 const entries = await tx.table('world_entries').where('bookId').anyOf(bookIds).toArray();
-                // 将它们转换为新的配置对象格式
                 character.linkedEntries = entries.map(entry => ({
-                    id: entry.id,
-                    enabled: true, // 默认全部启用
-                    depth: 100,
-                    order: 100
+                    id: entry.id, enabled: true, depth: 100, order: 100
                 }));
             }
-            delete character.linkedBooks; // 删除旧字段
+            delete character.linkedBooks;
+        }
+    });
+    
+    // --- ✨✨✨【全新】v170 迁移脚本：为 linkedEntries 添加所有新参数 ✨✨✨ ---
+    console.log("正在执行数据库升级 (v170): 为世界书条目配置添加新参数...");
+    await tx.table('characters').toCollection().modify(async character => {
+        if (character.linkedEntries && Array.isArray(character.linkedEntries)) {
+            let needsUpgrade = false;
+            // 遍历每一个条目配置
+            character.linkedEntries.forEach(config => {
+                // 检查它是否是旧格式 (通过检查旧字段是否存在来判断)
+                if (config.depth !== undefined) {
+                    needsUpgrade = true;
+                    // a. 将旧字段重命名为新字段
+                    config.priority = config.depth;       
+                    config.insertionOrder = config.order; 
+                    
+                    // b. 添加所有新字段的默认值
+                    config.probability = 100;
+                    config.position = 'global';
+                    config.keywordLogic = 'any';
+                    
+                    // c. 删除旧字段
+                    delete config.depth;
+                    delete config.order;
+                }
+            });
+            if(needsUpgrade) console.log(`已为角色「${character.name}」的条目配置升级到 v170 格式。`);
         }
     });
     console.log("数据库升级完成！");
@@ -11063,51 +10790,38 @@ async function getAiReply(contents, persona) {
                 throw new Error(`网络连接失败，无法访问API服务。(${networkError.message})`);
             }
         }
+async function loadAndApplyWallpaper() {
+    const pageEl = document.querySelector('.page');
+    const statusbar = document.getElementById('statusbar');
+    // ✨ 1. 获取桌面图标的容器
+    const desktopContainer = document.getElementById('desktop-container'); 
+    
+    if (!pageEl || !statusbar || !desktopContainer) return;
 
+    const wallpaperSetting = await db.global_settings.get('wallpaper');
+    const wallpaperBlob = (wallpaperSetting && wallpaperSetting.value instanceof Blob) ? wallpaperSetting.value : null;
 
-
-
+    if (window.getCurrentPageId() === 'home') {
+        const adaptiveClass = await getAdaptiveTextColor(wallpaperBlob);
         
+        // 应用到状态栏 (这行不变)
+        statusbar.className = 'statusbar ' + adaptiveClass;
 
-        async function loadAndApplyWallpaper() {
-            // 1. 获取所有需要更新壁纸的元素
-            const pageEl = document.querySelector('.page');
-            const wallpaperPreview = document.getElementById('wallpaper-preview');
-            // ✨ 核心新增：获取左上角新相册的图片元素
-            const snapshotImage = document.getElementById('snapshot-image');
-
-            if (!pageEl) return;
-
-            // 2. 从数据库读取壁纸设置 (保持不变)
-            const wallpaperSetting = await db.global_settings.get('wallpaper');
-
-            // 3. ✨ 核心修改：统一更新所有相关的UI元素
-            if (wallpaperSetting && wallpaperSetting.value instanceof Blob) {
-                const wallpaperUrl = URL.createObjectURL(wallpaperSetting.value);
-
-                // a. 更新页面背景
-                pageEl.style.setProperty('--wallpaper-url', `url(${wallpaperUrl})`);
-
-                // b. 更新设置页的预览图 (如果存在)
-                if (wallpaperPreview) wallpaperPreview.style.backgroundImage = `url(${wallpaperUrl})`;
-
-                // c. ✨ 更新我们左上角新相册的图片 ✨
-                if (snapshotImage) snapshotImage.style.backgroundImage = `url(${wallpaperUrl})`;
-
-            } else {
-                // (恢复默认的逻辑保持不变)
-                pageEl.style.removeProperty('--wallpaper-url');
-                if (wallpaperPreview) wallpaperPreview.style.backgroundImage = 'none';
-
-                // ✨ 当恢复默认时，也清空新相册的图片 ✨
-                if (snapshotImage) snapshotImage.style.backgroundImage = 'none';
-            }
+        // ✨ 2. 将同样的分析结果也应用到桌面容器上
+        if (adaptiveClass === 'light-mode') {
+            desktopContainer.classList.add('light-mode');
+        } else {
+            desktopContainer.classList.remove('light-mode');
         }
+    }
 
-
-
-
-        // 滑动返回逻辑
+    if (wallpaperBlob) {
+        const wallpaperUrl = URL.createObjectURL(wallpaperBlob);
+        pageEl.style.setProperty('--wallpaper-url', `url(${wallpaperUrl})`);
+    } else {
+        pageEl.style.removeProperty('--wallpaper-url');
+    }
+}
         (function () {
             let startX = 0;
             let startY = 0;
@@ -11134,131 +10848,6 @@ async function getAiReply(contents, persona) {
             });
         })();
 
-
-
-
-        // 【请将这一整块全新的代码，粘贴到音乐播放器 (function(){...}) 的正上方】
-        // ==========================================================
-        // --- ✨✨✨ 音乐频谱可视化核心引擎 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // 1. 获取必要的DOM元素和全局音频播放器
-            const visualizerContainer = document.getElementById('music-spectrum-visualizer');
-            const audioPlayer = globalAudioPlayer; // ✨ 使用我们新的全局播放器
-
-            if (!visualizerContainer || !globalAudioPlayer) {
-                // 如果找不到关键元素，则不执行任何操作
-                return;
-            }
-
-            // 2. 初始化Web Audio API
-            let audioContext, analyser, sourceNode, dataArray;
-            const NUM_BARS = 32; // 我们创建32个频谱柱
-
-            // ✨✨✨ 在这里粘贴下面的新代码 ✨✨✨
-            let peakVolume = 128; // 给一个初始的中间值
-            // ✨✨✨ 粘贴结束 ✨✨✨
-
-
-            function setupAudioApi() {
-                if (audioContext) return; // 防止重复初始化
-
-                try {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    analyser = audioContext.createAnalyser();
-                    analyser.fftSize = 256; // 频率数据点的数量
-
-                    // 关键：将audio元素连接到分析器
-                    sourceNode = audioContext.createMediaElementSource(globalAudioPlayer);
-                    sourceNode.connect(analyser);
-                    analyser.connect(audioContext.destination);
-
-                    const bufferLength = analyser.frequencyBinCount;
-                    dataArray = new Uint8Array(bufferLength);
-
-                    // 创建频谱柱的HTML结构
-                    visualizerContainer.innerHTML = '';
-                    for (let i = 0; i < NUM_BARS; i++) {
-                        const bar = document.createElement('div');
-                        bar.className = 'spectrum-bar';
-                        visualizerContainer.appendChild(bar);
-                    }
-
-                    // 启动渲染循环
-                    renderFrame();
-                } catch (error) {
-                    console.error("初始化Web Audio API失败:", error);
-                }
-            }
-
-            // 【请用这个全新的“对数采样”版，完整替换旧的 renderFrame 函数】
-            function renderFrame() {
-                requestAnimationFrame(renderFrame);
-
-                if (!analyser) return;
-
-                analyser.getByteFrequencyData(dataArray);
-
-                let peakVolume = 128;
-                let currentMax = 0;
-                for (let i = 0; i < dataArray.length; i++) {
-                    if (dataArray[i] > currentMax) {
-                        currentMax = dataArray[i];
-                    }
-                }
-                peakVolume = Math.max(peakVolume, currentMax);
-
-                const bars = visualizerContainer.children;
-
-                // --- ✨✨✨ 核心：对数采样引擎 ✨✨✨ ---
-
-                // 1. 定义对数采样的“底数”。这个值决定了低频区域占多宽，可以微调。
-                //    值越大，低频区越宽。2 是一个比较经典和通用的值。
-                const logBase = 2;
-
-                // 2. 计算对数坐标系的最大值，作为我们的“标尺”。
-                const logMax = Math.log(dataArray.length) / Math.log(logBase);
-
-                // 3. 遍历我们界面上的每一根柱子
-                for (let i = 0; i < NUM_BARS; i++) {
-                    // 4. ✨ 魔法核心：计算这根柱子在“对数标尺”上应该对应的位置
-                    const logIndex = Math.floor(
-                        Math.pow(logBase, (i / NUM_BARS) * logMax)
-                    );
-
-                    // 5. 从原始数据中，取出这个“对数位置”对应的音量值
-                    let barHeight = dataArray[logIndex];
-
-                    // --- 高度计算逻辑 (与之前版本完全相同) ---
-                    const minHeight = 2;
-                    const curvedHeight = Math.pow(barHeight / peakVolume, 0.6) * 100;
-                    const heightPercent = Math.min(280, minHeight + curvedHeight * 1.0);
-
-                    // --- 应用高度 ---
-                    if (bars[i]) {
-                        bars[i].style.height = `${heightPercent || 0}%`;
-                    }
-                }
-
-                // --- 自动增益控制 (保持不变) ---
-                const decayRate = 0.99;
-                const minPeak = 80;
-                peakVolume = Math.max(peakVolume * decayRate, minPeak);
-            }
-
-            // 4. ✨ 核心：将控制函数暴露到全局，方便播放器调用
-            window.showVisualizer = () => {
-                setupAudioApi(); // 在第一次显示时才初始化，优化性能
-                if (audioContext && audioContext.state === 'suspended') {
-                    audioContext.resume();
-                }
-                visualizerContainer.classList.remove('hidden');
-            };
-
-            window.hideVisualizer = () => {
-                visualizerContainer.classList.add('hidden');
-            };
-        })();
 
         // ==========================================================
         // --- ✨✨✨ 音乐播放器 & 列表弹窗核心逻辑 (最终修复版) ✨✨✨ ---
@@ -11440,11 +11029,6 @@ let shuffleHistory = [];
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
 
-                if (typeof window.showVisualizer === 'function') {
-                    window.showVisualizer();
-                }
-
-
                 const playPromise = globalAudioPlayer.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(error => {
@@ -11463,9 +11047,6 @@ let shuffleHistory = [];
                 discContainer.style.animationPlayState = 'paused';
                 playIcon.style.display = 'block';
                 pauseIcon.style.display = 'none';
-                if (typeof window.hideVisualizer === 'function') {
-                    window.hideVisualizer();
-                }
                 globalAudioPlayer.pause();
 
                 // 2. ✨✨✨ 核心修改：调用全局裁判 ✨✨✨
@@ -12865,7 +12446,7 @@ async function openMusicPlayerModal() {
         // --- ✨✨✨ 修复“设置”应用无法打开的核心逻辑 ✨✨✨ ---
 
         // 1. 让桌面上的“设置”图标能够打开主菜单
-        document.getElementById('app-settings-icon').addEventListener('click', () => {
+        document.getElementById('app-settings').addEventListener('click', () => {
             // 使用 navigateTo 函数，这样可以支持滑动返回桌面
             navigateTo('settings-menu', 'home');
         });
@@ -13009,59 +12590,100 @@ async function openMusicPlayerModal() {
             // 5. 将新图片放入容器
             iconEl.appendChild(img);
         }
+// ==========================================================
+// --- ✨✨✨【全新】图标还原“清洁工”函数 ✨✨✨ ---
+// ==========================================================
+/**
+ * 核心函数：将指定App的图标恢复到其默认的矢量图标状态
+ * @param {string} appId - 要还原的App的ID
+ */
+function restoreDefaultIcon(appId) {
+    // 1. 在主屏幕上找到这个App的按钮
+    const appButton = document.querySelector(`#home .app[data-app-id="${appId}"]`);
+    if (!appButton) return;
 
-        // --- 函数：渲染“更换图标”页面列表 ---
-        // 【请用这个全新的、适配网格布局的版本，替换旧的 renderIconSettingsList 函数】
-        // 【请用这个全新的、增加了“名称标签”的版本，替换旧的 renderIconSettingsList 函数】
-        /**
-         * 函数：渲染“更换图标”页面列表 (V3 - 带名称标签版)
-         */
-        function renderIconSettingsList() {
-            appIconListEl.innerHTML = '';
+    // 2. 找到它的.icon容器
+    const iconEl = appButton.querySelector('.icon');
+    if (!iconEl) return;
 
-            const gridContainer = document.createElement('div');
-            gridContainer.className = 'icon-settings-grid';
+    // 3. 移除 has-custom-icon 类名，这将让CSS自动恢复容器的背景和边框
+    iconEl.classList.remove('has-custom-icon');
 
-            const appButtons = document.querySelectorAll('#home .app[data-app-id]');
+    // 4. 找到并移除之前添加的 <img> 元素
+    const imgEl = iconEl.querySelector('img');
+    if (imgEl) {
+        imgEl.remove();
+    }
+    
+    // 5. 默认的 <i> 图标会自动因为CSS规则的变化而重新显示出来，我们无需操作
+}
+// ==========================================================
+// --- ✨✨✨【全新 V4 - 带还原功能版】更换图标列表渲染引擎 ✨✨✨ ---
+// ==========================================================
+async function renderIconSettingsList() { // ✨ 核心修改 1: 函数现在是异步的 (async)
+    appIconListEl.innerHTML = '';
 
-            appButtons.forEach(button => {
-                const appId = button.dataset.appId;
-                const appLabelText = button.querySelector('.label').textContent; // ✨ 核心新增：获取应用的原始名称
-                const iconEl = button.querySelector('.icon');
+    const gridContainer = document.createElement('div');
+    gridContainer.className = 'icon-settings-grid';
 
-                const item = document.createElement('div');
-                item.className = 'icon-setting-item';
+    // ✨ 核心修改 2: 在渲染前，先一次性获取所有自定义图标的数据
+    const iconsSetting = await db.global_settings.get('app_icons');
+    const customIconAppIds = new Set((iconsSetting?.value || []).map(i => i.appId));
 
-                const iconPreview = iconEl.cloneNode(true);
-                iconPreview.classList.add('settings-icon-preview');
-                iconPreview.classList.remove('buttonlike');
+    const appButtons = document.querySelectorAll('#home .app[data-app-id]');
 
-                // ✨✨✨ 核心新增：创建并添加“名称标签” ✨✨✨
-                const nameLabel = document.createElement('span');
-                nameLabel.className = 'icon-name-label'; // 给它一个专属的class，方便设置样式
-                nameLabel.textContent = appLabelText;
-                // ✨✨✨ 新增结束 ✨✨✨
+    appButtons.forEach(button => {
+        const appId = button.dataset.appId;
+        const appLabelText = button.querySelector('.label').textContent;
+        const iconEl = button.querySelector('.icon');
+        
+        // a. 检查当前App是否有自定义图标
+        const hasCustomIcon = customIconAppIds.has(appId);
 
-                const changeButton = document.createElement('button');
-                changeButton.className = 'change-btn btn btn-secondary buttonlike';
-                changeButton.textContent = '更换';
+        const item = document.createElement('div');
+        item.className = 'icon-setting-item';
 
-                changeButton.addEventListener('click', () => {
-                    currentAppIdToChange = appId;
-                    iconInput.click();
-                });
+        const iconPreview = iconEl.cloneNode(true);
+        iconPreview.classList.add('settings-icon-preview');
+        iconPreview.classList.remove('buttonlike');
 
-                // ✨ 核心修改：调整添加子元素的顺序，实现“上-中-下”布局
-                item.appendChild(iconPreview);
-                item.appendChild(nameLabel); // 将名称标签放在图标和按钮之间
-                item.appendChild(changeButton);
+        const nameLabel = document.createElement('span');
+        nameLabel.className = 'icon-name-label';
+        nameLabel.textContent = appLabelText;
 
-                gridContainer.appendChild(item);
-            });
+        // b. ✨ 核心修改 3: 创建一个专门放按钮的容器
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'button-group'; // 我们会为这个新class添加样式
 
-            appIconListEl.appendChild(gridContainer);
+        const changeButton = document.createElement('button');
+        changeButton.className = 'change-btn btn btn-secondary buttonlike';
+        changeButton.textContent = '换';
+        changeButton.addEventListener('click', () => {
+            currentAppIdToChange = appId;
+            iconInput.click();
+        });
+        
+        buttonContainer.appendChild(changeButton); // 始终都有“更换”按钮
+
+        // c. ✨ 核心修改 4: 如果有自定义图标，才创建并添加“还原”按钮
+        if (hasCustomIcon) {
+            const restoreButton = document.createElement('button');
+            restoreButton.className = 'restore-btn btn btn-secondary buttonlike';
+            restoreButton.textContent = '原';
+            restoreButton.dataset.appId = appId; // 将appId存起来，方便点击时识别
+            
+            buttonContainer.appendChild(restoreButton);
         }
 
+        item.appendChild(iconPreview);
+        item.appendChild(nameLabel);
+        item.appendChild(buttonContainer); // ✨ 将按钮容器添加到卡片中
+
+        gridContainer.appendChild(item);
+    });
+
+    appIconListEl.appendChild(gridContainer);
+}
         // --- 事件监听 ---
         // 这是新的，用于打开弹窗的代码
         document.getElementById('goto-icon-settings').addEventListener('click', () => {
@@ -13106,7 +12728,37 @@ async function openMusicPlayerModal() {
                 currentAppIdToChange = null;
             }
         });
+// ==========================================================
+// ==========================================================
+// --- ✨✨✨【最终修复版】图标还原功能-事件监听引擎 ✨✨✨ ---
+// ==========================================================
+appIconListEl.addEventListener('click', async (e) => {
+    const restoreBtn = e.target.closest('.restore-btn');
+    if (!restoreBtn) return;
 
+    const appIdToRestore = restoreBtn.dataset.appId;
+    if (!appIdToRestore) return;
+
+    showDeleteDialog('确定要还原这个应用的默认图标吗？', async () => {
+        try {
+            const iconsSetting = await db.global_settings.get('app_icons');
+            let allIcons = iconsSetting ? iconsSetting.value : [];
+            const updatedIcons = allIcons.filter(icon => icon.appId !== appIdToRestore);
+            await db.global_settings.put({ key: 'app_icons', value: updatedIcons });
+
+            // ✨✨✨ 核心修复：调用我们的新“清洁工”函数，立即刷新桌面 ✨✨✨
+            restoreDefaultIcon(appIdToRestore);
+
+            // 刷新弹窗内的列表 (这行不变)
+            await renderIconSettingsList();
+
+            showNotification('图标已成功还原！');
+        } catch (error) {
+            console.error("还原图标失败:", error);
+            showNotification("还原失败，请重试。");
+        }
+    });
+});
         // --- ✨✨✨ 更换App图标核心逻辑结束 ✨✨✨
 
         // = a========================================================
@@ -13240,152 +12892,8 @@ if (typeSelect) {
                 });
             }
         })();
-// ▼▼▼ 请将这一整块全新的代码，粘贴到刚刚删除旧代码的位置 ▼▼▼
-// ▼▼▼ 请用这一整块全新的【最终版】代码，替换旧的“世界书核心引擎” (function(){...}) 代码块 ▼▼▼
-// ==========================================================
-// --- ✨✨✨【V3.1 - 手风琴版】世界书核心引擎 ✨✨✨ ---
-// ==========================================================
-(function () {
-    // --- 1. 获取所有新UI的 DOM 元素 (不变) ---
-    const page = document.getElementById('world-book-page');
-    const listContainer = document.getElementById('world-books-list-container');
-    const emptyState = document.getElementById('world-book-empty-state');
-    const addNewBookBtn = document.getElementById('add-new-book-btn');
 
-    if (!page) return;
 
-    /**
-     * 核心函数 1: 渲染“书本”的手风琴列表 (已重构)
-     */
-    async function renderWorldBookPage() {
-        listContainer.innerHTML = '';
-        const allBooks = await db.world_books.toArray();
-
-        if (allBooks.length === 0) {
-            listContainer.appendChild(emptyState);
-            emptyState.classList.remove('hidden');
-            return;
-        }
-        emptyState.classList.add('hidden');
-
-        for (const book of allBooks) {
-            const entryCount = await db.world_entries.where({ bookId: book.id }).count();
-            
-            // a. 创建手风琴的整体容器
-            const group = document.createElement('div');
-            group.className = 'book-group';
-
-            // b. 创建可点击的头部
-            group.innerHTML = `
-                <button class="settings-item buttonlike">
-                    <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
-                    <span class="label">${escapeHtml(book.name)} (${entryCount})</span>
-                    <span class="arrow">></span>
-                </button>
-                <div class="book-entries-container">
-                    <div class="book-entries-inner">
-                        <p style="text-align:center; font-size:12px; color:#a1a1aa;">加载中...</p>
-                    </div>
-                </div>
-            `;
-
-            // c. 为头部绑定“展开/加载”事件
-            const header = group.querySelector('.settings-item');
-            const contentInner = group.querySelector('.book-entries-inner');
-
-            header.addEventListener('click', async () => {
-                // 切换展开/折叠状态
-                group.classList.toggle('open');
-
-                // 智能加载：只在第一次展开时加载内容
-                if (group.classList.contains('open') && contentInner.dataset.loaded !== 'true') {
-                    const entries = await db.world_entries.where({ bookId: book.id }).toArray();
-                    contentInner.innerHTML = ''; // 清空“加载中”
-
-                    if (entries.length > 0) {
-                        entries.forEach(entry => {
-                            // 复用我们最开始的条目卡片创建逻辑
-                            const entryCard = createEntryCard(entry);
-                            contentInner.appendChild(entryCard);
-                        });
-                    } else {
-                        contentInner.innerHTML = '<p style="text-align:center; font-size:12px; color:#a1a1aa;">这本书里还没有任何条目。</p>';
-                    }
-                    contentInner.dataset.loaded = 'true'; // 标记为已加载
-                }
-            });
-
-            listContainer.appendChild(group);
-        }
-    }
-
-    /**
-     * 核心函数 2: 创建单个“书页”(条目)的卡片 (从旧版逻辑中复活并改造)
-     */
-    function createEntryCard(entry) {
-        const card = document.createElement('div');
-        card.className = 'world-entry-card buttonlike';
-        card.dataset.id = entry.id;
-
-        const globalIcon = entry.isGlobal ? '<i class="fa-solid fa-globe" title="全局条目"></i> ' : '';
-
-        card.innerHTML = `
-            <div class="content">
-                <div class="title">${globalIcon}${escapeHtml(entry.title)}</div>
-                <div class="keywords">关键词: ${escapeHtml(entry.keywords)}</div>
-            </div>
-            <button class="delete-btn btn-icon buttonlike" title="删除条目"><i class="fa-solid fa-trash-can"></i></button>
-        `;
-
-        // 点击卡片主体 -> 打开编辑器
-        card.addEventListener('click', (e) => {
-            if (!e.target.closest('.delete-btn')) {
-                if (typeof window.openWorldEntryEditor === 'function') {
-                    // (TODO: 改造编辑器，让它能感知到 bookId)
-                    window.openWorldEntryEditor(entry);
-                }
-            }
-        });
-
-        // 点击删除按钮 -> 删除条目
-        card.querySelector('.delete-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            showDeleteDialog(`确定要删除条目「${entry.title}」吗？`, async () => {
-                await db.world_entries.delete(entry.id);
-                // 刷新整个书本列表，以更新条目计数
-                renderWorldBookPage(); 
-            });
-        });
-
-        return card;
-    }
-
-    // --- 事件绑定 (保持不变) ---
-    document.getElementById('app-world-book').addEventListener('click', () => {
-        renderWorldBookPage();
-        navigateTo('world-book-page');
-    });
-
-    document.getElementById('world-book-back').addEventListener('click', () => navigateBack());
-
-    addNewBookBtn.addEventListener('click', async () => {
-        const newBookName = await showInputDialog("请输入新书本的名称：", "");
-        if (newBookName && newBookName.trim()) {
-            try {
-                await db.world_books.add({ name: newBookName.trim() });
-                renderWorldBookPage(); // 刷新列表
-            } catch (error) {
-                if (error.name === 'ConstraintError') showNotification("已存在同名的书本！");
-            }
-        }
-    });
-
-})();
-// ==========================================================
-// ▲▲▲ 替换到这里结束 ▲▲▲
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
-
-        // --- ✨✨✨ 世界书核心逻辑结束 ✨✨✨
 
         if (fullscreenToggle) { // ✨ 保持安全检查
             const savedMode = localStorage.getItem('displayMode');
@@ -13635,10 +13143,11 @@ if (typeSelect) {
 
     }
     window.showPage = showPage;
-
-function _renderPage(id) {
-    const statusbar = document.querySelector('.statusbar');
+// ▼▼▼ 请用这个【V3.3 - 智能变色持久化版】进行替换 ▼▼▼
+async function _renderPage(id) { // ✨ 核心修改 1: 确保函数是 async
+    const statusbar = document.getElementById('statusbar');
     
+    // --- 页面切换逻辑 (保持不变) ---
     pages.forEach(pid => {
         const el = document.getElementById(pid);
         if (el) el.style.display = 'none';
@@ -13650,19 +13159,28 @@ function _renderPage(id) {
         targetEl.style.display = displayStyle;
 
         if (statusbar) {
-            const isAppPage = (id !== 'home');
-            const isChatPage = (id === 'qq-chat');
-            statusbar.classList.toggle('light-mode', isAppPage);
+            // ✨ 核心修改 2: 用全新的 if/else 逻辑替换旧的颜色控制
+            if (id !== 'home') {
+                // 如果进入的不是桌面（即任何App页面），则强制使用深色文字模式
+                statusbar.className = 'statusbar light-mode';
+            } else {
+                // 如果是回到了桌面，则必须重新调用一次“智能管家”，根据当前壁纸决定颜色
+                console.log("【导航探针】: 已返回桌面，重新分析壁纸以应用状态栏颜色...");
+                const wallpaperSetting = await db.global_settings.get('wallpaper');
+                const wallpaperBlob = (wallpaperSetting && wallpaperSetting.value instanceof Blob) ? wallpaperSetting.value : null;
+                const adaptiveClass = await getAdaptiveTextColor(wallpaperBlob); // 再次调用智能分析
+                statusbar.className = 'statusbar ' + adaptiveClass; // 应用分析结果
+            }
 
-            // ✨ 核心修改：这里只管理那些【真正需要】根据页面变化的图标
+            // --- 图标显隐逻辑 (保持不变) ---
+            const isChatPage = (id === 'qq-chat');
             const promptBtn = document.getElementById('statusbar-prompt-btn');
             const listenTogetherBtn = document.getElementById('statusbar-listen-together-btn');
-const worldBookBtn = document.getElementById('statusbar-world-book-btn');
+            const worldBookBtn = document.getElementById('statusbar-world-book-btn');
             const displayValue = isChatPage ? 'inline-flex' : 'none';
             if (promptBtn) promptBtn.style.display = displayValue;
             if (listenTogetherBtn) listenTogetherBtn.style.display = displayValue;
-if (worldBookBtn) worldBookBtn.style.display = displayValue;
-            // ✨ 关键一步：当进入聊天页面时，主动刷新一次图标状态，确保其正确性
+            if (worldBookBtn) worldBookBtn.style.display = displayValue;
             if (isChatPage) {
                 updateStatusbarFeatureIcons();
             }
@@ -13671,11 +13189,12 @@ if (worldBookBtn) worldBookBtn.style.display = displayValue;
         console.error(`导航错误：无法找到 ID 为 "${id}" 的页面！`);
     }
 }
-    // --- 绑定事件 ---
+// ▲▲▲ 替换到这里结束 ▲▲▲
+
+// --- 绑定事件 ---
     document.getElementById('qq-main-back-btn')?.addEventListener('click', () => showPage('home'));
     document.getElementById('chat-back')?.addEventListener('click', () => navigateBack());
     document.getElementById('settings-menu-back')?.addEventListener('click', () => navigateBack());
-    document.getElementById('world-book-back')?.addEventListener('click', () => navigateBack());
     document.getElementById('contacts-lib-back')?.addEventListener('click', () => navigateBack());
 
 })();
@@ -13974,42 +13493,29 @@ ${historyTranscript}
         .replace(/{{user}}/g, userPersonaForCall.name);
 }
 // ==========================================================
-// --- ✨✨✨【V9 - 重构版】AI系统提示词构建引擎 ✨✨✨ ---
-// ---      (此版本依赖 buildCoreContext 函数)          ---
+// --- ✨✨✨【V10 - 关键词触发版】AI系统提示词构建引擎 ✨✨✨ ---
 // ==========================================================
-/**
- * 将从 buildCoreContext 获取的上下文数据，格式化为AI可理解的系统指令。
- * @param {object} character - 当前角色的对象。
- * @param {object} user - 当前用户的对象。
- * @returns {Promise<Array<object>>} 一个包含多个指令模块的数组，用于在提示词查看器中显示。
- */
 async function buildCharacterSystemPrompt(character, user) {
-    // 1. ✨ 单一入口：调用统一上下文构建函数，获取所有需要的基础设定和聊天记录
     const context = await buildCoreContext(character.id, user.id);
 
-    // 如果获取上下文失败，则返回空数组，中断后续操作
     if (!context) {
         console.error("构建Prompt失败：未能从 buildCoreContext 获取到核心上下文。");
         return [];
     }
 
-    // 2. ✨ 数据解构：从 context 对象中轻松地取出所有准备好的“配料”
     const {
-        character: contextCharacter,   // 角色人设
-        userPersona: userPersonaForPrompt, // 用户人设
-        worldBook: linkedEntries,      // 世界书
-        chatHistory                    // 聊天记录
+        character: contextCharacter,
+        userPersona: userPersonaForPrompt,
+        chatHistory
     } = context;
 
-    // 3. ✨ 纯粹的格式化：后续所有代码不再进行任何数据库查询，只负责将数据组装成字符串
-    
-    // --- 组装【核心设定】模块 ---
+    // --- 组装【核心设定】模块 (不变) ---
     const characterCorePrompt = `
 【核心身份】
 你是“{{char}}”，你的人设是：“{{persona}}”。
 你正在和{{user}}进行线上聊天。
 `;
-const userPersonaContext = `
+    const userPersonaContext = `
 【重要提醒】
 正在与你聊天的人名叫“{{user}}”，ta的性别是${userPersonaForPrompt.gender || '未设置'}，你应该称呼{{user}}的名字。
 
@@ -14021,12 +13527,25 @@ ${userPersonaForPrompt.age ? `年龄: ${userPersonaForPrompt.age}` : ''}
 ${userPersonaForPrompt.bio ? `人设: ${userPersonaForPrompt.bio}` : ''}
 `;
 
-    // --- 组装【世界书】模块 ---
-    const worldBookContext = linkedEntries.length > 0
-        ? linkedEntries.map(entry => `--- ${entry.title} ---\n${entry.content}`).join('\n\n')
-        : '无';
+// ▼▼▼ 请用这一整块全新的代码进行替换 ▼▼▼
+// ==========================================================
+// --- ✨✨✨ 核心修改：调用 V2 引擎并处理分类结果 ✨✨✨ ---
+// ==========================================================
 
-    // --- 组装【即时情境】模块 (使用 context.chatHistory) ---
+// 1. 调用我们全新的 V2 引擎，并传入角色的条目配置
+const triggeredContents = await getActiveWorldBookEntriesForTurn(chatHistory, contextCharacter.linkedEntries);
+
+// 2. 将返回的、已分类的字符串，分别赋值给两个变量
+const worldBookBeforeChar = triggeredContents.before_char;
+const worldBookAfterChar = triggeredContents.after_char;
+
+// (我们不再需要一个统一的 worldBookContext 变量了)
+
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
+
+
+    // (函数后半部分所有其他上下文的组装逻辑，都保持和您文件中的原版一致)
     const now = new Date();
     const formattedTime = now.toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
     const timeWeatherSetting = await db.global_settings.get('isTimeWeatherAware');
@@ -14044,7 +13563,7 @@ ${userPersonaForPrompt.bio ? `人设: ${userPersonaForPrompt.bio}` : ''}
     let timeWeatherComponent = '';
     if (isTimeWeatherAware) {
         let weatherContext = (window.worldWeather && window.worldWeather.city !== '查询中...')
-            ? `- {{user}}的世界当前天气: ${window.worldWeather.city} ${window.worldWeather.description}, 气温 ${window.worldWeather.temperature}°C。\n`
+            ? `- 当前天气: ${window.worldWeather.city} ${window.worldWeather.description}, 气温 ${window.worldWeather.temperature}°C。\n`
             : '';
         
         let timeSinceLastChatContext = '';
@@ -14052,10 +13571,10 @@ ${userPersonaForPrompt.bio ? `人设: ${userPersonaForPrompt.bio}` : ''}
         if (lastAiMessage) {
             timeSinceLastChatContext = `- 距离你们上次聊天: ${formatTimeDifference(lastAiMessage.time)}。\n `;
         }
-        timeWeatherComponent = `当前本地时间是: ${formattedTime}\n${weatherContext}${timeSinceLastChatContext}`;
+        timeWeatherComponent = `当前时间是: ${formattedTime}\n${weatherContext}${timeSinceLastChatContext}`;
     }
 
-    let customStatusContext = contextCharacter.customStatusText ? `- 【你当前的自定义状态 (必须遵守)】: 你现在的状态是“${contextCharacter.customStatusText}”。\n` : '';
+    let customStatusContext = contextCharacter.customStatusText ? `- 【你当前的状态】: 你现在的状态是“${contextCharacter.customStatusText}”。\n` : '';
     
     let immediateContext = [customStatusContext, timeWeatherComponent, recallContext].filter(Boolean).join('\n');
     if (immediateContext) {
@@ -14065,30 +13584,19 @@ ${immediateContext}
 你必须结合以上所有即时情境来回应。`;
     }
 
-// ▼▼▼ 请用这一整块全新的代码，替换旧的 momentsContext 获取逻辑 ▼▼▼
-
-const { recentMoments } = context;
-
-const momentsContext = recentMoments.length > 0
-    ? "【背景信息：最近社交圈里发生的新鲜事 (按时间从旧到新排列)】\n" + 
-      recentMoments.reverse() // ✨✨✨ 核心修复：在这里，我们把从数据库拿到的“新->旧”数组，反转为“旧->新”
-      .map(moment => {
-        // (后续的格式化逻辑保持不变)
-        let momentString = `- [动态] ${moment.authorName}: "${moment.content}"`;
+    const { recentMoments } = context;
+    const momentsContext = recentMoments.length > 0
+        ? "【背景信息：最近社交圈里发生的新鲜事 (按时间从旧到新排列)】\n" + 
+          recentMoments.reverse().map(moment => {
+            let momentString = `- [动态] ${moment.authorName}: "${moment.content}"`;
+            if (moment.comments.length > 0) {
+                const commentsString = moment.comments.map(comment => `  - [评论] ${comment.authorName}: ${comment.content}`).join('\n');
+                momentString += `\n${commentsString}`;
+            }
+            return momentString;
+          }).join('\n\n')
+        : '';
         
-        if (moment.comments.length > 0) {
-            const commentsString = moment.comments.map(comment => 
-                `  - [评论] ${comment.authorName}: ${comment.content}`
-            ).join('\n');
-            momentString += `\n${commentsString}`;
-        }
-        return momentString;
-      }).join('\n\n')
-    : '';
-
-// ▲▲▲ 替换到这里结束 ▲▲▲
-
-    
     const stickerComponent = await buildStickerPromptComponent(contextCharacter);
     
     let musicContext = '';
@@ -14137,7 +13645,7 @@ ${currentSong.lyrics || '（这首歌没有歌词）'}
 2.  **自由分段**: 你可以根据对话节奏，自由决定输出多个气泡。
 3.  **绝对禁止**: 不要输出任何标签之外的文字、解释或 markdown 标记。`;
       
-            const DYNAMIC_CARD_PROMPT = `
+    const DYNAMIC_CARD_PROMPT = `
 【你的隐藏任务：创造“独一无二的小卡片”】
 除了常规的文本回复，你作为 {{char}} 还要在对话的最后，创造一张能将你的内心世界、情绪氛围或关键信息【视觉化】的卡片。
 这张卡片是你思想的延伸，是当前聊天氛围的具象化。
@@ -14169,22 +13677,29 @@ ${currentSong.lyrics || '（这首歌没有歌词）'}
 4.  **【安全规范】**: 【禁止】使用任何 \`<script>\` 标签或JavaScript代码。
 `;
     const coreDirectivesContent = [JAILBREAK_PROMPT, momentsContext, ANTI_BAGU_PROMPT, FINAL_INSTRUCTIONS_PROMPT].filter(Boolean).join('\n\n');
+    
+// ▼▼▼ 请用这一整块全新的代码进行替换 ▼▼▼
+const components = [
+    { id: 'context', title: '即时情境', icon: '<i class="fa-solid fa-clock-rotate-left"></i>', content: immediateContext },
+    
+    // ✨ 核心修改 1: 在“核心设定”之前，插入“世界书(前置)”
+    { id: 'worldbook_before', title: '世界书 (前置)', icon: '<i class="fa-solid fa-book-atlas"></i>', content: worldBookBeforeChar },
 
-    // 4. ✨ 最终组装：将所有格式化好的字符串，打包成用于提示词查看器的组件数组
-    const components = [
-        { id: 'context', title: '即时情境', icon: '<i class="fa-solid fa-clock-rotate-left"></i>', content: immediateContext },
-        { id: 'character', title: '核心设定 (char)', icon: '<i class="fa-solid fa-address-card"></i>', content: characterCorePrompt },
-        { id: 'user', title: '你的信息 (user)', icon: '<i class="fa-solid fa-user"></i>', content: userPersonaContext },
-        { id: 'worldbook', title: '关联世界书', icon: '<i class="fa-solid fa-book-atlas"></i>', content: worldBookContext },
-        { id: 'tools', title: '能力与工具', icon: '<i class="fa-solid fa-comments"></i>', content: [toolsPrompt, stickerComponent, musicContext].filter(Boolean).join('\n\n') },
-        { id: 'directives', title: '核心指令', icon: '<i class="fa-solid fa-table-list"></i>', content: coreDirectivesContent },
-    ];
+    { id: 'character', title: '核心设定 (char)', icon: '<i class="fa-solid fa-address-card"></i>', content: characterCorePrompt },
+    
+    // ✨ 核心修改 2: 在“核心设定”之后，插入“世界书(后置)”
+    { id: 'worldbook_after', title: '世界书 (后置)', icon: '<i class="fa-solid fa-book-atlas"></i>', content: worldBookAfterChar },
+
+    { id: 'user', title: '你的信息 (user)', icon: '<i class="fa-solid fa-user"></i>', content: userPersonaContext },
+    { id: 'tools', title: '能力与工具', icon: '<i class="fa-solid fa-comments"></i>', content: [toolsPrompt, stickerComponent, musicContext].filter(Boolean).join('\n\n') },
+    { id: 'directives', title: '核心指令', icon: '<i class="fa-solid fa-table-list"></i>', content: coreDirectivesContent },
+];
+// ▲▲▲ 替换到这里结束 ▲▲▲
     
     if (localStorage.getItem('smallTheaterEnabled') !== 'false') {
         components.push({ id: 'creative', title: '创意彩蛋：灵魂卡片', icon: '<i class="fa-solid fa-wand-sparkles"></i>', content: DYNAMIC_CARD_PROMPT });
     }
 
-    // 5. ✨ 在返回前，进行最终的占位符替换
     return components
         .filter(comp => comp.content && comp.content.trim())
         .map(comp => ({
@@ -14195,7 +13710,6 @@ ${currentSong.lyrics || '（这首歌没有歌词）'}
                 .replace(/{{user}}/g, userPersonaForPrompt.name)
         }));
 }
-        // ▲▲▲ 替换到这里结束 ▲▲▲
 
         // ==========================================================
         // --- ✨✨✨【最终修复版】AI回复按钮核心引擎 (兼容所有模式) ✨✨✨ ---
@@ -14295,32 +13809,6 @@ ${currentSong.lyrics || '（这首歌没有歌词）'}
             const seeAllBtn = e.target.closest('.see-all-btn');
             if (seeAllBtn) {
                 switch (seeAllBtn.id) {
-
-case 'goto-world-book-links-modal':
-    switchToProfileDetailView(`${character.name}的档案`, async () => {
-        // ▼▼▼ ✨✨✨ 核心修复就在这里！ ✨✨✨ ▼▼▼
-        // 1. 使用新的 linkedBooks 字段，并过滤掉所有无效值 (如 null, undefined)
-        const linkedBookIds = (character.linkedBooks || []).filter(Boolean);
-        // ▲▲▲ ✨✨✨ 修复结束 ▲▲▲ ▲▲▲
-
-        if (linkedBookIds.length === 0) return '<p style="text-align:center; color:#a1a1aa;">还没有为「' + character.name + '」关联任何书本。</p>';
-
-        // 2. 使用新的查询方式：根据书本ID(bookId)去 world_entries 表中查找所有条目
-        const entries = await db.world_entries.where('bookId').anyOf(linkedBookIds).toArray();
-
-        if (entries.length === 0) {
-            return '<p style="text-align:center; color:#a1a1aa;">关联的书本中还没有任何条目。</p>';
-        }
-        
-        // 3. 后续的渲染逻辑保持不变
-        return entries.map(entry => `
-            <div class="world-entry-card" style="margin-bottom:10px; background: rgba(0,0,0,0.1); border:none;">
-                <div class="title" style="color: rgba(0,0,0,0.9);">${entry.title}</div>
-                <div class="keywords" style="color: rgba(0,0,0,0.7);">关键词: ${entry.keywords}</div>
-            </div>`).join('');
-
-    }, { actionButton: { text: '管理档案 >', onClick: () => { if (typeof openWorldBookSelectionModal === 'function') openWorldBookSelectionModal(); } } });
-    return;
 
                     case 'goto-bonds-page-modal':
                         switchToProfileDetailView(`${character.name}的拾光集`, async () => {
@@ -14557,7 +14045,7 @@ case 'goto-world-book-links-modal':
             function openPlotControlModal() {
                 // ✨✨✨ 核心修改 1：在打开菜单前，修改按钮的文字 ✨✨✨
                 if (summarizeBtn) {
-                    summarizeBtn.innerHTML = '🧠 查看核心记忆'; // 将文字从“生成”改为“查看”
+                    summarizeBtn.innerHTML = '<i class="fa-solid fa-table"></i>  查看总结记忆'; // 将文字从“生成”改为“查看”
                 }
                 showModal('plot-control-modal');
             }
@@ -14922,7 +14410,7 @@ case 'goto-world-book-links-modal':
                 try {
                     await db.messages.update(messageId, {
                         type: 'system',
-                        content: `[你撤回了一条消息，内容是：${messageToRecall.content}]`,
+                        content: `[你撤回了一条消息]`,
                         recalledContent: messageToRecall.content
                     });
                     // ✨ 核心修复：调用我们强大的局部刷新函数！
@@ -14949,13 +14437,13 @@ case 'goto-world-book-links-modal':
 
             // 选项C: 搏一搏！
             gambleBtn.onclick = async () => {
-                const CATCH_PROBABILITY = 0.45;
+                const CATCH_PROBABILITY = 0.5;
 
                 if (Math.random() < CATCH_PROBABILITY) {
                     try {
                         await db.messages.update(messageId, {
                             type: 'system',
-                            content: `[你撤回了一条消息，内容是：${messageToRecall.content}]`,
+                            content: `[你撤回了一条消息]`,
                             recalledContent: messageToRecall.content
                         });
                         // ✨ 核心修复：调用我们强大的局部刷新函数！
@@ -15888,55 +15376,7 @@ function bindBubbleEditorEvents() {
             const character = window.currentProfileContact;
             if (!character) return;
 
-
-// ▼▼▼ 请用这一整块全新的【最终修复版】代码，替换旧的 'goto-world-book-links-modal' 的 if 代码块 ▼▼▼
-if (e.target.id === 'goto-world-book-links-modal') {
-    switchToProfileDetailView(
-        `${character.name}的档案`, // 参数1: 视图标题
-
-        // 参数2: 异步渲染函数
-        async () => {
-            // ▼▼▼ ✨✨✨ 核心修复就在这里！ ✨✨✨ ▼▼▼
-            // 使用 .filter(Boolean) 来过滤掉数组中所有 null, undefined 等无效值
-            const linkedBookIds = (character.linkedBooks || []).filter(Boolean);
-            // ▲▲▲ ✨✨✨ 修复结束 ▲▲▲ ▲▲▲
-
-            if (linkedBookIds.length === 0) {
-                return '<p style="text-align:center; color:#a1a1aa; padding-top:40px;">还没有为「' + character.name + '」关联任何书本。</p>';
-            }
-
-            // 现在 linkedBookIds 是一个纯净的、只包含有效ID的数组，可以安全地查询
-            const linkedBooks = await db.world_books.bulkGet(linkedBookIds);
-
-            const bookCardsHtml = await Promise.all(linkedBooks.map(async (book) => {
-                if (!book) return '';
-                const entryCount = await db.world_entries.where({ bookId: book.id }).count();
-                return `
-                    <div class="settings-item" style="margin-bottom: 8px;">
-                        <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
-                        <span class="label">${escapeHtml(book.name)} (${entryCount}条)</span>
-                    </div>
-                `;
-            }));
-
-            return bookCardsHtml.join('');
-        },
-
-        // 参数3: 专属操作按钮配置 (保持不变)
-        {
-            actionButton: {
-                text: '管理档案 >',
-                onClick: () => {
-                    if (typeof openWorldBookSelectionModal === 'function') {
-                        openWorldBookSelectionModal();
-                    }
-                }
-            }
-        }
-    );
-}
-// ▲▲▲ 替换到这里结束 ▲▲▲
-            else if (e.target.id === 'goto-bonds-page-modal') {
+         if (e.target.id === 'goto-bonds-page-modal') {
                 switchToProfileDetailView(`${character.name}的拾光集`, async () => {
                     const bonds = await db.bonds.where({ userId: window.currentUser.id, contactId: character.id }).reverse().sortBy('createdAt');
                     if (bonds.length === 0) {
@@ -17324,7 +16764,9 @@ async function addCommentToUI(comment) {
 
         const selectionModal = document.getElementById('world-book-selection-modal');
 
-// ▼▼▼ 请用这个【全新版本】替换旧的 openLinkedWorldBook 函数 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【全新修复版】角色世界书渲染引擎 (显示书本而非条目) ✨✨✨ ---
+// ==========================================================
 /**
  * 【全新】核心函数：打开并渲染与角色关联的【书本】列表
  */
@@ -17336,10 +16778,11 @@ async function renderLinkedWorldBooks(contact) {
     const titleEl = page.querySelector('#linked-wb-title');
     const listEl = page.querySelector('#linked-wb-list');
 
-    titleEl.textContent = `${contact.name}的档案`;
+    titleEl.textContent = `${contact.name}的世界书`;
     listEl.innerHTML = '<p style="text-align:center; color:#a1a1aa;">正在检索已关联的书本...</p>';
     
-    const linkedBookIds = contact.linkedBooks || [];
+    // 1. 获取已关联的书本ID列表 (保持不变)
+    const linkedBookIds = (contact.linkedBooks || []).filter(Boolean);
 
     if (linkedBookIds.length === 0) {
         listEl.innerHTML = `<p style="text-align:center; color:#a1a1aa; padding-top:40px;">
@@ -17348,15 +16791,21 @@ async function renderLinkedWorldBooks(contact) {
         return;
     }
 
+    // 2. ✨ 核心修改：直接使用 bulkGet 从 world_books 表中获取书本的详细信息
     const linkedBooks = await db.world_books.bulkGet(linkedBookIds);
 
-    listEl.innerHTML = '';
+    listEl.innerHTML = ''; // 清空加载提示
+    
+    // 3. ✨ 核心修改：遍历书本列表，而不是条目列表
     for (const book of linkedBooks) {
-        if (!book) continue;
+        // 安全检查，以防书本被删除但关联关系还在
+        if (!book) continue; 
+        
+        // (可选但推荐) 获取这本书里的条目数量，让显示更友好
         const entryCount = await db.world_entries.where({ bookId: book.id }).count();
 
         const card = document.createElement('div');
-        // 复用世界书主页的卡片样式
+        // 复用设置页的卡片样式，保持风格统一
         card.className = 'settings-item'; 
         card.innerHTML = `
             <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
@@ -17365,7 +16814,7 @@ async function renderLinkedWorldBooks(contact) {
         listEl.appendChild(card);
     }
 }
-// 为了兼容旧的调用，我们重命名一下
+
 window.openLinkedWorldBook = renderLinkedWorldBooks;
 // ▲▲▲ 替换到这里结束 ▲▲▲
 /**
@@ -17396,23 +16845,21 @@ const contact = window.currentChat;
 }
 // ▲▲▲ 替换到这里结束 ▲▲▲
 
-
-
-
-
         // 4. 选择弹窗 -> 取消 (逻辑不变)
         document.getElementById('cancel-wb-selection').addEventListener('click', () => {
             selectionModal.classList.add('hidden');
         });
-// ▼▼▼ 请用这一整块【最终修复版】的代码，替换所有旧的 'confirm-wb-selection' 事件监听器 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【V5 - 最终修复版】世界书关联保存引擎 ✨✨✨ ---
+// --- ✨✨✨【V6 - 修复版】世界书关联保存引擎 ✨✨✨ ---
 // ==========================================================
 document.getElementById('confirm-wb-selection').addEventListener('click', async () => {
+
+
     const selectedBookIds = [];
     document.querySelectorAll('#wb-selection-list input[type="checkbox"]:checked').forEach(checkbox => {
         selectedBookIds.push(parseInt(checkbox.value, 10));
     });
+
 
     const characterToUpdate = window.currentChat;
     if (!characterToUpdate) {
@@ -17421,37 +16868,25 @@ document.getElementById('confirm-wb-selection').addEventListener('click', async 
     }
 
     try {
-        const currentConfigs = characterToUpdate.linkedEntries || [];
-        const entriesFromSelectedBooks = await db.world_entries.where('bookId').anyOf(selectedBookIds).toArray();
-        const newConfigs = [];
+        // --- 核心逻辑修正：我们现在直接更新 linkedBooks 数组 ---
+        const updatedData = {
+            linkedBooks: selectedBookIds
+        };
         
-        // 逻辑：保留仍在选中书本中的旧条目设置
-        currentConfigs.forEach(config => {
-            const entryDetail = entriesFromSelectedBooks.find(e => e.id === config.id);
-            if (entryDetail) {
-                newConfigs.push(config);
-            }
-        });
-        
-        // 为新选中的书本中尚未配置的条目添加默认设置
-        entriesFromSelectedBooks.forEach(entry => {
-            if (!newConfigs.some(c => c.id === entry.id)) {
-                newConfigs.push({ id: entry.id, enabled: true, depth: 100, order: 100 });
-            }
-        });
 
-        // 1. 直接更新内存中的 characterToUpdate 对象
-        characterToUpdate.linkedEntries = newConfigs;
-        
-        // 2. 将更新后的角色对象保存到数据库
-        await db.characters.update(characterToUpdate.id, { linkedEntries: newConfigs });
+        // 1. 直接更新数据库中角色的 linkedBooks 字段
+        await db.characters.update(characterToUpdate.id, updatedData);
+
+        // 2. 同步更新内存中（全局变量）的角色数据，这非常重要！
+        window.currentChat.linkedBooks = selectedBookIds;
+
 
         // 3. 关闭选择弹窗
         document.getElementById('world-book-selection-modal').classList.add('hidden');
         
-        // 4. ✨✨✨ 核心修复：调用正确拼写的函数，并直接传入内存中最新的 characterToUpdate 对象！
-        if (typeof renderCharacterWbList === 'function') {
-            await renderCharacterWbList(characterToUpdate);
+        // 4. 调用渲染函数，刷新角色世界书列表的UI
+        if (typeof window.renderCharacterWbList === 'function') {
+            await window.renderCharacterWbList(window.currentChat);
         } else {
             console.error("渲染函数 renderCharacterWbList 未定义！");
         }
@@ -17463,63 +16898,73 @@ document.getElementById('confirm-wb-selection').addEventListener('click', async 
         showNotification("更新失败，请稍后再试。");
     }
 });
-// ==========================================================
-// ▲▲▲ 替换到这里结束 ▲▲▲
-        /**
-         * ✨ 核心函数：分析图片Blob的平均亮度，并决定使用深色还是浅色文字
-         * @param {Blob} imageBlob - 要分析的图片文件
-         * @returns {Promise<string>} - 返回 'text-color-dark' 或 'text-color-light'
-         */
-        async function getAdaptiveTextColor(imageBlob) {
-            // 如果没有背景图（使用默认渐变），则背景是浅色，应使用深色文字
-            if (!imageBlob) {
-                return 'text-color-dark';
+/**
+ * ✨✨✨【全新】智能分析图片亮度并返回相应文字颜色模式的函数 ✨✨✨
+ * @param {Blob} imageBlob - 要分析的图片文件
+ * @returns {Promise<string>} - 返回 'light-mode' (深色文字) 或 '' (浅色文字)
+ */
+async function getAdaptiveTextColor(imageBlob) {
+     console.log("【探针 B】: 亮度分析函数 getAdaptiveTextColor 已被调用。"); // <-- 添加这一行探针
+    if (!imageBlob) {
+        return 'light-mode';
+    }
+
+    return new Promise((resolve) => {
+        const img = new Image();
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+
+            // 为了性能，我们只取图片中心一小块区域进行分析
+            const sampleSize = Math.min(100, img.width, img.height);
+            const imageData = ctx.getImageData(
+                img.width / 2 - sampleSize / 2,
+                img.height / 2 - sampleSize / 2,
+                sampleSize,
+                sampleSize
+            ).data;
+            
+            let r = 0, g = 0, b = 0;
+            // 遍历采样像素点
+            for (let i = 0; i < imageData.length; i += 4) {
+                r += imageData[i];
+                g += imageData[i + 1];
+                b += imageData[i + 2];
             }
 
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const pixelCount = imageData.length / 4;
+            r = r / pixelCount;
+            g = g / pixelCount;
+            b = b / pixelCount;
 
-                img.onload = () => {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
+            // 根据YIQ色彩空间公式计算平均亮度
+            const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const data = imageData.data;
-                    let r = 0, g = 0, b = 0;
+            URL.revokeObjectURL(img.src); // 释放内存
 
-                    // 为了性能，我们每隔5个像素取一个点进行计算
-                    for (let i = 0; i < data.length; i += 20) {
-                        r += data[i];
-                        g += data[i + 1];
-                        b += data[i + 2];
-                    }
+   // ▼▼▼ 探针 C 的正确放置位置在这里 ▼▼▼
 
-                    const count = data.length / 20;
-                    r = Math.floor(r / count);
-                    g = Math.floor(g / count);
-                    b = Math.floor(b / count);
+                    // 1. 先把判断结果存到一个变量里
+                    const result = brightness > 140 ? 'light-mode' : '';
+                    
+                    // 2. 这就是探针 C，打印出详细的计算过程和结果
+                    console.log(`【探针 C】: 图片亮度分析结果为: ${brightness.toFixed(2)}, 判定模式为: '${result}'`); 
+                    
+                    // 3. 最后再把结果传递出去
+                    resolve(result);
 
-                    // 根据YIQ色彩空间公式计算亮度
-                    const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+                    // ▲▲▲ 探针 C 放置结束 ▲▲▲
 
-                    // 释放临时创建的URL，防止内存泄漏
-                    URL.revokeObjectURL(img.src);
-
-                    // 亮度值大于140时我们认为是“亮色背景”，应该用深色文字
-                    resolve(brightness > 140 ? 'text-color-dark' : 'text-color-light');
-                };
-
-                img.onerror = (err) => {
-                    URL.revokeObjectURL(img.src);
-                    reject(err);
-                };
-
-                img.src = URL.createObjectURL(imageBlob);
-            });
-        }
+        };
+        
+        img.onerror = () => resolve(''); // 图片加载失败则默认使用浅色文字
+        img.src = URL.createObjectURL(imageBlob);
+    });
+}
 
 
         // ==========================================================
@@ -17746,7 +17191,7 @@ function enterQQMainWithMessageTab(user) {
         // ==========================================================
         async function exportData() {
             try {
-                showLoadingModal("正在打包您的宇宙档案..."); // 使用 showLoadingModal
+                showLoadingModal("正在打包数据..."); // 使用 showLoadingModal
                 const data = {};
                 for (const table of db.tables) {
                     const tableName = table.name;
@@ -17859,7 +17304,7 @@ function enterQQMainWithMessageTab(user) {
                 const reader = new FileReader();
                 reader.onload = async (e) => {
                     try {
-                        showLoadingModal("正在解压宇宙档案并导入...");
+                        showLoadingModal("正在解压数据并导入...");
                         const data = JSON.parse(e.target.result);
                         await db.transaction('rw', db.tables, async () => {
                             for (const tableName in data) {
@@ -17935,7 +17380,7 @@ document.querySelectorAll('.qq-tab').forEach(btn => {
 
         // 2. 智能切换UI模式
         if (tab === 'message') {
-            qqMainPage.classList.add('transparent-ui-mode');
+        
             if (qqMainHeader) qqMainHeader.style.display = 'flex';
             renderChatList(window.currentUser);
         } else {
@@ -18273,7 +17718,202 @@ await window.loadAndApplyWidgetSignature(); // ✨ 新增：加载iOS小组件�
         const MESSAGES_PER_PAGE = 100; // 每次加载30条
         let currentMessageOffset = 0;   // 记录当前已加载到第几条
 
+// ==========================================================
+// --- ✨✨✨【全新】世界书高级设置 - 保存与加载引擎 V1.0 ✨✨✨ ---
+// ==========================================================
+(function() {
+    /**
+     * 核心函数: 保存“全局激活设置”面板中的所有参数
+     */
+    async function saveWorldBookSettings() {
+        const settingsContainer = document.getElementById('wb-activation-settings');
+        if (!settingsContainer) return;
 
+        // 探针 1: 确认保存函数被触发
+        console.log("【探针】: 检测到设置变更，正在保存世界书设置...");
+
+        // 从UI中读取所有参数值
+        const settings = {
+            scanDepth: parseInt(settingsContainer.querySelector('.setting-row:nth-of-type(1) .setting-item:nth-of-type(1) input').value, 10) || 0,
+            contextPercentage: parseInt(settingsContainer.querySelector('.setting-row:nth-of-type(1) .setting-item:nth-of-type(2) input').value, 10) || 0,
+            tokenBudget: parseInt(settingsContainer.querySelector('.setting-row:nth-of-type(2) .setting-item:nth-of-type(1) input').value, 10) || 0,
+            minParameters: parseInt(settingsContainer.querySelector('.setting-row:nth-of-type(2) .setting-item:nth-of-type(2) input').value, 10) || 0,
+            maxDepth: parseInt(settingsContainer.querySelector('.setting-row:nth-of-type(3) .setting-item:nth-of-type(1) input').value, 10) || 0,
+            maxRecursionDepth: parseInt(settingsContainer.querySelector('.setting-row:nth-of-type(3) .setting-item:nth-of-type(2) input').value, 10) || 0,
+            includeName: settingsContainer.querySelector('.checkbox-grid label:nth-of-type(1) input').checked,
+            caseSensitive: settingsContainer.querySelector('.checkbox-grid label:nth-of-type(2) input').checked,
+            useGroupScoring: settingsContainer.querySelector('.checkbox-grid label:nth-of-type(3) input').checked,
+            recursiveScanning: settingsContainer.querySelector('.checkbox-grid label:nth-of-type(4) input').checked,
+            matchWholeWord: settingsContainer.querySelector('.checkbox-grid label:nth-of-type(5) input').checked,
+            fadeAlert: settingsContainer.querySelector('.checkbox-grid label:nth-of-type(6) input').checked,
+            insertionPoint: settingsContainer.querySelector('select').value,
+        };
+        
+        // 探针 2: 检查收集到的设置值
+        console.log("【探针】: 收集到的设置对象:", settings);
+
+        try {
+            // 将整个设置对象存入数据库，使用一个固定的键名 'global'
+            await db.world_book_settings.put({ key: 'global', value: settings });
+            console.log("【探针】: 世界书设置已成功存入数据库。");
+        } catch (error) {
+            console.error("保存世界书设置失败:", error);
+        }
+    }
+
+    /**
+     * 辅助函数: 加载已保存的设置并填充到UI界面
+     */
+    async function loadWorldBookSettings() {
+        const settingsContainer = document.getElementById('wb-activation-settings');
+        if (!settingsContainer) return;
+        
+        const savedSettings = await db.world_book_settings.get('global');
+        if (!savedSettings) {
+            console.log("【探针】: 未找到已保存的世界书设置，将使用界面默认值。");
+            return; 
+        }
+        
+        console.log("【探针】: 成功加载已保存的世界书设置:", savedSettings.value);
+        const settings = savedSettings.value;
+        
+        // 填充UI
+        settingsContainer.querySelector('.setting-row:nth-of-type(1) .setting-item:nth-of-type(1) input').value = settings.scanDepth;
+        settingsContainer.querySelector('.setting-row:nth-of-type(1) .setting-item:nth-of-type(2) input').value = settings.contextPercentage;
+        settingsContainer.querySelector('.setting-row:nth-of-type(2) .setting-item:nth-of-type(1) input').value = settings.tokenBudget;
+        settingsContainer.querySelector('.setting-row:nth-of-type(2) .setting-item:nth-of-type(2) input').value = settings.minParameters;
+        settingsContainer.querySelector('.setting-row:nth-of-type(3) .setting-item:nth-of-type(1) input').value = settings.maxDepth;
+        settingsContainer.querySelector('.setting-row:nth-of-type(3) .setting-item:nth-of-type(2) input').value = settings.maxRecursionDepth;
+        settingsContainer.querySelector('.checkbox-grid label:nth-of-type(1) input').checked = settings.includeName;
+        settingsContainer.querySelector('.checkbox-grid label:nth-of-type(2) input').checked = settings.caseSensitive;
+        settingsContainer.querySelector('.checkbox-grid label:nth-of-type(3) input').checked = settings.useGroupScoring;
+        settingsContainer.querySelector('.checkbox-grid label:nth-of-type(4) input').checked = settings.recursiveScanning;
+        settingsContainer.querySelector('.checkbox-grid label:nth-of-type(5) input').checked = settings.matchWholeWord;
+        settingsContainer.querySelector('.checkbox-grid label:nth-of-type(6) input').checked = settings.fadeAlert;
+        settingsContainer.querySelector('select').value = settings.insertionPoint;
+    }
+
+// ▼▼▼ 请用这一整块全新的【V2.0 - 高级参数版】代码，替换旧的 getActiveWorldBookEntriesForTurn 函数 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【全新 V2.0 - 高级参数版】世界书“关键词触发”核心引擎 ✨✨✨ ---
+// ==========================================================
+/**
+ * 根据最近的聊天记录、全局设置以及每个条目的独立设置，
+ * 智能筛选出本轮对话应该激活的世界书条目，并按插入位置分类。
+ * @param {Array<object>} chatHistory - 最近的聊天记录数组
+ * @param {Array<object>} characterLinkedEntries - 角色关联的条目配置数组
+ * @returns {Promise<object>} - 返回一个包含分类后条目内容的对象, e.g., { before_char: '...', after_char: '...' }
+ */
+async function getActiveWorldBookEntriesForTurn(chatHistory, characterLinkedEntries) {
+    // --- 1. 获取全局设置 (与V1版相同) ---
+    const settingsRecord = await db.world_book_settings.get('global');
+    const globalSettings = settingsRecord ? settingsRecord.value : {
+        scanDepth: 2, includeName: true, caseSensitive: false, 
+        matchWholeWord: true, insertionPoint: 'before_char'
+    };
+
+    // --- 2. 准备工作 (获取所有条目详情 & 截取聊天记录) ---
+    const recentMessages = chatHistory.slice(-globalSettings.scanDepth);
+    if (recentMessages.length === 0 || !characterLinkedEntries || characterLinkedEntries.length === 0) {
+        return { before_char: '', after_char: '' };
+    }
+    
+    const allEntryIds = characterLinkedEntries.map(c => c.id);
+    const allEntryDetails = await db.world_entries.bulkGet(allEntryIds);
+    const entryDetailsMap = new Map(allEntryDetails.filter(Boolean).map(e => [e.id, e]));
+
+    const triggeredEntries = [];
+
+    // --- 3. ✨ 核心升级：遍历角色的“条目配置”，而不是所有条目 ---
+    for (const config of characterLinkedEntries) {
+        // a. 检查开关和概率
+        if (!config.enabled || Math.random() * 100 > config.probability) {
+            continue;
+        }
+
+        const entry = entryDetailsMap.get(config.id);
+        if (!entry) continue;
+
+        // b. 准备关键词列表
+        let keywords = (entry.keywords || '').split(',').map(k => k.trim()).filter(Boolean);
+        if (globalSettings.includeName && entry.title) {
+            keywords.push(entry.title.trim());
+        }
+        if (keywords.length === 0) continue;
+
+        // c. ✨ 实现“与所有关键词匹配”逻辑
+        let isTriggered = false;
+        if (config.keywordLogic === 'all') {
+            // "与所有"逻辑：要求所有关键词都必须在最近消息中找到
+            isTriggered = keywords.every(keyword => 
+                recentMessages.some(message => 
+                    typeof message.content === 'string' && message.content.toLowerCase().includes(keyword.toLowerCase())
+                )
+            );
+        } else {
+            // "与任意"逻辑 (默认行为)
+            isTriggered = keywords.some(keyword =>
+                recentMessages.some(message =>
+                    typeof message.content === 'string' && message.content.toLowerCase().includes(keyword.toLowerCase())
+                )
+            );
+        }
+
+        // d. 如果触发成功，将“配置”和“详情”打包在一起
+        if (isTriggered) {
+            triggeredEntries.push({ ...entry, config });
+        }
+    }
+    
+    // --- 4. ✨ 核心升级：按优先级排序，并按插入位置分类 ---
+    
+    // a. 排序：优先级(priority)高的排前面，注入顺序(insertionOrder)小的排前面
+    triggeredEntries.sort((a, b) => {
+        if (b.config.priority !== a.config.priority) {
+            return b.config.priority - a.config.priority;
+        }
+        return a.config.insertionOrder - b.config.insertionOrder;
+    });
+
+    // b. 分类
+    const categorizedEntries = {
+        before_char: [],
+        after_char: []
+    };
+
+    triggeredEntries.forEach(entry => {
+        // 决定这个条目应该去哪个“剧本”
+        let targetPosition = entry.config.position;
+        if (targetPosition === 'global') {
+            targetPosition = globalSettings.insertionPoint === '角色定义之前' ? 'before_char' : 'after_char';
+        }
+
+        if (categorizedEntries[targetPosition]) {
+            categorizedEntries[targetPosition].push(`--- ${entry.title} ---\n${entry.content}`);
+        }
+    });
+    
+    // --- 5. 返回最终处理好的、分类的字符串 ---
+    console.log(`【探针 WBE V2】: 本轮触发 ${triggeredEntries.length} 个条目。`);
+    return {
+        before_char: categorizedEntries.before_char.join('\n\n'),
+        after_char: categorizedEntries.after_char.join('\n\n')
+    };
+}
+// ▼▼▼ 在这里添加下面这行新代码 ▼▼▼
+window.getActiveWorldBookEntriesForTurn = getActiveWorldBookEntriesForTurn; // 将函数暴露到全局
+// ▲▲▲ 添加结束 ▲▲▲
+
+    // 绑定事件：当用户修改任何设置时，自动保存
+    document.getElementById('global-wb-settings-accordion')?.addEventListener('change', saveWorldBookSettings);
+
+    // 绑定事件：当打开世界书管理弹窗时，加载已保存的设置
+    const worldBookManagerBtn = document.getElementById('statusbar-world-book-btn');
+    if(worldBookManagerBtn) {
+        worldBookManagerBtn.addEventListener('click', loadWorldBookSettings);
+    }
+})();
+// ==========================================================
 // ==========================================================
         // --- ✨✨✨【V5   】角色编辑器开启引擎 ✨✨✨ ---
         // ==========================================================
@@ -21102,7 +20742,7 @@ ${videoTranscript}
             ];
 
             /**
-             * 核心函数：获取今天的星期，并更新图片
+             * 核心函数：获取今天的周，并更新图片
              */
             function updateWeekdayArt() {
                 const imageElement = document.getElementById('weekday-art-image');
@@ -22739,7 +22379,7 @@ addBtn.addEventListener('click', () => {
         }
 
         /**
-         * 核心模块 2: 构建分类的主题档案馆 (拾光集/日记) (TXT版)
+         * 核心模块 2:  (拾光集/日记) (TXT版)
          */
         function formatThematicSection(items, title, anchor, characterName, includeTimestamps) {
             if (items.length === 0) return { toc: '', content: '' };
@@ -22786,7 +22426,7 @@ addBtn.addEventListener('click', () => {
                 return;
             }
 
-            showLoadingModal("正在整理您的回忆档案，请稍候...");
+            showLoadingModal("正在整理回忆，请稍候...");
 
             try {
                 const userId = window.currentUser.id;
@@ -22805,7 +22445,7 @@ addBtn.addEventListener('click', () => {
                 const diarySection = formatThematicSection(allDiaries, "TA的日记", "diary", character.name, includeTimestamps);
 
                 // --- 组装最终的 TXT 内容 ---
-                let finalContent = `##################################################\n#                                                #\n#            与 ${character.name} 的回忆档案                  #\n#                                                #\n##################################################\n\n\n`;
+                let finalContent = `##################################################\n#                                                #\n#            与 ${character.name} 的回忆                  #\n#                                                #\n##################################################\n\n\n`;
                 finalContent += "============ 目录索引 ============\n\n";
                 finalContent += timeline.toc;
                 finalContent += bondsSection.toc;
@@ -22851,156 +22491,6 @@ addBtn.addEventListener('click', () => {
             }
         }
 
-
-
-
-
-
-        // ==========================================================
-        // --- ✨✨✨【全新补完】世界书导入/导出核心引擎 V1.0 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // --- 1. 获取所有相关的 DOM 元素 ---
-            const importBtn = document.getElementById('import-world-entries-btn');
-            const exportBtn = document.getElementById('export-world-entries-btn');
-            const fileInput = document.getElementById('import-world-book-input');
-
-            // 安全检查，如果找不到这些元素就直接退出，防止报错
-            if (!importBtn || !exportBtn || !fileInput) {
-                console.warn("警告：未能找到世界书导入/导出所需按钮，相关功能将不可用。");
-                return;
-            }
-
-            /**
-             * 核心函数 1: 导出所有世界书条目
-             */
-            async function exportWorldBookData() {
-                showLoadingModal("正在打包世界书...");
-                try {
-                    const allEntries = await db.world_entries.toArray();
-
-                    if (allEntries.length === 0) {
-                        showNotification("世界书是空的，没有什么可以导出哦。");
-                        return;
-                    }
-
-                    // 将数据打包成JSON字符串
-                    const jsonString = JSON.stringify(allEntries, null, 2); // 使用 null, 2 来格式化JSON，使其更易读
-                    const blob = new Blob([jsonString], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-
-                    // 创建一个隐藏的下载链接并触发点击
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `我的世界书备份_${new Date().toISOString().slice(0, 10)}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-
-                    showNotification("世界书已成功导出！");
-
-                } catch (error) {
-                    console.error("导出世界书失败:", error);
-                    showNotification(`导出失败: ${error.message}`);
-                } finally {
-                    hideLoadingModal();
-                }
-            }
-
-            /**
-             * 核心函数 2: 从文件导入世界书条目 (V2 - 兼容TavernAI格式)
-             */
-            function importWorldBookData(file) {
-                if (!file) return;
-
-                showDeleteDialog('警告：导入数据会【添加】新条目到您现有的世界书中。确定要继续吗？', () => {
-                    const reader = new FileReader();
-                    reader.onload = async (e) => {
-                        showLoadingModal("正在解析世界书文件...");
-                        try {
-                            const data = JSON.parse(e.target.result);
-                            let entriesToImport = [];
-
-                            // ✨ 核心修改：智能格式嗅探
-                            if (data.entries && typeof data.entries === 'object') {
-                                // --- TavernAI/SillyTavern 格式处理逻辑 ---
-                                console.log("检测到 TavernAI/SillyTavern 世界书格式，启动转换模式...");
-
-                                const tavernEntries = Object.values(data.entries);
-
-                                entriesToImport = tavernEntries.map(tavernEntry => {
-                                    const title = tavernEntry.comment || '无标题条目';
-                                    const keywords = [
-                                        ...(tavernEntry.key || []),
-                                        ...(tavernEntry.keysecondary || [])
-                                    ].join(','); // 将关键词数组合并为逗号分隔的字符串
-
-                                    return {
-                                        userId: window.currentUser.id,
-                                        title: title,
-                                        keywords: keywords,
-                                        content: tavernEntry.content || '',
-                                        type: 'note', // 默认导入为“私人笔记”，您可以稍后修改
-                                        isGlobal: 0,
-                                        createdAt: new Date().toISOString()
-                                    };
-                                });
-
-                            } else if (Array.isArray(data)) {
-                                // --- 原生格式处理逻辑 (保持不变) ---
-                                console.log("检测到 auing原生备份格式...");
-                                entriesToImport = data;
-                                // 确保导入的数据也关联到当前用户
-                                entriesToImport.forEach(entry => {
-                                    entry.userId = window.currentUser.id;
-                                    delete entry.id; // 移除旧ID，让数据库自动生成新ID
-                                });
-
-                            } else {
-                                throw new Error("文件格式无法识别，既不是 auing备份，也不是 TavernAI 世界书。");
-                            }
-
-                            if (entriesToImport.length > 0) {
-                                await db.world_entries.bulkAdd(entriesToImport);
-                                showNotification(`成功导入了 ${entriesToImport.length} 个世界书条目！`);
-                            } else {
-                                showNotification("文件中没有找到可以导入的有效条目。");
-                            }
-
-                            // 导入成功后，立即刷新当前的世界书页面
-                            if (typeof window.renderWorldEntries === 'function') {
-                                window.renderWorldEntries();
-                            }
-
-                        } catch (error) {
-                            console.error("导入世界书失败:", error);
-                            showNotification(`导入失败: ${error.message}`);
-                        } finally {
-                            hideLoadingModal();
-                        }
-                    };
-                    reader.readAsText(file);
-                });
-            }
-
-            // --- 2. 绑定所有事件 ---
-
-            // a. 点击“导出”按钮
-            exportBtn.addEventListener('click', exportWorldBookData);
-
-            // b. 点击“导入”按钮，实际是触发隐藏的文件选择框
-            importBtn.addEventListener('click', () => {
-                fileInput.click();
-            });
-
-            // c. 当用户选择了文件后，由文件选择框来执行真正的导入操作
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files && e.target.files[0]) {
-                    importWorldBookData(e.target.files[0]);
-                    e.target.value = ''; // 清空，以便下次能选择同一个文件
-                }
-            });
-
-        })();
 
         // ==========================================================
         // ▲▲▲ 替换到这里结束 ▲▲▲
@@ -23539,7 +23029,7 @@ document.getElementById('memo-detail-back-btn').addEventListener('click', hideMe
             window.openPlotCenter = openPlotCenter;
 
             /**
-             * 核心函数 2: 渲染历史梗概列表
+             * 核心函数 2: 渲染历史总结列表
              */
             async function renderSummariesList() {
                 summariesListContainer.innerHTML = '';
@@ -23716,16 +23206,16 @@ ${memoryData.internal_monologue || '无'}
             }
             window.generateNewSummary = generateNewSummary;
             /**
-             * 核心函数 4: 打开梗概编辑器
+             * 核心函数 4: 打开总结编辑器
              */
             function openPlotSummaryEditor(summary = null, newContent = '') {
                 const titleEl = document.getElementById('plot-summary-editor-title');
                 if (summary) {
-                    titleEl.textContent = '编辑剧情梗概';
+                    titleEl.textContent = '编辑剧情总结';
                     summaryIdInput.value = summary.id;
                     editorTextarea.value = summary.content;
                 } else {
-                    titleEl.textContent = '保存新梗概';
+                    titleEl.textContent = '保存新总结';
                     summaryIdInput.value = '';
                     editorTextarea.value = newContent;
                 }
@@ -23739,7 +23229,7 @@ ${memoryData.internal_monologue || '无'}
                 const id = summaryIdInput.value ? parseInt(summaryIdInput.value, 10) : null;
                 const content = editorTextarea.value.trim();
                 if (!content) {
-                    showNotification("梗概内容不能为空！");
+                    showNotification("总结内容不能为空！");
                     return;
                 }
                 try {
@@ -23753,10 +23243,10 @@ ${memoryData.internal_monologue || '无'}
                         });
                     }
                     await hideModal('plot-summary-editor-modal');
-                    showNotification("剧情档案已保存！");
+                    showNotification("剧情总结已保存！");
                     await openPlotCenter();
                 } catch (error) {
-                    console.error("保存梗概失败:", error);
+                    console.error("保存总结失败:", error);
                     showNotification("保存失败，请稍后再试。");
                 }
             }
@@ -23768,7 +23258,7 @@ ${memoryData.internal_monologue || '无'}
                 try {
                     const summary = await db.plot_summaries.get(summaryId);
                     if (!summary) {
-                        showNotification("错误：找不到这条梗概。");
+                        showNotification("错误：找不到这条总结。");
                         return;
                     }
 
@@ -23968,13 +23458,13 @@ ${historyTranscript}
                 const deleteBtn = e.target.closest('.delete-summary-btn');
                 if (deleteBtn) {
                     const summaryId = parseInt(deleteBtn.dataset.id, 10);
-                    showDeleteDialog('确定要删除这条剧情梗概吗？', async () => {
+                    showDeleteDialog('确定要删除这条剧情总结吗？', async () => {
                         await db.plot_summaries.delete(summaryId);
                         deleteBtn.closest('.memory-card').remove();
                         if (summariesListContainer.querySelectorAll('.memory-card').length === 0) {
                             emptyState.classList.remove('hidden');
                         }
-                        showNotification("梗概已删除。");
+                        showNotification("总结已删除。");
                     });
                     return;
                 }
@@ -25417,8 +24907,8 @@ case 'image_description':
         (function () {
             // 1. 我们将所有当前未实现功能的App ID都放在这个数组里
             const appsUnderConstruction = [
-                'app-live',         // 直播
-                'app-novel',        // 小说
+      
+                'app-novel',        // 故事
                 'app-offline',      // 线下
                 'app-forum',        // 论坛
                 'app-presets',      // 预设
@@ -25499,7 +24989,7 @@ case 'image_description':
 
             if (!dateEl || !timeEl || !weekdayEl || !nicknameEl || !ipLocationEl) return;
 
-            const weekdayArray = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekdayArray = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
             // --- 时间更新逻辑 (保持不变) ---
             function updateWidgetTime() {
@@ -25640,22 +25130,30 @@ makeEditable(ipLocationEl, 'widgetIpLocation', '未知'); // ✨ 默认值现在
                 return;
             }
 
-            /**
-             * 核心函数 1: 从数据库加载当前用户的头像，并应用到小组件上
-             */
-            async function loadAndApplyWidgetAvatar() {
-                try {
-                    // a. 我们直接获取唯一的“默认用户”
-                    const user = await db.users.get('default-user');
+async function loadAndApplyWidgetAvatar() {
+    try {
+        const user = await db.users.get('default-user');
+        const userAvatar = user ? user.avatar : null;
+        
+        // 1. 获取主头像和小头像的容器
+        const mainAvatarEl = document.getElementById('widget-avatar');
+        const signatureAvatarEl = document.getElementById('widget-signature-avatar');
 
-                    // b. 使用早已写好的 renderAvatar 函数来显示头像
-                    //    它能智能处理 Blob 数据或回退到占位符
-                    renderAvatar(avatarImg, user ? user.avatar : null, USER_FALLBACK_ICON);
+        // 2. 渲染主头像 (这部分不变)
+        if (mainAvatarEl) {
+            renderAvatar(mainAvatarEl, userAvatar, USER_FALLBACK_ICON);
+        }
+        
+        // 3. ✨ 核心新增：用同样的数据渲染签名栏的小头像
+        if (signatureAvatarEl) {
+            // 我们使用一个空的字符串作为回退，因为小头像不需要显示占位图标
+            renderAvatar(signatureAvatarEl, userAvatar, ''); 
+        }
 
-                } catch (error) {
-                    console.error("加载小组件头像失败:", error);
-                }
-            }
+    } catch (error) {
+        console.error("加载小组件头像失败:", error);
+    }
+}
 
             // 关键一步：暴露到全局，以便在应用启动时和别处调用
             window.loadAndApplyWidgetAvatar = loadAndApplyWidgetAvatar;
@@ -25871,33 +25369,7 @@ makeEditable(ipLocationEl, 'widgetIpLocation', '未知'); // ✨ 默认值现在
 
         })();
 // --- ✨✨✨【全新】iOS小组件-中栏多行文本引擎 ✨✨✨ ---
-// ==========================================================
-(function () {
-    const textarea = document.getElementById('widget-multi-line-text');
-    if (!textarea) return;
 
-    const storageKey = 'widgetMultiLineText';
-
-    // 辅助函数：根据内容自动调整文本框高度
-    function autoResize() {
-        textarea.style.height = 'auto'; // 先重置高度
-        textarea.style.height = textarea.scrollHeight + 'px'; // 再设置为内容的实际高度
-    }
-
-    // 1. 加载已保存的数据
-    const savedText = localStorage.getItem(storageKey);
-    // 提供一个默认的多行文本
-    textarea.value = savedText || '我是一个\n居中的文本块\n支持换行和编辑'; 
-    autoResize(); // 初始加载时也要调整一次高度
-
-    // 2. 监听输入事件以保存和自动调整高度
-    textarea.addEventListener('input', () => {
-        localStorage.setItem(storageKey, textarea.value);
-        autoResize();
-    });
-})();
-// ==========================================================
-// ==========================================================
         // --- ✨✨✨【全新】指纹图标更换主壁纸引擎 ✨✨✨ ---
         // ==========================================================
         (function () {
@@ -26366,7 +25838,9 @@ const globalActiveEntriesList = document.querySelector('#world-book-manager-moda
          globalActiveEntriesList.innerHTML = '<div class="wb-entry-item-placeholder">没有已启用的全局世界书...</div>';
     }
 }
-// ▼▼▼ 请用这个【V4 - 带书本操作栏版】的代码进行替换 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【V5 - 探针修复版】角色世界书渲染引擎 ✨✨✨ ---
+// ==========================================================
 async function renderCharacterWbList(character) { 
     const characterTitleEl = document.getElementById('character-wb-title');
     const listContainer = document.getElementById('character-wb-entry-list');
@@ -26379,44 +25853,35 @@ async function renderCharacterWbList(character) {
     characterTitleEl.textContent = `角色世界书 (${character.name})`;
     listContainer.innerHTML = '';
 
-    const linkedEntryConfigs = character.linkedEntries || [];
-    if (linkedEntryConfigs.length === 0) {
+    // 1. 核心修改：直接从 character 对象中获取我们保存的 linkedBooks 数组
+    const linkedBookIds = (character.linkedBooks || []).filter(Boolean);
+
+    if (linkedBookIds.length === 0) {
         listContainer.innerHTML = '<div class="wb-entry-item-placeholder">当前角色没有专属的世界书...</div>';
         return;
     }
     
-    const entryIds = linkedEntryConfigs.map(config => config.id);
-    const entryDetails = await db.world_entries.bulkGet(entryIds);
-
-    const entriesByBook = new Map();
-    entryDetails.forEach(entry => {
-        if (!entry) return;
-        if (!entriesByBook.has(entry.bookId)) {
-            entriesByBook.set(entry.bookId, []);
-        }
-        entriesByBook.get(entry.bookId).push(entry);
-    });
-
-    const bookDetails = await db.world_books.bulkGet(Array.from(entriesByBook.keys()));
+    // 2. 根据书本ID列表，获取所有书本的详细信息
+    const bookDetails = await db.world_books.bulkGet(linkedBookIds);
 
     for (const book of bookDetails) {
-        if (!book) continue;
-        const entriesInThisBook = entriesByBook.get(book.id) || [];
-        if (entriesInThisBook.length === 0) continue;
+        if (!book) continue; // 跳过可能已被删除的书本 
+        // (后续的渲染逻辑与上一版相同，它已经能处理空书本了)
+        const entriesInThisBook = await db.world_entries.where({ bookId: book.id }).toArray();
+        const entryCount = entriesInThisBook.length;
 
         const group = document.createElement('div');
         group.className = 'book-group';
-        group.dataset.bookId = book.id; // ✨ 核心新增：为整个组添加book-id
+        group.dataset.bookId = book.id; 
 
         group.innerHTML = `
             <button class="settings-item buttonlike">
                 <span class="icon"><i class="fa-solid fa-book-journal-whills"></i></span>
-                <span class="label">${escapeHtml(book.name)} (${entriesInThisBook.length})</span>
+                <span class="label">${escapeHtml(book.name)} (${entryCount})</span>
                 <span class="arrow">></span>
             </button>
             <div class="book-entries-container">
                 <div class="book-entries-inner">
-                    <!-- ✨ 核心新增：在这里注入操作栏 -->
                     <div class="book-actions-bar">
                         <button class="btn btn-secondary buttonlike btn-add-entry">增加条目</button>
                         <button class="btn btn-secondary buttonlike btn-delete-entry">删除条目</button>
@@ -26425,108 +25890,128 @@ async function renderCharacterWbList(character) {
                 </div>
             </div>`;
         
-        const header = group.querySelector('.settings-item');
         const contentInner = group.querySelector('.book-entries-inner');
+        
+        if (entryCount > 0) {
+             entriesInThisBook.forEach(entry => {
+                const entryCard = createCharacterWbItemCard(entry);
+                contentInner.appendChild(entryCard);
+            });
+        } else {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'wb-entry-item-placeholder';
+            placeholder.textContent = '这本书中还没有任何条目。';
+            placeholder.style.padding = '15px 0';
+            contentInner.appendChild(placeholder);
+        }
 
+        const header = group.querySelector('.settings-item');
         header.addEventListener('click', () => {
             group.classList.toggle('open');
-            if (group.classList.contains('open') && contentInner.dataset.loaded !== 'true') {
-                entriesInThisBook.forEach(entry => {
-                    const entryCard = createCharacterWbItemCard(entry);
-                    contentInner.appendChild(entryCard);
-                });
-                contentInner.dataset.loaded = 'true';
-            }
         });
+
         listContainer.appendChild(group);
     }
 }
-  window.renderCharacterWbList = renderCharacterWbList;
+window.renderCharacterWbList = renderCharacterWbList; // 确保函数是全局可访问的
 
+// ▼▼▼ 请用这一整块全新的【V3.0 - 高级参数版】代码，替换旧的 createCharacterWbItemCard 函数 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【V2 - 内联编辑器版】条目设置卡片创建引擎 ✨✨✨ ---
+// --- ✨✨✨【V3.0 - 高级参数版】条目设置卡片创建引擎 ✨✨✨ ---
 // ==========================================================
 /**
- * 辅助函数：创建单个条目的、带内联编辑器的设置卡片
+ * 辅助函数：创建单个条目的、带高级参数和内联编辑器的设置卡片
  */
 function createCharacterWbItemCard(entry) {
     const character = window.currentChat;
     const linkedEntriesConfig = character.linkedEntries || [];
-    let config = linkedEntriesConfig.find(c => c.id === entry.id) || { id: entry.id, enabled: true, depth: 100, order: 100 };
+    // 为旧数据提供兼容性默认值
+    let config = linkedEntriesConfig.find(c => c.id === entry.id) || { 
+        id: entry.id, enabled: true, priority: 100, insertionOrder: 100,
+        probability: 100, position: 'global', keywordLogic: 'any'
+    };
+    // 再次检查，确保即使是旧数据迁移过来的，也包含所有字段
+    config = {
+        priority: 100, insertionOrder: 100, probability: 100, 
+        position: 'global', keywordLogic: 'any', ...config
+    };
 
     const itemEl = document.createElement('div');
     itemEl.className = `character-wb-item ${config.enabled ? '' : 'disabled'}`;
     itemEl.dataset.entryId = entry.id;
 
-    // ✨ 核心修改：使用了全新的、包含内联编辑器的HTML模板
+    // ✨✨✨ 核心修改：使用了全新的、包含所有高级参数的HTML模板 ✨✨✨
     itemEl.innerHTML = `
         <div class="item-main-info">
             <button class="wb-entry-expand-btn btn-icon buttonlike"><i class="fa-solid fa-chevron-down"></i></button>
             <input type="checkbox" class="toggle-switch wb-entry-toggle" ${config.enabled ? 'checked' : ''}>
             <span class="item-title">${escapeHtml(entry.title)}</span>
         </div>
-        <div class="item-parameters">
+        
+        <!-- 第二行：核心参数 -->
+        <div class="item-parameters" style="grid-template-columns: repeat(3, 1fr);">
             <div class="param-group">
-                <label>深度</label>
-                <input type="number" class="form-input wb-entry-depth" value="${config.depth}">
+                <label>优先级</label>
+                <input type="number" class="form-input wb-entry-priority" value="${config.priority}">
             </div>
             <div class="param-group">
-                <label>顺序</label>
-                <input type="number" class="form-input wb-entry-order" value="${config.order}">
+                <label>注入顺序</label>
+                <input type="number" class="form-input wb-entry-order" value="${config.insertionOrder}">
+            </div>
+            <div class="param-group">
+                <label>概率 (%)</label>
+                <input type="number" class="form-input wb-entry-probability" value="${config.probability}" min="0" max="100">
             </div>
         </div>
-        
-        <!-- ▼▼▼ 这是新增的可折叠内容区 ▼▼▼ -->
+
+        <!-- 第三行：插入位置 -->
+        <div class="param-group" style="margin-top: 4px;">
+            <label>插入位置</label>
+            <select class="form-input wb-entry-position">
+                <option value="global" ${config.position === 'global' ? 'selected' : ''}>使用全局设置</option>
+                <option value="before_char" ${config.position === 'before_char' ? 'selected' : ''}>角色定义之前</option>
+                <option value="after_char" ${config.position === 'after_char' ? 'selected' : ''}>角色定义之后</option>
+            </select>
+        </div>
+
+        <!-- 第四行（可折叠部分）：关键词与内容编辑器 -->
         <div class="wb-entry-details-container">
             <div class="wb-entry-details-inner">
-                <div>
-                    <label class="form-label">关键词 (Keywords):</label>
-                    <input type="text" class="form-input wb-entry-keywords" value="${escapeHtml(entry.keywords || '')}">
+                <div class="keyword-logic-group">
+                    <label class="form-label" style="margin:0;">关键词:</label>
+                    <select class="form-input wb-entry-key-logic">
+                        <option value="any" ${config.keywordLogic === 'any' ? 'selected' : ''}>与任意匹配</option>
+                        <option value="all" ${config.keywordLogic === 'all' ? 'selected' : ''}>与所有匹配</option>
+                    </select>
                 </div>
-                <div>
+                <input type="text" class="form-input wb-entry-keywords" value="${escapeHtml(entry.keywords || '')}">
+                
+                <div style="margin-top: 10px;">
                     <label class="form-label">内容 (Content):</label>
                     <textarea class="form-input form-textarea wb-entry-content">${escapeHtml(entry.content || '')}</textarea>
                 </div>
-                <button class="btn btn-secondary buttonlike save-entry-details-btn" style="align-self: flex-end;">保存内容改动</button>
+                <button class="btn btn-secondary buttonlike save-entry-details-btn" style="align-self: flex-end; margin-top: 8px;">保存内容改动</button>
             </div>
         </div>
-        <!-- ▲▲▲ 新增结束 ▲▲▲ -->
     `;
 
-    // --- 事件绑定 ---
-
-    // 1. 为开关和参数输入框绑定“自动保存”事件 (保持不变)
+    // --- 事件绑定 (与旧版完全相同，无需修改) ---
     itemEl.addEventListener('change', (e) => {
-        if (e.target.classList.contains('wb-entry-toggle') || e.target.classList.contains('form-input')) {
+        if (e.target.classList.contains('form-input') || e.target.classList.contains('toggle-switch')) {
             if (typeof saveCharacterWbSettings === 'function') {
                 saveCharacterWbSettings(e.target);
             }
         }
     });
-    
-    // 2. ✨ 新增：为“展开”按钮绑定点击事件
     const expandBtn = itemEl.querySelector('.wb-entry-expand-btn');
-    if (expandBtn) {
-        expandBtn.addEventListener('click', () => {
-            itemEl.classList.toggle('expanded');
-        });
-    }
-
-    // 3. ✨ 新增：为“保存内容改动”按钮绑定点击事件
+    if (expandBtn) { expandBtn.addEventListener('click', () => itemEl.classList.toggle('expanded')); }
     const saveDetailsBtn = itemEl.querySelector('.save-entry-details-btn');
-    if (saveDetailsBtn) {
-        saveDetailsBtn.addEventListener('click', () => {
-            if (typeof saveWbEntryDetails === 'function') {
-                saveWbEntryDetails(itemEl); // 调用我们即将创建的新函数
-            }
-        });
-    }
+    if (saveDetailsBtn) { saveDetailsBtn.addEventListener('click', () => { if (typeof saveWbEntryDetails === 'function') saveWbEntryDetails(itemEl); }); }
 
     return itemEl;
 }
 // ==========================================================
-// ▼▼▼ 请将这个全新的函数，粘贴到 createCharacterWbItemCard 函数的后方 ▼▼▼
-// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
 // --- ✨✨✨【全新】世界书条目内联编辑器-保存引擎 ✨✨✨ ---
 // ==========================================================
 /**
@@ -26560,36 +26045,50 @@ async function saveWbEntryDetails(itemEl) {
         showNotification("保存失败，请稍后再试。");
     }
 }
+// ▼▼▼ 请用这一整块全新的【V2.0 - 高级参数版】代码，替换旧的 saveCharacterWbSettings 函数 ▼▼▼
 // ==========================================================
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
-    /**
-     * 核心函数 4: 保存角色世界书的设置
-     */
-    async function saveCharacterWbSettings(inputElement) {
-        const itemEl = inputElement.closest('.character-wb-item');
-        const entryId = parseInt(itemEl.dataset.entryId, 10);
+// --- ✨✨✨【V2.0 - 高级参数版】角色世界书设置保存引擎 ✨✨✨ ---
+// ==========================================================
+/**
+ * 核心函数 4: 保存角色世界书的设置 (已升级，支持所有新参数)
+ */
+async function saveCharacterWbSettings(inputElement) {
+    const itemEl = inputElement.closest('.character-wb-item');
+    if (!itemEl) return;
+    const entryId = parseInt(itemEl.dataset.entryId, 10);
 
-        // 从UI读取最新的设置值
-        const newSettings = {
-            enabled: itemEl.querySelector('.wb-entry-toggle').checked,
-            depth: parseInt(itemEl.querySelector('.wb-entry-depth').value, 10),
-            order: parseInt(itemEl.querySelector('.wb-entry-order').value, 10),
-        };
+    // ✨ 核心修改：从全新的UI中，读取所有参数的最新值
+    const newSettings = {
+        enabled: itemEl.querySelector('.wb-entry-toggle').checked,
+        priority: parseInt(itemEl.querySelector('.wb-entry-priority').value, 10) || 100,
+        insertionOrder: parseInt(itemEl.querySelector('.wb-entry-order').value, 10) || 100,
+        probability: parseInt(itemEl.querySelector('.wb-entry-probability').value, 10) || 100,
+        position: itemEl.querySelector('.wb-entry-position').value,
+        // ✨ 核心新增：读取我们新添加的“关键词匹配逻辑”
+        keywordLogic: itemEl.querySelector('.wb-entry-key-logic')?.value || 'any' // 如果找不到，默认为 'any'
+    };
 
-        // 更新内存和数据库
-        const character = window.currentChat;
-        const configIndex = character.linkedEntries.findIndex(c => c.id === entryId);
-        if (configIndex > -1) {
-            // 合并新旧设置
-            Object.assign(character.linkedEntries[configIndex], newSettings);
-            // 一次性更新整个数组
-            await db.characters.update(character.id, { linkedEntries: character.linkedEntries });
-        }
+    // 更新内存和数据库 (这部分逻辑与旧版几乎完全一样)
+    const character = window.currentChat;
+    if (!character || !character.linkedEntries) return;
 
-        // 切换禁用时的视觉效果
-        itemEl.classList.toggle('disabled', !newSettings.enabled);
+    const configIndex = character.linkedEntries.findIndex(c => c.id === entryId);
+    if (configIndex > -1) {
+        // 将新读取的设置，合并到内存中的配置对象里
+        Object.assign(character.linkedEntries[configIndex], newSettings);
+        
+        // 将更新后的整个数组，一次性写回数据库
+        await db.characters.update(character.id, { linkedEntries: character.linkedEntries });
     }
 
+    // 切换禁用时的视觉效果
+    itemEl.classList.toggle('disabled', !newSettings.enabled);
+    
+    // (可选) 给用户一个即时的反馈
+    console.log(`✅ 已为条目 #${entryId} 保存设置:`, newSettings);
+}
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
     // --- 事件绑定 ---
     worldBookBtn.addEventListener('click', openWorldBookManager);
     closeBtn.addEventListener('click', () => hideModal('world-book-manager-modal'));
@@ -26651,38 +26150,40 @@ async function openDeleteBookModal() {
     });
 }
 
-    /**
-     * 核心函数 3: 确认并执行删除操作
-     */
-    async function handleDeleteBooks() {
-        const idsToDelete = Array.from(deleteListContainer.querySelectorAll('input:checked')).map(cb => parseInt(cb.value, 10));
+/**
+ * 核心函数 3: 确认并执行删除操作
+ */
+async function handleDeleteBooks() {
+    // 修正：使用正确的变量名 deleteBooksList
+    const idsToDelete = Array.from(deleteBooksList.querySelectorAll('input:checked')).map(cb => parseInt(cb.value, 10));
 
-        if (idsToDelete.length === 0) {
-            showNotification("您没有选择任何要删除的书本。");
-            return;
-        }
-
-        showDeleteDialog(`确定要删除选中的 ${idsToDelete.length} 本书以及其中【所有】的条目吗？此操作不可恢复！`, async () => {
-            showLoadingModal("正在删除...");
-            try {
-                await db.transaction('rw', db.world_books, db.world_entries, async () => {
-                    await db.world_entries.where('bookId').anyOf(idsToDelete).delete();
-                    await db.world_books.bulkDelete(idsToDelete);
-                });
-                
-                hideModal('wb-delete-books-modal');
-                await renderGlobalWbSelector();
-                await window.renderCharacterWbList(window.currentChat);
-                showNotification("所选书本已成功删除。");
-
-            } catch (error) {
-                console.error("删除书本失败:", error);
-                showNotification("删除失败，请重试。");
-            } finally {
-                hideLoadingModal();
-            }
-        });
+    if (idsToDelete.length === 0) {
+        showNotification("您没有选择任何要删除的书本。");
+        return;
     }
+
+    showDeleteDialog(`确定要删除选中的 ${idsToDelete.length} 本书以及其中【所有】的条目吗？此操作不可恢复！`, async () => {
+        showLoadingModal("正在删除...");
+        try {
+            await db.transaction('rw', db.world_books, db.world_entries, async () => {
+                await db.world_entries.where('bookId').anyOf(idsToDelete).delete();
+                await db.world_books.bulkDelete(idsToDelete);
+            });
+            
+            hideModal('wb-delete-books-modal');
+            await renderGlobalWbSelector();
+            await window.renderCharacterWbList(window.currentChat);
+            showNotification("所选书本已成功删除。");
+
+        } catch (error) {
+            console.error("删除书本失败:", error);
+            showNotification("删除失败，请重试。");
+        } finally {
+            hideLoadingModal();
+        }
+    });
+}
+
 
     /**
      * 核心函数 4: 导出所有书本和条目
