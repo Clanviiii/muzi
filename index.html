@@ -2603,184 +2603,6 @@
 
 
         /* ========================================================== */
-        /* --- ✨✨✨ 音乐播放器 - 播放列表弹窗样式 ✨✨✨ --- */
-        /* ========================================================== */
-        #playlist-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 1020;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        #playlist-modal.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        #playlist-modal-overlay {
-            position: absolute;
-            inset: 0;
-
-        }
-
-        #playlist-modal-content {
-            position: absolute;
-            bottom: 0;
-            /* ✨ 核心修改 1：让弹窗在水平方向上居中，而不是撑满 */
-            left: 50%;
-            transform: translateX(-50%) translateY(100%);
-            /* 初始状态依然在屏幕外 */
-
-            /* ✨ 核心修改 2：给弹窗一个固定的宽度，让它看起来更精致 */
-            width: 95%;
-            max-width: 400px;
-            /* 在大屏幕上，最大宽度不超过400px */
-
-            background-color: var(--color-ui-base);
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-
-            /* ✨ 核心修改 3：将百分比高度改为固定的最大像素值 */
-            max-height: 450px;
-
-            /* ✨ 核心修改 4：同步调整打开时的 transform 动画 */
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        /* ✨ 核心新增：为弹窗的打开状态也设置正确的 transform */
-        #playlist-modal.visible #playlist-modal-content {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .playlist-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--color-ui-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .playlist-header h3 {
-            margin: 0;
-            font-size: 16px;
-            color: var(--color-secondary-accent);
-        }
-
-        .playlist-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px 16px;
-        }
-
-        .playlist-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--color-ui-border);
-            gap: 12px;
-        }
-
-        .playlist-item:last-child {
-            border-bottom: none;
-        }
-
-        .playlist-item-info {
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .playlist-item-title {
-            font-size: 14px;
-            color: var(--color-tertiary-accent);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .playlist-item-artist {
-            font-size: 12px;
-            color: var(--color-tertiary-accent);
-            opacity: 0.7;
-        }
-
-        .playlist-item.playing .playlist-item-title,
-        .playlist-item.playing .playlist-item-artist {
-            color: var(--color-primary-accent);
-            font-weight: 600;
-        }
-
-        .playlist-item-delete-btn {
-            font-size: 16px;
-            color: #a1a1aa;
-            padding: 8px;
-            flex-shrink: 0;
-        }
-
-        .playlist-header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            /* 标题和加号按钮的间距 */
-        }
-
-        #add-song-from-playlist-btn {
-            font-size: 28px;
-            /* 让加号更醒目 */
-            font-weight: 300;
-            color: var(--color-secondary-accent);
-            padding-bottom: 4px;
-            /* 微调垂直位置 */
-        }
-
-        /* --- ✨ 新增：可滚动个性化弹窗样式 --- */
-
-        /* 弹窗内容区的主样式 */
-        .chat-customization-content {
-            width: 300px;
-            max-height: 70%;
-            /* 核心：让弹窗最高可以占据屏幕70%的高度 */
-            background: var(--color-ui-base);
-            border-radius: 16px;
-
-
-            /* 使用Flexbox布局来分离头部和可滚动的内容区 */
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            /* 裁剪掉超出圆角的部分 */
-        }
-
-        /* 弹窗头部 */
-        .chat-customization-header {
-            padding: 12px;
-            font-weight: 600;
-
-            text-align: center;
-            border-bottom: 1px solid var(--color-ui-border);
-            position: relative;
-            flex-shrink: 0;
-            /* 防止头部被压缩 */
-        }
-
-        /* 弹窗的可滚动主体 */
-        .chat-customization-body {
-            flex: 1;
-            /* 核心：让这个区域占据所有剩余空间 */
-            overflow-y: auto;
-            /* 核心：这是实现滚动的关键！ */
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-
-        /* ========================================================== */
         /* --- ✨✨✨ 新增：手风琴式下拉菜单样式 ✨✨✨ --- */
         /* ========================================================== */
 
@@ -3632,135 +3454,6 @@
 
 
         /* ========================================================== */
-        /* --- ✨✨✨ 音乐播放器弹窗专属样式 (Flexbox 布局版) ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* 1. 弹窗内容主体 (卡片) */
-        #music-player-content {
-            /* 使用 Flexbox 垂直布局，替代旧的绝对定位 */
-            display: flex;
-            flex-direction: column;
-
-            /* ✨ 核心修改：定义弹窗的尺寸和外观 */
-            width: 90%;
-            max-width: 340px;
-            height: 80%;
-            max-height: 580px;
-
-            /* 复用我们早已写好的毛玻璃效果，让它与系统风格统一 */
-            background-color: var(--color-ui-glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-
-            /* ✨ 移除旧页面占满屏幕的样式 */
-            position: relative;
-            overflow: hidden;
-            /* 确保内部的绝对定位背景不会溢出圆角 */
-        }
-
-        /* 2. 内部布局调整 */
-
-        /* a. 背景层：依然是绝对定位，撑满整个弹窗 */
-        #music-player-bg {
-            display: block;
-            background: var(--music-wallpaper-url, linear-gradient(135deg,
-                        var(--color-bg-gradient-start),
-                        var(--color-bg-gradient-mid),
-                        var(--color-bg-gradient-end)));
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            /* 确保它在最底层 */
-            background-size: cover;
-            background-position: center;
-            transition: background-image 0.4s ease-in-out;
-            opacity: 0.6;
-            /* 可以让背景稍微暗一点，突出前景内容 */
-        }
-
-        /* b. 头部、主体、脚部：现在是 Flexbox 的子项 */
-        #music-player-header {
-
-            flex-shrink: 0;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: static;
-            /* 移除绝对定位 */
-            padding: 12px 16px;
-            /* 调整内边距，适应更小的空间 */
-            height: auto;
-            color: rgb(0, 0, 0);
-            /* 增加文字阴影 */
-        }
-
-        #music-player-header .btn-icon {
-            color: rgb(0, 0, 0);
-            /* 按钮图标也强制为白色 */
-        }
-
-        #music-player-body {
-            top: 60px;
-            /* 从顶栏 (高度约60px) 的下方开始 */
-            bottom: 160px;
-            /* 在底栏 (高度约160px) 的上方结束 */
-            left: 0;
-            /* 左右撑满 */
-            right: 0;
-            position: static;
-            /* 移除绝对定位 */
-            flex-grow: 1;
-            /* ✨ 核心：让它占据所有剩余的垂直空间 */
-            display: grid;
-            place-items: center;
-            min-height: 0;
-            /* Flexbox 布局中的一个重要技巧，防止内容溢出 */
-        }
-
-        #music-player-footer {
-            position: static;
-            /* 移除绝对定位 */
-            flex-shrink: 0;
-            /* 高度固定，不允许被压缩 */
-            padding: 12px 16px;
-            /* 调整内边距 */
-            color: rgb(0, 0, 0);
-            /* 文字强制为白色 */
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-        }
-
-        #music-player-footer .btn-icon {
-            color: rgb(0, 0, 0);
-        }
-
-        #music-player-footer #music-player-play {
-            border-color: rgba(255, 255, 255, 0.8);
-            /* 边框也改为浅色 */
-        }
-
-        /* c. 光碟尺寸微调 */
-        #music-player-disc-container {
-            width: 220px;
-            height: 220px;
-        }
-
-        #music-player-cover-art {
-            cursor: pointer;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            background: var(--color-ui-subtle);
-            color: var(--color-tertiary-accent);
-            display: grid;
-            place-items: center;
-            font-size: 14px;
-            text-align: center;
-            width: 150px;
-            height: 150px;
-        }
-
-        /* ========================================================== */
         /* --- ✨✨✨【全新】三栏式页头布局引擎 ✨✨✨ --- */
         /* ========================================================== */
         /* 【请用这个新版本，替换旧的 .page-header 规则】 */
@@ -3832,171 +3525,7 @@
             /* 将超出的部分显示为... */
         }
 
-        /* ========================================================== */
-        /* --- ✨✨✨ 新增：一起听功能专属样式 ✨✨✨ --- */
-        /* ========================================================== */
-        #music-player-listen-together-btn {
-            color: #4CAF50;
-            /* 一个代表分享和连接的绿色 */
-            transition: transform 0.2s ease;
-        }
 
-        #music-player-listen-together-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* ========================================================== */
-        /* --- ✨✨✨【全新】歌词功能专属样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* 歌词容器 */
-        #lyrics-content-area {
-            scroll-behavior: smooth;
-            /* 让滚动更平滑 */
-        }
-
-        /* 单句歌词样式 */
-        .lyric-line {
-            font-size: 18px;
-            font-weight: 500;
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: var(--color-tertiary-accent);
-            opacity: 0.5;
-            /* 非当前行半透明 */
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* 当前高亮的歌词行 */
-        .lyric-line.active-lyric {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--color-primary-accent);
-            background-color: rgba(0, 0, 0, 0.03);
-            opacity: 1;
-            /* 当前行完全不透明 */
-            transform: scale(1.05);
-            /* 轻微放大，突出显示 */
-        }
-
-        /* ========================================================== */
-        /* --- ✨✨✨【全新】音乐播放器-视图切换专属样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* 1. 视图容器：撑满整个播放器，并启用Flex布局 */
-        #music-player-view-container {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            /* 确保它在背景层之上 */
-            display: flex;
-            overflow: hidden;
-            /* 隐藏滑出屏幕的视图 */
-        }
-
-        /* 2. 单个视图的通用样式 */
-        .music-player-view {
-            width: 100%;
-            height: 100%;
-            flex-shrink: 0;
-            /* 防止视图被压缩 */
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            /* ✨ 切换动画 */
-        }
-
-        /* 3. 默认情况下，歌词视图在右侧屏幕外 */
-        #player-lyrics-view {
-            transform: translateX(100%);
-        }
-
-        /* 4. 当播放器处于“歌词模式”时，两个视图一起向左滑动 */
-        #music-player-content.lyrics-mode #player-main-view {
-            transform: translateX(-100%);
-        }
-
-        #music-player-content.lyrics-mode #player-lyrics-view {
-            transform: translateX(-100%);
-        }
-
-        /* 5. 歌词文本样式优化 (增加阴影，在复杂背景下更清晰) */
-        .lyric-line {
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-            color: rgba(255, 255, 255, 0.7);
-            /* 默认歌词用半透明白色 */
-        }
-
-        .lyric-line.active-lyric {
-            color: white;
-            /* 高亮行用纯白色 */
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-        }
-
-
-        /* ========================================================== */
-        /* --- ✨✨✨【全新】“一起听”界面美化样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* 1. “一起听”头部总容器：改为垂直布局 */
-        #listen-together-header {
-            display: flex;
-            flex-direction: column;
-            /* 核心：让头像行和计时器垂直堆叠 */
-            align-items: center;
-            /* 水平居中 */
-            gap: 8px;
-            /* 头像行与计时器之间的间距 */
-            width: 100%;
-            padding-bottom: 8px;
-            /* 给底部留一点空间，避免过于拥挤 */
-        }
-
-        /* 2. 头像行的容器：保持水平布局 */
-        #listen-together-header .avatar-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            /* 两个头像之间的间距可以稍大一些 */
-        }
-
-        /* 3. ✨ 核心修改：放大头像尺寸 */
-        #listen-together-header .avatar-display {
-            width: 48px;
-            /* 从 24px 放大到 48px */
-            height: 48px;
-            /* 从 24px 放大到 48px */
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            /* (可选) 增加一个漂亮的半透明边框 */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            /* (可选) 增加一点阴影，更有立体感 */
-        }
-
-        /* 4. ✨ 核心新增：计时器文本的样式 */
-        #listen-together-timer {
-            font-size: 13px;
-            font-weight: 500;
-            color: white;
-            opacity: 0.9;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-            /* 使用等宽字体，可以防止数字跳动时文本宽度变化，视觉效果更稳定 */
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        /* ========================================================== */
-        /* --- ✨✨✨【全新】“一起听”邀请消息专属样式 ✨✨✨ --- */
-        /* ========================================================== */
-        .msg-timestamp.clickable-music-invite {
-            cursor: pointer;
-            transition: color 0.2s ease, text-shadow 0.2s ease;
-            /* (可选) 给它一个独特的颜色，让它更醒目 */
-            color: #0e0b124b;
-            /* 紫色 */
-        }
-
-        .dialog-content .form-input {
-            width: 100%;
-        }
 
         /* ========================================================== */
         /* --- ✨✨✨【全新修复版】气泡CSS编辑器上下布局 ✨✨✨ --- */
@@ -4301,68 +3830,6 @@
             text-shadow: 0 0 4px rgba(236, 72, 153, 0.4);
             /* (可选) 增加一点柔和的光晕 */
         }
-
-        /* ========================================================== */
-        /* --- ✨✨✨【全新】音乐搜索结果弹窗专属样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* 列表项的基本样式 */
-        .music-search-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .music-search-item:hover {
-            background-color: var(--color-ui-border);
-        }
-
-        /* 歌曲信息的容器 */
-        .music-search-item-info {
-            flex-grow: 1;
-            /* 占据所有剩余空间 */
-            overflow: hidden;
-            /* 防止文字溢出 */
-        }
-
-        /* 歌曲标题 */
-        .music-search-item-title {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--color-secondary-accent);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            /* 超长部分显示省略号 */
-        }
-
-        /* 歌手名 */
-        .music-search-item-artist {
-            font-size: 12px;
-            color: var(--color-tertiary-accent);
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        /* 1. 核心：让弹窗的主内容区能够自然滚动 */
-        #global-sticker-manager-modal .page-content {
-            overflow-y: auto;
-            /* 允许垂直滚动 */
-        }
-
-        /* 2. 确保网格容器能正常工作 (这部分您已有的代码是正确的) */
-        #global-sticker-grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 10px;
-            align-content: start;
-        }
-
-
 
 
         /* ========================================================== */
@@ -4841,7 +4308,7 @@
             gap: 4px;
         }
 
-        、
+        
         /* ========================================================== */
         /* --- ✨✨✨【全新】状态栏API按钮专属样式 ✨✨✨ --- */
         /* ========================================================== */
@@ -7786,6 +7253,8 @@
 #bond-modal #bond-save-icon-btn:disabled i {
     animation: spin 1s linear infinite; /* 应用旋转动画 */
 }
+
+
     </style>
 
     <!-- 【请将这个新的 style 标签粘贴到旧 style 标签的紧后方】 -->
@@ -7853,19 +7322,15 @@
             <div id="statusbar" class="statusbar">
                 <div id="statusbar-left" class="statusbar-left">
                     <span id="statusbar-time">00:00</span>
+<button id="statusbar-preset-btn" class="btn-icon buttonlike" title="提示词预设">
+<i class="fa-solid fa-t"></i>
+</button>
 
                     <button id="statusbar-world-book-btn" class="btn-icon buttonlike" title="世界书"
                         style="display: none;">
                         <i class="fa-solid fa-book-atlas"></i>
                     </button>
-<button id="statusbar-preset-btn" class="btn-icon buttonlike" title="提示词预设">
-<i class="fa-solid fa-t"></i>
-</button>
-<!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
-                    <button id="statusbar-listen-together-btn" class="btn-icon buttonlike" title="音乐"
-                        style="display: none;">
-                        <i class="fa-solid fa-headphones"></i>
-                    </button>
+
                 </div>
 
 
@@ -7876,7 +7341,6 @@
         style="display: none;">
         <i class="fa-solid fa-star"></i> <!-- 图标会由JS动态改变 -->
     </button>
-    
     <button id="statusbar-prompt-btn" class="btn-icon buttonlike" title="查看AI提示词">
        <i class="fa-regular fa-comment"></i>
     </button>
@@ -7943,7 +7407,7 @@
                                     <span id="widget-signature" class="buttonlike">我の世界本是阴天 直到@署名の出现</span>
                                 </div>
                                 <div class="widget-top-actions">
-                                    <i id="widget-change-bg-btn" class="fa-regular fa-image buttonlike"></i>
+                                    <i id="widget-change-bg-btn"  class="fa-regular fa-circle-user"></i>
                                     <i id="widget-fingerprint-btn" class="fa-solid fa-fingerprint buttonlike"></i>
                                 </div>
                             </div>
@@ -8071,7 +7535,7 @@
                                     <i class="fa-solid fa-moon"></i>
                                 </button>
                                 <button id="calendar-bg-change-btn" class="btn-icon buttonlike" title="自定义背景">
-                                    <i class="fa-regular fa-image"></i>
+                                   <i class="fa-solid fa-hourglass-end"></i>
                                 </button>
                             </div>
                             <div class="calendar-body">
@@ -8089,7 +7553,6 @@
                                 <span id="calendar-weather-temp">--°</span>
                             </div>
                         </div>
-
 
                         <nav id="desktop-dock">
 
@@ -9365,19 +8828,19 @@
     <div id="bond-paper-inner-content">
 
         <header id="bond-paper-header">
-            <h3 id="bond-paper-title">与 <span id="bond-character-name">角色名</span> 的拾光集</h3>
+            <h3 id="bond-paper-title">与 <span id="bond-character-name">角色名</span> 的拾光</h3>
         </header>
 
         <!-- 区域 1: “心声” -->
         <div class="paper-section" data-section="heart_trace">
-            <h4 class="paper-title" style="color: #84cafc;">心声</h4>
+            <h4 class="paper-title" style="color: #fc84a8;">心声</h4>
             <p class="paper-content">【<span class="placeholder-char-name">角色名</span>正在思考...】</p>
         </div>
         <hr class="paper-divider">
 
         <!-- 区域 2: “独白” -->
         <div class="paper-section" data-section="monologue">
-            <h4 class="paper-title" style="color: #fcd484;">独白</h4>
+            <h4 class="paper-title" style="color: #84cafc;">独白</h4>
             <p class="paper-content">【<span class="placeholder-char-name">角色名</span>正在思考...】</p>
         </div>
 
@@ -9389,214 +8852,8 @@
 </button>
 
     </div>
-    <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-    <!-- 【请将这个全新的 HTML 弹窗，粘贴到 body 的末尾】 -->
-
-    <!-- 位置输入弹窗 -->
-    <div id="location-modal" class="hidden" style="position: fixed; inset: 0;  ; 
-            display: flex; align-items: center; justify-content: center; z-index: 1008;">
-        <div style="width: 300px; background: var(--color-ui-base); border-radius: 16px; 
-              display: flex; flex-direction: column; overflow: hidden;
-               ">
-            <header style="padding: 12px; font-weight: 600;   text-align: center; border-bottom: 1px solid #afafaf;">
-                发送位置
-            </header>
-            <main style="padding: 16px;">
-                <input id="location-name-input" type="text" class="form-input" placeholder="输入地点名称...">
-            </main>
-            <footer style="padding: 12px; border-top: 1px solid #afafaf; display: flex; gap: 12px;">
-                <button id="cancel-location-btn" class="btn btn-secondary buttonlike" style="flex: 1;">取消</button>
-                <button id="send-location-btn" class="btn btn-primary buttonlike" style="flex: 1;">发送</button>
-            </footer>
-        </div>
-    </div>
 
 
-
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新弹窗版】沉浸式音乐播放器 ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="music-player-modal" class="modal-overlay hidden">
-
-        <!-- 1. 这是弹窗的内容主体 (卡片) -->
-        <div id="music-player-content" class="modal-content">
-
-            <!-- (id="music-player-content" 这个容器本身保持不变) -->
-
-            <!-- 1. 背景层 (保持不变) -->
-            <div id="music-player-bg"></div>
-
-            <!-- 2. ✨ 核心修改：这是一个全新的“视图切换容器” ✨ -->
-            <div id="music-player-view-container">
-
-                <!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 id="player-main-view" ▼▼▼ -->
-                <!-- 视图 A: 播放器主界面 (图标已全部替换) -->
-                <div id="player-main-view" class="music-player-view active">
-
-                    <header id="music-player-header">
-                        <button id="music-player-back" class="btn-icon buttonlike">
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </button>
-                        <div id="music-player-title-info">
-                            <h2 id="music-player-song-title">歌曲名</h2>
-                            <p id="music-player-song-artist">歌手</p>
-                        </div>
-                        <div class="header-right" style="display: flex; align-items: center; gap: 16px;">
-                            <button id="change-music-wallpaper-btn" class="btn-icon buttonlike">
-                                <i class="fa-solid fa-bars"></i>
-                            </button>
-                            <button id="open-music-search-btn" class="btn-icon buttonlike" title="搜索歌曲">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
-                    </header>
-
-                    <input type="file" id="cover-art-upload-input" accept="image/*" class="hidden" />
-                    <input type="file" id="music-wallpaper-input" accept="image/*" class="hidden" />
-
-                    <main id="music-player-body">
-                        <div id="music-player-disc-container">
-                            <div class="disc-rings"></div>
-                            <img id="music-player-cover-art" src="" alt="专辑封面">
-                        </div>
-                    </main>
-
-                    <footer id="music-player-footer">
-                        <div class="action-icons">
-                            <button id="music-player-lyrics-btn" class="btn-icon buttonlike" title="查看歌词">
-                                <i class="fa-solid fa-file-lines"></i>
-                            </button>
-                            <!-- ▼▼▼ 将下面这个全新的 button 代码块，粘贴到“歌词”和“列表”按钮之间 ▼▼▼ -->
-                            <button id="music-player-mode-btn" class="btn-icon buttonlike" title="播放模式">
-                                <i class="fa-solid fa-repeat"></i>
-                            </button>
-                            <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
-                            <button id="show-playlist-btn" class="btn-icon buttonlike" title="播放列表">
-                                <i class="fa-solid fa-list-ul"></i>
-                            </button>
-                        </div>
-                        <div class="progress-bar-container">
-                            <span id="music-player-current-time">00:00</span>
-                            <input type="range" id="music-player-progress" value="0" min="0" max="100">
-                            <span id="music-player-total-time">00:00</span>
-                        </div>
-                        <div class="main-controls">
-                            <button id="music-player-prev" class="btn-icon buttonlike">
-                                <i class="fa-solid fa-backward-step fa-xl"></i>
-                            </button>
-                            <button id="music-player-play" class="btn-icon buttonlike">
-                                <i class="play-icon fa-solid fa-play fa-2xl"></i>
-                                <i class="pause-icon fa-solid fa-pause fa-2xl" style="display:none;"></i>
-                            </button>
-                            <button id="music-player-next" class="btn-icon buttonlike">
-                                <i class="fa-solid fa-forward-step fa-xl"></i>
-                            </button>
-                        </div>
-                    </footer>
-                </div>
-                <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-                <!-- 视图 B: 歌词界面 (默认隐藏) -->
-                <div id="player-lyrics-view" class="music-player-view">
-                    <!-- (我们把原来歌词弹窗的 header 和 main 搬进来) -->
-                    <header class="page-header" style="flex-shrink: 0; background: transparent; border: none;">
-                        <div id="lyrics-modal-title-info" style="text-align: center; flex-grow: 1;">
-                            <h2 id="lyrics-song-title"
-                                style="font-size: 16px; margin: 0; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
-                                歌词</h2>
-                            <p id="lyrics-song-artist"
-                                style="font-size: 12px; margin: 4px 0 0; color: white; opacity: 0.8; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">
-                            </p>
-                        </div>
-                        <button id="lyrics-view-close-btn" class="btn-icon buttonlike"
-                            style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: white;"><i
-                                class="fa-solid fa-x"></i></button>
-                    </header>
-                    <main id="lyrics-content-area" class="page-content"
-                        style="padding: 20px 10px; text-align: center; background: transparent;"></main>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- 【请将这个全新的 HTML 弹窗，粘贴到 body 的末尾】 -->
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨ 音乐播放器 - 播放列表弹窗 ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="playlist-modal" class="hidden">
-        <div id="playlist-modal-overlay"></div>
-        <div id="playlist-modal-content">
-            <header class="playlist-header">
-                <!-- ✨ 核心新增：一个包含“添加”按钮的左侧容器 -->
-                <div class="playlist-header-left">
-                    <h3>播放列表 (<span id="playlist-count">0</span>)</h3>
-                    <button id="add-song-from-playlist-btn" class="btn-icon buttonlike">+</button>
-                </div>
-                <button id="close-playlist-btn" class="btn-icon buttonlike">完成</button>
-            </header>
-            <!-- ✨ 核心修正：这个容器的 ID 就是您代码中需要的 playlist-items-container -->
-            <main id="playlist-items-container" class="playlist-body">
-                <!-- 播放列表将由 JavaScript 动态生成 -->
-            </main>
-        </div>
-        <!-- 隐藏的文件上传控件 -->
-        <!-- 修改后 -->
-        <input type="file" id="song-upload-input" accept="audio/*,audio/mpeg,.mp3,.lrc" class="hidden" multiple />
-
-
-        <!-- ✨✨✨ 粘贴结束 ✨✨✨ -->
-
-
-    </div>
-
-    <!-- 【请将这个全新的 HTML 弹窗，粘贴到 body 的末尾】 -->
-
-    <!-- 聊天个性化弹窗 (手风琴下拉菜单版) -->
-    <div id="chat-customization-modal" class="hidden" style="position: fixed; inset: 0;  ; 
-            display: flex; align-items: center; justify-content: center; z-index: 1009;">
-
-        <div class="chat-customization-content">
-            <header class="chat-customization-header">
-                <span>个性化</span>
-                <button id="close-chat-customization-btn" class="btn-icon buttonlike"
-                    style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 16px;"><i
-                        class="fa-solid fa-x"></i></button>
-            </header>
-
-            <!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 chat-customization-modal 的 main 区域 ▼▼▼ -->
-            <main class="chat-customization-body">
-
-                <!-- 手风琴菜单 1: 自定义聊天背景 (图标已更新) -->
-
-
-                <!-- 手风琴菜单 3: AI高级设置 (图标已更新) -->
-                <div class="customization-group" data-group="advanced-ai-settings">
-                    <div class="group-header">
-                        <span class="icon"><i class="fa-solid fa-brain"></i></span>
-                        <span class="label">AI高级设置</span>
-                        <span class="arrow">&lt;</span>
-                    </div>
-                    <div class="group-content">
-                        <div class="group-content-inner">
-                            <hr
-                                style="border: none; height: 1px; background-color: var(--color-ui-border); margin: 20px 0;">
-                            <button id="show-prompt-viewer-btn" class="btn btn-secondary buttonlike btn-full-width">
-                                查看当前提示词
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-            </main>
-            <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-
-        </div>
-
-        </main>
-
-
-    </div>
     </div>
 
 
@@ -9778,9 +9035,9 @@
     </div>
 
     <!-- 【请将这个全新的输入弹窗HTML，粘贴到 body 的末尾】 -->
-    <div id="input-dialog" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.4); 
+    <div id="input-dialog" class="hidden" style="position: fixed; inset: 0;  
             display: flex; align-items: center; justify-content: center; z-index: 1021;">
-        <div class="dialog-content" style="background:#cccccc; border-radius:16px; padding:20px; width:300px; ">
+        <div class="dialog-content" style="background:#ffffff; border-radius:16px; padding:20px; width:300px; ">
             <h3 id="input-dialog-title" style="  font-weight:bold; margin: 0 0 16px; text-align: center;">
                 请输入</h3>
             <input type="text" id="input-dialog-input" class="form-input">
@@ -9883,9 +9140,9 @@
 
     <!-- --- ✨✨✨【全新 V2 - 带概率选项】撤回确认弹窗 ✨✨✨ --- -->
     <!-- ========================================================== -->
-    <div id="recall-options-dialog" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.4); 
+    <div id="recall-options-dialog" class="hidden" style="position: fixed; inset: 0; 
         display: flex; align-items: center; justify-content: center; z-index: 1021;">
-        <div class="dialog-content" style="background:#cccccc; border-radius:16px; padding:20px; width:300px;  ">
+        <div class="dialog-content" style="background:#ffffff; border-radius:16px; padding:20px; width:300px;  ">
             <h3 id="recall-options-title" style="  font-weight:bold; margin: 0 0 16px; text-align: center;">
                 选择撤回方式
             </h3>
@@ -9905,25 +9162,6 @@
         </div>
     </div>
 
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新】音乐搜索结果弹窗 ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="music-search-modal" class="modal-overlay hidden">
-        <!-- 复用大尺寸弹窗样式，让列表更舒展 -->
-        <div class="modal-content" style="width: 90%; max-width: 360px; height: 70%; max-height: 500px;">
-            <header class="page-header">
-                <span id="music-search-title" style="font-weight: 600;  ">搜索结果</span>
-                <button id="music-search-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
-            </header>
-
-            <main id="music-search-results-list" class="page-content" style="padding: 10px;">
-                <!-- 搜索结果将由 JS 动态生成并插入到这里 -->
-                <p id="music-search-placeholder" style="text-align: center; color: #a1a1aa; padding-top: 40px;">
-                    正在努力搜索中...
-                </p>
-            </main>
-        </div>
-    </div>
     <!-- ========================================================== -->
     <!-- ========================================================== -->
     <!-- --- ✨✨✨【全新V2 - 带标签筛选】角色表情包管理弹窗 ✨✨✨ --- -->
@@ -10003,9 +9241,9 @@
     <!-- ========================================================== -->
     <!-- --- ✨✨✨【全新 V2】支持移动端复制的下载弹窗 ✨✨✨ --- -->
     <!-- ========================================================== -->
-    <div id="download-link-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.4); 
+    <div id="download-link-modal" class="hidden" style="position: fixed; inset: 0; 
         display: flex; align-items: center; justify-content: center; z-index: 1021;">
-        <div class="dialog-content" style="background:#cccccc; border-radius:16px; padding:20px; width:320px;  ">
+        <div class="dialog-content" style="background:#ffffff; border-radius:16px; padding:20px; width:320px;  ">
             <h3 style="  font-weight:bold; margin: 0 0 16px; text-align: center;">
                 下载链接已生成
             </h3>
@@ -10340,14 +9578,17 @@
                             </div>
 
                             <!-- 订单信息卡片 -->
+      <!-- 订单信息卡片 (已升级) -->
                             <div class="order-detail-card">
                                 <h4 class="detail-card-header">订单信息</h4>
-                                <div class="detail-info-row"><span class="info-label">订单号码</span><span
-                                        id="order-detail-order-id" class="info-value"></span></div>
-                                <div class="detail-info-row"><span class="info-label">下单时间</span><span
-                                        id="order-detail-timestamp" class="info-value"></span></div>
-                                <div class="detail-info-row"><span class="info-label">支付方式</span><span
-                                        id="order-detail-payment-method" class="info-value"></span></div>
+                                <div class="detail-info-row"><span class="info-label">订单号码</span><span id="order-detail-order-id" class="info-value"></span></div>
+                                <div class="detail-info-row"><span class="info-label">下单时间</span><span id="order-detail-timestamp" class="info-value"></span></div>
+                                <div class="detail-info-row"><span class="info-label">支付方式</span><span id="order-detail-payment-method" class="info-value"></span></div>
+                                <!-- ✨✨✨ 核心新增的“备注”行 ✨✨✨ -->
+                                <div id="order-detail-remark-row" class="detail-info-row" style="display: none;">
+                                    <span class="info-label">订单备注</span>
+                                    <span id="order-detail-remark" class="info-value"></span>
+                                </div>
                             </div>
 
                             <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
@@ -10534,9 +9775,9 @@
     <!-- ========================================================== -->
     <!-- --- ✨✨✨【全新】导出选项弹窗 ✨✨✨ --- -->
     <!-- ========================================================== -->
-    <div id="export-options-dialog" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.4); 
+    <div id="export-options-dialog" class="hidden" style="position: fixed; inset: 0;
         display: flex; align-items: center; justify-content: center; z-index: 1021;">
-        <div class="dialog-content" style="background:#cccccc; border-radius:16px; padding:20px; width:300px;">
+        <div class="dialog-content" style="background:#ffffff; border-radius:16px; padding:20px; width:300px;">
             <h3 style="font-weight:bold; margin: 0 0 16px; text-align: center;">
                 请选择导出选项
             </h3>
@@ -10584,9 +9825,9 @@
     <!-- ========================================================== -->
     <!-- --- ✨✨✨【全新】剧情快进专属输入弹窗 ✨✨✨ --- -->
     <!-- ========================================================== -->
-    <div id="fast-forward-dialog" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.4); 
+    <div id="fast-forward-dialog" class="hidden" style="position: fixed; inset: 0; 
         display: flex; align-items: center; justify-content: center; z-index: 1021;">
-        <div class="dialog-content" style="background:#cccccc; border-radius:16px; padding:20px; width:320px;">
+        <div class="dialog-content" style="background:#ffffff; border-radius:16px; padding:20px; width:320px;">
             <h3 style="font-weight:bold; margin: 0 0 20px; text-align: center;">
                 剧情快进
             </h3>
@@ -11067,7 +10308,7 @@
         // ==========================================================
         // --- ✨✨✨【V173 - 新增生理周期表】数据库结构 ✨✨✨ ---
         // ==========================================================
-        db.version(178).stores({
+        db.version(179).stores({
             // --- 核心新增：这是我们用来记录生理周期的专属“账本” ---
             period_cycles: '++id, startDate, endDate',
 // 这是正确的代码
@@ -11086,7 +10327,7 @@ prompt_presets: '++id, &name, isActive',
          
             diaries: "++id, [userId+contactId], contactId, createdAt",
             bonds: "++id,[userId+contactId],contactId,category,aspectRatio,createdAt",
-            songs: "++id, title, artist, audioData, coverArt, isFavorite, lyrics, songUrl",
+       
             novels: "++id, &title, author, createdAt",
             messages: "++id,[userId+chatId],chatId,senderId,time,videoCallHistory,[userId+chatId+isAnalyzed],recalledContent,sceneName",
             moments: "++id,[userId+contactId],contactId,createdAt",
@@ -12161,1024 +11402,11 @@ async function getSummaryAiReply(contents, persona) {
         })();
 
 
-        // ==========================================================
-        // --- ✨✨✨ 音乐播放器 & 列表弹窗核心逻辑 (最终修复版) ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // --- 1. 全局变量与音频对象 ---
 
-            let currentPlaylist = [];
-            let currentTrackIndex = -1;
-            let isPlaying = false;
-            // ✨✨✨ 核心修正：将关键状态暴露到全局 ✨✨✨
-            Object.defineProperty(window, 'isPlaying', {
-                get: () => isPlaying,
-                set: (value) => { isPlaying = value; }
-            });
-            Object.defineProperty(window, 'currentPlaylist', {
-                get: () => currentPlaylist,
-                set: (value) => { currentPlaylist = value; }
-            });
-            Object.defineProperty(window, 'currentTrackIndex', {
-                get: () => currentTrackIndex,
-                set: (value) => { currentTrackIndex = value; }
-            });
-
-            // ▼▼▼ 将下面这些新代码，粘贴到 (function () { 的紧后方 ▼▼▼
-
-            // 1. 定义所有可用的播放模式，方便循环切换
-            const PLAYBACK_MODES = ['loop', 'one', 'shuffle'];
-
-            // 2. 从本地存储加载用户上次的选择，如果没有则默认为 'loop' (列表循环)
-            let playbackMode = localStorage.getItem('musicPlaybackMode') || 'loop';
-
-            // 3. 存储随机播放时的历史记录，避免短时间内重复
-            let shuffleHistory = [];
-
-            // ▲▲▲ 粘贴到这里结束 ▲▲▲
-
-            // --- 2. 获取所有相关的DOM元素 (已优化为在函数内获取或延迟获取) ---
-            // 主播放器弹窗
-            const playerModal = document.getElementById('music-player-modal');
-            const playerContent = document.getElementById('music-player-content');
-            const playerBackBtn = document.getElementById('music-player-back');
-            const songTitleEl = document.getElementById('music-player-song-title');
-            const songArtistEl = document.getElementById('music-player-song-artist');
-            const discContainer = document.getElementById('music-player-disc-container');
-            const coverArtEl = document.getElementById('music-player-cover-art');
-
-            const coverArtUploadInput = document.getElementById('cover-art-upload-input');
-
-            const currentTimeEl = document.getElementById('music-player-current-time');
-            const totalTimeEl = document.getElementById('music-player-total-time');
-            const progressSlider = document.getElementById('music-player-progress');
-            const prevBtn = document.getElementById('music-player-prev');
-            const playBtn = document.getElementById('music-player-play');
-            const nextBtn = document.getElementById('music-player-next');
-            const playIcon = playBtn.querySelector('.play-icon');
-            const pauseIcon = playBtn.querySelector('.pause-icon');
-            const favoriteBtn = document.getElementById('music-player-favorite-btn');
-            const showPlaylistBtn = document.getElementById('show-playlist-btn');
-
-            // 播放列表弹窗 (现在可以安全地获取了)
-            const playlistModal = document.getElementById('playlist-modal');
-            const playlistOverlay = document.getElementById('playlist-modal-overlay');
-            const closePlaylistBtn = document.getElementById('close-playlist-btn');
-            const playlistContainer = document.getElementById('playlist-items-container');
-            const playlistCountSpan = document.getElementById('playlist-count');
-
-            // 上传歌曲相关
-            const addSongBtn = document.getElementById('add-song-from-playlist-btn');
-            const songUploadInput = document.getElementById('song-upload-input');
-
-
-            // --- 3. 核心功能函数 (已修复和补充) ---
-
-            async function loadPlayerSkin() {
-                const coverArtEl = document.getElementById('music-player-cover-art');
-                if (!coverArtEl) return;
-                try {
-                    // ✨ 核心修改：从 global_settings 读取 'playerCover'
-                    const coverSetting = await db.global_settings.get('playerCover');
-                    if (coverSetting && coverSetting.value instanceof Blob) {
-                        coverArtEl.src = URL.createObjectURL(coverSetting.value);
-                    } else {
-                        coverArtEl.src = '';
-                    }
-                } catch (error) {
-                    console.error("加载播放器皮肤失败:", error);
-                    coverArtEl.src = '';
-                }
-            }
-
-            // --- 2. 绑定所有事件 ---
-
-            // ✨ 核心修正 1：现在我们监听整个光碟的点击事件
-            if (discContainer) {
-                discContainer.addEventListener('click', () => {
-                    // ✨ 核心修正 2：移除了只能在没有封面时才能更换的限制
-                    if (coverArtUploadInput) {
-                        coverArtUploadInput.click();
-                    }
-                });
-            }
-
-            // 事件 2：当用户选择了新的封面图片后 (这部分逻辑是正确的，保持不变)
-            if (coverArtUploadInput) {
-                // 这是新的全局保存逻辑
-                coverArtUploadInput.addEventListener('change', async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return; // ✨ 删除了对 currentUser 的检查
-
-                    try {
-                        const coverBlob = await compressImage(file, { type: 'avatar' });
-                        // ✨ 核心修改：保存到全局设置
-                        await db.global_settings.put({ key: 'playerCover', value: coverBlob });
-                        coverArtEl.src = URL.createObjectURL(coverBlob);
-                        alert('播放器封面更换成功！');
-                    } catch (error) {
-                        console.error('更换封面失败:', error);
-                        alert('更换封面失败，请重试。');
-                    } finally {
-                        e.target.value = '';
-                    }
-                });
-            }
-
-            // 关键：将 loadPlayerSkin 函数暴露到全局
-            window.loadPlayerSkin = loadPlayerSkin;
-
-
-
-            // (这是 loadSong 的最终版本)
-            function loadSong(song) {
-                if (!song) return;
-
-                // 1. 切换歌曲时，重置所有歌词状态
-                parsedLyrics = [];
-                statusBarLyricsData = [];
-                if (lyricsContentArea) lyricsContentArea.innerHTML = '';
-                if (playerContentEl && playerContentEl.classList.contains('lyrics-mode')) {
-                    hideLyricsView();
-                }
-
-                // 2. 填充歌曲标题和艺术家
-                songTitleEl.textContent = song.title;
-                songArtistEl.textContent = song.artist;
-
-                // ▼▼▼ ✨✨✨ 核心修改：智能判断音源 ✨✨✨ ▼▼▼
-                if (song.songUrl) {
-                    // 如果有 songUrl，就直接使用 URL 播放
-                    globalAudioPlayer.src = song.songUrl;
-                } else if (song.audioData instanceof Blob) {
-                    // 否则，兼容旧的 Blob 数据
-                    const songUrl = URL.createObjectURL(song.audioData);
-                    globalAudioPlayer.src = songUrl;
-                }
-                // ▲▲▲ ✨✨✨ 修改结束 ✨✨✨ ▲▲▲
-
-                // 4. 智能判断封面图
-                if (song.coverArt instanceof Blob) {
-                    coverArtEl.src = URL.createObjectURL(song.coverArt);
-                } else {
-                    if (typeof window.loadPlayerSkin === 'function') {
-                        window.loadPlayerSkin();
-                    }
-                }
-                // 5. ✨ 核心修正：为歌词视图同时解析并存储数据
-                if (song.lyrics) {
-                    const parsed = parseLrc(song.lyrics);
-
-                    parsedLyrics = parsed; // <-- ✨✨✨ 就是在这里，多加了这一行！
-                }
-            }
-
-            // (这是 playSong 的最终版本)
-            function playSong() {
-                isPlaying = true;
-                playerContent.classList.add('playing');
-                discContainer.style.animationPlayState = 'running';
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'block';
-
-                const playPromise = globalAudioPlayer.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        if (error.name !== 'AbortError') {
-                            console.error("音频播放时发生意外错误:", error);
-                        }
-                    });
-                }
-            }
-
-            // 【请用这个V4“呼叫裁判”版，替换旧的 pauseSong 函数】
-            function pauseSong() {
-                // 1. 暂停音乐的UI逻辑保持不变
-                isPlaying = false;
-                playerContent.classList.remove('playing');
-                discContainer.style.animationPlayState = 'paused';
-                playIcon.style.display = 'block';
-                pauseIcon.style.display = 'none';
-                globalAudioPlayer.pause();
-
-                // 2. ✨✨✨ 核心修改：调用全局裁判 ✨✨✨
-                checkAndEndListenTogether();
-            }
-            // 【请将这个全新的辅助函数，粘贴到 closeMusicPlayerModal 函数的上方】
-
-            /**
-             * ✨ 核心辅助函数：发送“结束一起听”的旁白并重置所有相关状态
-             */
-            function sendEndListenTogetherMessage() {
-                // 1. 检查是否真的处在“一起听”模式，防止重复发送
-                if (!isListenTogetherMode || !window.currentChat) {
-                    return;
-                }
-
-                console.log("√ 条件满足：暂停且弹窗关闭。正在结束‘一起听’会话...");
-
-                // 2. 创建并发送旁白 (这部分逻辑不变)
-                const endMessageContent = `[结束了和 ${window.currentChat.name} 一起听]`;
-                const endMsg = {
-                    userId: window.currentUser.id,
-                    chatId: window.currentChat.id,
-                    senderId: 'system',
-                    type: 'system',
-                    content: endMessageContent,
-                    time: new Date().toISOString(),
-                };
-                db.messages.add(endMsg).then(newMsgId => {
-                    addMessageToUI({ id: newMsgId, ...endMsg });
-                    scrollToBottom(document.getElementById('chat-messages'));
-                });
-                // ✨✨✨ 核心新增：在结束时，清理播放器弹窗内的UI ✨✨✨
-                const oldListenTogetherHeader = document.getElementById('listen-together-header');
-                if (oldListenTogetherHeader) oldListenTogetherHeader.remove();
-                const titleInfo = document.getElementById('music-player-title-info');
-                if (titleInfo) titleInfo.style.display = 'block'; // 恢复原始标题的显示
-                // ✨✨✨ 清理结束 ✨✨✨
-
-                // 3. 关键一步：重置所有“一起听”相关的状态，为下一次做准备
-                isListenTogetherMode = false;
-                listenTogetherStartTime = null;
-                if (listenTogetherTimerInterval) {
-                    clearInterval(listenTogetherTimerInterval);
-                    listenTogetherTimerInterval = null;
-                }
-            }
-
-            // 【请将这个全新的“全局裁判”函数，粘贴到 sendEndListenTogetherMessage 函数的下方】
-
-            /**
-             * ✨ 全局裁判：检查是否满足“一起听”结束条件
-             * 只有当音乐暂停【且】弹窗关闭时，才判定为结束。
-             */
-            function checkAndEndListenTogether() {
-                // 条件1：必须正处于“一起听”模式
-                if (!isListenTogetherMode) {
-                    return;
-                }
-
-                const playerModal = document.getElementById('music-player-modal');
-
-                // 条件2：音乐必须已暂停 (isPlaying === false)
-                // 条件3：播放器弹窗必须已关闭 (.hidden class is present)
-                if (!isPlaying && playerModal && playerModal.classList.contains('hidden')) {
-                    // 如果所有条件都满足，就调用唯一的“结束会话”执行函数
-                    sendEndListenTogetherMessage();
-                }
-            }
-
-            // ▼▼▼ 请用这一整块全新的代码，替换旧的 closeMusicPlayerModal 函数 ▼▼▼
-            // ==========================================================
-            // --- ✨✨✨【V6 - “单一宇宙”版】关闭音乐播放器引擎 ✨✨✨ ---
-            // ==========================================================
-            async function closeMusicPlayerModal() {
-                // 1. 保存累计时长的逻辑
-                if (listenTogetherStartTime && window.currentChat) {
-                    try {
-                        const sessionEndTime = new Date();
-                        const currentSessionDuration = (sessionEndTime - listenTogetherStartTime) / 1000;
-
-                        // ✨ 核心修改 1：直接从 character 对象获取旧的总时长
-                        const oldTotalDuration = window.currentChat.listenTogetherDuration || 0;
-                        const newTotalDuration = oldTotalDuration + currentSessionDuration;
-
-                        // ✨ 核心修改 2：直接更新 characters 表
-                        await db.characters.update(window.currentChat.id, {
-                            listenTogetherDuration: newTotalDuration
-                        });
-
-                        // ✨ 核心修改 3：同步更新内存中的数据
-                        window.currentChat.listenTogetherDuration = newTotalDuration;
-
-                    } catch (error) {
-                        console.error("保存“一起听”时长失败:", error);
-                        // 即使保存失败，也要继续执行关闭流程，不影响用户操作
-                    }
-                }
-
-                // 2. 关闭弹窗的UI逻辑 (保持不变)
-                hideModal('music-player-modal');
-
-                // 3. 调用“裁判”函数，检查并结束会话 (保持不变)
-                setTimeout(() => {
-                    checkAndEndListenTogether();
-                }, 310);
-            }
-            // ==========================================================
-            // ▼▼▼ 请用这个【全新的、统一的】函数，完整替换旧的 startListenTogetherSession 函数 ▼▼▼
-            /**
-             * 【全新】核心函数：启动“一起听”会话的唯一入口
-             * @param {object} song - 要播放的歌曲对象
-             */
-            async function startListenTogether(song) {
-                if (!song || !window.currentChat) {
-                    showNotification("无法开始一起听", "缺少歌曲或聊天对象信息。");
-                    return;
-                }
-
-                // 1. 发送旁白 (这部分逻辑不变)
-                const startMessageContent = `[正在和 ${window.currentChat.name} 一起听《${song.title}》]`;
-                const startMsg = {
-                    userId: window.currentUser.id,
-                    chatId: window.currentChat.id,
-                    senderId: 'system',
-                    type: 'system',
-                    content: startMessageContent,
-                    songId: song.id,
-                    time: new Date().toISOString(),
-                };
-                const newMsgId = await db.messages.add(startMsg);
-
-                // 确保聊天界面是打开的，并显示新消息
-                if (window.getCurrentPageId() !== 'qq-chat') {
-                    navigateTo('qq-chat');
-                }
-                await addMessageToUI({ id: newMsgId, ...startMsg });
-                scrollToBottom(document.getElementById('chat-messages'));
-
-                // 2. 智能加载歌曲
-                const isSameSong = (window.currentTrackIndex !== -1 && window.currentPlaylist[window.currentTrackIndex]?.id === song.id);
-                if (!isSameSong) {
-                    const newIndex = window.currentPlaylist.findIndex(s => s.id === song.id);
-                    if (newIndex !== -1) {
-                        window.currentTrackIndex = newIndex;
-                    }
-                    loadSong(song);
-                }
-
-                // 3. 打开播放器并播放
-                await openMusicPlayerModal(); // 调用我们即将简化的 openMusicPlayerModal
-                playSong();
-            }
-            // ▲▲▲ 替换到这里结束 ▲▲▲
-
-
-            // ▼▼▼ 请用这个【功能升级版】的 playNext 函数，完整替换旧版本 ▼▼▼
-            async function playNext() {
-                if (currentPlaylist.length === 0) return; // 如果列表为空，什么都不做
-
-                switch (playbackMode) {
-                    case 'one':
-                        // 单曲循环：不改变索引，直接重新加载并播放当前歌曲
-                        loadSong(currentPlaylist[currentTrackIndex]);
-                        playSong();
-                        break;
-
-                    case 'shuffle':
-                        // 随机播放
-                        if (currentPlaylist.length <= 1) {
-                            // 如果只有一首歌，表现和单曲循环一致
-                            loadSong(currentPlaylist[0]);
-                            playSong();
-                            break;
-                        }
-
-                        // 将当前歌曲加入历史
-                        if (shuffleHistory.indexOf(currentTrackIndex) === -1) {
-                            shuffleHistory.push(currentTrackIndex);
-                        }
-                        // 如果历史记录包含了所有歌曲，就清空历史，重新开始
-                        if (shuffleHistory.length >= currentPlaylist.length) {
-                            shuffleHistory = [currentTrackIndex]; // 只保留当前曲目
-                        }
-
-                        let nextIndex;
-                        do {
-                            nextIndex = Math.floor(Math.random() * currentPlaylist.length);
-                        } while (shuffleHistory.includes(nextIndex)); // 确保下一首不在最近播放历史里
-
-                        currentTrackIndex = nextIndex;
-                        loadSong(currentPlaylist[currentTrackIndex]);
-                        playSong();
-                        break;
-
-                    case 'loop':
-                    default:
-                        // 列表循环 (默认行为)
-                        currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length;
-                        loadSong(currentPlaylist[currentTrackIndex]);
-                        playSong();
-                        break;
-                }
-            }
-            // ▲▲▲ 替换到这里结束 ▲▲▲
-
-            // 【这是修改后的代码】
-            async function playPrev() {
-                currentTrackIndex--;
-                if (currentTrackIndex < 0) currentTrackIndex = currentPlaylist.length - 1;
-
-                if (currentPlaylist.length > 0) {
-                    const prevSong = currentPlaylist[currentTrackIndex];
-                    loadSong(prevSong);
-                    playSong();
-
-                    // --- 这里的代码已被删除 ---
-                }
-            }
-
-            function formatTime(seconds) {
-                if (isNaN(seconds)) return '00:00';
-                const minutes = Math.floor(seconds / 60);
-                const secs = Math.floor(seconds % 60);
-                return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            }
-
-
-            // =====================================================================
-            // --- ✨✨✨【最终修复版】播放列表弹窗核心逻辑 (数据同步) ✨✨✨ ---
-            // =====================================================================
-            async function showPlaylistModal() { // ✨ 核心修改 1：将函数声明为 async
-                const playlistContainer = document.getElementById('playlist-items-container');
-                const playlistCountSpan = document.getElementById('playlist-count');
-                const playlistModal = document.getElementById('playlist-modal');
-
-                if (!playlistContainer || !playlistCountSpan || !playlistModal) {
-                    console.error("无法显示播放列表：关键HTML元素缺失！");
-                    return;
-                }
-
-                // ✨ 核心修改 2：在渲染之前，总是从数据库获取最新的播放列表
-                currentPlaylist = await db.songs.toArray();
-
-                playlistContainer.innerHTML = '';
-                playlistCountSpan.textContent = currentPlaylist.length;
-
-                if (currentPlaylist.length === 0) {
-                    playlistContainer.innerHTML = '<p style="text-align:center; padding: 20px; color: #a1a1aa;">播放列表是空的</p>';
-                } else {
-                    currentPlaylist.forEach((song, index) => {
-                        const item = document.createElement('div');
-                        item.className = 'playlist-item';
-                        // 如果当前有正在播放的歌曲，并且索引匹配，则高亮显示
-                        if (isPlaying && index === currentTrackIndex) {
-                            item.classList.add('playing');
-                        }
-                        item.innerHTML = `
-          <div class="playlist-item-info">
-            <div class="playlist-item-title">${song.title}</div>
-            <div class="playlist-item-artist">${song.artist}</div>
-          </div>
-          <button class="playlist-item-delete-btn btn-icon buttonlike" data-id="${song.id}" data-index="${index}"><i class="fa-solid fa-x"></i></button>
-        `;
-                        playlistContainer.appendChild(item);
-                    });
-                }
-
-                playlistModal.classList.remove('hidden');
-                setTimeout(() => playlistModal.classList.add('visible'), 10);
-            }
-
-            window.showPlaylistModal = showPlaylistModal;
-
-            function hidePlaylistModal() {
-                if (playlistModal) {
-                    playlistModal.classList.remove('visible');
-                    setTimeout(() => playlistModal.classList.add('hidden'), 300);
-                }
-            }
-
-            // --- 5. 事件绑定 ---
-
-            // 打开/关闭播放器
-            document.getElementById('app-music')?.addEventListener('click', openMusicPlayerModal);
-            // 【请用这段新代码替换旧的 playerBackBtn?.addEventListener... 那一行】
-            if (playerBackBtn) {
-                playerBackBtn.addEventListener('click', () => {
-                    // 直接调用我们早已写好的、功能完善的关闭函数
-                    closeMusicPlayerModal();
-                });
-            }
-
-            // 播放器按钮
-            playBtn?.addEventListener('click', () => isPlaying ? pauseSong() : playSong());
-            nextBtn?.addEventListener('click', playNext);
-            prevBtn?.addEventListener('click', playPrev);
-
-            // =====================================================================
-            // --- ✨✨✨【全新V2 - 视图切换版】歌词解析与同步核心引擎 ✨✨✨ ---
-            // =====================================================================
-
-            // --- 1. 获取所有歌词功能相关的 DOM 元素 ---
-            const playerContentEl = document.getElementById('music-player-content');
-            const lyricsView = document.getElementById('player-lyrics-view');
-            const lyricsCloseBtn = document.getElementById('lyrics-view-close-btn');
-            const lyricsTitle = document.getElementById('lyrics-song-title');
-            const lyricsArtist = document.getElementById('lyrics-song-artist');
-            const lyricsContentArea = document.getElementById('lyrics-content-area');
-            const lyricsBtn = document.getElementById('music-player-lyrics-btn');
-
-            let parsedLyrics = [];
-
-            // (在 let parsedLyrics = []; 的下方添加)
-            const statusBarLyricsContainer = document.getElementById('statusbar-lyrics-container');
-
-            /**
-             * 核心函数 1: LRC 歌词解析器 (保持不变)
-             */
-            function parseLrc(lrcText) {
-                if (!lrcText) return [];
-                const lines = lrcText.split('\n');
-                const result = [];
-                const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/g;
-
-                for (const line of lines) {
-                    const matches = [...line.matchAll(timeRegex)];
-                    const text = line.replace(timeRegex, '').trim();
-
-                    if (text && matches.length > 0) {
-                        for (const match of matches) {
-                            const minutes = parseInt(match[1], 10);
-                            const seconds = parseInt(match[2], 10);
-                            const milliseconds = parseInt(match[3].padEnd(3, '0'), 10);
-                            const timeInSeconds = minutes * 60 + seconds + milliseconds / 1000;
-                            result.push({ time: timeInSeconds, text: text });
-                        }
-                    }
-                }
-                return result.sort((a, b) => a.time - b.time);
-            }
-
-            /**
-             * ✨ 全新的“歌词探测器”：根据当前播放时间获取对应的歌词行
-             * @returns {string|null} - 返回当前歌词的文本，如果没有则返回null
-             */
-            function getCurrentLyricLine() {
-                // 安全检查：确保歌词数据已解析且播放器正在运行
-                if (parsedLyrics.length === 0 || !globalAudioPlayer) {
-                    return null;
-                }
-
-                const currentTime = globalAudioPlayer.currentTime;
-                let activeLineText = null;
-
-                // 遍历所有歌词，找到最后一个时间戳小于当前播放时间的行
-                for (let i = 0; i < parsedLyrics.length; i++) {
-                    if (currentTime >= parsedLyrics[i].time) {
-                        activeLineText = parsedLyrics[i].text;
-                    } else {
-                        break; // 因为歌词是按时间排序的，所以可以提前结束循环
-                    }
-                }
-
-                return activeLineText;
-            }
-            // ✨✨✨ 核心修正：将这个函数暴露到全局 ✨✨✨
-            window.getCurrentLyricLine = getCurrentLyricLine;
-
-            /**
-             * 核心函数 2: ✨【重构】切换到歌词视图
-             */
-            function showLyricsView() {
-                const currentSong = currentPlaylist[currentTrackIndex];
-                if (!currentSong) return;
-
-                if (!currentSong.lyrics) {
-                    showNotification("这首歌没有关联歌词文件哦。");
-                    return;
-                }
-
-                // 填充歌曲信息
-                lyricsTitle.textContent = currentSong.title;
-                lyricsArtist.textContent = currentSong.artist;
-
-                // 解析并渲染歌词
-                parsedLyrics = parseLrc(currentSong.lyrics);
-                lyricsContentArea.innerHTML = '';
-                if (parsedLyrics.length === 0) {
-                    lyricsContentArea.innerHTML = '<p class="lyric-line active-lyric">歌词解析失败或格式不正确</p>';
-                } else {
-                    parsedLyrics.forEach((line, index) => {
-                        const lineEl = document.createElement('p');
-                        lineEl.className = 'lyric-line';
-                        lineEl.textContent = line.text;
-                        lineEl.dataset.index = index;
-                        lyricsContentArea.appendChild(lineEl);
-                    });
-                }
-
-                // ✨ 核心修改：通过添加class来触发CSS动画，切换视图
-                playerContentEl.classList.add('lyrics-mode');
-                syncLyrics(globalAudioPlayer.currentTime); // 切换后立即同步一次
-            }
-
-            /**
-             * 核心函数 3: ✨【重构】切换回播放器主视图
-             */
-            function hideLyricsView() {
-                playerContentEl.classList.remove('lyrics-mode');
-                parsedLyrics = []; // 清空数据
-            }
-
-            /**
-             * 核心函数 4: 根据当前播放时间同步歌词高亮 (保持不变)
-             */
-            function syncLyrics(currentTime) {
-                if (parsedLyrics.length === 0 || !playerContentEl.classList.contains('lyrics-mode')) {
-                    return;
-                }
-
-                let activeIndex = -1;
-                for (let i = 0; i < parsedLyrics.length; i++) {
-                    if (currentTime >= parsedLyrics[i].time) { activeIndex = i; }
-                    else { break; }
-                }
-
-                if (activeIndex > -1) {
-                    const currentActive = lyricsContentArea.querySelector('.active-lyric');
-                    if (currentActive) currentActive.classList.remove('active-lyric');
-                    const newLine = lyricsContentArea.querySelector(`.lyric-line[data-index="${activeIndex}"]`);
-                    if (newLine) {
-                        newLine.classList.add('active-lyric');
-                        newLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }
-            }
-
-            // --- 2. 绑定所有事件 ---
-
-            // a. 点击“歌词”按钮，切换到歌词视图
-            if (lyricsBtn) {
-                lyricsBtn.addEventListener('click', showLyricsView);
-            }
-
-            // b. 在歌词视图中，点击“关闭”按钮，切回主视图
-            if (lyricsCloseBtn) {
-                lyricsCloseBtn.addEventListener('click', hideLyricsView);
-            }
-
-            // =====================================================================
-            // --- ✨✨✨【最终版】全局音频播放器时间更新引擎 ✨✨✨ ---
-            // =====================================================================
-            globalAudioPlayer.addEventListener('timeupdate', () => {
-                const currentTime = globalAudioPlayer.currentTime; // 获取一次当前时间，提高效率
-
-                // 1. 更新播放器内部的进度条和时间显示
-                if (globalAudioPlayer.duration) {
-                    progressSlider.value = currentTime;
-                    currentTimeEl.textContent = formatTime(currentTime);
-                }
-
-                // 2. ✨ 同时驱动两个歌词引擎 ✨
-                syncLyrics(currentTime);          // 同步歌词弹窗 (视图)
-
-            });
-            // d. 修正 loadSong 函数，确保切换歌曲时清空旧歌词 (保持不变)
-
-            // 播放列表弹窗按钮
-            showPlaylistBtn?.addEventListener('click', showPlaylistModal);
-            closePlaylistBtn?.addEventListener('click', hidePlaylistModal);
-            playlistOverlay?.addEventListener('click', hidePlaylistModal);
-
-            // 上传歌曲
-            addSongBtn?.addEventListener('click', () => songUploadInput?.click());
-            // =====================================================================
-            // --- ✨✨✨【全新V2 - 支持歌词上传】歌曲添加核心逻辑 ✨✨✨ ---
-            // =====================================================================
-            /**
-             * 辅助函数：弹窗让用户选择歌词文件，并读取内容
-             * @returns {Promise<string|null>} 返回歌词文本或null
-             */
-            function promptForLyricsFile() {
-                return new Promise((resolve) => {
-                    const lyricsInput = document.getElementById('lyrics-upload-input');
-
-                    // 创建一个一次性的change事件监听器
-                    const listener = (event) => {
-                        const file = event.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                resolve(e.target.result); // 成功读取，返回文本内容
-                            };
-                            reader.onerror = () => {
-                                alert('歌词文件读取失败！');
-                                resolve(null); // 读取失败
-                            };
-                            reader.readAsText(file);
-                        } else {
-                            resolve(null); // 用户没有选择文件
-                        }
-                        // 清理工作
-                        lyricsInput.value = '';
-                        lyricsInput.removeEventListener('change', listener);
-                    };
-
-                    lyricsInput.addEventListener('change', listener);
-                    lyricsInput.click(); // 弹出文件选择框
-                });
-            }
-
-
-            // 【请用这个V3“智能配对”版，完整替换旧的 songUploadInput change 事件】
-            songUploadInput?.addEventListener('change', async (e) => {
-                const files = e.target.files;
-                if (!files.length) return;
-
-                // 1. 将文件分为音频和歌词两类
-                const audioFiles = [];
-                const lyricFiles = new Map(); // 使用Map，以文件名（无后缀）为键，方便快速查找
-
-                for (const file of files) {
-                    if (file.type.startsWith('audio/')) {
-                        audioFiles.push(file);
-                    } else if (file.name.toLowerCase().endsWith('.lrc')) {
-                        const baseName = file.name.replace(/\.[^/.]+$/, "");
-                        lyricFiles.set(baseName, file);
-                    }
-                }
-
-                if (audioFiles.length === 0) {
-                    alert("请至少选择一个音频文件。");
-                    e.target.value = '';
-                    return;
-                }
-
-                // 2. 逐个处理音频文件
-                for (const audioFile of audioFiles) {
-                    const baseName = audioFile.name.replace(/\.[^/.]+$/, "");
-
-                    const title = prompt(`请输入歌曲《${baseName}》的歌名：`, baseName);
-                    if (!title) continue;
-
-                    const artist = prompt(`请输入演唱者：`, "未知艺术家");
-                    if (!artist) continue;
-
-                    let lyricsText = null;
-
-                    // 3. ✨ 魔法核心：尝试寻找同名的歌词文件
-                    if (lyricFiles.has(baseName)) {
-                        const lyricFile = lyricFiles.get(baseName);
-                        try {
-                            // 使用Promise来异步读取文件内容
-                            lyricsText = await new Promise((resolve, reject) => {
-                                const reader = new FileReader();
-                                reader.onload = (e) => resolve(e.target.result);
-                                reader.onerror = (err) => reject(err);
-                                reader.readAsText(lyricFile);
-                            });
-                            console.log(`√ 成功为《${title}》配对并加载了歌词文件！`);
-                        } catch (error) {
-                            console.error(`读取歌词文件 ${lyricFile.name} 失败:`, error);
-                            alert(`读取歌词文件 ${lyricFile.name} 时出错，该歌曲将不含歌词。`);
-                        }
-                    }
-
-                    // 4. 将所有信息一同存入数据库
-                    try {
-                        await db.songs.add({
-                            title,
-                            artist,
-                            audioData: audioFile,
-                            coverArt: null,
-                            lyrics: lyricsText
-                        });
-                    } catch (dbError) {
-                        console.error("添加歌曲到数据库失败:", dbError);
-                        alert(`添加《${title}》失败。`);
-                    }
-                }
-
-                // 5. 全部处理完毕后，刷新UI
-                e.target.value = '';
-                currentPlaylist = await db.songs.toArray();
-                showPlaylistModal();
-                alert(`${audioFiles.length} 首歌曲已处理完毕！`);
-            });
-
-            // =====================================================================
-            // ▼▼▼ 请用这个【最终修复版】的 playlistContainer 点击事件，完整替换旧版本 ▼▼▼
-            playlistContainer?.addEventListener('click', async (e) => {
-                // --- 删除逻辑 ---
-                const deleteBtn = e.target.closest('.playlist-item-delete-btn');
-                if (deleteBtn) {
-                    e.stopPropagation(); // 阻止事件冒泡，防止触发播放
-                    const songIdToDelete = parseInt(deleteBtn.dataset.id, 10);
-                    const indexToDelete = parseInt(deleteBtn.dataset.index, 10);
-
-                    showDeleteDialog('确定要从播放列表中移除这首歌吗？', async () => {
-                        try {
-                            // 1. 从数据库删除
-                            await db.songs.delete(songIdToDelete);
-
-                            // 2. 从内存中的播放列表数组删除
-                            currentPlaylist.splice(indexToDelete, 1);
-
-                            // 3. 智能处理当前播放索引
-                            if (indexToDelete < currentTrackIndex) {
-                                currentTrackIndex--; // 如果删除的是前面的歌，索引减一
-                            } else if (indexToDelete === currentTrackIndex) {
-                                // 如果删除的正是当前播放的歌
-                                pauseSong();
-                                // 尝试播放下一首，如果列表空了则重置
-                                currentTrackIndex = (currentPlaylist.length > 0) ? indexToDelete % currentPlaylist.length : -1;
-                                if (currentTrackIndex !== -1) {
-                                    loadSong(currentPlaylist[currentTrackIndex]);
-                                } else {
-                                    // 列表已空，重置播放器UI
-                                    songTitleEl.textContent = '播放列表为空';
-                                    songArtistEl.textContent = '请添加歌曲';
-                                    coverArtEl.src = '';
-                                }
-                            }
-
-                            // 4. 刷新播放列表弹窗
-                            showPlaylistModal();
-
-                        } catch (error) {
-                            console.error("删除歌曲失败:", error);
-                            showNotification("删除失败，请重试。");
-                        }
-                    });
-
-                    return; // 处理完删除后，必须结束函数，防止执行下面的播放逻辑
-                }
-
-                // --- 播放逻辑 (保持我们上次简化的版本) ---
-                const songItem = e.target.closest('.playlist-item');
-                if (songItem) {
-                    const indexToPlay = Array.from(playlistContainer.children).indexOf(songItem);
-                    const songToPlay = currentPlaylist[indexToPlay];
-
-                    hidePlaylistModal(); // 先关闭列表
-
-                    if (typeof window.startListenTogether === 'function') {
-                        await window.startListenTogether(songToPlay);
-                    }
-                }
-            });
-            // ▲▲▲ 替换到这里结束 ▲▲▲
-
-            globalAudioPlayer.addEventListener('loadedmetadata', () => {
-                progressSlider.max = globalAudioPlayer.duration;
-                totalTimeEl.textContent = formatTime(globalAudioPlayer.duration);
-            });
-            progressSlider.addEventListener('input', () => {
-                globalAudioPlayer.currentTime = progressSlider.value;
-            });
-            globalAudioPlayer.addEventListener('ended', playNext);
-            // ▼▼▼ 在这里粘贴新函数 ▼▼▼
-            // ==========================================================
-            // --- ✨✨✨【全新补完】播放列表同步核心函数 ✨✨✨ ---
-            // ==========================================================
-            async function syncPlaylistFromDB() {
-                console.log("🎵 同步播放列表: 正在从数据库获取最新歌曲列表...");
-                const allSongs = await db.songs.toArray();
-                window.currentPlaylist = allSongs;
-            }
-            // ▲▲▲ 粘贴到这里结束 ▲▲▲
-
-            async function openMusicPlayerModal() {
-                // --- 1. 显示弹窗 & 清理旧UI (这部分逻辑不变) ---
-                showModal('music-player-modal');
-
-                const playerHeader = document.getElementById('music-player-header');
-                const titleInfo = document.getElementById('music-player-title-info');
-                const oldListenTogetherHeader = document.getElementById('listen-together-header');
-                if (oldListenTogetherHeader) oldListenTogetherHeader.remove();
-                if (titleInfo) titleInfo.style.display = 'block';
-                if (listenTogetherTimerInterval) {
-                    clearInterval(listenTogetherTimerInterval);
-                    listenTogetherTimerInterval = null;
-                }
-
-                // --- 2. ✨✨✨ 核心修正：打开弹窗后，再来智能加载歌曲 ✨✨✨ ---
-
-                // a. 强制从数据库同步一次最新的播放列表
-                await syncPlaylistFromDB();
-
-                // b. 检查列表是否有歌
-                if (window.currentPlaylist.length > 0) {
-                    // 如果有歌，就加载当前选中的歌曲，或者列表的第一首
-                    let songToLoad = null;
-                    if (window.currentTrackIndex > -1 && window.currentPlaylist[window.currentTrackIndex]) {
-                        songToLoad = window.currentPlaylist[window.currentTrackIndex];
-                    } else {
-                        window.currentTrackIndex = 0; // 默认选中第一首
-                        songToLoad = window.currentPlaylist[0];
-                    }
-                    loadSong(songToLoad);
-                } else {
-                    // 如果没歌，就在播放器内部显示提示，而不是阻止弹窗打开
-                    songTitleEl.textContent = '音乐库为空';
-                    songArtistEl.textContent = '请添加歌曲';
-                    coverArtEl.src = '';
-                    // 确保UI也处于暂停状态
-                    playIcon.style.display = 'block';
-                    pauseIcon.style.display = 'none';
-                    discContainer.style.animationPlayState = 'paused';
-                }
-
-                // --- 3. 构建“一起听”的UI (这部分逻辑不变) ---
-                if (window.currentChat) {
-                    // ... (这里所有创建头像、计时器的代码都和原来一样，无需修改)
-                    titleInfo.style.display = 'none';
-                    const listenTogetherHeader = document.createElement('div');
-                    listenTogetherHeader.id = 'listen-together-header';
-                    const avatarRow = document.createElement('div');
-                    avatarRow.className = 'avatar-row';
-                    const userAvatarDiv = document.createElement('div');
-                    userAvatarDiv.className = 'avatar-display';
-                    renderAvatar(userAvatarDiv, window.currentUser.avatar);
-                    const characterAvatarDiv = document.createElement('div');
-                    characterAvatarDiv.className = 'avatar-display';
-                    renderAvatar(characterAvatarDiv, window.currentChat.avatar);
-                    const timerSpan = document.createElement('span');
-                    timerSpan.id = 'listen-together-timer';
-                    const savedDuration = window.currentChat.listenTogetherDuration || 0;
-                    listenTogetherStartTime = new Date(); // 重置计时起点
-                    initialListenTogetherDuration = savedDuration;
-
-                    const totalIntegerSeconds = Math.floor(savedDuration);
-                    const minutes = String(Math.floor(totalIntegerSeconds / 60)).padStart(2, '0');
-                    const seconds = String(totalIntegerSeconds % 60).padStart(2, '0');
-                    timerSpan.textContent = `已共听 ${minutes}:${seconds}`;
-
-                    avatarRow.appendChild(userAvatarDiv);
-                    avatarRow.appendChild(characterAvatarDiv);
-                    listenTogetherHeader.appendChild(avatarRow);
-                    listenTogetherHeader.appendChild(timerSpan);
-                    playerHeader.insertBefore(listenTogetherHeader, titleInfo);
-
-                    listenTogetherTimerInterval = setInterval(() => { /* ... (计时器逻辑不变) ... */ }, 1000);
-                }
-
-                // --- 4. 加载皮肤和壁纸 (这部分逻辑不变) ---
-                if (typeof window.loadPlayerSkin === 'function') await window.loadPlayerSkin();
-                if (typeof window.loadAndApplyMusicWallpaper === 'function') await window.loadAndApplyMusicWallpaper();
-            }
-            // ▲▲▲ 替换到这里结束 ▲▲▲
-
-
-            window.openMusicPlayerModal = openMusicPlayerModal;
-            window.startListenTogether = startListenTogether;
-            window.loadSong = loadSong;
-            window.playSong = playSong;
-            window.pauseSong = pauseSong;
-
-
-            const modeBtn = document.getElementById('music-player-mode-btn');
-            if (!modeBtn) return;
-            const icon = modeBtn.querySelector('i');
-
-            /**
-             * 核心函数 1: 根据当前的 playbackMode 更新按钮的图标、标题和样式
-             */
-            function updateModeButtonUI() {
-                modeBtn.classList.remove('active'); // 先移除高亮
-
-                switch (playbackMode) {
-                    case 'one':
-                        icon.className = 'fa-solid fa-repeat';
-                        modeBtn.title = '单曲循环';
-                        modeBtn.classList.add('active'); // 为单曲循环添上高亮
-                        break;
-                    case 'shuffle':
-                        icon.className = 'fa-solid fa-shuffle';
-                        modeBtn.title = '随机播放';
-                        break;
-                    case 'loop':
-                    default:
-                        icon.className = 'fa-solid fa-bars-staggered';
-                        modeBtn.title = '列表循环';
-                        break;
-                }
-            }
-
-            /**
-             * 核心函数 2: 切换到下一个播放模式
-             */
-            function cyclePlaybackMode() {
-                const currentIndex = PLAYBACK_MODES.indexOf(playbackMode);
-                const nextIndex = (currentIndex + 1) % PLAYBACK_MODES.length;
-                playbackMode = PLAYBACK_MODES[nextIndex];
-
-                // 将用户的选择保存到本地存储
-                localStorage.setItem('musicPlaybackMode', playbackMode);
-
-                // 更新UI
-                updateModeButtonUI();
-            }
-
-            // 绑定点击事件
-            modeBtn.addEventListener('click', cyclePlaybackMode);
-
-            // 初始化：在页面加载时，根据保存的设置，立即更新一次按钮的初始状态
-            updateModeButtonUI();
-
-
-
-
-
-        })();
 
 
 
         document.addEventListener('DOMContentLoaded', () => {
-
-
             // ==========================================================
             // --- 引擎 1: API 设置与预设管理 ---
             // ==========================================================
@@ -14391,33 +12619,6 @@ if (summaryModelSelect && summaryModelInput) {
                 });
             });
         })();
-
-        // --- ✨✨✨【V5 - 无条件开启版】状态栏“一起听”按钮交互引擎 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            const btn = document.getElementById('statusbar-listen-together-btn');
-            if (btn) {
-                btn.addEventListener('click', async () => {
-                    // 不再进行任何检查，直接调用我们强大的 openMusicPlayerModal 函数
-                    if (typeof window.openMusicPlayerModal === 'function') {
-                        await window.openMusicPlayerModal();
-
-                        // 只有当音乐库里真的有歌时，才发送旁白并自动播放
-                        if (window.currentPlaylist && window.currentPlaylist.length > 0) {
-                            const songToPlay = window.currentPlaylist[window.currentTrackIndex];
-
-                            // 发送旁白
-                            const startMessageContent = `[正在和 ${window.currentChat.name} 一起听《${songToPlay.title}》]`;
-                            const startMsg = { /* ... (构造消息对象的代码不变) ... */ };
-                            // ...
-
-                            // 自动播放
-                            playSong();
-                        }
-                    }
-                });
-            }
-        })();
         // ==========================================================
         // ▲▲▲ 替换到这里结束 ▲▲▲
         // ==========================================================
@@ -14427,7 +12628,7 @@ if (summaryModelSelect && summaryModelInput) {
 
             const pages = [
                 'home', 'qq-main', 'qq-chat', 'settings-menu',
-                'world-book-page', 'contacts-lib-page'
+                'contacts-lib-page'
             ];
 
             let navigationHistory = [];
@@ -15103,8 +13304,6 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
 【聊天扩展功能】
 - 当对话情节合理时，你可以主动使用以下【功能指令】（必须严格使用尖括号包裹）：
   - 使用 <vc/> 来【发起视频通话】。
-  - 使用 <m>你想听的歌曲名</m> 来【点歌】。
-  - 当你们在“一起听”时，使用 <ms>你想听的歌曲名</ms> 来【切歌】。
   - 在新回复的【最开头】使用 <r/> 【撤回】上一句话
   - 使用 <img>你想展示的画面</img> 来【发送一张描述性的图片】。
   - 使用 <vo>你想说的话</vo> 来【发送一条语音消息】。
@@ -15122,23 +13321,8 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
 
     const stickerComponent = await buildStickerPromptComponent(ctxChar);
     
-    let musicContext = '';
-    if (window.isPlaying && window.currentTrackIndex > -1) {
-        const currentSong = window.currentPlaylist[window.currentTrackIndex];
-        const currentLyric = getCurrentLyricLine();
-        if (currentSong) {
-            musicContext = `
-【背景信息：你和{{user}}正在一起听歌】
-- 歌曲: ${currentSong.title} - ${currentSong.artist}
-- 当前正在唱的歌词是: ${currentLyric ? `“${currentLyric}”` : "（暂无歌词或处于间奏）"}
-- 以下是这首歌的完整歌词：
----
-${currentSong.lyrics || '（这首歌没有歌词）'}
----`;
-        }
-    }
 
-    const toolsAndMusicContext = [toolsPrompt, stickerComponent, musicContext].filter(Boolean).join('\n\n');
+    const toolsAndMusicContext = [toolsPrompt, stickerComponent, ].filter(Boolean).join('\n\n');
     
     const FINAL_INSTRUCTIONS_PROMPT = `
 【最终输出指令 (最高优先级)】
@@ -15424,8 +13608,6 @@ if (options.isChatReply !== false) {
             const quickBondBtn = document.getElementById('quick-btn-bond');
 
 
-            const quickLocationBtn = document.getElementById('quick-btn-location');
-
             const quickRerollBtn = document.getElementById('quick-btn-reroll');
 
 
@@ -15448,10 +13630,6 @@ if (options.isChatReply !== false) {
                     openVideoCall(window.currentChat, { initiator: 'user' });
             });
             if (quickBondBtn) quickBondBtn.addEventListener('click', () => { if (typeof openBondModal === 'function') openBondModal(); });
-
-
-
-            if (quickLocationBtn) quickLocationBtn.addEventListener('click', () => { if (typeof openLocationModal === 'function') openLocationModal(); });
 
 
             if (quickRerollBtn) quickRerollBtn.addEventListener('click', () => { if (typeof handleReroll === 'function') handleReroll(); });
@@ -16772,7 +14950,7 @@ ${MULTI_BUBBLE_SUFFIX}`;
             // 我们在原来的HTML模板中，新增了两个卡片
             bodyContainer.innerHTML = `
 
-        <!-- 新增卡片 1: 气泡样式 -->
+        <!-- 新增卡片: 气泡样式 -->
         <div class="profile-section-glass">
             <div class="section-header">
                 <h3><i class="fa-solid fa-comments"></i> 气泡样式</h3>
@@ -16780,7 +14958,9 @@ ${MULTI_BUBBLE_SUFFIX}`;
             </div>
         </div>
 
-        <!-- 新增卡片 2: 聊天背景 -->
+
+        
+        <!-- 新增卡片: 聊天背景 -->
         <div class="profile-section-glass">
             <div class="section-header">
                 <h3><i class="fa-solid fa-image"></i> 聊天背景</h3>
@@ -16807,26 +14987,6 @@ ${MULTI_BUBBLE_SUFFIX}`;
             const character = window.currentProfileContact;
             if (!character) return;
 
-// ▼▼▼ 请用这个【新版本】替换旧的 if (e.target.id === 'goto-bonds-page-modal') 代码块 ▼▼▼
-            if (e.target.id === 'goto-bonds-page-modal') {
-                // 直接调用我们新创建的、用于打开弹窗的函数
-                if (typeof window.openBondsListModal === 'function') {
-                    window.openBondsListModal(character);
-                }
-                return; // 处理完毕，结束函数
-            }
-// ▲▲▲ 替换到这里结束 ▲▲▲
-
-   // B. ✨ 核心新增：处理“记忆”的“查看全部”按钮
-    else if (e.target.id === 'goto-memories-page-modal') {
-        if (typeof openMemoriesViewer === 'function') {
-            openMemoriesViewer();
-        }
-        return;
-    }
-
-
-            else
                 if (e.target.closest('#goto-bubble-settings-modal')) {
                     await switchToProfileDetailView(
                         '气泡自定义',
@@ -20540,25 +18700,42 @@ async function addMessageToUI(msg) {
             }
         }
 
+// ▼▼▼ 请用这个【全新V2 - 双重渲染版】替换它 ▼▼▼
         /**
-         * ✨✨✨【全新辅助函数】处理转账的收款或退回动作 ✨✨✨
-         * @param {number} messageId - 要处理的转账消息ID
-         * @param {'claimed' | 'returned'} action - 执行的动作
+         * ✨✨✨【AI处理转账】核心引擎 (V2 - 双重渲染版) ✨✨✨
          */
         async function processTransferAction(messageId, action) {
             if (!messageId) return;
 
             try {
                 const message = await db.messages.get(messageId);
-                // 严格检查：必须是转账消息，且状态是初始的'已发送'
-                if (message && message.type === 'transfer' && message.transferData.status === '已发送') {
+                if (message && message.type === 'transfer' && message.transferData.status === 'sent') {
 
+                    // 1. 更新原始卡片的状态 (这部分不变)
                     await db.messages.update(messageId, { 'transferData.status': action });
-
-                    // 调用局部刷新，让卡片UI瞬间变化
                     await updateMessageUI(messageId);
 
-                    // 发送系统提示
+                    // --- ✨✨✨ 核心修改：在这里“搭便车” ✨✨✨ ---
+                    // a. 复制一份原始的转账数据，并更新其状态
+                    const newCardData = { ...message.transferData, status: action };
+
+                    // b. 构造一条新的、由AI发送的、状态已更新的卡片消息
+                    const newCardMessage = {
+                        userId: window.currentUser.id,
+                        chatId: window.currentChat.id,
+                        senderId: window.currentChat.id, // 发送者是AI
+                        type: 'transfer',
+                        content: `[更新了转账状态]`,
+                        transferData: newCardData,
+                        time: new Date().toISOString()
+                    };
+
+                    // c. 将这张新卡片存入数据库并渲染
+                    const newCardId = await db.messages.add(newCardMessage);
+                    await addMessageToUI({ id: newCardId, ...newCardMessage });
+                    // --- ✨✨✨ “搭便车”结束 ✨✨✨ ---
+
+                    // d. 最后，发送旁白消息 (逻辑不变)
                     const actionText = action === 'claimed' ? '收款了' : '退回了';
                     const systemMsg = {
                         userId: window.currentUser.id,
@@ -20569,31 +18746,51 @@ async function addMessageToUI(msg) {
                         time: new Date().toISOString()
                     };
                     const newMsgId = await db.messages.add(systemMsg);
-                    setTimeout(() => addMessageToUI({ id: newMsgId, ...systemMsg }), 600);
+                    await addMessageToUI({ id: newMsgId, ...systemMsg });
+
+                    scrollToBottom(document.getElementById('chat-messages'));
                 }
             } catch (error) {
                 console.error(`AI处理转账(${action})时发生错误:`, error);
             }
         }
 
+// ▼▼▼ 请用这个【全新V2 - 双重渲染版】替换它 ▼▼▼
         /**
-         * ✨✨✨【全新辅助函数】处理由【用户】发起的转账收款或退回动作 ✨✨✨
-         * @param {number} messageId - 要处理的转账消息ID
-         * @param {'claimed' | 'returned'} action - 执行的动作
+         * ✨✨✨【用户处理转账】核心引擎 (V2 - 双重渲染版) ✨✨✨
          */
         async function processUserTransferAction(messageId, action) {
             if (!messageId) return;
 
             try {
-                // 1. 更新数据库
-                await db.messages.update(messageId, {
-                    'transferData.status': action
-                });
-
-                // 2. 刷新UI
+                // 1. 更新原始卡片的状态 (这部分不变)
+                await db.messages.update(messageId, { 'transferData.status': action });
                 await updateMessageUI(messageId);
 
-                // 3. 发送旁白
+                // --- ✨✨✨ 核心修改：在这里“搭便车” ✨✨✨ ---
+                const message = await db.messages.get(messageId); // 重新获取一下，确保拿到最新数据
+                if (!message || !message.transferData) return;
+
+                // a. 复制并更新状态
+                const newCardData = { ...message.transferData, status: action };
+                
+                // b. 构造由【用户】发送的新卡片消息
+                const newCardMessage = {
+                    userId: window.currentUser.id,
+                    chatId: window.currentChat.id,
+                    senderId: window.currentUser.id, // 发送者是用户
+                    type: 'transfer',
+                    content: `[更新了转账状态]`,
+                    transferData: newCardData,
+                    time: new Date().toISOString()
+                };
+                
+                // c. 存库并渲染
+                const newCardId = await db.messages.add(newCardMessage);
+                await addMessageToUI({ id: newCardId, ...newCardMessage });
+                // --- ✨✨✨ “搭便车”结束 ✨✨✨ ---
+
+                // d. 发送旁白 (逻辑不变)
                 const actionText = action === 'claimed' ? '收款了' : '退回了';
                 const systemMsg = {
                     userId: window.currentUser.id,
@@ -20605,6 +18802,7 @@ async function addMessageToUI(msg) {
                 };
                 const newMsgId = await db.messages.add(systemMsg);
                 await addMessageToUI({ id: newMsgId, ...systemMsg });
+                
                 scrollToBottom(document.getElementById('chat-messages'));
 
             } catch (error) {
@@ -21007,59 +19205,6 @@ if (bondModalOverlay) {
         });
 
 
-        // 【请将这段代码粘贴到 <script> 的末尾】
-        // --- ✨✨✨ 位置功能核心逻辑 ✨✨✨ ---
-        const locationPanelBtn = document.getElementById('quick-btn-location');
-        const locationModal = document.getElementById('location-modal');
-
-        // 打开弹窗
-        if (locationPanelBtn) {
-            locationPanelBtn.addEventListener('click', () => {
-                if (!window.currentChat) return;
-                closeAllPanels();
-                document.getElementById('location-name-input').value = '';
-                locationModal.classList.remove('hidden');
-                document.getElementById('location-name-input').focus();
-            });
-        }
-
-        // 关闭弹窗
-        document.getElementById('cancel-location-btn').addEventListener('click', () => {
-            locationModal.classList.add('hidden');
-        });
-
-        // 发送位置
-        document.getElementById('send-location-btn').addEventListener('click', async () => {
-            const locationName = document.getElementById('location-name-input').value.trim();
-            if (!locationName) {
-                alert('请输入地点名称！');
-                return;
-            }
-
-            const user = window.currentUser;
-            const chat = window.currentChat;
-            const locationMsg = {
-                userId: user.id,
-                chatId: chat.id,
-                senderId: user.id,
-                type: 'location',
-                content: `[发送了位置：${locationName}]`, // 给AI看的记录
-                locationData: { // 给UI渲染用的数据
-                    name: locationName,
-                    address: '在地图上查看' // 这是一个静态的副标题
-                },
-                time: new Date().toISOString(),
-            };
-
-            await db.messages.add(locationMsg);
-            addMessageToUI(locationMsg);
-
-            locationModal.classList.add('hidden');
-            const msgBox = document.getElementById('chat-messages');
-            setTimeout(() => { msgBox.scrollTop = msgBox.scrollHeight; }, 0);
-        });
-
-
         /**
          * 清除所有待处理的“动态”AI互动计时器，防止重复执行。
          */
@@ -21331,17 +19476,21 @@ async function openPromptViewerModal() {
                 updateSelectionCount();
             }
 
+// ▼▼▼ 请用这个全新的、修复后的版本替换它 ▼▼▼
             function exitSelectionMode() {
                 chatPage.classList.remove('selection-mode');
                 selectionBar.classList.add('hidden');
                 selectedMessageIds.clear();
-                messagesContainer.querySelectorAll('.msg-row').forEach(row => {
-                    row.classList.remove('selected');
-                    const checkbox = row.querySelector('.selection-checkbox');
-                    if (checkbox) checkbox.remove();
+                
+                // ✨ 核心修复：现在我们告诉它，要去清理所有的 .msg-row 和 .msg-timestamp ✨
+                messagesContainer.querySelectorAll('.msg-row, .msg-timestamp').forEach(el => {
+                    el.classList.remove('selected');
+                    const checkbox = el.querySelector('.selection-checkbox');
+                    if (checkbox) {
+                        checkbox.remove();
+                    }
                 });
             }
-
             function updateSelectionCount() {
                 selectionCountEl.textContent = `已选择 ${selectedMessageIds.size} 项`;
                 const hasSelection = selectedMessageIds.size > 0;
@@ -21611,72 +19760,6 @@ async function openPromptViewerModal() {
             window.showIncomingCallScreen = showIncomingCallScreen;
 
         })();
-
-
-        // ↓↓↓ 请将下面这一整块代码粘贴到 <script> 的末尾 ↓↓↓
-        // ==========================================================
-        // --- ✨✨✨ 音乐播放器自定义背景核心逻辑 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // --- 1. 获取所有相关的 DOM 元素 ---
-            const playerPage = document.getElementById('music-player-content');
-            const changeWallpaperBtn = document.getElementById('change-music-wallpaper-btn');
-            const wallpaperInput = document.getElementById('music-wallpaper-input');
-
-            async function loadAndApplyMusicWallpaper() {
-                const playerPage = document.getElementById('music-player-content'); // ✨ 修正：目标是弹窗内容
-                if (!playerPage) return;
-
-                try {
-                    // ✨ 核心修改：从 global_settings 读取 'musicWallpaper'
-                    const wallpaperSetting = await db.global_settings.get('musicWallpaper');
-                    if (wallpaperSetting && wallpaperSetting.value instanceof Blob) {
-                        const wallpaperUrl = URL.createObjectURL(wallpaperSetting.value);
-                        playerPage.style.setProperty('--music-wallpaper-url', `url(${wallpaperUrl})`);
-                    } else {
-                        playerPage.style.removeProperty('--music-wallpaper-url');
-                    }
-                } catch (error) {
-                    console.error("加载音乐播放器壁纸失败:", error);
-                }
-            }
-            // --- 2. 绑定事件 ---
-
-            // a. 点击右上角的按钮，触发隐藏的文件选择器
-            if (changeWallpaperBtn) {
-                changeWallpaperBtn.addEventListener('click', () => {
-                    if (wallpaperInput) wallpaperInput.click();
-                });
-            }
-
-            // b. 当用户选择了新的壁纸文件后
-            if (wallpaperInput) {
-                // 这是新的全局保存逻辑
-                wallpaperInput.addEventListener('change', async (e) => {
-                    const file = e.target.files && e.target.files[0];
-                    if (!file) return; // ✨ 删除了对 currentUser 的检查
-
-                    try {
-                        const wallpaperBlob = await compressImage(file, { type: 'background' });
-                        // ✨ 核心修改：保存到全局设置
-                        await db.global_settings.put({ key: 'musicWallpaper', value: wallpaperBlob });
-                        await loadAndApplyMusicWallpaper();
-                        alert('音乐播放器背景更换成功！');
-                    } catch (error) {
-                        console.error("更换音乐背景失败:", error);
-                        alert("图片处理失败，请重试。");
-                    } finally {
-                        e.target.value = '';
-                    }
-                });
-            }
-
-            // 关键：将加载函数暴露到全局，方便其他地方调用
-            window.loadAndApplyMusicWallpaper = loadAndApplyMusicWallpaper;
-
-        })();
-        // ↑↑↑ 粘贴到这里结束 ↑↑↑
-        // ==========================================================
 
 
 
@@ -24655,13 +22738,13 @@ async function generateMemoData() {
                     }
                 }
 
-                // ▼▼▼ 请用这个全新的版本，替换旧的 generateOrderData 函数 ▼▼▼
+// ▼▼▼ 请用这个【全新 V3 - 中央厨房版】替换上面的旧函数 ▼▼▼
                 /**
-                 * 核心函数 2: 指挥AI生成订单数据 (V2 - 详情版)
+                 * 核心函数 2: 指挥AI生成订单数据 (V3 - 中央厨房版)
                  */
                 async function generateOrderData() {
-                    const basePrompt = await buildBasePrompt();
-                    const prompt = basePrompt + `
+                    // 1. 定义一份专属的“外卖订单”菜单（任务描述）
+                    const taskDescription = `
 【你的任务】
 根据你的角色设定、口味偏好、当前心情以及与{{user}}的关系，随机生成 **2到4个** 你最近的外卖订单。
 订单信息需要非常详细，包含订单号、地址、骑手等。其中至少一个地址要与“{{user}}”相关。
@@ -24682,12 +22765,18 @@ async function generateMemoData() {
     "delivery_address": "送到 {{user}} 家里",
     "delivery_contact_name": "{{user}}",
     "delivery_contact_phone": "138****1234",
-    "delivery_rider": "骑手小张",
+    "delivery_rider": "骑手小陈",
     "order_id": "1234 5678 9012 3456",
     "payment_method": "在线支付"
+    "remark": "微辣，多放香菜，谢谢！"
   }
 ]`;
-                    return await getAiGeneratedJson(prompt);
+
+                    // 2. 将这份菜单交给“中央厨房”，让它去烹饪一份完整的“菜谱”
+                    const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, window.currentUser, taskDescription);
+
+                    // 3. 将烹饪好的“菜谱”交给AI去执行
+                    return await getAiGeneratedJson(finalPrompt);
                 }
                 // ▲▲▲ 替换到这里结束 ▲▲▲
                 // ▼▼▼ 请用这个“精装修”版，替换旧的 renderOrderList 函数 ▼▼▼
@@ -24784,6 +22873,26 @@ async function generateMemoData() {
                     document.getElementById('order-detail-order-id').textContent = order.order_id;
                     document.getElementById('order-detail-timestamp').textContent = order.timestamp;
                     document.getElementById('order-detail-payment-method').textContent = order.payment_method;
+
+
+                      // --- ✨✨✨ 核心新增就在这里！ ✨✨✨ ---
+                    // a. 找到“订单信息”卡片中，用于显示备注的那一行
+                    const remarkRow = document.getElementById('order-detail-remark-row');
+                    const remarkValue = document.getElementById('order-detail-remark');
+                    
+                    // b. 智能判断：如果AI生成了备注，就显示这一行并填充内容
+                    if (order.remark && remarkRow && remarkValue) {
+                        remarkValue.textContent = order.remark;
+                        remarkRow.style.display = 'flex'; // 确保这一行是可见的
+                    } 
+                    // c. 如果没有备注，就隐藏这一行
+                    else if (remarkRow) {
+                        remarkRow.style.display = 'none';
+                    }
+                    // --- ✨✨✨ 新增结束 ✨✨✨ ---
+
+
+
                 }
                 // ▲▲▲ 替换到这里结束 ▲▲▲
 
@@ -25047,15 +23156,6 @@ async function generateMemoData() {
                     if (match && match[1]) {
                         renderingQueue.push({ type: 'set_wallpaper', id: match[1].trim() });
                     }
-                }
-                // ==========================================================
-                else if (content.startsWith('<m>')) {
-                    const match = content.match(/<m>(.*?)<\/m>/s);
-                    if (match && match[1]) renderingQueue.push({ type: 'music_search', keyword: match[1].trim() });
-                }
-                else if (content.startsWith('<ms>')) {
-                    const match = content.match(/<ms>(.*?)<\/ms>/s);
-                    if (match && match[1]) renderingQueue.push({ type: 'music_switch', keyword: match[1].trim() });
                 }
                 else {
                     // 如果以上都不是，就作为普通文本或HTML卡片处理
@@ -25337,25 +23437,7 @@ async function generateMemoData() {
                         }
                         break;
                     }
-                    // ▲▲▲ 替换到这里结束 ▲▲▲
-                    // ▲▲▲ 粘贴到这里结束 ▲▲▲
-                    // ▼▼▼ 请用这个【新版本】替换掉您之前添加的 case 'music_search' ▼▼▼
-                    case 'music_search': {
-                        if (task.keyword) {
-                            // 步骤 1: 立即打开用于显示结果的弹窗
-                            showModal('music-search-modal');
 
-                            // 步骤 2: 更新弹窗标题，让用户知道正在搜什么
-                            const searchModalTitle = document.getElementById('music-search-title');
-                            if (searchModalTitle) searchModalTitle.textContent = `AI点歌: “${task.keyword}”`;
-
-                            // 步骤 3: 调用搜索函数，它会在弹窗内填充内容
-                            if (typeof window.searchMusic === 'function') {
-                                window.searchMusic(task.keyword);
-                            }
-                        }
-                        break;
-                    }
                     case 'status_update': {
                         const newStatus = task.status;
                         if (typeof window.updateStatusDisplay === 'function') {
@@ -25367,7 +23449,7 @@ async function generateMemoData() {
                             window.currentChat.customStatusText = newStatus;
                         }
 
-                        // ✨ 核心新增：创建并发送系统提示消息
+
                         const systemMessage = {
                             userId: user.id,
                             chatId: chat.id,
@@ -29791,7 +27873,17 @@ window.openFixedPromptViewer = async function (moduleId) { // ✨ 核心修改�
             
         case 'jailbreak':
             title = '破限指令 模块';
-            content = typeof JAILBREAK_PROMPT !== 'undefined' ? JAILBREAK_PROMPT.trim() : '加载指令失败...';
+            // ✨ 这里是针对您问题的核心修复 ✨
+            let rawContent = typeof JAILBREAK_PROMPT !== 'undefined' ? JAILBREAK_PROMPT.trim() : '加载指令失败...';
+            if (character && user) {
+                const userPersonaForDisplay = character.activeUserPersona || user;
+                // 在显示之前，手动执行一次占位符替换
+                content = rawContent
+                    .replace(/{{char}}/g, character.name)
+                    .replace(/{{user}}/g, userPersonaForDisplay.name);
+            } else {
+                content = rawContent; // 如果不在聊天中，还是显示原始模板
+            }
             break;
     }
 
@@ -29800,8 +27892,6 @@ window.openFixedPromptViewer = async function (moduleId) { // ✨ 核心修改�
     contentEl.textContent = content; // 使用 .textContent 更安全
     showModal('fixed-prompt-viewer-modal');
 }
-// ==========================================================
-// ▲▲▲ 替换到这里结束 ▲▲▲
 
     /**
      * 核心函数 2: 关闭查看器
@@ -30011,7 +28101,43 @@ window.openBondsListModal = openBondsListModal;
         contentEl.querySelectorAll('.bond-card-menu').forEach(m => m.style.display = 'none');
     });
 })();
+// ==========================================================
+        // --- ✨✨✨【全新重建版】定位功能核心引擎 V4.0 ✨✨✨ ---
+        // ==========================================================
+        (function () {
+            // 1. 获取唯一的触发器：快捷操作栏里的“定位”按钮
+            const quickLocationBtn = document.getElementById('quick-btn-location');
+            if (!quickLocationBtn) return;
 
+            // 2. 为按钮绑定点击事件
+            quickLocationBtn.addEventListener('click', async () => {
+                // a. 调用您项目中早已存在的、功能稳定的通用输入弹窗
+                const locationName = await showInputDialog("请输入您想发送的地点名称：", "");
+
+                // b. 如果用户输入了内容 (即没有点“取消”)
+                if (locationName !== null && locationName.trim()) {
+                    const finalLocationName = locationName.trim();
+                    const user = window.currentUser;
+                    const chat = window.currentChat;
+
+                    // c. 构造一条标准的 'location' 类型的消息
+                    const locationMsg = {
+                        userId: user.id,
+                        chatId: chat.id,
+                        senderId: user.id,
+                        type: 'location',
+                        content: `[发送了位置：${finalLocationName}]`,
+                        locationData: { name: finalLocationName, address: '在地图上查看' },
+                        time: new Date().toISOString(),
+                    };
+
+                    // d. 保存到数据库并更新UI (复用现有函数)
+                    await db.messages.add(locationMsg);
+                    addMessageToUI(locationMsg);
+                    scrollToBottom(document.getElementById('chat-messages'));
+                }
+            });
+        })();
 
     </script>
 
