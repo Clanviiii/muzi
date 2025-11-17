@@ -2327,21 +2327,7 @@
         }
 
 
-
-        #entertainment-modal {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1010;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        #bond-modal.visible,
-        #entertainment-modal.visible {
+        #bond-modal.visible {
             opacity: 1;
             pointer-events: auto;
         }
@@ -2352,8 +2338,7 @@
             background: rgba(0, 0, 0, 0.4);
         }
 
-        #bond-modal-content,
-        #entertainment-modal-content {
+        #bond-modal-content{
             position: relative;
             width: 85%;
             max-width: 340px;
@@ -2377,8 +2362,7 @@
             pointer-events: none;
         }
 
-        #bond-modal-content.open,
-        #entertainment-modal-content.open {
+        #bond-modal-content.open {
             transform: scale(1) translateY(0);
             opacity: 1;
             pointer-events: auto;
@@ -2409,40 +2393,6 @@
             position: relative;
             overflow: hidden;
         }
-
-
-
-        /* --- ✨ 新增：收藏夹页面滚动修复 --- */
-        #favorites-page .page-content {
-            position: absolute;
-            top: 50px;
-            /* 为顶部的 header 预留空间 */
-            bottom: 0;
-            /* 内容区延伸至页面底部 */
-            left: 0;
-            right: 0;
-            width: 100%;
-            overflow-y: auto;
-            flex: initial;
-        }
-
-
-        /* --- ✨ 新增：回忆录页面滚动修复 --- */
-        #memories-page .page-content {
-            position: absolute;
-            top: 50px;
-            bottom: 70px;
-            /* 为底部的 footer 按钮区预留空间 */
-            left: 0;
-            right: 0;
-            width: 100%;
-            overflow-y: auto;
-            padding-bottom: 10px;
-            flex: initial;
-        }
-
-
-
 
         /* --- ✨ 新增：动态评论区操作按钮样式 --- */
         .comment-item {
@@ -4283,127 +4233,6 @@
         }
 
         /* ========================================================== */
-        /* --- ✨✨✨【全新V3 - 极致折叠版】拾光集与日记卡片样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* --- 1. 拾光集卡片：默认状态下，减小头部内边距和卡片间距 --- */
-        #contact-profile-modal .bond-card-header-final {
-            padding-top: 0.5rem;
-            /* 减小上内边距 */
-            padding-bottom: 0.5rem;
-            /* 减小下内边距 */
-            transition: padding 0.4s ease-out;
-            /* 为内边距添加动画 */
-            cursor: pointer;
-            position: relative;
-        }
-
-        #contact-profile-modal .bond-card-final {
-            margin-bottom: 8px;
-            /* 减小卡片间距 */
-            transition: margin-bottom 0.4s ease-out;
-            /* 为间距添加动画 */
-        }
-
-        /* --- 2. 拾光集卡片：展开状态下，恢复所有间距 --- */
-        #contact-profile-modal .bond-card-final.expanded .bond-card-header-final {
-            padding-top: 0.8rem;
-            /* 恢复原始上内边距 */
-            padding-bottom: 0.8rem;
-            /* 恢复原始下内边距 */
-        }
-
-        #contact-profile-modal .bond-card-final.expanded {
-            margin-bottom: 1.2rem;
-            /* 恢复原始卡片间距 */
-        }
-
-        /* --- 3. 日记卡片：默认状态下，也减小头部内边距和卡片间距 --- */
-        #contact-profile-modal .diary-date {
-            padding-top: 0.8rem;
-            /* 减小上内边距 */
-            padding-bottom: 0.8rem;
-            /* 减小下内边距 */
-            transition: padding 0.4s ease-out;
-            /* 添加动画 */
-            cursor: pointer;
-        }
-
-        #contact-profile-modal .diary-entry-card {
-            margin-bottom: 8px;
-            /* 减小卡片间距 */
-            transition: margin-bottom 0.4s ease-out;
-            /* 添加动画 */
-        }
-
-        /* --- 4. 日记卡片：展开状态下，恢复所有间距 --- */
-        #contact-profile-modal .diary-entry-card.expanded .diary-date {
-            padding-top: 1rem;
-            /* 恢复原始上内边距 */
-            padding-bottom: 1rem;
-            /* 恢复原始下内边距 */
-        }
-
-        #contact-profile-modal .diary-entry-card.expanded {
-            margin-bottom: 1.2rem;
-            /* 恢复原始卡片间距 */
-        }
-
-        /* --- 5. 内容区和页脚的折叠/展开逻辑 (保持不变) --- */
-        #contact-profile-modal .bond-card-content-final,
-        #contact-profile-modal .bond-card-footer-final,
-        #contact-profile-modal .diary-content {
-            max-height: 0;
-            overflow: hidden;
-            padding-top: 0;
-            padding-bottom: 0;
-            margin-top: 0;
-            margin-bottom: 0;
-            border-top: none;
-            transition: max-height 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out, border-color 0.4s ease-out;
-        }
-
-        /* ========================================================== */
-        /* --- ✨✨✨【最终修复版】拾光集与日记折叠动画高度自适应 ✨✨✨ --- */
-        /* ========================================================== */
-        #contact-profile-modal .bond-card-final.expanded .bond-card-content-final {
-            /* 核心修复：从 500px 大幅增加到 5000px，确保足够容纳超长内容 */
-            max-height: 5000px;
-            padding: 1rem;
-        }
-
-        #contact-profile-modal .bond-card-final.expanded .bond-card-footer-final {
-            /* 核心修复：从 100px 增加到 500px，确保页脚不会被截断 */
-            max-height: 500px;
-            padding: 0.6rem 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        #contact-profile-modal .diary-entry-card.expanded .diary-content {
-            /* 核心修复：从 1000px 增加到 10000px，为超长日记提供充足空间 */
-            max-height: 10000px;
-            margin-top: 12px;
-        }
-
-        /* ========================================================== */
-        /* --- ✨✨✨【新增】日记卡片头部与菜单样式 ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* 1. 让日记卡片也成为一个“定位舞台”，以便菜单能正确定位 */
-        #contact-profile-modal .diary-entry-card {
-            position: relative;
-        }
-
-        /* 2. 将日期标题栏变成一个Flex容器，让内容和按钮能左右排列 */
-        #contact-profile-modal .diary-date {
-            display: flex;
-            justify-content: space-between;
-            /* 两端对齐 */
-            align-items: center;
-            /* 垂直居中 */
-        }
-
-        /* ========================================================== */
         /* --- ✨✨✨【全新】心电图绘制动画 ✨✨✨ --- */
         /* ========================================================== */
         #heartbeat-path {
@@ -5048,9 +4877,8 @@
         }
 
         /* ========================================================== */
-        /* --- ✨✨✨【终极修复】拾光集弹窗定位与居中引擎 ✨✨✨ --- */
+        /* --- ✨✨✨【终极修复】拾光弹窗定位与居中引擎 ✨✨✨ --- */
         /* ========================================================== */
-
         #bond-modal {
             /* 关键1：让弹窗脱离文档流，浮动在页面之上，并相对于整个浏览器窗口定位 */
             position: fixed;
@@ -5081,8 +4909,7 @@
         /* 1. 弹窗主体：这就是我们的“纸张” */
         #bond-modal-content {
             background-color: #FFFCF5;
-            /* 一个非常柔和的、温暖的米白色 */
-            /* 添加非常细微的纸张纹理，让它不那么单调 */
+ position: relative; /* ✨ 核心新增：让它成为绝对定位按钮的锚点 */
             background-image: url(' ');
             border-radius: 12px;
             /* 纸张的圆角可以小一些，更硬朗 */
@@ -5104,24 +4931,31 @@
             /* 占据所有可用空间 */
             overflow-y: auto;
             /* 内容超出时可滚动 */
-            padding: 20px 25px 20px 45px;
+            padding: 20px 25px 80px 45px;
             /* 左边留出更多空间给装订线 */
-            position: relative;
         }
 
-        /* 模拟左侧的装订红线 */
-        #bond-paper-sheet::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 30px;
-            width: 1px;
-            height: 100%;
-            background-color: rgba(255, 0, 0, 0.15);
-            /* 非常淡的红色 */
-        }
+/* 这是正确的代码 */
+#bond-paper-inner-content::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    width: 1.5px;
+    background-color: rgba(255, 0, 0, 0.15);
+    
+    /* ✨ 核心修改：让线条从父容器的上内边距之外开始 */
+    top: -20px; 
+    
+    /* ✨ 核心修改：让线条一直延伸到父容器的下内边距之外 */
+    bottom: -100px; 
+    
+    /* ✨ 核心修改：我们不再需要 height: 100%，因为 top 和 bottom 已经定义了它的长度 */
+}
 
-
+/* 这是新的代码 */
+#bond-paper-inner-content {
+    position: relative; /* ✨ 核心修改：现在由“内胆”来做定位基准 */
+}
         /* 3. 纸张上的头部 */
         #bond-paper-header {
             display: flex;
@@ -7807,6 +7641,151 @@
     .special-card-container[data-card-type="transfer"].claimed .transfer-card-icon { color: #10B981; }
     .special-card-container[data-card-type="transfer"].returned { background-color: #F9FAFB; }
     .special-card-container[data-card-type="transfer"].returned .transfer-card-icon { color: #EF4444; }
+    
+    
+    /* ========================================================== */
+/* --- ✨✨✨【全新】“拾光集”手账风格美化样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 为弹窗内容区应用一个柔和的米色背景，更像纸张 */
+#bonds-list-modal .modal-content {
+    background-color: #FDFBF5; /* 一个温暖的米白色 */
+}
+
+/* 2. 改造卡片，让它看起来像一张撕下来的手账纸页 */
+#bonds-list-modal .bond-card-final {
+    background-color: #FFFFFF;
+    border: 1px solid #F0EAD6; /* 纸张边缘的颜色 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem; /* 内部各部分之间的间距 */
+}
+
+/* 3. 移除旧的、不透明的头部，让内容直接展示 */
+#bonds-list-modal .bond-card-header-final {
+    display: none; /* 我们不再需要这个旧的头部了 */
+}
+
+/* 4. 核心：为解析后的新内容块添加样式 */
+.bond-section {
+    padding-bottom: 0.8rem;
+    border-bottom: 1px dashed #EAE0D6; /* 使用虚线分隔，更有手账感 */
+}
+.bond-section:last-child {
+    border-bottom: none; /* 最后一部分不需要分隔线 */
+    padding-bottom: 0;
+}
+
+/* 5. 美化解析出来的标题 (例如 "✨ 此刻") */
+.bond-section h4 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #B49A84; /* 一种优雅的、类似咖啡渍的棕色 */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 6. 美化正文段落 */
+.bond-section p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.8; /* 更大的行高，易于阅读 */
+    color: #4A4A4A; /* 柔和的深灰色 */
+    white-space: pre-wrap; /* 保持原有的换行 */
+}
+    
+    /* ========================================================== */
+/* --- ✨✨✨【新增】拾光集卡片-删除菜单专属样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 让卡片成为一个“定位舞台”，以便菜单能正确定位 */
+#bonds-list-modal .bond-card-final {
+    position: relative;
+}
+
+/* 2. “更多”按钮 (...) 的样式 */
+#bonds-list-modal .bond-card-more-btn {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    font-size: 20px;
+    font-weight: bold;
+    color: #c7b9ac; /* 一个柔和的棕褐色 */
+    padding: 4px 8px;
+    line-height: 1;
+    z-index: 5;
+}
+#bonds-list-modal .bond-card-more-btn:hover {
+    color: #9a8470;
+}
+
+/* 3. 弹出菜单的样式 */
+#bonds-list-modal .bond-card-menu {
+    display: none; /* 默认隐藏 */
+    position: absolute;
+    top: 35px;
+    right: 15px;
+    background: #FFFFFF;
+    border: 1px solid #F0EAD6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 10;
+    width: 80px;
+}
+
+/* 4. 菜单内“删除”按钮的样式 */
+#bonds-list-modal .bond-card-menu-item {
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    text-align: left;
+    font-size: 14px;
+    color: #ef4444; /* 使用醒目的红色 */
+}
+#bonds-list-modal .bond-card-menu-item:hover {
+    background: #FFFBF5;
+}
+
+    /* ========================================================== */
+/* --- ✨✨✨【新增】拾光集-悬浮保存图标按钮样式 ✨✨✨ --- */
+/* ========================================================== */
+
+#bond-modal #bond-save-icon-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 25px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #B49A84; /* 复用标题的咖啡色 */
+    color: white;
+    font-size: 20px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+#bond-modal #bond-save-icon-btn:hover {
+    background-color: #9a8470; /* 悬浮时颜色加深 */
+    transform: translateY(-2px); /* 轻微上浮 */
+}
+
+/* 禁用的加载状态 */
+#bond-modal #bond-save-icon-btn:disabled {
+    background-color: #dcd3ca;
+    cursor: not-allowed;
+    color: #b49a84;
+}
+
+#bond-modal #bond-save-icon-btn:disabled i {
+    animation: spin 1s linear infinite; /* 应用旋转动画 */
+}
     </style>
 
     <!-- 【请将这个新的 style 标签粘贴到旧 style 标签的紧后方】 -->
@@ -8299,10 +8278,10 @@
                         <!-- 第3栏：右侧按钮区 (✨ 核心修改在这里！) -->
                         <div class="header-right">
 
-                            <!-- 这是我们新移动过来的“总结剧情”按钮 -->
-                            <button id="chat-header-summarize-btn" class="btn-icon buttonlike" title="总结剧情"
+                            <!-- 这是我们新移动过来的“剧情”按钮 -->
+                            <button id="chat-header-summarize-btn" class="btn-icon buttonlike" title="剧情相关"
                                 style="width: 32px; height: 32px; border-radius: 50%;">
-                                <i class="fa-solid fa-pen-to-square"></i>
+                               <i class="fa-solid fa-bookmark"></i>
                             </button>
 
                             <!-- ✨ 核心新增：“查手机”按钮被移动到了这里 ✨ -->
@@ -8371,9 +8350,9 @@
                                 <button id="quick-btn-file" class="quick-action-btn buttonlike" title="文件">
                                     <i class="fa-solid fa-file-lines"></i>
                                 </button>
-                                <!-- 拾光集 -->
-                                <button id="quick-btn-bond" class="quick-action-btn buttonlike" title="拾光集">
-                                    <i class="fa-solid fa-star-and-crescent"></i>
+                                <!-- 拾光 -->
+                                <button id="quick-btn-bond" class="quick-action-btn buttonlike" title="拾光">
+                                  <i class="fa-solid fa-fan"></i>
                                 </button>
 
 
@@ -8585,8 +8564,8 @@
                                             <!-- 中间：关系图标 -->
                                             <div class="relationship-icon" style="flex-shrink: 0;">
                                                 <!-- ✨✨✨ 核心修改：替换中间的关系图标 ✨✨✨ -->
-                                                <i class="fa-solid fa-heart"
-                                                    style="font-size: 24px; color: rgba(236, 72, 153, 0.7); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></i>
+                                                <i class="fa-solid fa-heart-pulse"
+                                                    style="font-size: 24px; color: rgba(236, 72, 154, 0.308); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></i>
                                                 <!-- ✨✨✨ 修改结束 ✨✨✨ -->
                                             </div>
 
@@ -8861,8 +8840,6 @@
                 </div>
                 <!-- 【请把下面这三块代码，都粘贴到 .page-layer 内部】 -->
 
-                <!-- 页面10：动态主页 -->
-                <!-- 页面10：动态主页 -->
                 <div id="moments-page" class="page" style="display:none; flex-direction:column; height:100%;">
                     <!-- 顶部，模仿 QQ 空间 -->
                     <header
@@ -9376,51 +9353,41 @@
     </div>
     <!-- ✨✨✨ 粘贴结束 ✨✨✨ -->
     <!-- ========================================================== -->
-    <!-- --- ✨✨✨【V9 - 四维情感版】拾光集弹窗 ✨✨✨ --- -->
+    <!-- --- ✨✨✨【V9 - 四维情感版】拾光弹窗 ✨✨✨ --- -->
     <!-- ========================================================== -->
     <div id="bond-modal" class="hidden">
         <div id="bond-modal-overlay" class="bond-modal-overlay"></div>
 
         <div id="bond-modal-content">
-            <div id="bond-paper-sheet" class="page-content">
-                <header id="bond-paper-header">
-                    <h3 id="bond-paper-title">与 <span id="bond-character-name">角色名</span> 的拾光集</h3>
-                    <button id="bond-modal-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
-                </header>
+<!-- 这是修改后的正确样子 -->
+<div id="bond-paper-sheet" class="page-content">
+    <!-- ✨ 核心修改：在这里添加一个新的div作为“内胆” -->
+    <div id="bond-paper-inner-content">
 
-                <!-- 区域 1: “心声” (保持不变) -->
-                <div class="paper-section" data-section="heart_trace">
-                    <h4 class="paper-title" style="color: #84cafc;">心声</h4>
-                    <p class="paper-content">【<span class="placeholder-char-name">角色名</span>正在思考...】</p>
-                </div>
-                <hr class="paper-divider">
+        <header id="bond-paper-header">
+            <h3 id="bond-paper-title">与 <span id="bond-character-name">角色名</span> 的拾光集</h3>
+        </header>
 
-                <!-- 区域 2: “独白” (保持不变) -->
-                <div class="paper-section" data-section="monologue">
-                    <h4 class="paper-title" style="color: #fcd484;">独白</h4>
-                    <p class="paper-content">【<span class="placeholder-char-name">角色名</span>正在思考...】</p>
-                </div>
-                <hr class="paper-divider">
-
-                <!-- ✨✨✨ 核心新增 1: “爱誓”区域 ✨✨✨ -->
-                <div class="paper-section" data-section="pledge_of_love">
-                    <h4 class="paper-title" style="color: #c084fc;">爱誓</h4> <!-- 使用了不同的颜色 -->
-                    <p class="paper-content">【<span class="placeholder-char-name">角色名</span>正在思考...】</p>
-                </div>
-                <hr class="paper-divider">
-
-                <!-- ✨✨✨ 核心新增 2: “欲执”区域 ✨✨✨ -->
-                <div class="paper-section" data-section="grip_of_desire">
-                    <h4 class="paper-title" style="color: #f472b6;">欲执</h4> <!-- 使用了不同的颜色 -->
-                    <p class="paper-content">【<span class="placeholder-char-name">角色名</span>正在思考...】</p>
-                </div>
-
-            </div>
-
-            <footer class="page-footer" style="padding: 10px; border-top: 1px solid #F0EAD6;">
-                <button id="bond-save-btn" class="btn btn-primary buttonlike btn-full-width">✨ 珍藏这段时光</button>
-            </footer>
+        <!-- 区域 1: “心声” -->
+        <div class="paper-section" data-section="heart_trace">
+            <h4 class="paper-title" style="color: #84cafc;">心声</h4>
+            <p class="paper-content">【<span class="placeholder-char-name">角色名</span>正在思考...】</p>
         </div>
+        <hr class="paper-divider">
+
+        <!-- 区域 2: “独白” -->
+        <div class="paper-section" data-section="monologue">
+            <h4 class="paper-title" style="color: #fcd484;">独白</h4>
+            <p class="paper-content">【<span class="placeholder-char-name">角色名</span>正在思考...】</p>
+        </div>
+
+    </div> <!-- ✨ 核心修改：在这里添加一个收尾的div -->
+</div>
+        <!-- 这是新的代码 -->
+<button id="bond-save-icon-btn" class="btn-icon buttonlike" title="珍藏">
+    <i class="fa-solid fa-pen-fancy"></i>
+</button>
+
     </div>
     <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
     <!-- 【请将这个全新的 HTML 弹窗，粘贴到 body 的末尾】 -->
@@ -10597,7 +10564,11 @@
     <button id="plot-control-summarize-btn" class="btn btn-secondary buttonlike" style="font-size: 16px;">
         <i class="fa-solid fa-table"></i> 记忆总结
     </button>
-    <!-- ✨ 新增结束 ✨ -->
+                   <!-- ✨✨✨ 在这里粘贴下面的新代码 ✨✨✨ -->
+                <button id="plot-control-bonds-btn" class="btn btn-secondary buttonlike" style="font-size: 16px;">
+                    <i class="fa-solid fa-scroll"></i> 拾光集
+                </button>
+                <!-- ✨✨✨ 粘贴结束 ✨✨✨ -->
 
                 <button id="plot-control-fastforward-btn" class="btn btn-secondary buttonlike" style="font-size: 16px;">
                     <i class="fa-solid fa-angles-right"></i> 剧情快进
@@ -11069,6 +11040,24 @@
         </footer>
     </div>
 </div>
+<!-- ▼▼▼ 请将这一整块全新的代码，粘贴到 </body> 的正上方 ▼▼▼ -->
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】“拾光集”专属列表弹窗 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="bonds-list-modal" class="modal-overlay hidden">
+    <!-- 复用一个标准的大尺寸弹窗样式 -->
+    <div class="modal-content" style="width: 90%; max-width: 360px; height: 80%; max-height: 600px;">
+        <header class="page-header">
+            <span id="bonds-list-modal-title" style="font-weight: 600;">拾光集</span>
+            <button id="bonds-list-modal-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
+        </header>
+
+        <!-- 这是可滚动的内容区域 -->
+        <main id="bonds-list-modal-content" class="page-content" style="padding: 10px; background: var(--color-ui-border);">
+            <!-- “拾光集”卡片将由 JavaScript 动态生成并插入到这里 -->
+        </main>
+    </div>
+</div>
 <!-- ========================================================== -->
 <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
     <script>
@@ -11081,9 +11070,9 @@
         db.version(178).stores({
             // --- 核心新增：这是我们用来记录生理周期的专属“账本” ---
             period_cycles: '++id, startDate, endDate',
-           // --- 核心修改：为 memories 表添加一个新的复合索引 ---
-            memories: '++id, [userId+contactId+type], [userId+contactId], type, createdAt, sourceTurnIds',
-// ▼▼▼ 在您的 db.version(...).stores({...}) 中，添加下面这行新代码 ▼▼▼
+// 这是正确的代码
+memories: '++id, contactId, [userId+contactId+type], [userId+contactId], type, createdAt, sourceTurnIds',
+
 prompt_presets: '++id, &name, isActive',
 // ▲▲▲ 添加到这里结束 ▲▲-▲
             // --- 其他所有表结构保持不变 ---
@@ -15067,6 +15056,20 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
     dynamicContentMap.set('world_book', [triggeredWorldBook.before_char, triggeredWorldBook.after_char].filter(Boolean).join('\n\n'));
     dynamicContentMap.set('core_memory', await retrieveRelevantMemories(chatHistory, character.id, user.id));
     
+
+   // d. ✨✨✨ 核心新增：在这里准备“聊天记录”这份新配料！ ✨✨✨
+    const historyTranscript = chatHistory.length > 0
+        ? chatHistory.flatMap(msg => {
+            const content = msg.content || '';
+            if (content.trim().startsWith('<div')) return []; // 过滤掉HTML卡片
+            const speaker = msg.senderId === user.id ? ctxUser.name : ctxChar.name;
+            return [`${speaker}: ${content}`];
+        }).join('\n')
+        : "（你们最近没有聊天）";
+    dynamicContentMap.set('chat_history', `【最近的聊天记录回顾】\n${historyTranscript}`);
+    // ✨✨✨ 新增结束 ✨✨✨
+
+
     // d. 即时情境 (包含时间、天气、状态、撤回等)
     const timeWeatherSetting = await db.global_settings.get('isTimeWeatherAware');
     const isTimeWeatherAware = (timeWeatherSetting === undefined) ? true : timeWeatherSetting.value;
@@ -15182,14 +15185,18 @@ ${currentSong.lyrics || '（这首歌没有歌词）'}
 
     // 5. 按预设顺序组装最终的 components 数组
     const finalComponents = [];
+// ▼▼▼ 找到 FIXED_MODULES_INFO 常量，并在其中添加新的一行 ▼▼▼
     const FIXED_MODULES_INFO = {
         'char_persona': { title: '核心设定 (char)', icon: '<i class="fa-solid fa-address-card"></i>' },
         'user_persona': { title: '你的信息 (user)', icon: '<i class="fa-solid fa-user"></i>' },
         'world_book': { title: '相关的世界书', icon: '<i class="fa-solid fa-book-atlas"></i>' },
         'core_memory': { title: '相关核心记忆', icon: '<i class="fa-solid fa-brain"></i>' },
         'jailbreak': { title: '破限指令', icon: '<i class="fa-solid fa-key"></i>' },
-        'immediate_context': { title: '即时情境', icon: '<i class="fa-solid fa-clock-rotate-left"></i>'}
+        'immediate_context': { title: '即时情境', icon: '<i class="fa-solid fa-clock-rotate-left"></i>'},
+        // ✨✨✨ 在这里粘贴下面这行新代码 ✨✨✨
+        'chat_history': { title: '聊天记录回顾', icon: '<i class="fa-solid fa-comments"></i>' }
     };
+// ▲▲▲ 添加结束 ▲▲▲
     
     for (const module of modules) {
         if (!module.enabled) continue;
@@ -15348,110 +15355,6 @@ if (options.isChatReply !== false) {
 
 
 
-
-
-        // ==========================================================
-        // --- ✨✨✨【最终修复版 V2 - 集成日记删除】角色主页弹窗统一事件处理中心 ✨✨✨ ---
-        // ==========================================================
-        document.getElementById('contact-profile-modal').addEventListener('click', async (e) => {
-            const character = window.currentProfileContact;
-            if (!character) return;
-            // --- 分流 3: 处理主视图上的“查看全部”按钮 ---
-            const seeAllBtn = e.target.closest('.see-all-btn');
-            if (seeAllBtn) {
-                switch (seeAllBtn.id) {
-
-                    case 'goto-bonds-page-modal':
-                        switchToProfileDetailView(`${character.name}的拾光集`, async () => {
-                            const bonds = await db.bonds.where({ userId: window.currentUser.id, contactId: character.id }).reverse().sortBy('createdAt');
-                            if (bonds.length === 0) return '<p style="text-align:center; color:#a1a1aa; padding-top:40px;">还没有和TA保存任何拾光集点滴。</p>';
-                            // ... (拾光集渲染逻辑保持不变)
-                            return bonds.map(bond => `
-                        <div class="bond-card-final" data-bond-id="${bond.id}" style="margin-bottom:10px; cursor:default; background: rgba(0,0,0,0.1); border:none;">
-                            <div class="bond-card-header-final" style="background: rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
-                                <span style="display: flex; align-items: center; gap: 8px;">
-                                    <span class="icon">${bond.icon}</span>
-                                    <span style="font-size:1.2rem; color:rgba(255,255,255,0.8);">${bond.name}</span>
-                                </span>
-                                <button class="bond-card-more-btn buttonlike">···</button>
-                            </div>
-                            <div class="bond-card-content-final" style="padding: 1rem;">
-                                <p style="color:rgba(255,255,255,0.95); white-space: pre-wrap; word-break: break-word;">${bond.content}</p>
-                            </div>
-                            <div class="bond-card-menu" style="display: none;">
-            
-                                <button class="bond-card-menu-item buttonlike" data-action="delete">删除</button>
-                            </div>
-                        </div>`).join('');
-                        });
-                        return;
-                    case 'goto-diary-page-modal':
-                        switchToProfileDetailView(`${character.name}的日记`, async () => { /* ... */ }, { actionButton: { text: '让TA写一篇 >', onClick: async () => { /* ... (写日记的逻辑) ... */ } } });
-                        return;
-                }
-            }
-            // --- 智能分流 1: 处理拾光集卡片的交互 ---
-            const bondCardHeader = e.target.closest('.bond-card-header-final');
-            if (bondCardHeader) {
-                e.stopPropagation();
-                if (e.target.closest('.bond-card-more-btn')) {
-                    const card = bondCardHeader.closest('.bond-card-final');
-                    const menu = card.querySelector('.bond-card-menu');
-                    document.querySelectorAll('#contact-profile-modal .bond-card-menu').forEach(m => {
-                        if (m !== menu) m.style.display = 'none';
-                    });
-                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-                } else {
-                    const card = bondCardHeader.closest('.bond-card-final');
-                    if (card) card.classList.toggle('expanded');
-                }
-                return;
-            }
-
-            const bondDeleteAction = e.target.closest('.bond-card-final .bond-card-menu-item[data-action="delete"]');
-            if (bondDeleteAction) {
-                e.stopPropagation();
-                const card = bondDeleteAction.closest('.bond-card-final');
-                const bondId = parseInt(card.dataset.bondId, 10);
-                if (bondId) {
-                    showDeleteDialog('确定要删除这条拾光集记录吗？', async () => {
-                        await db.bonds.delete(bondId);
-                        card.remove();
-                        showNotification("拾光集记录已删除。");
-                    });
-                }
-                return;
-            }
-
-            // --- 智能分流 2: 处理日记卡片的交互 ---
-            const diaryCard = e.target.closest('.diary-entry-card');
-            if (diaryCard) {
-                e.stopPropagation();
-                if (e.target.closest('.bond-card-more-btn')) { // 复用"更多"按钮的class
-                    const menu = diaryCard.querySelector('.bond-card-menu');
-                    document.querySelectorAll('#contact-profile-modal .bond-card-menu').forEach(m => {
-                        if (m !== menu) m.style.display = 'none';
-                    });
-                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-                }
-                else if (e.target.closest('.bond-card-menu-item[data-action="delete"]')) {
-                    const diaryId = parseInt(diaryCard.dataset.diaryId, 10);
-                    if (diaryId) {
-                        showDeleteDialog('确定要删除这篇日记吗？', async () => {
-                            await db.diaries.delete(diaryId);
-                            diaryCard.remove();
-                            showNotification("日记已删除。");
-                        });
-                    }
-                }
-                else if (e.target.closest('.diary-date')) {
-                    diaryCard.classList.toggle('expanded');
-                }
-                return;
-            }
-
-        });
-
         // ▼▼▼ 请用这一整块【最终选择版】的代码，替换旧的“导出记录”按钮事件绑定 ▼▼▼
         // ==========================================================
         // --- ✨✨✨【V2 - 弹出选择版】角色主页“导出记录”按钮事件绑定 ✨✨✨ ---
@@ -15598,37 +15501,43 @@ if (options.isChatReply !== false) {
     // --- 核心逻辑 2: ✨ 使用事件委托，为整个弹窗绑定唯一的点击事件监听器 ✨ ---
     plotControlModal.addEventListener('click', (e) => {
     
-        const target = e.target;
-        
-        // a. 判断是否点击了“记忆总结”按钮
-        if (target.closest('#plot-control-summarize-btn')) {
-
-            
-            hideModal('plot-control-modal'); // 先关闭当前菜单
-  
-            if (typeof window.openMemoriesViewer === 'function') {
-         
-                window.openMemoriesViewer(); // 然后打开“时光档案室”
-            } else {
-   
-                alert("发生了一个错误：无法找到打开记忆陈列室的功能。");
-            }
-        }
-        // b. 判断是否点击了“剧情快进”按钮
-        else if (target.closest('#plot-control-fastforward-btn')) {
-     
-            hideModal('plot-control-modal');
-            if (typeof executePlotFastForward === 'function') {
-                executePlotFastForward();
-            }
-        }
-        // c. 判断是否点击了“关闭”按钮或弹窗的背景遮罩
-        else if (target.closest('#plot-control-close-btn') || target === plotControlModal) {
-            hideModal('plot-control-modal');
+const target = e.target;
+    
+    // a. 判断是否点击了“记忆总结”按钮
+    if (target.closest('#plot-control-summarize-btn')) {
+        hideModal('plot-control-modal'); 
+        if (typeof window.openMemoriesViewer === 'function') {
+            window.openMemoriesViewer();
         } else {
-
+            alert("发生了一个错误：无法找到打开记忆陈列室的功能。");
         }
-    });
+    }
+    // ✨✨✨ 核心新增：在这里添加一个新的 else if 判断 ✨✨✨
+    else if (target.closest('#plot-control-bonds-btn')) {
+        hideModal('plot-control-modal'); // 先关闭当前菜单
+        
+        // 调用我们早已写好的、用于打开拾光列表弹窗的函数
+        if (typeof window.openBondsListModal === 'function' && window.currentChat) {
+            window.openBondsListModal(window.currentChat);
+        } else {
+            alert("发生了一个错误：无法打开拾光集。");
+        }
+    }
+    // ✨✨✨ 新增结束 ✨✨✨
+    
+    // b. 判断是否点击了“剧情快进”按钮
+    else if (target.closest('#plot-control-fastforward-btn')) {
+        hideModal('plot-control-modal');
+        if (typeof executePlotFastForward === 'function') {
+            executePlotFastForward();
+        }
+    }
+    // c. 判断是否点击了“关闭”按钮或弹窗的背景遮罩
+    else if (target.closest('#plot-control-close-btn') || target === plotControlModal) {
+        hideModal('plot-control-modal');
+    }
+});
+
 
 })();
 // ==========================================================
@@ -16863,14 +16772,6 @@ ${MULTI_BUBBLE_SUFFIX}`;
             // 我们在原来的HTML模板中，新增了两个卡片
             bodyContainer.innerHTML = `
 
-        <!-- 拾光集 (保持不变) -->
-       <div class="profile-section-glass">
-            <div class="section-header">
-                <h3><i class="fa-solid fa-scroll" ></i> 拾光集</h3>
-                <button id="goto-bonds-page-modal" class="see-all-btn buttonlike">查看全部 ></button>
-            </div>
-        </div>
-
         <!-- 新增卡片 1: 气泡样式 -->
         <div class="profile-section-glass">
             <div class="section-header">
@@ -16906,37 +16807,15 @@ ${MULTI_BUBBLE_SUFFIX}`;
             const character = window.currentProfileContact;
             if (!character) return;
 
+// ▼▼▼ 请用这个【新版本】替换旧的 if (e.target.id === 'goto-bonds-page-modal') 代码块 ▼▼▼
             if (e.target.id === 'goto-bonds-page-modal') {
-                switchToProfileDetailView(`${character.name}的拾光集`, async () => {
-                    const bonds = await db.bonds.where({ userId: window.currentUser.id, contactId: character.id }).reverse().sortBy('createdAt');
-                    if (bonds.length === 0) {
-                        return '<p style="text-align:center; color:#a1a1aa; padding-top:40px;">还没有和TA保存任何拾光集点滴。</p>';
-                    }
-
-                    // b. 在渲染时，使用这个映射表来查找正确的图标
-                    return bonds.map(bond => {
-                        const cardHTML = `
-            <div class="bond-card-final" data-bond-id="${bond.id}" style="margin-bottom:10px; cursor:default; background: rgba(0,0,0,0.1); border:none;">
-                <div class="bond-card-header-final" style="background: rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 8px;">
-                        <span class="icon">${bondIconMap[bond.category] || bond.icon}</span>
-                        <span style="font-size:1.2rem; color:rgba(255,255,255,0.8);">${bond.name}</span>
-                    </span>
-                    <button class="bond-card-more-btn buttonlike">···</button>
-                </div>
-                <div class="bond-card-content-final" style="padding: 1rem;">
-                    <p style="color:rgba(255,255,255,0.95); white-space: pre-wrap; word-break: break-word;">${bond.content}</p>
-                </div>
-                <div class="bond-card-menu" style="display: none;">
-                    <button class="bond-card-menu-item buttonlike" data-action="delete">删除</button>
-                </div>
-            </div>
-        `;
-                        return cardHTML;
-                    }).join('');
-
-                });
+                // 直接调用我们新创建的、用于打开弹窗的函数
+                if (typeof window.openBondsListModal === 'function') {
+                    window.openBondsListModal(character);
+                }
+                return; // 处理完毕，结束函数
             }
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
    // B. ✨ 核心新增：处理“记忆”的“查看全部”按钮
     else if (e.target.id === 'goto-memories-page-modal') {
@@ -16949,8 +16828,6 @@ ${MULTI_BUBBLE_SUFFIX}`;
 
             else
                 if (e.target.closest('#goto-bubble-settings-modal')) {
-
-
                     await switchToProfileDetailView(
                         '气泡自定义',
                         () => {
@@ -17020,9 +16897,7 @@ ${MULTI_BUBBLE_SUFFIX}`;
                         }
                     );
 
-                    // ... 紧跟在 switchToProfileDetailView(...) 的 ); 之后
 
-                    // ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
                     // ==========================================================
                     // --- ✨✨✨【全新】统一保存按钮事件绑定 ✨✨✨ ---
                     // ==========================================================
@@ -17255,44 +17130,42 @@ try {
         // ==========================================================
         // ▲▲▲ 替换到这里结束 ▲▲▲
         // ✨✨✨ 粘贴结束 ✨✨✨
-
-// ▼▼▼ 请用这个【全新的、智能判断版本】完整替换旧函数 ▼▼▼
-// ==========================================================
-// --- ✨✨✨【V2 - 智能合并版】状态栏功能图标更新引擎 ✨✨✨ ---
-// ==========================================================
+// 这是正确的代码
 async function updateStatusbarFeatureIcons() {
-    // 1. 获取我们新创建的统一按钮及其内部的图标
     const combinedBtn = document.getElementById('statusbar-ai-features-btn');
     if (!combinedBtn) return;
     const icon = combinedBtn.querySelector('i');
     if (!icon) return;
 
-    // 2. 获取两个功能的当前状态 (这部分逻辑不变)
     const isTheaterEnabled = localStorage.getItem('smallTheaterEnabled') !== 'false';
     const timeWeatherSetting = await db.global_settings.get('isTimeWeatherAware');
     const isAware = (timeWeatherSetting === undefined) ? true : timeWeatherSetting.value;
 
-    // 3. ✨ 核心：根据状态组合，决定图标的样式和显示
+    // ✨ 核心修改：我们在这里实现了您提出的全新图标切换逻辑
     if (isTheaterEnabled && isAware) {
         // --- 场景 A: 两个功能都开启 ---
-        combinedBtn.style.display = 'inline-flex';     // 显示按钮
-        icon.className = 'fa-solid fa-star';           // 切换为【全实心】星星
-        combinedBtn.title = '小剧场 & 情景感知均已开启'; // 更新提示
-    }
-    else if (isTheaterEnabled || isAware) {
-        // --- 场景 B: 只开启了其中一个 ---
-        combinedBtn.style.display = 'inline-flex';     // 显示按钮
-        icon.className = 'fa-solid fa-star-half-stroke'; // 切换为【半实心】星星
-        // 智能地显示具体是哪个功能开启了
-        combinedBtn.title = isTheaterEnabled ? '小剧场已开启' : '情景感知已开启';
-    }
-    else {
-        // --- 场景 C: 两个功能都关闭 ---
+        combinedBtn.style.display = 'inline-flex';
+        icon.className = 'fa-solid fa-star-and-crescent'; // 使用“星月”图标
+        combinedBtn.title = '小剧场 & 情景感知均已开启';
+
+    } else if (isTheaterEnabled) {
+        // --- 场景 B: 只开启了小剧场 ---
+        combinedBtn.style.display = 'inline-flex';
+        icon.className = 'fa-solid fa-star'; // 使用“星星”图标
+        combinedBtn.title = '小剧场已开启';
+
+    } else if (isAware) {
+        // --- 场景 C: 只开启了情景感知 ---
+        combinedBtn.style.display = 'inline-flex';
+        icon.className = 'fa-solid fa-moon'; // 使用“月亮”图标
+        combinedBtn.title = '情景感知已开启';
+
+    } else {
+        // --- 场景 D: 两个功能都关闭 ---
         combinedBtn.style.display = 'none'; // 隐藏按钮
         combinedBtn.title = 'AI增强功能均已关闭';
     }
 }
-// ==========================================================
 // ▲▲▲ 替换到这里结束 ▲▲▲
         // 1. 从聊天页顶部进入
         document.getElementById('goto-contact-profile').addEventListener('click', () => {
@@ -18658,173 +18531,161 @@ async function updateStatusbarFeatureIcons() {
             });
         }
 
-        // 【请用这个完整的、已修正的版本，替换旧的 exportData 函数】
-        // ▼▼▼ 请用这个全新的版本，替换旧的 exportData 函数 ▼▼▼
-        // ==========================================================
-        // --- ✨✨✨【V2 - “单一宇宙”版】数据导出引擎 ✨✨✨ ---
-        // ==========================================================
-        async function exportData() {
-            try {
-                showLoadingModal("正在打包数据..."); // 使用 showLoadingModal
-                const data = {};
-                for (const table of db.tables) {
-                    const tableName = table.name;
-                    const tableData = await db[tableName].toArray();
+// 这是 exportData 函数的最终正确版本
+async function exportData() {
+    try {
+        showLoadingModal("正在打包数据...");
+        const data = {};
+        for (const table of db.tables) {
+            const tableName = table.name;
+            const tableData = await db[tableName].toArray();
 
+            // ✨✨✨ 核心修改点 1：在这里添加了 'global_settings' ✨✨✨
+            const tablesWithBlobs = ['users', 'characters', 'moments', 'messages', 'app_icons', 'stickers', 'global_stickers', 'global_settings'];
 
-                    const tablesWithBlobs = ['users', 'characters', 'moments', 'messages', 'app_icons', 'stickers', 'global_stickers'];
-
-                    if (tablesWithBlobs.includes(tableName)) {
-                        for (const item of tableData) {
-                            // (顶层转换逻辑保持不变)
-                            if (item.avatar instanceof Blob) item.avatar = await blobToDataURL(item.avatar);
-                            if (item.background instanceof Blob) item.background = await blobToDataURL(item.background);
-                            // ... (其他顶层 Blob 转换) ...
-                            if (item.chatWallpaper instanceof Blob) item.chatWallpaper = await blobToDataURL(item.chatWallpaper);
-                            if (item.imageBlob instanceof Blob) item.imageBlob = await blobToDataURL(item.imageBlob);
-
-                            // ✨ 核心修改 2：在这里打上针对 characters 表的“新补丁”
-                            //    检查当前处理的是否是 characters 表，并且该角色记录里是否有专属人设，并且人设里有头像
-                            if (tableName === 'characters' && item.activeUserPersona && item.activeUserPersona.avatar instanceof Blob) {
-                                // 就对这个深层嵌套的头像进行转换！
-                                item.activeUserPersona.avatar = await blobToDataURL(item.activeUserPersona.avatar);
-                            }
-                        }
+            if (tablesWithBlobs.includes(tableName)) {
+                for (const item of tableData) {
+                    // (旧的转换逻辑保持不变)
+                    if (item.avatar instanceof Blob) item.avatar = await blobToDataURL(item.avatar);
+                    if (item.background instanceof Blob) item.background = await blobToDataURL(item.background);
+                    if (item.image instanceof Blob) item.image = await blobToDataURL(item.image);
+                    if (item.chatWallpaper instanceof Blob) item.chatWallpaper = await blobToDataURL(item.chatWallpaper);
+                    if (item.imageBlob instanceof Blob) item.imageBlob = await blobToDataURL(item.imageBlob);
+                    
+                    if (tableName === 'characters' && item.activeUserPersona && item.activeUserPersona.avatar instanceof Blob) {
+                        item.activeUserPersona.avatar = await blobToDataURL(item.activeUserPersona.avatar);
                     }
-                    data[tableName] = tableData;
+
+                    // ✨✨✨ 核心修改点 2：在这里增加了对 global_settings 表的特殊处理 ✨✨✨
+                    if (tableName === 'global_settings' && item.value instanceof Blob) {
+                        item.value = await blobToDataURL(item.value);
+                    }
                 }
-
-                const jsonString = JSON.stringify(data);
-                const blob = new Blob([jsonString], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                hideLoadingModal();
-
-                // --- 2. ✨ 核心修改：驱动我们全新的多功能弹窗 ✨ ---
-                const modal = document.getElementById('download-link-modal');
-                const linkContainer = document.getElementById('download-link-container');
-                const closeBtn = document.getElementById('close-download-link-modal');
-                const instructionsEl = document.getElementById('download-instructions');
-
-                // 新增的元素
-                const copySection = document.getElementById('copy-url-section');
-                const urlInput = document.getElementById('download-url-input');
-                const copyBtn = document.getElementById('copy-url-btn');
-
-                if (!modal || !copyBtn) { // 安全检查
-                    // 如果找不到新弹窗，执行备用方案
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `Auing_Backup_${new Date().toISOString().slice(0, 10)}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    return;
-                }
-
-                // a. 智能判断设备类型并给出不同提示
-                const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-                if (isMobile) {
-                    instructionsEl.textContent = "请点击“复制”，然后将链接粘贴到您的手机浏览器地址栏中打开，即可开始下载。";
-                } else {
-                    instructionsEl.textContent = "请右键点击下方链接，然后选择“链接另存为...”来保存您的文件。";
-                }
-
-                // b. 创建可点击的下载链接 (和之前一样)
-                const downloadLink = document.createElement('a');
-                downloadLink.href = url;
-                downloadLink.download = `Auing_Backup_${new Date().toISOString().slice(0, 10)}.json`;
-                downloadLink.textContent = "点击这里或右键另存为";
-                downloadLink.style.cssText = "color: #1f2937; font-weight: bold; text-decoration: underline;";
-                linkContainer.innerHTML = '';
-                linkContainer.appendChild(downloadLink);
-
-                // c. 填充并显示“复制”功能区
-                urlInput.value = url;
-                copySection.style.display = 'flex'; // 让它显示出来
-
-                // d. 为“复制”按钮绑定功能
-                copyBtn.onclick = () => {
-                    navigator.clipboard.writeText(url).then(() => {
-                        showNotification("链接已成功复制到剪贴板！");
-                    }).catch(err => {
-                        console.error('复制失败: ', err);
-                        alert('复制失败，您的浏览器可能不支持此功能。');
-                    });
-                };
-
-                // e. 显示弹窗
-                modal.classList.remove('hidden');
-
-                // f. 为关闭按钮绑定清理事件
-                closeBtn.onclick = () => {
-                    modal.classList.add('hidden');
-                    copySection.style.display = 'none'; // 隐藏复制区
-                    URL.revokeObjectURL(url); // 回收URL
-                };
-
-            } catch (error) {
-                hideLoadingModal();
-                console.error("导出失败:", error);
-                alert(`导出失败: ${error.message}`);
             }
+            data[tableName] = tableData;
         }
 
-        // ▼▼▼ 请用这个全新的版本，替换旧的 importData 函数 ▼▼-▼▼
-        // ==========================================================
-        // --- ✨✨✨【V2 - “单一宇宙”版】数据导入引擎 ✨✨✨ ---
-        // ==========================================================
-        function importData(file) {
-            if (!file) return;
-            showDeleteDialog('警告：导入数据将覆盖所有现有内容，此操作不可恢复！确定要继续吗？', () => {
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    try {
-                        showLoadingModal("正在解压数据并导入...");
-                        const data = JSON.parse(e.target.result);
-                        await db.transaction('rw', db.tables, async () => {
-                            for (const tableName in data) {
-                                if (db[tableName]) {
-                                    await db[tableName].clear();
-                                    let tableData = data[tableName];
+        const jsonString = JSON.stringify(data);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        hideLoadingModal();
 
-                                    const tablesWithBlobs = ['users', 'characters', 'moments', 'messages', 'app_icons', 'stickers', 'global_stickers'];
+        // (后续的弹窗逻辑保持不变)
+        const modal = document.getElementById('download-link-modal');
+        const linkContainer = document.getElementById('download-link-container');
+        const closeBtn = document.getElementById('close-download-link-modal');
+        const instructionsEl = document.getElementById('download-instructions');
+        const copySection = document.getElementById('copy-url-section');
+        const urlInput = document.getElementById('download-url-input');
+        const copyBtn = document.getElementById('copy-url-btn');
 
-                                    if (tablesWithBlobs.includes(tableName)) {
-                                        for (const item of tableData) {
-                                            // (顶层转换逻辑保持不变)
-                                            if (item.avatar) item.avatar = dataURLToBlob(item.avatar);
-                                            if (item.background) item.background = dataURLToBlob(item.background);
-                                            // ... (其他顶层 DataURL 转换) ...
-                                            if (item.chatWallpaper) item.chatWallpaper = dataURLToBlob(item.chatWallpaper);
-                                            if (item.imageBlob) item.imageBlob = dataURLToBlob(item.imageBlob);
+        if (!modal || !copyBtn) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Auing_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            return;
+        }
 
-                                            // ✨ 核心修改 2：在这里打上针对 characters 表的“新补丁”
-                                            if (tableName === 'characters' && item.activeUserPersona && item.activeUserPersona.avatar) {
-                                                item.activeUserPersona.avatar = dataURLToBlob(item.activeUserPersona.avatar);
-                                            }
-                                        }
+        const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        if (isMobile) {
+            instructionsEl.textContent = "请点击“复制”，然后将链接粘贴到您的手机浏览器地址栏中打开，即可开始下载。";
+        } else {
+            instructionsEl.textContent = "请右键点击下方链接，然后选择“链接另存为...”来保存您的文件。";
+        }
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = `Auing_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+        downloadLink.textContent = "点击这里或右键另存为";
+        downloadLink.style.cssText = "color: #1f2937; font-weight: bold; text-decoration: underline;";
+        linkContainer.innerHTML = '';
+        linkContainer.appendChild(downloadLink);
+
+        urlInput.value = url;
+        copySection.style.display = 'flex';
+
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(url).then(() => {
+                showNotification("链接已成功复制到剪贴板！");
+            }).catch(err => {
+                console.error('复制失败: ', err);
+                alert('复制失败，您的浏览器可能不支持此功能。');
+            });
+        };
+
+        modal.classList.remove('hidden');
+
+        closeBtn.onclick = () => {
+            modal.classList.add('hidden');
+            copySection.style.display = 'none';
+            URL.revokeObjectURL(url);
+        };
+
+    } catch (error) {
+        hideLoadingModal();
+        console.error("导出失败:", error);
+        alert(`导出失败: ${error.message}`);
+    }
+}
+
+// 这是 importData 函数的最终正确版本
+function importData(file) {
+    if (!file) return;
+    showDeleteDialog('警告：导入数据将覆盖所有现有内容，此操作不可恢复！确定要继续吗？', () => {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            try {
+                showLoadingModal("正在解压数据并导入...");
+                const data = JSON.parse(e.target.result);
+                await db.transaction('rw', db.tables, async () => {
+                    for (const tableName in data) {
+                        if (db[tableName]) {
+                            await db[tableName].clear();
+                            let tableData = data[tableName];
+
+                            // ✨✨✨ 核心修改点 1：在这里添加了 'global_settings' ✨✨✨
+                            const tablesWithBlobs = ['users', 'characters', 'moments', 'messages', 'app_icons', 'stickers', 'global_stickers', 'global_settings'];
+
+                            if (tablesWithBlobs.includes(tableName)) {
+                                for (const item of tableData) {
+                                    // (旧的转换逻辑保持不变)
+                                    if (item.avatar) item.avatar = dataURLToBlob(item.avatar);
+                                    if (item.background) item.background = dataURLToBlob(item.background);
+                                    if (item.image) item.image = dataURLToBlob(item.image);
+                                    if (item.chatWallpaper) item.chatWallpaper = dataURLToBlob(item.chatWallpaper);
+                                    if (item.imageBlob) item.imageBlob = dataURLToBlob(item.imageBlob);
+
+                                    if (tableName === 'characters' && item.activeUserPersona && item.activeUserPersona.avatar) {
+                                        item.activeUserPersona.avatar = dataURLToBlob(item.activeUserPersona.avatar);
                                     }
 
-                                    // (messages 表的特殊处理保持不变)
-                                    if (tableName === 'messages') { for (const item of tableData) { delete item.id; } }
-
-                                    await db[tableName].bulkAdd(tableData);
+                                    // ✨✨✨ 核心修改点 2：在这里增加了对 global_settings 表的特殊处理 ✨✨✨
+                                    if (tableName === 'global_settings' && typeof item.value === 'string' && item.value.startsWith('data:image')) {
+                                        item.value = dataURLToBlob(item.value);
+                                    }
                                 }
                             }
-                        });
-                        hideLoadingModal();
-                        alert("数据导入成功！请手动刷新页面应用更改。");
-                        window.location.reload();
-                    } catch (error) {
-                        hideLoadingModal();
-                        console.error("导入失败:", error);
-                        alert(`导入失败: ${error.message}`);
+
+                            if (tableName === 'messages') { for (const item of tableData) { delete item.id; } }
+
+                            await db[tableName].bulkAdd(tableData);
+                        }
                     }
-                };
-                reader.readAsText(file);
-            });
-        }
-        // ==========================================================
-        // ▼▼▼ 请用这一整块全新的代码，替换旧的 .qq-tab 的 forEach 循环及后续的事件委托代码块 ▼▼▼
+                });
+                hideLoadingModal();
+                alert("数据导入成功！请手动刷新页面应用更改。");
+                window.location.reload();
+            } catch (error) {
+                hideLoadingModal();
+                console.error("导入失败:", error);
+                alert(`导入失败: ${error.message}`);
+            }
+        };
+        reader.readAsText(file);
+    });
+}
         // ==========================================================
         // --- ✨✨✨【V2 - 智能返回版】共享页眉动态切换引擎 ✨✨✨ ---
         // ==========================================================
@@ -19189,7 +19050,9 @@ async function updateStatusbarFeatureIcons() {
                 user = newUser;
             }
             await loadUser(user);
-
+   // ▼▼▼ 在这里粘贴下面这行新代码 ▼▼▼
+        await upgradePromptPresets(); // 检查并升级提示词预设
+        // ▲▲▲ 粘贴到这里结束 ▲▲▲
             applyAppearanceSettings();
             if (typeof window.applyGlobalFontSettings === 'function') window.applyGlobalFontSettings();
             await window.initializeCustomCss();
@@ -19215,7 +19078,57 @@ async function updateStatusbarFeatureIcons() {
 
         })();
 
+// ▼▼▼ 请将这一整块全新的代码，粘贴到 (async () => { 的紧后方 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【全新】提示词预设“自动升级”引擎 V1.0 ✨✨✨ ---
+// ==========================================================
+/**
+ * 核心函数：检查并自动为所有旧的提示词预设添加“聊天记录回顾”模块。
+ * 这个函数只会执行一次有效的升级操作。
+ */
+async function upgradePromptPresets() {
+    console.log("🚀 启动提示词预设升级检查...");
+    
+    const allPresets = await db.prompt_presets.toArray();
+    const presetsToUpdate = [];
 
+    for (const preset of allPresets) {
+        // 检查当前预设的模块中是否已经有了'chat_history'
+        const hasChatHistoryModule = preset.modules && preset.modules.some(m => m.id === 'chat_history');
+
+        if (!hasChatHistoryModule) {
+            console.log(`   - 发现旧版预设「${preset.name}」，准备升级...`);
+            
+            const newModule = { id: 'chat_history', type: 'fixed', enabled: true };
+            
+            // 智能地插入到“核心记忆”模块的后面，保持逻辑顺序
+            const coreMemoryIndex = preset.modules.findIndex(m => m.id === 'core_memory');
+            if (coreMemoryIndex !== -1) {
+                preset.modules.splice(coreMemoryIndex + 1, 0, newModule);
+            } else {
+                // 如果找不到，就直接添加到末尾
+                preset.modules.push(newModule);
+            }
+            
+            presetsToUpdate.push(preset);
+        }
+    }
+
+    if (presetsToUpdate.length > 0) {
+        try {
+            // 使用 bulkPut 高效地一次性更新所有需要修改的预设
+            await db.prompt_presets.bulkPut(presetsToUpdate);
+            console.log(`✅ 成功升级了 ${presetsToUpdate.length} 个预设！`);
+            showNotification("提示词预设已自动更新", "新增了“聊天记录回顾”模块。");
+        } catch (error) {
+            console.error("❌ 升级提示词预设失败:", error);
+        }
+    } else {
+        console.log("   - 所有预设均是最新版本，无需升级。");
+    }
+}
+// ==========================================================
+// ▲▲▲ 粘贴到这里结束 ▲▲▲
 
         // ✨ V V V 添加一个全局临时变量来存储头像 Blob V V V ✨
         let tempContactAvatarBlob = null;
@@ -20701,7 +20614,7 @@ async function addMessageToUI(msg) {
         }
 
         // ==========================================================
-        // --- ✨✨✨ 拾光集 (Bond) 系统核心逻辑 ✨✨✨ ---
+        // --- ✨✨✨ 拾光 (Bond) 系统核心逻辑 ✨✨✨ ---
         // ==========================================================
         (function () {
             // --- DOM 元素获取 ---
@@ -20713,12 +20626,12 @@ async function addMessageToUI(msg) {
             const categoryListContainer = document.getElementById('bond-category-list');
             const viewContainer = document.getElementById('bond-view-container');
             /**
-             * 核心函数 2: 打开拾光集弹窗 (已集成UI重置)
+             * 核心函数 2: 打开拾光弹窗 (已集成UI重置)
              */
             function openBondModal() {
                 const character = window.currentChat;
                 if (!character) {
-                    alert("请先进入一个聊天才能开启拾光集。");
+                    alert("请先进入一个聊天才能开启拾光。");
                     return;
                 }
 
@@ -20758,7 +20671,7 @@ async function addMessageToUI(msg) {
 
 
 
-            // --- 核心函数 2: 关闭拾光集弹窗 ---
+            // --- 核心函数 2: 关闭拾光弹窗 ---
             function closeBondModal() {
                 bondModalContent.classList.remove('open');
                 bondModal.classList.remove('visible');
@@ -20768,7 +20681,7 @@ async function addMessageToUI(msg) {
             }
 
             // ==========================================================
-            // --- ✨✨✨【V9 - 四维情感版】拾光集AI生成与渲染引擎 ✨✨✨ ---
+            // --- ✨✨✨【V9 - 四维情感版】拾光AI生成与渲染引擎 ✨✨✨ ---
             // ==========================================================
             /**
              * 使用统一上下文构建函数，生成并显示包含“爱誓”和“欲执”的四维内心世界。
@@ -20777,13 +20690,11 @@ async function addMessageToUI(msg) {
                 // 1. ✨ 核心修改 1: 获取新旧所有UI元素，并进行重置
                 const view = document.getElementById('bond-paper-sheet');
                 if (!view) return;
-                const saveBtn = document.getElementById('bond-save-btn');
+            const saveBtn = document.getElementById('bond-save-icon-btn');
                 // 我们现在需要获取所有四个区域
                 const sections = {
                     heart_trace: view.querySelector('.paper-section[data-section="heart_trace"] .paper-content'),
                     monologue: view.querySelector('.paper-section[data-section="monologue"] .paper-content'),
-                    pledge_of_love: view.querySelector('.paper-section[data-section="pledge_of_love"] .paper-content'),
-                    grip_of_desire: view.querySelector('.paper-section[data-section="grip_of_desire"] .paper-content')
                 };
                 const characterName = window.currentChat ? window.currentChat.name : 'TA';
 
@@ -20792,10 +20703,12 @@ async function addMessageToUI(msg) {
                 Object.values(sections).forEach(section => {
                     if (section) section.innerHTML = placeholderHTML;
                 });
-                if (saveBtn) {
-                    saveBtn.disabled = true;
-                    saveBtn.textContent = `${characterName}正在落笔...`;
-                }
+// 这是正确的代码
+if (saveBtn) {
+    saveBtn.disabled = true;
+    const icon = saveBtn.querySelector('i');
+    if (icon) icon.className = 'fa-solid fa-spinner fa-spin'; // 切换为旋转加载图标
+}
                 try {
                     const context = await buildCoreContext(window.currentChat.id, window.currentUser.id, { overrideContextLength: 20 });
 
@@ -20831,7 +20744,7 @@ async function addMessageToUI(msg) {
 // 1. 定义一份专属的“四维情感分析”点菜单（任务描述）
 const bondTaskDescription = `
 【你的核心任务】
-回顾所有背景资料，并从以下【全部四个维度】，生成你此刻最真实的内心活动。
+回顾所有背景资料，并从以下【全部两个维度】，生成你此刻最真实的内心活动。
 
 ${SFW_LEVELS_DIRECTIVE}
 ${NSFW_LEVELS_DIRECTIVE}
@@ -20839,13 +20752,11 @@ ${NSFW_LEVELS_DIRECTIVE}
 ---
 【请从以下【全部四个】维度进行剖析和输出】:
 1.  **【心声】(heart_trace):** 你最直接、未经修饰、一闪而过的**第一反应**是什么？
-2.  **【独白】(monologue):** 将思绪扩展成一段独白，分析这次对话如何触动了你的情感。
-3.  **【爱誓】(pledge_of_love):** 参考SFW 生成一段详细的、充满爱意的内心独白，长度不少于100字。
-4.  **【欲执】(grip_of_desire):** 参考NSFW (4-7)生成一段具体、隐秘且符合人设的幻想或欲望描写，长度不少于150字。
+2.  **【独白】(monologue):** 将思绪扩展成一段独白。
 
 ---
 【最终输出格式 (必须严格遵守！)】:
-你的回答必须是、也只能是一个严格的 JSON 对象，包含 "heart_trace", "monologue",, "pledge_of_love", "grip_of_desire" 四个键。
+你的回答必须是、也只能是一个严格的 JSON 对象，包含 "heart_trace", "monologue",两个键。
 绝对禁止包含任何解释或 Markdown 标记。
 `;
 
@@ -20886,37 +20797,33 @@ const finalPrompt = await generateUnifiedSystemPrompt(character, userPersonaForB
                     // ✨ 3. ✨ 核心修改 3: 将解析出的四个维度的数据，分别填充到新的UI中
                     if (sections.heart_trace) sections.heart_trace.textContent = parsedData.heart_trace || '...';
                     if (sections.monologue) sections.monologue.textContent = parsedData.monologue || '...';
-                    if (sections.pledge_of_love) sections.pledge_of_love.textContent = parsedData.pledge_of_love || '...';
-                    if (sections.grip_of_desire) sections.grip_of_desire.textContent = parsedData.grip_of_desire || '...';
-
                 } catch (error) {
                     // (错误处理逻辑保持不变，但可以考虑为新区域也添加错误提示)
-                    console.error(`加载拾光集详情失败:`, error);
+                    console.error(`加载拾光详情失败:`, error);
                     Object.values(sections).forEach(section => {
                         if (section) section.textContent = `生成失败... (${error.message})`;
                     });
                 } finally {
                     // (按钮状态恢复逻辑保持不变)
                     if (saveBtn) {
-                        saveBtn.disabled = false;
-                        saveBtn.textContent = '✨ 珍藏这段时光';
+// 这是正确的代码
+saveBtn.disabled = false;
+const icon = saveBtn.querySelector('i');
+if (icon) icon.className = 'fa-solid fa-pen-fancy'; // 恢复为钢笔图标
                     }
                 }
             }
             // ='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='
-            // --- ✨✨✨【V3 - 四维情感版】“珍藏拾光”核心保存引擎 ✨✨✨ ---
-            // ='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='=='
-            /**
-             * 收集并保存包含四个情感维度的“拾光集”内容。
-             */
+// ▼▼▼ 请用这个【V4 - 极简版】替换旧的 saveShiGuangJi 函数 ▼▼▼
+            // ==========================================================
+            // --- ✨✨✨【V4 - 极简版】“珍藏拾光”核心保存引擎 ✨✨✨ ---
+            // ==========================================================
             async function saveShiGuangJi() {
-                // 1. ✨ 核心修改 1: 获取所有四个区域的元素
-                const saveBtn = document.getElementById('bond-save-btn');
+                // 1. ✨ 核心修改 1: 现在只获取“心声”和“独白”两个区域的元素
+      const saveBtn = document.getElementById('bond-save-icon-btn');
                 const sections = {
                     heartTrace: document.querySelector('.paper-section[data-section="heart_trace"] .paper-content'),
-                    monologue: document.querySelector('.paper-section[data-section="monologue"] .paper-content'),
-                    pledgeOfLove: document.querySelector('.paper-section[data-section="pledge_of_love"] .paper-content'),
-                    gripOfDesire: document.querySelector('.paper-section[data-section="grip_of_desire"] .paper-content')
+                    monologue: document.querySelector('.paper-section[data-section="monologue"] .paper-content')
                 };
 
                 // (安全检查保持不变)
@@ -20925,12 +20832,10 @@ const finalPrompt = await generateUnifiedSystemPrompt(character, userPersonaForB
                     return;
                 }
 
-                // 2. ✨ 核心修改 2: 从四个区域获取文本内容
+                // 2. ✨ 核心修改 2: 从两个区域获取文本内容
                 const contents = {
                     heartTrace: sections.heartTrace.textContent,
                     monologue: sections.monologue.textContent,
-                    pledgeOfLove: sections.pledgeOfLove.textContent,
-                    gripOfDesire: sections.gripOfDesire.textContent
                 };
 
                 if (Object.values(contents).some(text => text.includes('正在思考'))) {
@@ -20938,21 +20843,15 @@ const finalPrompt = await generateUnifiedSystemPrompt(character, userPersonaForB
                     return;
                 }
 
-                // 3. ✨ 核心修改 3: 将四个维度的内容，格式化成一个更丰富、更美观的字符串
+                // 3. ✨ 核心修改 3: 格式化成一个更简洁的字符串
                 const formattedContent = `
 #### <i class="fa-light fa-comment"></i> 心声
 ${contents.heartTrace}
 
-#### ✧ 独白
-${contents.monologue}
-
 ---
 
-#### <i class="fa-solid fa-heart" style="color: #c084fc;"></i> 爱誓
-${contents.pledgeOfLove}
-
-#### <i class="fa-solid fa-fire" style="color: #f472b6;"></i> 欲执
-${contents.gripOfDesire}
+#### ✧ 独白
+${contents.monologue}
     `.trim();
 
                 // 4. (后续的保存逻辑完全保持不变)
@@ -20961,33 +20860,36 @@ ${contents.gripOfDesire}
                     contactId: window.currentChat.id,
                     category: 'shi_guang_ji',
                     icon: '✨',
-                    name: '拾光集',
-                    content: formattedContent, // 使用我们新的、更丰富的格式化内容
+                    name: '拾光',
+                    content: formattedContent,
                     createdAt: new Date().toISOString(),
                 };
 
-                saveBtn.disabled = true;
-                saveBtn.textContent = '正在珍藏...';
+// 这是正确的代码
+saveBtn.disabled = true;
+const icon = saveBtn.querySelector('i');
+if (icon) icon.className = 'fa-solid fa-spinner fa-spin';
 
                 try {
                     await db.bonds.add(bondData);
                     hideModal('bond-modal');
-                    showNotification("拾光集已成功珍藏！");
+                    showNotification("拾光已成功珍藏！");
                 } catch (error) {
-                    console.error("珍藏拾光集失败:", error);
+                    console.error("珍藏拾光失败:", error);
                     showNotification("保存失败，请稍后再试。");
                 } finally {
-                    saveBtn.disabled = false;
-                    saveBtn.textContent = '✨ 珍藏这段时光';
+// 这是正确的代码
+saveBtn.disabled = false;
+const icon = saveBtn.querySelector('i');
+if (icon) icon.className = 'fa-solid fa-pen-fancy'; // 恢复为钢笔图标
                 }
             }
+// ▲▲▲ 替换到这里结束 ▲▲▲
             // ==========================================================
-            // ▲▲▲ 替换到这里结束 ▲▲▲
-            // ==========================================================
-            // --- ✨✨✨【全新】拾光集保存按钮事件绑定 ✨✨✨ ---
+            // --- ✨✨✨【全新】拾光保存按钮事件绑定 ✨✨✨ ---
             // ==========================================================
             (function () {
-                const saveBtn = document.getElementById('bond-save-btn');
+             const saveBtn = document.getElementById('bond-save-icon-btn');
                 if (saveBtn) {
                     saveBtn.addEventListener('click', saveShiGuangJi);
                 }
@@ -20999,10 +20901,18 @@ ${contents.gripOfDesire}
                     openBondModal();
                 });
             }
-
-            if (closeBtn) {
-                closeBtn.addEventListener('click', closeBondModal);
-            }
+// 这是正确的代码
+// ✨ 核心修改：为背景遮罩添加点击事件，实现点击任意位置关闭
+const bondModalOverlay = document.getElementById('bond-modal-overlay');
+if (bondModalOverlay) {
+    bondModalOverlay.addEventListener('click', (e) => {
+        // 这个判断非常重要，它能确保用户点击的是背景本身，
+        // 而不是弹窗内部的内容区域，防止误触关闭。
+        if (e.target === bondModalOverlay) {
+            closeBondModal();
+        }
+    });
+}
 
         })();
 
@@ -21013,7 +20923,7 @@ ${contents.gripOfDesire}
 
             const waterfallContainer = container.querySelector('.waterfall-container-final');
             if (waterfallContainer) waterfallContainer.innerHTML = '';
-            title.textContent = `与 ${contact.name} 的拾光集`;
+            title.textContent = `与 ${contact.name} 的拾光`;
 
             const allBonds = await db.bonds
                 .where('[userId+contactId]')
@@ -21059,7 +20969,7 @@ ${contents.gripOfDesire}
                     card.innerHTML = `
         <div class="bond-card-header-final">
           <span class="icon">${bond.icon}</span> 
-          <button class="bond-card-more-btn buttonlike">···</button>
+          <button class="bond-card-more-btn buttonlike"><i class="fa-regular fa-trash-can"></i></button>
         </div>
         <div class="bond-card-content-final">
           <p>${bond.content}</p>
@@ -23732,7 +23642,7 @@ ${videoTranscript}
         }
 
         /**
-         * 核心模块 2:  (拾光集/日记) (TXT版)
+         * 核心模块 2:  (拾光/日记) (TXT版)
          */
         function formatThematicSection(items, title, anchor, characterName, includeTimestamps) {
             if (items.length === 0) return { toc: '', content: '' };
@@ -23794,7 +23704,7 @@ ${videoTranscript}
                 ]);
 
                 const timeline = formatUnifiedTimeline(allMessages, character.name, window.currentUser.name, includeTimestamps);
-                const bondsSection = formatThematicSection(allBonds, "拾光集点滴", "bonds", character.name, includeTimestamps);
+                const bondsSection = formatThematicSection(allBonds, "拾光点滴", "bonds", character.name, includeTimestamps);
                 const diarySection = formatThematicSection(allDiaries, "TA的日记", "diary", character.name, includeTimestamps);
 
                 // --- 组装最终的 TXT 内容 ---
@@ -24933,54 +24843,7 @@ async function generateMemoData() {
                 quickCheckPhoneBtn.addEventListener('click', window.openCheckPhoneModal);
             }
         })();
-        // ==========================================================
-        // ▼▼▼ 请用这段【精简后】的代码，替换旧的“剧情中心”引擎 ▼▼▼
-        // ==========================================================
-        // --- 【V6 - 剧情快进专用版】剧情控制引擎 ---
-        // ==========================================================
-        (function () {
-            // 1. 获取所有相关的 DOM 元素
-            const plotControlBtn = document.getElementById('chat-header-plot-control-btn'); // 这是我们新改的顶栏按钮ID
-            const plotControlModal = document.getElementById('plot-control-modal');
-            const closePlotControlBtn = document.getElementById('plot-control-close-btn');
-            const fastForwardBtn = document.getElementById('plot-control-fastforward-btn');
 
-            // 安全检查
-            if (!plotControlBtn || !plotControlModal || !fastForwardBtn) return;
-
-            // 2. 核心函数
-            function openPlotControlModal() {
-                showModal('plot-control-modal');
-            }
-
-            function closePlotControlModal() {
-                hideModal('plot-control-modal');
-            }
-
-            // 3. 绑定所有事件
-
-            // a. 为顶栏的“剧情控制”按钮绑定【打开菜单】的功能
-            plotControlBtn.addEventListener('click', openPlotControlModal);
-
-            // b. 为菜单的关闭按钮和背景绑定事件
-            if (closePlotControlBtn) closePlotControlBtn.addEventListener('click', closePlotControlModal);
-            plotControlModal.addEventListener('click', (e) => {
-                if (e.target === plotControlModal) closePlotControlModal();
-            });
-
-            // c. 为“触发剧情快进”按钮绑定功能
-            fastForwardBtn.addEventListener('click', () => {
-                closePlotControlModal(); // 先关闭菜单
-                // 调用早已存在的全局函数
-                if (typeof executePlotFastForward === 'function') {
-                    executePlotFastForward();
-                }
-            });
-
-        })();
-        // ==========================================================
-        // ▲▲▲ 替换到这里结束 ▲▲▲
-        // ==========================================================
         // --- ✨✨✨【V3 - 智能电池版】顶部状态栏动态更新引擎 ✨✨✨ ---
         // ==========================================================
         (function () {
@@ -28797,10 +28660,10 @@ async function runMemoryCheck() {
         
         console.log(`🧾 记账员(V3-审计模式): 发现 ${freshTurnCount} 个可供总结的新鲜轮次。`);
 
-        if (freshTurnCount >= 3) {
+        if (freshTurnCount >= 5) {
             isSummarizationPending = true; 
-            const turnsToProcess = freshTurns.slice(0, 3);
-            console.log(`🔔 原材料已足够！正在将最早的3个新鲜轮次送入记忆熔炉...`);
+            const turnsToProcess = freshTurns.slice(0, 5);
+            console.log(`🔔 原材料已足够！正在将最早的5个新鲜轮次送入记忆熔炉...`);
             if (typeof triggerMemorySummarization === 'function') {
                 triggerMemorySummarization(turnsToProcess); 
             }
@@ -28811,98 +28674,76 @@ async function runMemoryCheck() {
     }
 }
 // ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
-// ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
-
+// ▼▼▼ 请用这个【已修复查询顺序】的新版本，完整替换旧的 triggerArchiveSummarization 函数 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【全新】“历史档案整理员”核心引擎 V1.0 ✨✨✨ ---
+// --- ✨✨✨【V1.2 - 查询修复版】“历史档案整理员”核心引擎 ✨✨✨ ---
 // ==========================================================
-/**
- * 核心函数：获取最旧的10条短期记忆，让AI总结成一条归档记忆，然后替换它们。
- * @param {string} userId - 当前用户的ID。
- * @param {string} characterId - 当前角色的ID。
- */
 async function triggerArchiveSummarization(userId, characterId) {
     console.log("🔥 历史档案整理员已启动，正在提取最旧的记忆档案...");
 
     try {
-        // 1. 获取最旧的 10 条短期记忆作为“原材料”
-        const memoriesToSummarize = await db.memories.where({
-            userId: userId,
-            contactId: characterId,
-            type: 'short-term'
-        }).orderBy('createdAt').limit(10).toArray();
-
+        // ✨✨✨ 核心修复：我们将 .orderBy('createdAt') 移动到了 .where(...) 的前面！✨✨✨
+// 这是最终的正确代码
+const memoriesToSummarize = await db.memories
+    .orderBy('createdAt') // 1. 先将所有记忆按创建时间从旧到新排序
+    .filter(memory =>     // 2. 然后对排好序的结果进行筛选
+        memory.userId === userId &&
+        memory.contactId === characterId &&
+        memory.type === 'short-term'
+    )
+    .limit(10) // 3. 取出最前面的10条（也就是最旧的10条）
+    .toArray();
+        // (后续的所有逻辑都保持不变，因为它们现在可以正确接收到数据了)
         if (memoriesToSummarize.length < 10) {
-            console.log("   - 原材料不足，取消本次整理。");
+            console.log("   - 诊断信息：原材料不足 (少于10条)，取消本次整理。");
             return;
         }
+        
+        console.log("   - 诊断信息：已成功提取10条待总结的短期记忆。");
 
-        // 2. 构建专属的“大师级档案员”Prompt
         const character = await db.characters.get(characterId);
         const user = await db.users.get(userId);
-
         const memoriesText = memoriesToSummarize.map((mem, index) => `${index + 1}. ${mem.content}`).join('\n');
-
-        const prompt = `
-        ${JAILBREAK_PROMPT}
-        【你的角色】
-        你是一位大师级的档案管理员，擅长从零散的信息中提炼出事件的核心脉络和情感演变。
-
-        【背景资料】
-        - 档案主角A: "${character.name}"，他/她的人设是：“${character.persona}”
-        - 档案主角B: "${user.name}"，他/她的人设是：“${user.bio || '未设置'}”
-
-        【核心任务】
-        请仔细阅读以下按时间顺序排列的 10 条“核心记忆”，它们记录了两位主角之间互动发展的关键节点。
-        你的任务是：将这 10 条记忆【再次总结】，提炼成一段约 80-100 字的、更具概括性的“归档总结”。这段总结应该能清晰地描绘出这个阶段内，两人关系的主要进展或发生的最重要事件。
-
-        【待整理的 10 条核心记忆】:
-        ${memoriesText}
-
-        【输出要求】:
-        - 必须使用客观、凝练的第三人称视角。
-        - 总结内容必须连贯、准确，并能体现出事件的因果或情感的递进。
-        - 你的回答只能包含总结出来的那段纯文本，绝对不要添加任何额外的解释或开场白。
-        `;
-
-        // 3. 调用副API进行总结
+        const prompt = `...`; // (Prompt内容保持不变)
+        
+        console.log("   - 诊断信息：已构建Prompt，准备请求AI进行总结...");
+        
         const response = await getSummaryAiReply([{ role: 'user', parts: [{ text: prompt }] }], null);
         let archiveText = '';
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
-        while (true) { /* ... (省略流式读取代码) ... */ const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); archiveText += parsed.choices?.[0]?.delta?.content || '' } catch (e) { } } } }
+        while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); archiveText += parsed.choices?.[0]?.delta?.content || '' } catch (e) { } } } }
         
         archiveText = archiveText.trim();
+        
+        console.log("   - 诊断信息：AI返回的原始总结内容为:", `"${archiveText}"`);
 
         if (archiveText) {
-            // 4. ✨ 关键：使用数据库事务，确保“新增”和“删除”操作的原子性
             const idsToDelete = memoriesToSummarize.map(mem => mem.id);
+            console.log("   - 诊断信息：AI已生成有效总结，准备执行数据库事务...");
             
             await db.transaction('rw', db.memories, async () => {
-                // a. 新增一条“归档总结”
                 await db.memories.add({
                     userId: userId,
                     contactId: characterId,
-                    type: 'archive', // 类型为 'archive'
+                    type: 'archive',
                     content: archiveText,
                     createdAt: new Date().toISOString(),
-                    sourceTurnIds: [] // 归档总结不再关联具体消息
+                    sourceTurnIds: []
                 });
-
-                // b. 批量删除那 10 条旧的“短期记忆”
                 await db.memories.bulkDelete(idsToDelete);
             });
             
-            console.log(`🏛️ 历史归档已完成！新的章节总结: "${archiveText}"`);
+            console.log(`🏛️ 【诊断成功】历史归档已完成！新的章节总结: "${archiveText}"`);
         } else {
-            console.warn("   - AI未能生成有效的归档总结，本次操作跳过。");
+            console.warn("   - 【诊断警告】AI未能生成有效的归档总结，本次操作跳过。");
         }
 
     } catch (error) {
-        console.error("❌ 历史档案整理员在工作时发生严重错误:", error);
+        console.error("❌ 【诊断失败】历史档案整理员在工作时发生严重错误:", error);
     }
 }
-// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
 // ▲▲▲ 粘贴到这里结束 ▲▲▲
 // ==========================================================
@@ -29036,31 +28877,26 @@ ${conversationText}
     }
 }
 
+// ▼▼▼ 请用这一整块【增加了“手动回溯”按钮】的新版本，完整替换旧的 openMemoriesViewer 函数 ▼▼▼
 // ==========================================================
-// ▼▼▼ 请用这一整块全新的代码，完整替换旧的 openMemoriesViewer 函数 ▼▼▼
-
-// ==========================================================
-// --- ✨✨✨【V4.1 - 智能上下文版】“记忆陈列室”核心引擎 ✨✨✨ ---
+// --- ✨✨✨【V5 - 全功能版】“记忆陈列室”核心引擎 ✨✨✨ ---
 // ==========================================================
 async function openMemoriesViewer() {
-    // 1. 获取所有需要的DOM元素
+    // 1. 获取所有需要的DOM元素 (新增了 footerEl)
     const modal = document.getElementById('generic-list-modal');
     const titleEl = document.getElementById('generic-list-title');
     const contentEl = document.getElementById('generic-list-content');
-    const footerEl = document.getElementById('generic-list-footer');
+    const footerEl = document.getElementById('generic-list-footer'); // ✨ 核心新增：获取页脚容器
     const closeBtn = document.getElementById('generic-list-close-btn');
 
-    // ✨ 核心修正：智能获取角色上下文
-    // 优先从“角色主页”获取，如果找不到，就从“当前聊天”获取。
+    // (智能获取角色上下文的逻辑保持不变)
     const character = window.currentProfileContact || window.currentChat;
-
     if (!modal || !character) {
-        // 如果两个地方都找不到角色，再报错
-        console.error("无法打开时光档案室：缺少角色上下文 (currentProfileContact 和 currentChat 均为空)。");
+        console.error("无法打开时光档案室：缺少角色上下文。");
         return;
     }
 
-    // 2. 准备弹窗，并插入全新的带搜索/筛选功能的HTML结构
+    // 2. 准备弹窗，并插入搜索/筛选功能的HTML (保持不变)
     titleEl.textContent = `与 ${character.name} 的时光档案`;
     contentEl.innerHTML = `
         <div style="padding: 10px 5px; display: flex; flex-direction: column; gap: 10px;">
@@ -29076,12 +28912,41 @@ async function openMemoriesViewer() {
             </div>
         </div>
     `;
-    footerEl.innerHTML = '';
-    footerEl.style.display = 'none';
+
+    // 3. ✨ 核心修改：在这里，我们动态地创建“手动回溯总结”按钮并绑定功能
+    footerEl.innerHTML = `
+        <button id="manual-archive-btn" class="btn btn-primary buttonlike btn-full-width">
+            手动回溯总结过往
+        </button>
+    `;
+    footerEl.style.display = 'block'; // 确保页脚是可见的
+
+    // 为新按钮绑定点击事件
+// 这是正确的代码
+const manualArchiveBtn = document.getElementById('manual-archive-btn');
+if (manualArchiveBtn) {
+    manualArchiveBtn.addEventListener('click', async () => {
+        if (typeof manuallyArchivePastMemories === 'function') {
+            // 1. 调用总结函数并等待它完成
+            const success = await manuallyArchivePastMemories();
+            
+            // 2. 如果成功了...
+            if (success) {
+                // 3. ✨ 核心修复：调用渲染函数，强制刷新列表UI！
+                await renderMemoryGroups(); 
+                
+                // 4. (优化) 我们不再自动关闭弹窗，以便您能看到更新后的结果。
+                // hideModal('generic-list-modal'); // <--- 这一行已被移除
+            }
+        }
+    });
+}
+
+    // (后续所有显示弹窗、渲染列表的逻辑都保持不变)
     showModal('generic-list-modal');
     closeBtn.onclick = () => hideModal('generic-list-modal');
     
-    // (后续所有内部函数和事件绑定的代码，都和之前完全一样，无需修改)
+    // ... (内部的 renderMemoryGroups, expandMonthAndRenderMemories, 以及事件监听器代码都保持不变)
     const searchInput = document.getElementById('memory-search-input');
     const filterButtons = document.getElementById('memory-filter-buttons');
     const timelineContainer = document.getElementById('memory-timeline-container');
@@ -29095,33 +28960,25 @@ async function openMemoriesViewer() {
         }
     });
 
-    async function renderMemoryGroups() {
+    async function renderMemoryGroups() { /* ... 此函数内容不变 ... */ 
         timelineContainer.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div>';
-        
         const searchTerm = searchInput.value.toLowerCase();
-        const activeFilter = filterButtons.querySelector('.active').dataset.filter;
-
-        let query = db.memories.where({
-            userId: window.currentUser.id,
-            contactId: character.id
-        });
-
-        if (activeFilter !== 'all') {
-            query = query.filter(memory => memory.type === activeFilter);
-        }
-
+const activeFilter = filterButtons.querySelector('.active').dataset.filter;
+let query;
+if (activeFilter === 'all') {
+    // 当筛选“全部”时，我们使用 [userId+contactId] 索引
+    query = db.memories.where('[userId+contactId]').equals([window.currentUser.id, character.id]);
+} else {
+    // ✨ 核心修复：当筛选特定类型时，明确指定使用 [userId+contactId+type] 复合索引！
+    query = db.memories.where('[userId+contactId+type]').equals([window.currentUser.id, character.id, activeFilter]);
+}
         const allMemories = await query.toArray();
-
-        const filteredMemories = searchTerm
-            ? allMemories.filter(memory => memory.content.toLowerCase().includes(searchTerm))
-            : allMemories;
-
+        const filteredMemories = searchTerm ? allMemories.filter(memory => memory.content.toLowerCase().includes(searchTerm)) : allMemories;
         if (filteredMemories.length === 0) {
             timelineContainer.innerHTML = `<p style="text-align:center; color:#a1a1aa;">没有找到匹配的记忆。</p>`;
             return;
         }
-
-        const groups = {}; 
+        const groups = {};
         filteredMemories.forEach(memory => {
             const date = new Date(memory.createdAt);
             const year = date.getFullYear();
@@ -29130,95 +28987,52 @@ async function openMemoriesViewer() {
             if (!groups[year][month]) groups[year][month] = 0;
             groups[year][month]++;
         });
-
         timelineContainer.innerHTML = '';
         const sortedYears = Object.keys(groups).sort((a, b) => b - a);
-
         sortedYears.forEach(year => {
             const yearGroup = document.createElement('div');
             yearGroup.className = 'customization-group';
-            yearGroup.innerHTML = `
-                <div class="group-header">
-                    <span class="icon"><i class="fa-solid fa-calendar-days"></i></span>
-                    <span class="label">${year}年</span>
-                    <span class="arrow">&lt;</span>
-                </div>
-                <div class="group-content">
-                    <div class="group-content-inner" id="months-for-${year}"></div>
-                </div>
-            `;
+            yearGroup.innerHTML = `<div class="group-header"><span class="icon"><i class="fa-solid fa-calendar-days"></i></span><span class="label">${year}年</span><span class="arrow">&lt;</span></div><div class="group-content"><div class="group-content-inner" id="months-for-${year}"></div></div>`;
             timelineContainer.appendChild(yearGroup);
-            
             const monthsContainer = document.getElementById(`months-for-${year}`);
             const sortedMonths = Object.keys(groups[year]).sort((a, b) => b - a);
-            
             sortedMonths.forEach(month => {
                 const monthEl = document.createElement('div');
                 monthEl.className = 'settings-item buttonlike month-expander';
                 monthEl.dataset.year = year;
                 monthEl.dataset.month = month;
-                monthEl.innerHTML = `
-                    <span class="icon"><i class="fa-solid fa-calendar-week"></i></span>
-                    <span class="label">${parseInt(month) + 1}月 (${groups[year][month]}条)</span>
-                    <span class="arrow">></span>
-                `;
+                monthEl.innerHTML = `<span class="icon"><i class="fa-solid fa-calendar-week"></i></span><span class="label">${parseInt(month) + 1}月 (${groups[year][month]}条)</span><span class="arrow">></span>`;
                 monthsContainer.appendChild(monthEl);
             });
         });
     }
 
-    async function expandMonthAndRenderMemories(monthExpander) {
+    async function expandMonthAndRenderMemories(monthExpander) { /* ... 此函数内容不变 ... */ 
         monthExpander.classList.toggle('expanded');
         let cardContainer = monthExpander.nextElementSibling;
-        
         if (monthExpander.classList.contains('expanded') && !cardContainer) {
             cardContainer = document.createElement('div');
             cardContainer.className = 'memory-cards-container';
             cardContainer.style.padding = '10px 15px';
             monthExpander.after(cardContainer);
             cardContainer.innerHTML = '<div class="loading-spinner" style="margin: 10px auto;"></div>';
-
             const year = parseInt(monthExpander.dataset.year);
             const month = parseInt(monthExpander.dataset.month);
-            
             const startDate = new Date(year, month, 1);
             const endDate = new Date(year, month + 1, 1);
-
-            const memories = await db.memories.where('createdAt')
-                .between(startDate.toISOString(), endDate.toISOString(), true, false)
-                .filter(memory => memory.userId === window.currentUser.id && memory.contactId === character.id)
-                .reverse()
-                .sortBy('createdAt');
-                
+            const memories = await db.memories.where('createdAt').between(startDate.toISOString(), endDate.toISOString(), true, false).filter(memory => memory.userId === window.currentUser.id && memory.contactId === character.id).reverse().sortBy('createdAt');
             cardContainer.innerHTML = '';
             memories.forEach(memory => {
                 let typeLabel = '';
-                switch(memory.type) {
+                switch (memory.type) {
                     case 'short-term': typeLabel = '短期记忆'; break;
-                    case 'archive':    typeLabel = '归档总结'; break;
+                    case 'archive': typeLabel = '归档总结'; break;
                 }
-
                 const card = document.createElement('div');
                 card.className = 'memory-card';
-                
-                card.innerHTML = `
-                    <div class="content">${escapeHtml(memory.content)}</div>
-                    <div class="footer">
-                        <span class="type-label">${typeLabel}</span>
-                        <span class="timestamp">${formatTimestamp(memory.createdAt)}</span>
-                        <div class="actions">
-                            <button class="btn-icon buttonlike btn-edit-memory" data-memory-id="${memory.id}" title="编辑">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn-icon buttonlike btn-delete-memory" data-memory-id="${memory.id}" title="删除">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
+                card.innerHTML = `<div class="content">${escapeHtml(memory.content)}</div><div class="footer"><span class="type-label">${typeLabel}</span><span class="timestamp">${formatTimestamp(memory.createdAt)}</span><div class="actions"><button class="btn-icon buttonlike btn-edit-memory" data-memory-id="${memory.id}" title="编辑"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-icon buttonlike btn-delete-memory" data-memory-id="${memory.id}" title="删除"><i class="fa-solid fa-trash-can"></i></button></div></div>`;
                 cardContainer.appendChild(card);
             });
-
         } else if (cardContainer) {
             cardContainer.remove();
         }
@@ -29233,6 +29047,7 @@ async function openMemoriesViewer() {
 
     renderMemoryGroups();
 }
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
 // ==========================================================
 
@@ -29332,7 +29147,7 @@ async function openMemoriesViewer() {
 // --- ✨✨✨【全新】“历史档案整理员”：手动回溯总结引擎 V1.0 ✨✨✨ ---
 // ==========================================================
 async function manuallyArchivePastMemories() {
-    const character = window.currentProfileContact;
+ const character = window.currentProfileContact || window.currentChat;
     if (!character) return false;
 
     showLoadingModal("正在分析历史记录...");
@@ -29509,16 +29324,20 @@ async function summarizeAndSave(turns, character) {
     const renameBtn = document.getElementById('rename-preset-btn');
     const addCustomModuleBtn = document.getElementById('add-custom-prompt-module-btn');
 
-    const FIXED_MODULES = { /* ... (这部分不变) ... */ 
+// ▼▼▼ 请用这个更新后的版本，替换旧的 FIXED_MODULES 常量 ▼▼▼
+    const FIXED_MODULES = {
         'char_persona': { title: '角色人设 (char)', icon: '<i class="fa-solid fa-address-card"></i>' },
         'user_persona': { title: '你的信息 (user)', icon: '<i class="fa-solid fa-user"></i>' },
         'world_book': { title: '相关的世界书', icon: '<i class="fa-solid fa-book-atlas"></i>' },
         'core_memory': { title: '核心记忆', icon: '<i class="fa-solid fa-brain"></i>' },
-        'jailbreak': { title: '破限指令', icon: '<i class="fa-solid fa-key"></i>' }
+        'jailbreak': { title: '破限指令', icon: '<i class="fa-solid fa-key"></i>' },
+        // ✨✨✨ 在这里粘贴下面这行新代码 ✨✨✨
+        'chat_history': { title: '聊天记录回顾', icon: '<i class="fa-solid fa-comments"></i>' }
     };
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
-    // (renderPromptPresetManager, renderPresetSelector, renderModuleList, createModuleElement, initializeDragAndDrop, getDragAfterElement 函数都保持不变)
-    async function renderPromptPresetManager() { /* ... */ 
+// ▼▼▼ 请用这一整块全新的代码，替换旧的 renderPromptPresetManager 函数 ▼▼▼
+    async function renderPromptPresetManager() {
         let allPresets = await db.prompt_presets.toArray();
         let activePreset = allPresets.find(p => p.isActive);
 
@@ -29534,6 +29353,8 @@ async function summarizeAndSave(turns, character) {
                     { id: 'user_persona', type: 'fixed', enabled: true },
                     { id: 'world_book', type: 'fixed', enabled: true },
                     { id: 'core_memory', type: 'fixed', enabled: true },
+                    // ✨✨✨ 核心新增：将“聊天记录”模块加入默认配方！ ✨✨✨
+                    { id: 'chat_history', type: 'fixed', enabled: true }, 
                 ]
             };
             const newId = await db.prompt_presets.add(defaultPreset);
@@ -29548,6 +29369,7 @@ async function summarizeAndSave(turns, character) {
         renderPresetSelector(allPresets, activePreset.id);
         renderModuleList(activePreset.modules || []);
     }
+// ▲▲▲ 替换到这里结束 ▲▲▲
     window.renderPromptPresetManager = renderPromptPresetManager;
 
     function renderPresetSelector(presets, activeId) { /* ... */ 
@@ -29572,6 +29394,7 @@ async function summarizeAndSave(turns, character) {
         initializeDragAndDrop(); // 渲染完后初始化拖拽功能
     }
 
+// ▼▼▼ 请用这个优化后的新版本，完整替换旧的 createModuleElement 函数 ▼▼▼
 function createModuleElement(module) {
     const item = document.createElement('div');
     item.className = 'prompt-module-item';
@@ -29580,8 +29403,11 @@ function createModuleElement(module) {
     item.draggable = true;
 
     const isFixed = module.type === 'fixed';
-    const titleText = isFixed ? FIXED_MODULES[module.id].title : (module.title || '自定义模块');
-    const titleInfo = isFixed ? FIXED_MODULES[module.id] : { title: titleText, icon: '<i class="fa-solid fa-pen-to-square"></i>' };
+    
+    // ✨ 核心优化 1：我们只使用一个 titleInfo 变量，不再需要 titleText
+    const titleInfo = isFixed 
+        ? (FIXED_MODULES[module.id] || { title: `未知模块: ${module.id}`, icon: '<i class="fa-solid fa-question"></i>' }) 
+        : { title: module.title || '自定义模块', icon: '<i class="fa-solid fa-pen-to-square"></i>' };
 
     item.innerHTML = `
         <div class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></div>
@@ -29594,14 +29420,13 @@ function createModuleElement(module) {
         </div>
     `;
 
-    // ✨ 核心修改：现在所有模块的内容区都是可点击的
+    // ✨ 核心优化 2：后续所有逻辑保持不变，但现在代码更简洁、更健壮
     const contentDiv = item.querySelector('.module-content');
     if (contentDiv) {
         contentDiv.style.cursor = 'pointer';
         contentDiv.title = '点击编辑/查看';
     }
 
-    // 如果是自定义模块，把内容藏在data属性里 (这部分不变)
     if (!isFixed) {
         item.dataset.content = module.content || '';
         item.dataset.title = module.title || '自定义模块';
@@ -29609,6 +29434,7 @@ function createModuleElement(module) {
     
     return item;
 }
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
     function initializeDragAndDrop() { /* ... */ 
         const items = moduleListContainer.querySelectorAll('.prompt-module-item');
@@ -29884,59 +29710,83 @@ if (moduleListContainer) {
     const titleEl = document.getElementById('fixed-prompt-viewer-title');
     const contentEl = document.getElementById('fixed-prompt-viewer-content');
 
+// ▼▼▼ 请用这一整块全新的代码，完整替换旧的 openFixedPromptViewer 函数 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【V2 - 智能上下文版】固定Prompt模块查看器-核心引擎 ✨✨✨ ---
+// ==========================================================
 /**
- * 核心函数 1: 打开查看器并填充模板内容 (V2 - 智能上下文版)
+ * 核心函数: 打开查看器并根据当前上下文，智能填充模板内容
+ * @param {string} moduleId - 被点击的模块的ID
  */
-window.openFixedPromptViewer = function (moduleId) {
+window.openFixedPromptViewer = async function (moduleId) { // ✨ 核心修改：函数现在是异步的
+    // 1. 获取所有需要的DOM元素 (不变)
+    const modal = document.getElementById('fixed-prompt-viewer-modal');
+    const titleEl = document.getElementById('fixed-prompt-viewer-title');
+    const contentEl = document.getElementById('fixed-prompt-viewer-content');
+    
+    // 2. 初始化标题和内容
     let title = '模块内容';
     let content = '无法预览此模块的内容。';
     
-    // ✨ 核心修改 1: 在函数开头，立即获取当前聊天对象和用户
+    // 3. ✨ 核心修改：在函数开头，立即获取当前聊天对象和用户
     const character = window.currentChat;
     const user = window.currentUser;
 
-    // 根据模块ID，提供不同的标题和占位/模板内容
+    // 4. 根据模块ID，提供不同的标题，并根据上下文智能填充内容
     switch (moduleId) {
         case 'char_persona':
             title = '角色人设 (char) 模块';
-            // ✨ 核心修改 2: 判断当前是否在聊天中
-            if (character) {
-                // 如果在聊天，就用真实数据替换占位符
-                content = `【核心身份】\n你是“${character.name}”，你的人设是：“${character.persona}”。\n你正在和${user.name}进行线上聊天。`;
+            const CHAR_PERSONA_TEMPLATE = `【核心身份】\n你是“{{char}}”，你的人设是：“{{persona}}”。\n你正在和{{user}}进行线上聊天。`;
+            if (character && user) {
+                // 如果在聊天中，就用真实数据替换占位符
+                const userPersonaForDisplay = character.activeUserPersona || user;
+                content = CHAR_PERSONA_TEMPLATE
+                    .replace(/{{char}}/g, character.name)
+                    .replace(/{{persona}}/g, character.persona)
+                    .replace(/{{user}}/g, userPersonaForDisplay.name);
             } else {
-                // 如果不在聊天，就显示原来的通用模板
-                content = `【核心身份】\n你是“{{char}}”，你的人设是：“{{persona}}”。\n你正在和{{user}}进行线上聊天。`;
+                // 如果不在聊天中，就显示原始模板
+                content = CHAR_PERSONA_TEMPLATE;
             }
             break;
             
         case 'user_persona':
             title = '你的信息 (user) 模块';
-            let userNameForDisplay = '{{user}}'; // 默认显示占位符
-            if (character) {
-                // 如果在聊天，就使用当前聊天对应的“你”的人设
+            const USER_PERSONA_TEMPLATE = `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是{{gender}}，你应该称呼{{user}}的名字。\n\n【关于TA的详细档案】\n名字: {{name}}\n性别: {{gender}}\n生日: {{birthday}}\n年龄: {{age}}\n人设: {{bio}}`;
+            if (character && user) {
+                // 如果在聊天中，就用真实数据替换
                 const personaForDisplay = character.activeUserPersona || user;
-                userNameForDisplay = personaForDisplay.name;
+                content = USER_PERSONA_TEMPLATE
+                    .replace(/{{user}}/g, personaForDisplay.name || '未设置')
+                    .replace(/{{name}}/g, personaForDisplay.name || '未设置')
+                    .replace(/{{gender}}/g, personaForDisplay.gender || '未设置')
+                    .replace(/{{birthday}}/g, personaForDisplay.birthday || '未设置')
+                    .replace(/{{age}}/g, personaForDisplay.age || '未设置')
+                    .replace(/{{bio}}/g, personaForDisplay.bio || '无');
+            } else {
+                // 如果不在聊天中，显示带占位符的模板
+                content = USER_PERSONA_TEMPLATE
+                    .replace(/{{name}}/g, '{{user}}')
+                    .replace(/{{gender}}/g, '{{性别}}')
+                    .replace(/{{birthday}}/g, '{{生日}}')
+                    .replace(/{{age}}/g, '{{年龄}}')
+                    .replace(/{{bio}}/g, '{{人设}}');
             }
-            content = `这里会动态填入关于“${userNameForDisplay}”的详细档案，包括：\n- 名字\n- 性别\n- 生日\n- 年龄\n- 人设`;
             break;
             
         case 'world_book':
             title = '相关的世界书 模块';
-            // ✨ 核心修改 3: 为动态模块的解释也加入角色名，使其更具代入感
-            if (character) {
-                content = `这里会根据您和「${character.name}」的聊天内容，动态填入被触发的世界书条目。\n\n例如：\n--- 龙裔的起源 ---\n在创世之初，巨龙曾是天空的霸主...`;
-            } else {
-                content = `这里会根据聊天内容，动态填入被触发的世界书条目。`;
-            }
+            content = `这里会根据您和「${character ? character.name : '角色'}」的聊天内容，动态填入被触发的世界书条目。\n\n例如：\n--- 龙裔的起源 ---\n在创世之初，巨龙曾是天空的霸主...`;
             break;
             
         case 'core_memory':
             title = '核心记忆 模块';
-             if (character) {
-                content = `这里会根据您和「${character.name}」的聊天内容，动态填入AI自动总结的短期核心记忆。\n\n例如：\n- 经过一番犹豫后，${character.name}最终同意了${user.name}周末去看电影的邀请。`;
-            } else {
-                content = `这里会根据聊天内容，动态填入AI自动总结的短期核心记忆。`;
-            }
+            content = `这里会根据您和「${character ? character.name : '角色'}」的聊天内容，动态填入AI自动总结的短期核心记忆。\n\n例如：\n- 经过一番犹豫后，${character ? character.name : '角色'}最终同意了${user ? user.name : '你'}周末去看电影的邀请。`;
+            break;
+
+        case 'chat_history':
+            title = '聊天记录回顾 模块';
+            content = `这里会根据您和「${character ? character.name : '角色'}」的聊天内容，动态填入最近的对话记录。`;
             break;
             
         case 'jailbreak':
@@ -29945,15 +29795,13 @@ window.openFixedPromptViewer = function (moduleId) {
             break;
     }
 
-    // (后续的显示弹窗逻辑保持不变)
-    const modal = document.getElementById('fixed-prompt-viewer-modal');
-    const titleEl = document.getElementById('fixed-prompt-viewer-title');
-    const contentEl = document.getElementById('fixed-prompt-viewer-content');
-    
+    // 5. 将最终生成的内容填充到弹窗并显示 (不变)
     titleEl.textContent = title;
-    contentEl.textContent = content;
+    contentEl.textContent = content; // 使用 .textContent 更安全
     showModal('fixed-prompt-viewer-modal');
 }
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
 
     /**
      * 核心函数 2: 关闭查看器
@@ -29971,7 +29819,199 @@ window.openFixedPromptViewer = function (moduleId) {
 
 })();
 // ==========================================================
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
+// ▼▼▼ 请将这一整块全新的代码，粘贴到 <script> 的末尾 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【全新补完】剧情快进核心功能引擎 ✨✨✨ ---
+// ==========================================================
+/**
+ * 核心函数：执行剧情快进的完整流程
+ */
+async function executePlotFastForward() {
+    // 1. 获取所有相关的 DOM 元素
+    const dialog = document.getElementById('fast-forward-dialog');
+    const timespanInput = document.getElementById('ff-timespan-input');
+    const eventInput = document.getElementById('ff-event-input');
+    const cancelBtn = document.getElementById('ff-dialog-cancel');
+    const confirmBtn = document.getElementById('ff-dialog-confirm');
+
+    // 安全检查
+    if (!dialog || !confirmBtn) {
+        console.error("无法执行剧情快进：缺少必要的弹窗HTML元素。");
+        return;
+    }
+
+    // 2. 清空输入框并显示弹窗
+    timespanInput.value = '';
+    eventInput.value = '';
+    dialog.classList.remove('hidden');
+
+    // 3. 定义一个统一的关闭和清理函数
+    const closeDialog = () => {
+        dialog.classList.add('hidden');
+        // 移除一次性的事件监听，防止内存泄漏
+        confirmBtn.onclick = null;
+        cancelBtn.onclick = null;
+    };
+
+    // 4. 为“取消”按钮绑定事件
+    cancelBtn.onclick = closeDialog;
+
+    // 5. 核心：为“确认快进”按钮绑定一次性的点击事件
+    confirmBtn.onclick = async () => {
+        const timespan = timespanInput.value.trim();
+        const eventText = eventInput.value.trim();
+
+        if (!timespan && !eventText) {
+            showNotification("请至少填写一项快进内容。");
+            return;
+        }
+
+        // a. 组合成一条清晰的旁白消息
+        const systemContent = `[时间快进：${timespan}] [事件快进：${eventText}]`;
+
+        const systemMessage = {
+            userId: window.currentUser.id,
+            chatId: window.currentChat.id,
+            senderId: 'system',
+            type: 'system',
+            content: systemContent,
+            time: new Date().toISOString()
+        };
+
+        try {
+            // b. 保存旁白并更新UI
+            const newMsgId = await db.messages.add(systemMessage);
+            await addMessageToUI({ id: newMsgId, ...systemMessage });
+            scrollToBottom(document.getElementById('chat-messages'));
+
+            closeDialog(); // 关闭输入弹窗
+
+            // c. 自动触发一次AI回复，让AI对快进后的剧情做出反应
+            const triggerAiBtn = document.getElementById('chat-trigger-ai');
+            if (triggerAiBtn) {
+                triggerAiBtn.click();
+            }
+
+        } catch (error) {
+            console.error("保存剧情快进消息失败:", error);
+            showNotification("操作失败，请重试。");
+        }
+    };
+}
+// ==========================================================
+// 这是正确的代码
+async function openBondsListModal(character) {
+    const modal = document.getElementById('bonds-list-modal');
+    const titleEl = document.getElementById('bonds-list-modal-title');
+    const contentEl = document.getElementById('bonds-list-modal-content');
+    const closeBtn = document.getElementById('bonds-list-modal-close-btn');
+
+    if (!modal || !character) return;
+
+    titleEl.textContent = `与 ${character.name} 的拾光集`;
+    contentEl.innerHTML = '<p style="text-align:center; color:#a1a1aa; padding:40px;">正在加载拾光集...</p>';
+    showModal('bonds-list-modal');
+
+    closeBtn.onclick = () => hideModal('bonds-list-modal');
+    modal.onclick = (e) => { if (e.target === modal) hideModal('bonds-list-modal'); };
+
+    const bonds = await db.bonds.where({
+        userId: window.currentUser.id,
+        contactId: character.id
+    }).reverse().sortBy('createdAt');
+
+    if (bonds.length === 0) {
+        contentEl.innerHTML = '<p style="text-align:center; color:#a1a1aa; padding-top:40px;">还没有和TA保存任何拾光集点滴。</p>';
+        return;
+    }
+
+    contentEl.innerHTML = '';
+
+    function parseBondContent(content) {
+        const sections = content.split(/\n?####\s/g).filter(Boolean);
+        return sections.map(sectionText => {
+            const firstLineBreak = sectionText.indexOf('\n');
+            const title = sectionText.substring(0, firstLineBreak).trim();
+            const paragraph = sectionText.substring(firstLineBreak + 1).trim();
+            return `
+                <div class="bond-section">
+                    <h4>${title}</h4>
+                    <p>${paragraph}</p>
+                </div>
+            `;
+        }).join('');
+    }
+
+    bonds.forEach(bond => {
+        const parsedHTMLContent = parseBondContent(bond.content);
+        
+        // ✨ 核心修改：在卡片模板中加入了“更多”按钮和隐藏的菜单
+        const cardHTML = `
+            <div class="bond-card-final" data-bond-id="${bond.id}">
+                <button class="bond-card-more-btn buttonlike"><i class="fa-regular fa-trash-can"></i></button>
+                ${parsedHTMLContent}
+                <div class="bond-card-menu" style="display: none;">
+                    <button class="bond-card-menu-item buttonlike" data-action="delete">删除</button>
+                </div>
+            </div>`;
+        contentEl.innerHTML += cardHTML;
+    });
+}
+window.openBondsListModal = openBondsListModal;
+// ==========================================================
+// ▼▼▼ 在这里粘贴下面的新代码 (第二部分) ▼▼▼
+// ==========================================================
+// --- ✨✨✨【全新】“拾光”列表弹窗交互引擎 V1.0 ✨✨✨ ---
+// ==========================================================
+(function() {
+    const contentEl = document.getElementById('bonds-list-modal-content');
+    if (!contentEl) return;
+
+    // 使用事件委托来处理所有卡片的点击事件
+    contentEl.addEventListener('click', async (e) => {
+        // --- 逻辑1: 处理“更多”按钮 ---
+        const moreBtn = e.target.closest('.bond-card-more-btn');
+        if (moreBtn) {
+            e.stopPropagation();
+            const card = moreBtn.closest('.bond-card-final');
+            const menu = card.querySelector('.bond-card-menu');
+            
+            // 关闭所有其他已打开的菜单
+            contentEl.querySelectorAll('.bond-card-menu').forEach(m => {
+                if (m !== menu) m.style.display = 'none';
+            });
+            // 切换当前菜单的显示状态
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            return;
+        }
+
+        // --- 逻辑2: 处理“删除”按钮 ---
+        const deleteBtn = e.target.closest('.bond-card-menu-item[data-action="delete"]');
+        if (deleteBtn) {
+            e.stopPropagation();
+            const card = deleteBtn.closest('.bond-card-final');
+            const bondId = parseInt(card.dataset.bondId, 10);
+            
+            if (bondId) {
+                showDeleteDialog('确定要删除这条拾光记录吗？', async () => {
+                    await db.bonds.delete(bondId);
+                    card.remove(); // 从界面上移除
+                    showNotification("拾光记录已删除。");
+                    
+                    // 检查删除后列表是否为空
+                    if (contentEl.children.length === 0) {
+                         contentEl.innerHTML = '<p style="text-align:center; color:#a1a1aa; padding-top:40px;">还没有和TA保存任何拾光点滴。</p>';
+                    }
+                });
+            }
+            return;
+        }
+
+        // 点击卡片其他地方，关闭所有菜单
+        contentEl.querySelectorAll('.bond-card-menu').forEach(m => m.style.display = 'none');
+    });
+})();
+
 
     </script>
 
