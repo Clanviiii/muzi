@@ -129,7 +129,7 @@
         }
 
         #phone {
-            --w: 360px;
+            --w: 400px;
             --h: 800px;
             position: relative;
             width: var(--w);
@@ -383,23 +383,10 @@
 
         /* ========================================================== */
         /* --- ✨✨✨【核心修复】更换自定义图标时，隐藏默认的矢量图标 ✨✨✨ --- */
-
-        /* 
-  核心逻辑与主屏幕的修复完全相同：
-  当图标预览容器(.settings-icon-preview)拥有.has-custom-icon这个类时，
-  就将它内部的 <i> 矢量图标也隐藏掉。
-  这样就解决了在预览弹窗中，自定义图片和默认图标互相挤压的问题。
-*/
         .icon-setting-item .settings-icon-preview.has-custom-icon i {
             display: none;
         }
 
-        /* 
-  核心逻辑：
-  当 .icon 容器拥有 .has-custom-icon 这个类（意味着它内部已经有了一张自定义图片）时，
-  我们就将它内部原始的 <i> 矢量图标彻底隐藏掉。
-  这样可以防止矢量图标和自定义图片同时显示，互相挤压，导致图片变形。
-*/
         .app .icon.has-custom-icon i {
             display: none;
         }
@@ -451,13 +438,12 @@
 
         #desktop-dock {
             position: absolute;
-            bottom: 10px;
+            top: 85%;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 20px);
             z-index: 10;
             padding: 12px 20px;
-
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-radius: 24px;
@@ -489,37 +475,37 @@
         /*  auing */
         #app-qq {
             top: 40%;
-            right: 27%;
+            left: 60%;
         }
 
         /* 论坛 */
         #app-forum {
             top: 40%;
-            right: 5%;
+            left: 85%;
         }
 
         /* 线下 */
         #app-offline {
             top: 53%;
-            right: 5%;
+            left: 60%;
         }
 
         /*  设置*/
         #app-settings {
             top: 53%;
-            right: 27%;
+            left:85%;
         }
 
         /*  故事 */
         #app-novel {
             top: 66%;
-            left: 15%;
+            left: 12%;
         }
 
         /*  NPC */
         #app-npc-hub {
             top: 66%;
-            left: 38%;
+            left: 37%;
         }
 
         /* ✨ 全屏模式下，桌面网格也保持透明 */
@@ -1679,7 +1665,7 @@
             gap: 8px;
             background: rgba(255, 255, 255, 0.5);
             padding: 8px 12px;
-            border-top: 1px solid #fce7f3;
+            border-top: 1px solid #3f3a3d;
         }
 
         .quote-preview-content {
@@ -1799,8 +1785,8 @@
             /* 2. 复用桌面图标的核心样式，确保外观一致 */
             border-radius: var(--app-icon-border-radius);
             /* ✨ 核心修改 */
-            background: linear-gradient(135deg, #f472b6 0%, #c084fc 100%);
-            box-shadow: 0 2px 5px rgba(236, 72, 153, .25);
+            background: linear-gradient(135deg, #ffffff 0%, #d3d3d3 100%);
+            box-shadow: 0 2px 5px rgba(198, 198, 198, 0.25);
             font-weight: 800;
             font-size: 14px;
             color: white;
@@ -2033,7 +2019,7 @@
             background: transparent;
         }
 
-        /* --- ✨✨✨ 表情面板专属样式 (V5 - Flexbox 滚动终极修复版) --- */
+        /* --- 表情面板专属样式 (V5 - Flexbox 滚动终极修复版) --- */
 
         /* 1. 表情面板容器 (动画层) */
         #chat-sticker-panel {
@@ -2045,7 +2031,7 @@
             padding-bottom: 0;
             transition: max-height 0.3s ease, padding 0.3s ease;
 
-            /* ✨ 核心修正 1：将其变为 Flexbox 容器 */
+            /*  核心修正 1：将其变为 Flexbox 容器 */
             display: flex;
         }
 
@@ -5065,10 +5051,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-/* ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ */
-/* ▼▼▼ 请用这一整块全新的代码，替换旧的“成对头像”小组件的所有CSS ▼▼▼ */
-/* ▼▼▼ 请用这一整块全新的代码，替换旧的“成对头像”小组件的所有CSS ▼▼▼ */
-
 /* ========================================================== */
 /* --- ✨✨✨【V4-可编辑气泡版】左上角组合组件专属样式 ✨✨✨ --- */
 /* ========================================================== */
@@ -5076,8 +5058,8 @@
 /* --- 1. 组件主容器 (保持不变) --- */
 #paired-avatar-widget {
     position: absolute;
-    top: 47%; 
-    left: 20px;
+    top: 45%; 
+    left: 5%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -5116,11 +5098,6 @@
     outline: none;
     word-break: break-all;
 }
-/* ▼▼▼ 请用这一整块全新的代码，替换旧的圆形尾巴相关的所有CSS ▼▼▼ */
-
-/* ========================================================== */
-/* --- ✨✨✨【V4.2-独立尾巴定位版】气泡样式更新 ✨✨✨ --- */
-/* ========================================================== */
 
 /* a. 为所有小圆圈设置通用的外观样式 (颜色、边框、形状等) */
 .speech-bubble::before,
@@ -5235,12 +5212,6 @@
     font-weight: 400;
 }
 
-        /* ========================================================== */
-        /* --- ✨✨✨【全新】极简日历小组件样式 V6 ✨✨✨ --- */
-        /* ========================================================== */
-
-/* ▼▼▼ 请用这段全新的代码，替换旧的 #desktop-calendar-widget 规则 ▼▼▼ */
-
 /* ========================================================== */
 /* --- ✨✨✨【全新】极简日历小组件样式 V6 ✨✨✨ --- */
 /* ========================================================== */
@@ -5248,15 +5219,15 @@
 /* --- 1. 日历主容器 --- */
 #desktop-calendar-widget {
     position: absolute;
-    bottom: 17%; /* ✨ 核心修改：将固定像素值改为百分比 ✨ */
-    right: 20px;
-    width: 160px;
-    height: 170px;
+    top: 61%; /* ✨ 核心修改：将固定像素值改为百分比 ✨ */
+    left: 53%;
+    width: 150px;
+    height: 160px;
     background-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 22px;
-    padding: 12px 16px;
+    padding: 8px 12px;
     border: 1px solid rgba(255, 255, 255, 0.5);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
     color: var(--color-tertiary-accent);
@@ -5301,7 +5272,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 6px;
+            gap: 3px;
             /* 增大日期和下方信息的间距 */
         }
 
@@ -5319,7 +5290,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            /* 星期和年月之间的间距 */
+            /* 周和年月之间的间距 */
         }
 
         /* --- 7. ✨ 核心修改：为容器内所有span设置统一的小字号样式 --- */
@@ -6845,7 +6816,7 @@
             text-align: center;
         }
 
-        /* a. 星期几的表头 (日, 一, 二...) */
+        /* a. 周几的表头 (日, 一, 二...) */
         .day-name {
             font-size: 12px;
             font-weight: 600;
@@ -7815,7 +7786,7 @@
                                 </button>
                                 <!-- 拾光 -->
                                 <button id="quick-btn-bond" class="quick-action-btn buttonlike" title="拾光">
-                                  <i class="fa-solid fa-fan"></i>
+                                 <i class="fa-solid fa-paw"></i>
                                 </button>
 
 
@@ -8079,15 +8050,12 @@
                             </main>
 
                             <footer id="profile-modal-footer" class="page-footer"
-                                style="flex-shrink: 0; z-index: 5; background: transparent; border: none; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background-color: rgba(184, 184, 184, 0.5);">
+                                style="flex-shrink: 0; z-index: 5; background: transparent; border: none; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); ">
                                 <div style="display:flex; gap: 12px;">
                                     <button id="contact-profile-clear-chat-modal" class="btn btn-secondary buttonlike"
                                         style="flex:1; font-size: 16px;">清除记录</button>
 
-                                    <!-- ✨ 核心新增：这是我们新添加的“导出记录”按钮 -->
-                                    <button id="contact-profile-export-chat-modal" class="btn btn-primary buttonlike"
-                                        style="flex:1; font-size: 16px;">导出记录</button>
-
+    
                                 </div>
                             </footer>
                         </div>
@@ -8427,6 +8395,9 @@
                                 <span class="label">全屏模式</span>
                                 <input type="checkbox" id="fullscreen-toggle" class="toggle-switch">
                             </div>
+
+
+                            
                             <!-- 主动发消息开关 -->
                             <!-- 新代码 -->
                             <div class="settings-item">
@@ -8984,25 +8955,27 @@
     </div>
 
 
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新】美化功能弹窗 (带预设管理版 - 已修复) ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="beautify-modal" class="modal-overlay hidden">
-        <div class="modal-content"
-            style="width: 95%; max-width: 360px; height: 80%; max-height: 600px; display: flex; flex-direction: column;">
-            <header class="page-header" style="flex-shrink: 0;">
-                <span>美化中心 (CSS)</span>
-                <button id="beautify-modal-close-btn" class="btn-icon buttonlike" style="font-size: 16px;"><i
-                        class="fa-solid fa-x"></i></button>
-            </header>
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】美化功能弹窗 (页脚解放版) ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="beautify-modal" class="modal-overlay hidden">
+    <div class="modal-content"
+        style="width: 95%; max-width: 360px; height: 80%; max-height: 600px; display: flex; flex-direction: column;">
+        <header class="page-header" style="flex-shrink: 0;">
+            <span>美化中心 (CSS)</span>
+            <button id="beautify-modal-close-btn" class="btn-icon buttonlike" style="font-size: 16px;"><i
+                    class="fa-solid fa-x"></i></button>
+        </header>
 
-            <main class="page-content" style="padding: 10px; flex-grow: 1; display: flex;">
-                <textarea id="custom-css-input" class="form-input form-textarea"
-                    style="flex-grow: 1; resize: none; font-family: monospace; font-size: 13px;"
-                    placeholder="在此处粘贴或输入你的CSS美化代码..."></textarea>
-            </main>
+        <!-- ▼▼▼ 核心修改在这里 ▼▼▼ -->
+        <main class="page-content" style="padding: 10px; flex-grow: 1; display: flex; flex-direction: column; gap: 10px;">
+            
+            <!-- 1. CSS输入框现在可以自由伸展 -->
+            <textarea id="custom-css-input" class="form-input form-textarea"
+                style="flex-grow: 1; resize: none; font-family: monospace; font-size: 13px;"
+                placeholder="在此处粘贴或输入你的CSS美化代码..."></textarea>
 
-            <!-- 这是修改后的代码 -->
+            <!-- 2. 页脚被“搬家”到了可滚动区域的内部 -->
             <footer class="page-footer" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 10px;">
                 <!-- 第一行：预设选择和删除 -->
                 <div style="display: flex; gap: 8px; align-items: center;">
@@ -9011,7 +8984,7 @@
                         style="background-color: #fecaca; color: #b91c1c; flex-shrink: 0;">删除</button>
                 </div>
 
-                <!-- ✨✨✨ 核心新增：这是我们全新的第二行，包含了“保存改动”按钮 ✨✨✨ -->
+                <!-- 第二行：保存改动 -->
                 <div style="display: flex; gap: 10px;">
                     <button id="save-beautify-preset-btn" class="btn btn-secondary buttonlike"
                         style="flex: 1;">保存改动</button>
@@ -9019,7 +8992,7 @@
                         style="flex: 1;">另存为...</button>
                 </div>
 
-                <!-- 第三行：应用按钮（现在单独占一行，更突出） -->
+                <!-- 第三行：应用按钮 -->
                 <button id="apply-beautify-preset-btn" class="btn btn-primary buttonlike btn-full-width">应用选中方案</button>
 
                 <!-- 第四行：导入和导出 -->
@@ -9031,9 +9004,10 @@
                 <!-- 隐藏的文件选择器 -->
                 <input type="file" id="import-beautify-input" accept=".json" class="hidden" />
             </footer>
-        </div>
+        </main>
+        <!-- ▲▲▲ 核心修改结束 ▲▲▲ -->
     </div>
-
+</div>
     <!-- 【请将这个全新的输入弹窗HTML，粘贴到 body 的末尾】 -->
     <div id="input-dialog" class="hidden" style="position: fixed; inset: 0;  
             display: flex; align-items: center; justify-content: center; z-index: 1021;">
@@ -9152,7 +9126,7 @@
             <div style="display:flex; flex-direction: column; gap: 12px;">
                 <!-- ✨ 核心新增：“搏一搏”按钮，使用不同的样式以作区分 -->
                 <button id="recall-option-gamble" class="btn btn-secondary buttonlike"
-                    style="background-color: #f0abfc; color: #701a75;">搏一搏 (有几率被看到)</button>
+                    style="background-color: #fcabab; color: #751a1a;">搏一搏 (有几率被看到)</button>
                 <hr style="border: none; height: 1px; background-color: var(--color-ui-border); margin: 4px 0;">
                 <button id="recall-option-inform" class="btn btn-primary buttonlike">一定让TA看到</button>
                 <button id="recall-option-hide" class="btn btn-secondary buttonlike">一定不让TA看到</button>
@@ -9461,7 +9435,42 @@
                     </main>
                     <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
                 </div>
-                <!-- ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ -->
+           <!-- ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ -->
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】“查手机”内部-Auing App专属页面 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="char-phone-auing-page" class="page"
+    style="display:none; flex-direction: column; background-color: #f9fafb;">
+
+    <!-- 1. 这是两个视图将要“共用”的唯一页眉 -->
+    <header id="auing-app-header" class="page-header" style="background-color: #f3f4f6;">
+        <button class="btn-icon btn-back buttonlike" id="char-auing-back-btn">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <span id="char-auing-title" style="font-weight: bold; color: #374151;">Auing</span>
+        <!-- 右侧留空，用于对齐 -->
+        <div style="width: 32px;"></div>
+    </header>
+
+    <!-- 2. 这是可滚动的主内容区 -->
+    <main class="page-content" style="padding: 0; flex-grow: 1;">
+
+        <!-- 视图A: 聊天列表 (默认显示) -->
+        <div id="auing-chat-list-view">
+            <!-- 聊天列表将由JavaScript动态生成到这里 -->
+        </div>
+
+        <!-- 视图B: 聊天详情 (默认隐藏) -->
+        <div id="auing-chat-detail-view" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
+            <div id="auing-chat-messages" style="flex-grow: 1; overflow-y: auto; padding: 10px;">
+                <!-- 聊天气泡将显示在这里 -->
+            </div>
+        </div>
+
+    </main>
+</div>
+<!-- ========================================================== -->
+<!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
                 <!-- ========================================================== -->
                 <!-- --- ✨✨✨【全新】“查手机”内部-日记App专属页面 ✨✨✨ --- -->
                 <!-- ========================================================== -->
@@ -9814,6 +9823,13 @@
                 <button id="plot-control-fastforward-btn" class="btn btn-secondary buttonlike" style="font-size: 16px;">
                     <i class="fa-solid fa-angles-right"></i> 剧情快进
                 </button>
+
+    <!-- ▼▼▼ 在这里粘贴下面的新按钮代码 ▼▼▼ -->
+    <button id="plot-control-export-chat-btn" class="btn btn-secondary buttonlike" style="font-size: 16px;">
+        <i class="fa-solid fa-file-export"></i> 导出记录
+    </button>
+    <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
+
             </main>
             <footer class="page-footer">
                 <button id="plot-control-close-btn" class="btn btn-secondary buttonlike btn-full-width">关闭</button>
@@ -13223,14 +13239,17 @@ async function generateUnifiedSystemPrompt(character, user, taskDescription, con
 
 async function buildCharacterSystemPrompt(character, user, options = {}) {
 
-    // 1. 获取所有原始数据
     const context = await buildCoreContext(character.id, user.id);
     if (!context) {
         console.error("构建Prompt失败：未能从 buildCoreContext 获取到核心上下文。");
         return [];
     }
+    
+    // ✨✨✨ 核心修复：我们现在正确地从 context 中解构数据 ✨✨✨
     const { character: ctxChar, userPersona: ctxUser, chatHistory } = context;
-
+    // 我们从正确的角色对象(ctxChar)中获取“配方单”(linkedEntries)
+    const linkedEntries = ctxChar.linkedEntries || [];
+    
     // 2. 从数据库加载当前激活的“提示词预设”
     let activePreset = await db.prompt_presets.where({ isActive: 1 }).first();
     if (!activePreset) {
@@ -13253,7 +13272,7 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
     dynamicContentMap.set('user_persona', `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是${ctxUser.gender || '未设置'}，你应该称呼{{user}}的名字。\n\n【关于TA的详细档案】\n名字: ${ctxUser.name}\n${ctxUser.gender ? `性别: ${ctxUser.gender}` : ''}\n${ctxUser.birthday ? `生日: ${ctxUser.birthday}` : ''}\n${ctxUser.age ? `年龄: ${ctxUser.age}` : ''}\n${ctxUser.bio ? `人设: ${ctxUser.bio}` : ''}`);
 
     // c. 世界书与核心记忆
-    const triggeredWorldBook = await getActiveWorldBookEntriesForTurn(chatHistory, ctxChar.linkedEntries);
+ const triggeredWorldBook = await getActiveWorldBookEntriesForTurn(chatHistory, linkedEntries);
     dynamicContentMap.set('world_book', [triggeredWorldBook.before_char, triggeredWorldBook.after_char].filter(Boolean).join('\n\n'));
     dynamicContentMap.set('core_memory', await retrieveRelevantMemories(chatHistory, character.id, user.id));
     
@@ -13287,28 +13306,22 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
         timeWeatherComponent = `当前时间是: ${formattedTime}\n${weatherContext}${timeSinceLastChatContext}`;
     }
     const customStatusContext = ctxChar.customStatusText ? `- 【当前状态】: 你现在的状态是“${ctxChar.customStatusText}”。\n` : '';
-    let recallContext = '';
-    const veryLastMessage = chatHistory[chatHistory.length - 1];
-    if (veryLastMessage && veryLastMessage.type === 'system' && veryLastMessage.content.includes('[你撤回了一条消息')) {
-        const recallContentMatch = veryLastMessage.content.match(/内容是：(.*?)]$/);
-        recallContext = recallContentMatch && recallContentMatch[1]
-            ? `\n {{user}}刚刚撤回了一条消息，但又让你看到了内容是：“${recallContentMatch[1]}”。\n`
-            : `\n {{user}}刚刚撤回了一条消息，但你不知道具体内容。\n`;
-    }
+
     const periodContext = await buildPeriodContextPrompt(user.id);
-    const immediateContextContent = [customStatusContext, timeWeatherComponent, recallContext, periodContext].filter(Boolean).join('\n');
+ const immediateContextContent = [customStatusContext, timeWeatherComponent, periodContext].filter(Boolean).join('\n');
     dynamicContentMap.set('immediate_context', immediateContextContent ? `【你当前所处的即时情境 (最高优先级)】\n${immediateContextContent}\n你必须结合以上所有即时情境来回应。` : '');
 
     // 4. 定义固定的“功能性”模块内容 (完整版)
     const toolsPrompt = `
 【聊天扩展功能】
 - 当对话情节合理时，你可以主动使用以下【功能指令】（必须严格使用尖括号包裹）：
+  - 使用 <mem>你认为需要记下的核心事件或信息</mem> 来【记录一条记忆】。这条记忆必须是你认为对未来剧情走向至关重要的、客观的第三人称陈述。
   - 使用 <vc/> 来【发起视频通话】。
   - 在新回复的【最开头】使用 <r/> 【撤回】上一句话
   - 使用 <img>你想展示的画面</img> 来【发送一张描述性的图片】。
   - 使用 <vo>你想说的话</vo> 来【发送一条语音消息】。
   - 使用 <sk>你的表情描述</sk> 来【发送一个符合你当前情绪的表情包】。
-  - 使用 <quote id="被引用的消息ID">你的回复内容</quote> 来【引用某条具体的消息】。
+  - 使用 <quote id="被引用的消息ID">你的回复内容</quote> 来【引用并回复某条具体的消息】。
   - 使用 <file>[文件类型]文件名|||文件内容</file> 来【发送一个模拟文件】。
   - 使用 <transfer amount="数字金额" remark="附言"/> 指令【主动给{{user}}转账】。
   - 当{{user}}发来转账时，使用 <claim_t id="转账消息的ID"/> 领取，或使用 <return_t id="转账消息的ID"/> 退回。
@@ -13521,11 +13534,6 @@ if (options.isChatReply !== false) {
                     // 调用我们全新的万能渲染引擎
                     await processAndRenderAiResponse(aiResponseText, user, chat, quotedMessageForThisReply);
 
-    // ✨✨✨ 核心修改：在这里，在所有渲染都结束后，才调用我们的“记忆检查员”！ ✨✨✨
-    if (typeof runMemoryCheck === 'function') {
-        runMemoryCheck();
-    }
-    // ✨✨✨ 修改结束 ✨✨✨
                     if (typeof renderChatList === 'function') {
                         renderChatList(window.currentUser);
                     }
@@ -13538,60 +13546,6 @@ if (options.isChatReply !== false) {
         });
 
 
-
-        // ▼▼▼ 请用这一整块【最终选择版】的代码，替换旧的“导出记录”按钮事件绑定 ▼▼▼
-        // ==========================================================
-        // --- ✨✨✨【V2 - 弹出选择版】角色主页“导出记录”按钮事件绑定 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // 1. 获取所有新旧相关的DOM元素
-            const exportBtnOnProfile = document.getElementById('contact-profile-export-chat-modal');
-            const exportOptionsDialog = document.getElementById('export-options-dialog');
-            const withTimestampsBtn = document.getElementById('export-with-timestamps');
-            const withoutTimestampsBtn = document.getElementById('export-without-timestamps');
-            const cancelBtn = document.getElementById('export-cancel');
-
-            // 安全检查
-            if (!exportBtnOnProfile || !exportOptionsDialog) return;
-
-            // 2. 核心逻辑：点击主页的“导出记录”按钮，只负责打开选项弹窗
-            exportBtnOnProfile.addEventListener('click', () => {
-                exportOptionsDialog.classList.remove('hidden');
-            });
-
-            // 3. 为选项弹窗内的按钮绑定具体功能
-
-            // a. 点击“包含时间戳”
-            withTimestampsBtn.addEventListener('click', () => {
-                exportOptionsDialog.classList.add('hidden'); // 关闭弹窗
-                if (typeof exportFullArchive === 'function') {
-                    exportFullArchive(true); // 调用核心函数，并告诉它“需要时间戳”
-                }
-            });
-
-            // b. 点击“不包含时间戳”
-            withoutTimestampsBtn.addEventListener('click', () => {
-                exportOptionsDialog.classList.add('hidden'); // 关闭弹窗
-                if (typeof exportFullArchive === 'function') {
-                    exportFullArchive(false); // 调用核心函数，并告诉它“不需要时间戳”
-                }
-            });
-
-            // c. 点击“取消”或背景遮罩
-            cancelBtn.addEventListener('click', () => {
-                exportOptionsDialog.classList.add('hidden');
-            });
-            exportOptionsDialog.addEventListener('click', (e) => {
-                if (e.target === exportOptionsDialog) {
-                    exportOptionsDialog.classList.add('hidden');
-                }
-            });
-        })();
-        // ==========================================================
-        // ▲▲▲ 替换到这里结束 ▲▲▲
-        // ==========================================================
-        // ▲▲▲ 粘贴到这里结束 ▲▲▲
-        // ==========================================================
         // --- ✨✨✨【全新 V8 - 功能完整版】快捷操作栏交互引擎 ✨✨✨ ---
         // ==========================================================
         (function () {
@@ -13710,6 +13664,19 @@ const target = e.target;
             executePlotFastForward();
         }
     }
+
+    // ▼▼▼ 在这里粘贴下面的新代码块 ▼▼▼
+    else if (target.closest('#plot-control-export-chat-btn')) {
+        hideModal('plot-control-modal'); // 先关闭当前菜单
+        
+        // 打开导出选项弹窗
+        const exportOptionsDialog = document.getElementById('export-options-dialog');
+        if (exportOptionsDialog) {
+            exportOptionsDialog.classList.remove('hidden');
+        }
+    }
+    // ▲▲▲ 粘贴到这里结束 ▲▲▲
+
     // c. 判断是否点击了“关闭”按钮或弹窗的背景遮罩
     else if (target.closest('#plot-control-close-btn') || target === plotControlModal) {
         hideModal('plot-control-modal');
@@ -14004,8 +13971,8 @@ const target = e.target;
             }
         });
 
-        // ==========================================================
-        // --- ✨✨✨【V5 - UI同步终极修复版】消息撤回核心引擎 ✨✨✨ ---
+// ==========================================================
+        // --- ✨✨✨【V7 - 动态人设版】消息撤回核心引擎 ✨✨✨ ---
         // ==========================================================
         document.getElementById('recall-message-btn').addEventListener('click', async () => {
             messageMenu.classList.add('hidden');
@@ -14015,7 +13982,6 @@ const target = e.target;
             const messageToRecall = await db.messages.get(messageId);
             if (!messageToRecall) return;
 
-            // (获取弹窗元素的代码保持不变)
             const dialog = document.getElementById('recall-options-dialog');
             const charNameSpan = document.getElementById('recall-character-name');
             const informBtn = document.getElementById('recall-option-inform');
@@ -14034,71 +14000,77 @@ const target = e.target;
                 gambleBtn.onclick = null;
             };
 
-            // 选项A: 告知对方
+            // --- 选项A: 告知对方 (已升级) ---
             informBtn.onclick = async () => {
                 try {
                     await db.messages.update(messageId, {
                         type: 'system',
-                        content: `[你撤回了一条消息]`,
+                        senderId: 'system',
+                        // ✨ 核心修改：将 "用户" 替换为 "{{user}}" 占位符
+                        content: `[{{user}}撤回了上一条消息，但你已经看到了，内容是：“${messageToRecall.content}”]`,
+                        displayContent: `[你撤回了一条消息，但 ${window.currentChat.name} 看到了内容]`,
                         recalledContent: messageToRecall.content
                     });
-                    // ✨ 核心修复：调用我们强大的局部刷新函数！
+                    
                     await updateMessageUI(messageId);
                     showNotification("操作成功，对方将会看到你撤回的内容。");
                 } catch (error) { console.error("“告知”式撤回失败:", error); }
                 finally { closeAndCleanup(); }
             };
 
-            // 选项B: 彻底隐藏
+            // --- 选项B: 彻底隐藏 (已升级) ---
             hideBtn.onclick = async () => {
                 try {
                     await db.messages.update(messageId, {
                         type: 'system',
-                        content: '[你撤回了一条消息]',
-                        recalledContent: messageToRecall.content
+                        senderId: 'system',
+                        // ✨ 核心修改：将 "用户" 替换为 "{{user}}" 占位符
+                        content: `[{{user}}撤回了一条消息，但你没有看到内容。]`,
+                        displayContent: `[你撤回了一条消息，${window.currentChat.name} 不知道内容]`,
+                        recalledContent: null
                     });
-                    // ✨ 核心修复：调用我们强大的局部刷新函数！
+                    
                     await updateMessageUI(messageId);
                     showNotification("操作成功，对方不会知道你撤回了什么。");
                 } catch (error) { console.error("“隐藏”式撤回失败:", error); }
                 finally { closeAndCleanup(); }
             };
 
-            // 选项C: 搏一搏！
+            // --- 选项C: 搏一搏 (已升级) ---
             gambleBtn.onclick = async () => {
                 const CATCH_PROBABILITY = 0.5;
-
                 if (Math.random() < CATCH_PROBABILITY) {
+                    // 失败，被看到
                     try {
                         await db.messages.update(messageId, {
-                            type: 'system',
-                            content: `[你撤回了一条消息]`,
+                            type: 'system', senderId: 'system',
+                            // ✨ 核心修改：将 "用户" 替换为 "{{user}}" 占位符
+                            content: `[{{user}}撤回了上一条消息，但你已经看到了，内容是：“${messageToRecall.content}”]`,
+                            displayContent: `[你撤回了一条消息，但 ${window.currentChat.name} 看到了内容]`,
                             recalledContent: messageToRecall.content
                         });
-                        // ✨ 核心修复：调用我们强大的局部刷新函数！
                         await updateMessageUI(messageId);
                         showNotification("手滑了！对方看到了你撤回的消息！");
-                    } catch (error) { console.error("“搏一搏-失败”式撤回失败:", error); }
+                    } catch (error) { console.error("搏一搏撤回失败:", error); }
                 } else {
+                    // 成功，没被看到
                     try {
                         await db.messages.update(messageId, {
-                            type: 'system',
-                            content: '[你撤回了一条消息]',
-                            recalledContent: messageToRecall.content
+                            type: 'system', senderId: 'system',
+                            // ✨ 核心修改：将 "用户" 替换为 "{{user}}" 占位符
+                            content: `[{{user}}撤回了一条消息，但你没有看到内容。]`,
+                            displayContent: `[你撤回了一条消息，${window.currentChat.name} 不知道内容]`,
+                            recalledContent: null
                         });
-                        // ✨ 核心修复：调用我们强大的局部刷新函数！
                         await updateMessageUI(messageId);
                         showNotification("好险！成功在对方看到前撤回了！");
-                    } catch (error) { console.error("“搏一搏-成功”式撤回失败:", error); }
+                    } catch (error) { console.error("搏一搏-撤回成功:", error); }
                 }
-                closeAndCleanup();
+                closeAndCleanup(); 
             };
 
-            // 选项D: 取消
             cancelBtn.onclick = closeAndCleanup;
         });
-
-        // ▲▲▲ 替换到这里结束 ▲▲▲
 
         // ✨ 用这个新版本替换旧的 delete-message-btn 点击事件
         document.getElementById('delete-message-btn').addEventListener('click', async () => {
@@ -17454,7 +17426,7 @@ async function upgradePromptPresets() {
                     if (!entry) continue;
 
                     // b. 准备关键词列表
-                    let keywords = (entry.keywords || '').split(',').map(k => k.trim()).filter(Boolean);
+                   let keywords = (entry.keywords || '').split(/,|，/).map(k => k.trim()).filter(Boolean);
                     if (globalSettings.includeName && entry.title) {
                         keywords.push(entry.title.trim());
                     }
@@ -18154,15 +18126,23 @@ async function addMessageToUI(msg) {
 
             // --- 旁白/系统消息处理 (保持不变) ---
             if (msg.type === 'system' || msg.senderId === 'system') {
+                
+                // ▼▼▼ ✨✨✨ 用下面这整块新代码，替换掉旧的旁白处理逻辑 ✨✨✨ ▼▼▼
                 const systemMessageEl = document.createElement('div');
+                
+                // 智能判断显示内容
+                let textToShow = msg.displayContent || msg.content; // 优先使用 displayContent！
+
                 if (msg.content.includes('撤回了一条消息')) {
                     systemMessageEl.className = 'msg-timestamp recalled-message-placeholder';
-                    systemMessageEl.textContent = msg.content.replace(/\[|\]/g, '');
+                    systemMessageEl.textContent = textToShow.replace(/\[|\]/g, '');
                 } else {
                     systemMessageEl.className = 'msg-timestamp';
-                    systemMessageEl.textContent = msg.displayContent || msg.content;
+                    systemMessageEl.textContent = textToShow;
                 }
+                
                 systemMessageEl.dataset.id = msg.id;
+
                 if (msg.recalledContent) {
                     systemMessageEl.classList.add('clickable-recalled-message');
                     systemMessageEl.dataset.recalledText = msg.recalledContent;
@@ -18171,14 +18151,16 @@ async function addMessageToUI(msg) {
                 if (msg.videoCallHistory?.length > 0) {
                     systemMessageEl.classList.add('clickable');
                 }
-                systemMessageEl.dataset.messageId = msg.id;
-                // ... (长按菜单的事件绑定保持不变)
+                systemMessageEl.dataset.messageId = msg.id; // 确保 messageId 存在
+                
+                // (长按菜单的事件绑定保持不变)
                 systemMessageEl.addEventListener('contextmenu', (e) => { e.preventDefault(); showMenuForRow(systemMessageEl, msg.id); });
                 let pressTimer;
                 systemMessageEl.addEventListener('touchstart', (e) => { pressTimer = window.setTimeout(() => showMenuForRow(systemMessageEl, msg.id), 500); }, { passive: true });
                 systemMessageEl.addEventListener('touchend', () => clearTimeout(pressTimer));
                 systemMessageEl.addEventListener('touchmove', () => clearTimeout(pressTimer), { passive: true });
                 return systemMessageEl;
+                // ▲▲▲ ✨✨✨ 替换到这里结束 ✨✨✨ ▲▲▲
             }
 
             const isUserMessage = msg.senderId === window.currentUser.id;
@@ -18300,7 +18282,7 @@ async function addMessageToUI(msg) {
                     contentContainer.classList.add('voice-message');
                     const svgIconHTML = `<svg class="voice-icon-svg" width="24" height="24"><use href="#icon-animated-soundwave"></use></svg>`;
                     const durationHTML = `<span class="voice-duration">${msg.duration}"</span>`;
-                    let toplineHTML = isUserMessage ? durationHTML + svgIconHTML : svgIconHTML + durationHTML;
+           let toplineHTML = durationHTML + svgIconHTML;
                     contentContainer.innerHTML += `<div class="voice-top-line">${toplineHTML}</div><hr class="voice-separator"><div class="voice-text-content">${msg.content}</div>`;
                     contentContainer.addEventListener('click', (e) => e.currentTarget.classList.toggle('text-visible'));
                     break;
@@ -18602,7 +18584,7 @@ async function addMessageToUI(msg) {
                     const duration = `<span class="voice-duration">${updatedMsg.duration}"</span>`;
 
                     // 现在 topLine 就能正确找到 svgIconHTML 了
-                    const topLine = (updatedMsg.senderId === window.currentUser.id) ? (duration + svgIconHTML) : (svgIconHTML + duration);
+                   const topLine = duration + svgIconHTML;
 
                     oldBubble.innerHTML += `<div class="voice-top-line">${topLine}</div><hr class="voice-separator"><div class="voice-text-content">${updatedMsg.content}</div>`;
                     oldBubble.addEventListener('click', (e) => e.currentTarget.classList.toggle('text-visible'));
@@ -19043,7 +19025,7 @@ if (icon) icon.className = 'fa-solid fa-pen-fancy'; // 恢复为钢笔图标
 
                 // 3. ✨ 核心修改 3: 格式化成一个更简洁的字符串
                 const formattedContent = `
-#### <i class="fa-light fa-comment"></i> 心声
+#### ✧ 心声
 ${contents.heartTrace}
 
 ---
@@ -21916,7 +21898,7 @@ ${videoTranscript}
                 return JSON.parse(cleanedJson);
             }
 
-            // --- 3. 各应用的专属生成器 & 渲染器 ---
+       window.getAiGeneratedJson = getAiGeneratedJson;
 
 async function generateBrowserData() {
     // 1. 定义专属的“菜单”（任务描述）
@@ -21931,7 +21913,9 @@ async function generateBrowserData() {
 }`;
 
     // 2. 将菜单交给“中央厨房”去烹饪，获取最终的完整Prompt
-    const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, window.currentUser, taskDescription);
+    // 这是修正后的新代码
+const userPersonaForThisContext = window.currentChat.activeUserPersona || window.currentUser;
+const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, userPersonaForThisContext, taskDescription);
 
     // 3. 将烹饪好的菜谱交给AI去执行
     return await getAiGeneratedJson(finalPrompt);
@@ -21961,7 +21945,9 @@ async function generateMusicData() {
 }`;
 
     // 2. 呼叫“中央厨房”
-    const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, window.currentUser, taskDescription);
+    // 这是修正后的新代码
+const userPersonaForThisContext = window.currentChat.activeUserPersona || window.currentUser;
+const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, userPersonaForThisContext, taskDescription);
 
     // 3. 执行
     return await getAiGeneratedJson(finalPrompt);
@@ -21991,7 +21977,9 @@ async function generateAlbumData() {
 ]`;
 
     // 2. 呼叫“中央厨房”
-    const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, window.currentUser, taskDescription);
+    // 这是修正后的新代码
+const userPersonaForThisContext = window.currentChat.activeUserPersona || window.currentUser;
+const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, userPersonaForThisContext, taskDescription);
 
     // 3. 执行
     return await getAiGeneratedJson(finalPrompt);
@@ -22023,7 +22011,9 @@ async function generateCartData() {
 ]`;
 
     // 2. 呼叫“中央厨房”
-    const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, window.currentUser, taskDescription);
+    // 这是修正后的新代码
+const userPersonaForThisContext = window.currentChat.activeUserPersona || window.currentUser;
+const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, userPersonaForThisContext, taskDescription);
 
     // 3. 执行
     return await getAiGeneratedJson(finalPrompt);
@@ -22084,7 +22074,9 @@ async function generateMemoData() {
 ]`;
 
     // 2. 呼叫“中央厨房”
-    const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, window.currentUser, taskDescription);
+    // 这是修正后的新代码
+const userPersonaForThisContext = window.currentChat.activeUserPersona || window.currentUser;
+const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, userPersonaForThisContext, taskDescription);
 
     // 3. 执行
     return await getAiGeneratedJson(finalPrompt);
@@ -22410,7 +22402,7 @@ async function generateMemoData() {
                 const targetPage = document.getElementById(pageIdToShow);
                 if (targetPage) targetPage.style.display = 'flex';
             }
-
+window.showCharPhonePage = showCharPhonePage;
             // --- 5. 更换壁纸逻辑 ---
             const wallpaperAppBtn = document.getElementById('char-app-wallpaper');
             const wallpaperInput = document.getElementById('char-wallpaper-input');
@@ -22762,10 +22754,10 @@ async function generateMemoData() {
     "delivery_fee": 5,
     "packing_fee": 2,
     "discount": 3.5,
-    "delivery_address": "送到 {{user}} 家里",
-    "delivery_contact_name": "{{user}}",
+    "delivery_address": "地址",
+    "delivery_contact_name": "接收人",
     "delivery_contact_phone": "138****1234",
-    "delivery_rider": "骑手小陈",
+    "delivery_rider": "骑手xx",
     "order_id": "1234 5678 9012 3456",
     "payment_method": "在线支付"
     "remark": "微辣，多放香菜，谢谢！"
@@ -22773,7 +22765,9 @@ async function generateMemoData() {
 ]`;
 
                     // 2. 将这份菜单交给“中央厨房”，让它去烹饪一份完整的“菜谱”
-                    const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, window.currentUser, taskDescription);
+                    // 这是修正后的新代码
+const userPersonaForThisContext = window.currentChat.activeUserPersona || window.currentUser;
+const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, userPersonaForThisContext, taskDescription);
 
                     // 3. 将烹饪好的“菜谱”交给AI去执行
                     return await getAiGeneratedJson(finalPrompt);
@@ -23129,7 +23123,14 @@ async function generateMemoData() {
                     renderingQueue.push({ type: 'recall' });
                 }
 
-                // ▼▼▼ 在这里粘贴新代码 ▼▼▼
+                // ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
+                else if (content.startsWith('<mem>')) {
+                    const match = content.match(/<mem>(.*?)<\/mem>/s);
+                    if (match && match[1]) {
+                        renderingQueue.push({ type: 'memory', content: match[1].trim() });
+                    }
+                }
+                // ▲▲▲ 粘贴到这里结束 ▲▲▲
 
                 else if (content.startsWith('<post_moment>')) {
                     const match = content.match(/<post_moment>(.*?)<\/post_moment>/s);
@@ -23341,6 +23342,41 @@ async function generateMemoData() {
                         }
                         break;
                     }
+
+
+    // ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
+                    case 'memory': {
+                        if (!task.content) break;
+
+                        console.log(`🧠 AI主动记录记忆: "${task.content}"`);
+
+                        // 1. 构造并保存记忆数据
+                        const memoryData = {
+                            userId: user.id,
+                            contactId: chat.id,
+                            type: 'short-term',
+                            content: task.content,
+                            createdAt: new Date().toISOString(),
+                            sourceTurnIds: [] // 这里可以留空，因为是AI主动生成的
+                        };
+                        await db.memories.add(memoryData);
+
+                        // 2. 在聊天界面发送一条系统提示，让用户知道AI记住了什么
+                        const systemMessage = {
+                            userId: user.id,
+                            chatId: chat.id,
+                            senderId: 'system',
+                            type: 'system',
+                            content: `[${chat.name} 记录了一条核心记忆]`,
+                            time: new Date().toISOString()
+                        };
+                        const newMsgId = await db.messages.add(systemMessage);
+                        await addMessageToUI({ id: newMsgId, ...systemMessage });
+
+                        
+                        break;
+                    }
+                    // ▲▲▲ 粘贴到这里结束 ▲▲▲
 
                     case 'set_avatar': {
                         if (typeof handleSetImageProperty === 'function') {
@@ -24449,7 +24485,7 @@ async function generateMemoData() {
                 'app-offline',
                 'app-forum',
                 'app-regex',
-                'char-app-auing' // ✨ 新增
+       
             ];
 
             // 2. 循环遍历这个数组，为每一个App统一绑定点击事件
@@ -25919,7 +25955,7 @@ async function generateMemoData() {
                 return;
             }
 
-            const weekdayArray = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekdayArray = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
             /**
              * 核心函数：渲染极简日历
@@ -25932,7 +25968,7 @@ async function generateMemoData() {
                 const currentWeekday = weekdayArray[now.getDay()];
 
                 // ✨ 核心修改：将数据填充到新的元素中
-                monthYearEl.textContent = `${currentYear}年 ${currentMonth + 1}月`;
+                monthYearEl.textContent = `${currentYear}. ${currentMonth + 1}`;
                 todayDateEl.textContent = currentDate;
                 todayWeekdayEl.textContent = currentWeekday;
             }
@@ -26057,7 +26093,7 @@ async function generateMemoData() {
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
                 const allCycles = await db.period_cycles.toArray();
 
-                // b. 渲染星期表头
+                // b. 渲染周表头
                 ['日', '一', '二', '三', '四', '五', '六'].forEach(day => {
                     grid.innerHTML += `<div class="day-name">${day}</div>`;
                 });
@@ -26643,496 +26679,91 @@ async function generateMemoData() {
     bgInput.addEventListener('change', handleBackgroundChange);
 
 })();
+// ▼▼▼ 请用这一整块全新的 V8 版本，完整替换旧的 openMemoriesViewer 函数 ▼▼▼
 // ==========================================================
-// ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
-
-// ==========================================================
-// --- ✨✨✨【全新 V3 - 逻辑重构版】对话轮次解析引擎 ✨✨✨ ---
-// ==========================================================
-/**
- * 核心函数：将一个完整的消息数组，精确地解析成多个“已完成”的对话轮次。
- * 新逻辑：一个轮次 = (一个或多个连续的用户发言) + (随后的所有AI/系统发言)。
- * @param {Array<object>} messages - 按时间顺序排列的完整消息数组。
- * @returns {Array<Array<object>>} - 返回一个由“轮次”组成的二维数组。
- */
-async function extractCompletedTurns(messages) {
-    const turns = [];
-    let currentTurn = [];
-    // 关键状态：记录上一条消息的发送者是否是用户
-    let lastSpeakerWasUser = false; 
-
-    for (const msg of messages) {
-        const isCurrentUserMessage = (msg.senderId === window.currentUser.id && msg.type !== 'system');
-
-        if (isCurrentUserMessage) {
-            // 如果当前消息是用户发的...
-
-            // ...并且上一条消息不是用户发的（或者这是第一条消息）
-            // 这就标志着一个【新轮次】的开始！
-            if (!lastSpeakerWasUser) {
-                // 如果 currentTurn 中已经有内容了，说明上一轮（AI的回复）到此结束
-                // 把它打包存入 turns 仓库
-                if (currentTurn.length > 0) {
-                    turns.push(currentTurn);
-                }
-                // 开启一个全新的轮次，并将当前用户消息作为起点
-                currentTurn = [msg];
-            } else {
-                // 如果上一条消息也是用户发的，说明用户在连续发言
-                // 只需要将这条消息追加到当前轮次即可
-                currentTurn.push(msg);
-            }
-        } else {
-            // 如果当前消息是AI或系统发的...
-            // ...并且一个轮次已经由用户开启了（currentTurn不为空）
-            if (currentTurn.length > 0) {
-                // 就将这条非用户的消息追加到当前轮次中
-                currentTurn.push(msg);
-            }
-        }
-        
-        // 更新状态，为下一次循环做准备
-        lastSpeakerWasUser = isCurrentUserMessage;
-    }
-
-    // 循环结束后，最后的检查：
-    // 如果最后一条消息不是用户发的（lastSpeakerWasUser为false），
-    // 并且 currentTurn 中有内容，说明这是最后一个完整的轮次，需要存入仓库。
-    if (!lastSpeakerWasUser && currentTurn.length > 0) {
-        turns.push(currentTurn);
-    }
-    // 如果最后是用户在连续发言，那么 currentTurn 就是一个“未完成”的轮次，我们不应将其计入。
-
-    console.log(`✅ 轮次解析器(V3)：成功从 ${messages.length} 条消息中，解析出 ${turns.length} 个已完成的轮次。`);
-    return turns;
-}
-
-// ==========================================================
-// --- ✨✨✨【全新】“记忆检查员”独立核心引擎 V1.0 ✨✨✨ ---
-// ==========================================================
-async function runMemoryCheck() {
-    // 安全检查：如果不在聊天界面，或缺少上下文，则不执行
-    if (!window.currentChat || !window.currentUser || window.getCurrentPageId() !== 'qq-chat') {
-        return;
-    }
-
-    // 状态锁检查：如果当前已经有一个总结任务正在等待或执行，就直接退出
-    if (isSummarizationPending) {
-        console.log("🔒 记忆熔炉已上锁，跳过本次触发检查。");
-        return;
-    }
-
-    try {
-        // (这里的记账逻辑与我们之前修复好的 V6 版完全相同)
-        const allMessages = await db.messages.where({
-            userId: window.currentUser.id,
-            chatId: window.currentChat.id
-        }).sortBy('time');
-
-        const allMemories = await db.memories.where({
-            userId: window.currentUser.id,
-            contactId: window.currentChat.id,
-            type: 'short-term'
-        }).toArray();
-
-        const summarizedMessageIds = new Set(allMemories.flatMap(m => m.sourceTurnIds || []));
-        const unsummarizedMessages = allMessages.filter(msg => !summarizedMessageIds.has(msg.id));
-        const freshTurns = await extractCompletedTurns(unsummarizedMessages);
-        const freshTurnCount = freshTurns.length;
-        
-        console.log(`🧾 记账员(V3-审计模式): 发现 ${freshTurnCount} 个可供总结的新鲜轮次。`);
-
-        if (freshTurnCount >= 5) {
-            isSummarizationPending = true; 
-            const turnsToProcess = freshTurns.slice(0, 5);
-            console.log(`🔔 原材料已足够！正在将最早的5个新鲜轮次送入记忆熔炉...`);
-            if (typeof triggerMemorySummarization === 'function') {
-                triggerMemorySummarization(turnsToProcess); 
-            }
-        }
-
-    } catch (error) {
-        console.error("❌ 记账员在审计时出错:", error);
-    }
-}
-// ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
-// ▼▼▼ 请用这个【已修复查询顺序】的新版本，完整替换旧的 triggerArchiveSummarization 函数 ▼▼▼
-// ==========================================================
-// --- ✨✨✨【V1.2 - 查询修复版】“历史档案整理员”核心引擎 ✨✨✨ ---
-// ==========================================================
-async function triggerArchiveSummarization(userId, characterId) {
-    console.log("🔥 历史档案整理员已启动，正在提取最旧的记忆档案...");
-
-    try {
-        // ✨✨✨ 核心修复：我们将 .orderBy('createdAt') 移动到了 .where(...) 的前面！✨✨✨
-// 这是最终的正确代码
-const memoriesToSummarize = await db.memories
-    .orderBy('createdAt') // 1. 先将所有记忆按创建时间从旧到新排序
-    .filter(memory =>     // 2. 然后对排好序的结果进行筛选
-        memory.userId === userId &&
-        memory.contactId === characterId &&
-        memory.type === 'short-term'
-    )
-    .limit(10) // 3. 取出最前面的10条（也就是最旧的10条）
-    .toArray();
-        // (后续的所有逻辑都保持不变，因为它们现在可以正确接收到数据了)
-        if (memoriesToSummarize.length < 10) {
-            console.log("   - 诊断信息：原材料不足 (少于10条)，取消本次整理。");
-            return;
-        }
-        
-        console.log("   - 诊断信息：已成功提取10条待总结的短期记忆。");
-
-        const character = await db.characters.get(characterId);
-        const user = await db.users.get(userId);
-        const memoriesText = memoriesToSummarize.map((mem, index) => `${index + 1}. ${mem.content}`).join('\n');
-        const prompt = `...`; // (Prompt内容保持不变)
-        
-        console.log("   - 诊断信息：已构建Prompt，准备请求AI进行总结...");
-        
-        const response = await getSummaryAiReply([{ role: 'user', parts: [{ text: prompt }] }], null);
-        let archiveText = '';
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); archiveText += parsed.choices?.[0]?.delta?.content || '' } catch (e) { } } } }
-        
-        archiveText = archiveText.trim();
-        
-        console.log("   - 诊断信息：AI返回的原始总结内容为:", `"${archiveText}"`);
-
-        if (archiveText) {
-            const idsToDelete = memoriesToSummarize.map(mem => mem.id);
-            console.log("   - 诊断信息：AI已生成有效总结，准备执行数据库事务...");
-            
-            await db.transaction('rw', db.memories, async () => {
-                await db.memories.add({
-                    userId: userId,
-                    contactId: characterId,
-                    type: 'archive',
-                    content: archiveText,
-                    createdAt: new Date().toISOString(),
-                    sourceTurnIds: []
-                });
-                await db.memories.bulkDelete(idsToDelete);
-            });
-            
-            console.log(`🏛️ 【诊断成功】历史归档已完成！新的章节总结: "${archiveText}"`);
-        } else {
-            console.warn("   - 【诊断警告】AI未能生成有效的归档总结，本次操作跳过。");
-        }
-
-    } catch (error) {
-        console.error("❌ 【诊断失败】历史档案整理员在工作时发生严重错误:", error);
-    }
-}
-// ▲▲▲ 替换到这里结束 ▲▲▲
-
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
-// ==========================================================
-// --- ✨✨✨【全新】“记忆档案管理员”触发引擎 V1.0 ✨✨✨ ---
-// ==========================================================
-/**
- * 核心函数：检查指定角色的短期记忆是否已达到归档阈值，并触发归档。
- * @param {string} userId - 当前用户的ID。
- * @param {string} characterId - 当前角色的ID。
- */
-async function checkForArchiving(userId, characterId) {
-    const ARCHIVE_THRESHOLD = 10; // 归档阈值：10条短期记忆
-
-    try {
-        // 1. 使用我们新创建的索引，高效地计算短期记忆的数量
-        const shortTermMemoryCount = await db.memories.where({
-            userId: userId,
-            contactId: characterId,
-            type: 'short-term'
-        }).count();
-        
-        console.log(`🗂️ 档案管理员: 角色「${characterId}」当前有 ${shortTermMemoryCount} 条短期记忆。`);
-
-        // 2. 检查是否达到阈值
-        if (shortTermMemoryCount >= ARCHIVE_THRESHOLD) {
-            console.log(`🔔 归档阈值已达到！正在启动“历史档案整理员”...`);
-            
-            // 3. 如果达到，调用主归档函数
-            if (typeof triggerArchiveSummarization === 'function') {
-                triggerArchiveSummarization(userId, characterId);
-            }
-        }
-    } catch (error) {
-        console.error("❌ 档案管理员在检查时出错:", error);
-    }
-}
-// ==========================================================
-
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
-// --- ✨✨✨【V1.3 - 上帝视角版】“记忆熔炉”核心引擎 ✨✨✨ ---
-// ==========================================================
-/**
- * 核心函数：接收指定的对话轮次，结合双方人设进行【客观】总结，并存入数据库。
- * @param {Array<Array<object>>} turnsToSummarize - 一个包含3个轮次的二维数组。
- */
-async function triggerMemorySummarization(turnsToSummarize) {
-    if (!turnsToSummarize || turnsToSummarize.length < 3) {
-        console.warn("记忆熔炉：收到的原材料不足3轮，取消本次总结。");
-        isSummarizationPending = false; 
-        return;
-    }
-    
-    console.log("🔥 记忆熔炉(上帝视角版)已启动，正在分析原材料...");
-
-    try {
-        // --- 获取双方人设信息 (逻辑不变) ---
-        const character = window.currentChat;
-        const userPersona = character.activeUserPersona || window.currentUser;
-
-        const conversationText = turnsToSummarize.flat().map(msg => {
-            const speaker = (msg.senderId === window.currentUser.id) ? userPersona.name : character.name;
-            return `${speaker}: ${msg.content}`;
-        }).join('\n');
-        
-        console.log("   - 正在总结以下对话：\n", conversationText);
-
-        // --- ✨✨✨ 核心修改：构建一个全新的、“上帝视角”的 Prompt ✨✨✨ ---
-        const prompt = `
-        ${JAILBREAK_PROMPT}
-【你的角色】
-你是一个档案管理员，任务是为一段对话生成精炼的核心记忆摘要。
-
-【背景资料】
-- 对话参与者A: "${character.name}"，他/她的人设是：“${character.persona}”
-- 对话参与者B: "${userPersona.name}"，他/她的人设是：“${userPersona.bio || '未设置'}”
-
-【核心任务】
-请仔细阅读以下对话记录。在充分理解了双方人设的基础上，用【客观的第三人称视角】，将这段对话中发生的关键事件、达成的重要共识、或显著的情感转折点，总结成一段约30-50字的“核心记忆”。
-
-【对话记录】:
-${conversationText}
-
-【输出要求】:
-- 必须使用客观、中立的第三人称视角进行陈述。
-- 总结内容必须简洁明了，直击核心。
-- 你的回答只能包含总结出来的那段纯文本记忆，绝对不要添加任何额外的解释或开场白。
-
-【优秀范例】:
-- 经过一番犹豫后，[角色名]最终同意了[用户名]周末去看电影的邀请。
-- [用户名]向[角色名]解释了上次迟到的原因，消除了两人之间的误会。
-- 在讨论中，[角色名]表现出了对[某件事]不同寻常的占有欲。
-`;
-
-        const response = await getSummaryAiReply([{ role: 'user', parts: [{ text: prompt }] }], null);
-        
-        let memoryText = '';
-        // ... (流式读取代码保持不变) ...
-        const reader = response.body.getReader(); const decoder = new TextDecoder(); while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); memoryText += parsed.choices?.[0]?.delta?.content || '' } catch (e) { } } } }
-        
-        memoryText = memoryText.trim();
-
-        if (memoryText) {
-            // (后续的数据库保存逻辑完全保持不变)
-            const memoryData = {
-                userId: window.currentUser.id,
-                contactId: window.currentChat.id,
-                type: 'short-term',
-                content: memoryText,
-                createdAt: new Date().toISOString(),
-                sourceTurnIds: turnsToSummarize.flat().map(msg => msg.id) 
-            };
-            
-            await db.memories.add(memoryData);
-            console.log(`✨ 记忆黄金(上帝视角)已铸成！已存入数据库: "${memoryText}"`);
-
-            // --- ▼▼▼ 核心新增：在这里呼叫“档案管理员”！ ▼▼▼ ---
-            if (typeof checkForArchiving === 'function') {
-                checkForArchiving(window.currentUser.id, window.currentChat.id);
-            }
-            // --- ▲▲▲ 新增结束 ▲▲▲ ---
-
-        } else {
-            console.warn("   - AI未能生成有效的记忆内容。");
-        }
-
-    } catch (error) {
-        console.error("❌ 记忆熔炉在工作时发生严重错误:", error);
-    } finally {
-        console.log("🔑 记忆熔炉工作完毕，解锁。");
-        isSummarizationPending = false;
-    }
-}
-
-// ▼▼▼ 请用这一整块【增加了“手动回溯”按钮】的新版本，完整替换旧的 openMemoriesViewer 函数 ▼▼▼
-// ==========================================================
-// --- ✨✨✨【V5 - 全功能版】“记忆陈列室”核心引擎 ✨✨✨ ---
+// --- ✨✨✨【V8 - 瀑布流版】“记忆陈列室”核心引擎 ✨✨✨ ---
 // ==========================================================
 async function openMemoriesViewer() {
-    // 1. 获取所有需要的DOM元素 (新增了 footerEl)
+    // 1. 获取所有需要的DOM元素 (保持不变)
     const modal = document.getElementById('generic-list-modal');
     const titleEl = document.getElementById('generic-list-title');
     const contentEl = document.getElementById('generic-list-content');
-    const footerEl = document.getElementById('generic-list-footer'); // ✨ 核心新增：获取页脚容器
     const closeBtn = document.getElementById('generic-list-close-btn');
 
-    // (智能获取角色上下文的逻辑保持不变)
     const character = window.currentProfileContact || window.currentChat;
     if (!modal || !character) {
         console.error("无法打开时光档案室：缺少角色上下文。");
         return;
     }
 
-    // 2. 准备弹窗，并插入搜索/筛选功能的HTML (保持不变)
+    // 2. ✨ 核心修改：准备一个更简洁的、用于瀑布流的HTML结构
     titleEl.textContent = `与 ${character.name} 的时光档案`;
     contentEl.innerHTML = `
         <div style="padding: 10px 5px; display: flex; flex-direction: column; gap: 10px;">
             <input type="search" id="memory-search-input" class="form-input" placeholder="搜索记忆关键词...">
-            <div id="memory-filter-buttons" style="display: flex; gap: 8px;">
-                <button class="btn btn-secondary buttonlike active" data-filter="all">全部</button>
-                <button class="btn btn-secondary buttonlike" data-filter="short-term">短期记忆</button>
-                <button class="btn btn-secondary buttonlike" data-filter="archive">归档总结</button>
-            </div>
-            <hr style="border: none; border-top: 1px solid var(--color-ui-border); margin: 5px 0;">
-            <div id="memory-timeline-container">
+            <!-- 我们在这里彻底移除了手风琴的容器 -->
+            <div id="memory-timeline-container" style="padding-top: 10px;">
                 <p style="text-align:center; color:#a1a1aa;">正在构建时间线...</p>
             </div>
         </div>
     `;
 
-    // 3. ✨ 核心修改：在这里，我们动态地创建“手动回溯总结”按钮并绑定功能
-    footerEl.innerHTML = `
-        <button id="manual-archive-btn" class="btn btn-primary buttonlike btn-full-width">
-            手动回溯总结过往
-        </button>
-    `;
-    footerEl.style.display = 'block'; // 确保页脚是可见的
-
-    // 为新按钮绑定点击事件
-// 这是正确的代码
-const manualArchiveBtn = document.getElementById('manual-archive-btn');
-if (manualArchiveBtn) {
-    manualArchiveBtn.addEventListener('click', async () => {
-        if (typeof manuallyArchivePastMemories === 'function') {
-            // 1. 调用总结函数并等待它完成
-            const success = await manuallyArchivePastMemories();
-            
-            // 2. 如果成功了...
-            if (success) {
-                // 3. ✨ 核心修复：调用渲染函数，强制刷新列表UI！
-                await renderMemoryGroups(); 
-                
-                // 4. (优化) 我们不再自动关闭弹窗，以便您能看到更新后的结果。
-                // hideModal('generic-list-modal'); // <--- 这一行已被移除
-            }
-        }
-    });
-}
-
-    // (后续所有显示弹窗、渲染列表的逻辑都保持不变)
+    // (移除页脚的代码保持不变)
+    const footerEl = document.getElementById('generic-list-footer');
+    if (footerEl) {
+        footerEl.innerHTML = '';
+        footerEl.style.display = 'none';
+    }
+    
     showModal('generic-list-modal');
     closeBtn.onclick = () => hideModal('generic-list-modal');
     
-    // ... (内部的 renderMemoryGroups, expandMonthAndRenderMemories, 以及事件监听器代码都保持不变)
     const searchInput = document.getElementById('memory-search-input');
-    const filterButtons = document.getElementById('memory-filter-buttons');
     const timelineContainer = document.getElementById('memory-timeline-container');
 
-    searchInput.addEventListener('input', () => renderMemoryGroups());
-    filterButtons.addEventListener('click', (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            filterButtons.querySelector('.active').classList.remove('active');
-            e.target.classList.add('active');
-            renderMemoryGroups();
-        }
-    });
+    // ✨ 核心修改：不再需要 filterButtons，只监听搜索框
+    searchInput.addEventListener('input', () => renderMemoryList());
 
-    async function renderMemoryGroups() { /* ... 此函数内容不变 ... */ 
+    /**
+     * ✨ 核心修改：全新的、简化的渲染函数 renderMemoryList
+     */
+    async function renderMemoryList() { 
         timelineContainer.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div>';
         const searchTerm = searchInput.value.toLowerCase();
-const activeFilter = filterButtons.querySelector('.active').dataset.filter;
-let query;
-if (activeFilter === 'all') {
-    // 当筛选“全部”时，我们使用 [userId+contactId] 索引
-    query = db.memories.where('[userId+contactId]').equals([window.currentUser.id, character.id]);
-} else {
-    // ✨ 核心修复：当筛选特定类型时，明确指定使用 [userId+contactId+type] 复合索引！
-    query = db.memories.where('[userId+contactId+type]').equals([window.currentUser.id, character.id, activeFilter]);
-}
-        const allMemories = await query.toArray();
-        const filteredMemories = searchTerm ? allMemories.filter(memory => memory.content.toLowerCase().includes(searchTerm)) : allMemories;
+        
+        // 查询逻辑被极大简化
+        const allMemories = await db.memories
+            .where('[userId+contactId]')
+            .equals([window.currentUser.id, character.id])
+            .reverse() // 直接按时间倒序
+            .sortBy('createdAt');
+        
+        const filteredMemories = searchTerm 
+            ? allMemories.filter(memory => memory.content.toLowerCase().includes(searchTerm)) 
+            : allMemories;
+
         if (filteredMemories.length === 0) {
             timelineContainer.innerHTML = `<p style="text-align:center; color:#a1a1aa;">没有找到匹配的记忆。</p>`;
             return;
         }
-        const groups = {};
+
+        timelineContainer.innerHTML = ''; // 清空加载提示
+        
+        // 直接遍历所有筛选后的记忆，并创建卡片
         filteredMemories.forEach(memory => {
-            const date = new Date(memory.createdAt);
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            if (!groups[year]) groups[year] = {};
-            if (!groups[year][month]) groups[year][month] = 0;
-            groups[year][month]++;
-        });
-        timelineContainer.innerHTML = '';
-        const sortedYears = Object.keys(groups).sort((a, b) => b - a);
-        sortedYears.forEach(year => {
-            const yearGroup = document.createElement('div');
-            yearGroup.className = 'customization-group';
-            yearGroup.innerHTML = `<div class="group-header"><span class="icon"><i class="fa-solid fa-calendar-days"></i></span><span class="label">${year}年</span><span class="arrow">&lt;</span></div><div class="group-content"><div class="group-content-inner" id="months-for-${year}"></div></div>`;
-            timelineContainer.appendChild(yearGroup);
-            const monthsContainer = document.getElementById(`months-for-${year}`);
-            const sortedMonths = Object.keys(groups[year]).sort((a, b) => b - a);
-            sortedMonths.forEach(month => {
-                const monthEl = document.createElement('div');
-                monthEl.className = 'settings-item buttonlike month-expander';
-                monthEl.dataset.year = year;
-                monthEl.dataset.month = month;
-                monthEl.innerHTML = `<span class="icon"><i class="fa-solid fa-calendar-week"></i></span><span class="label">${parseInt(month) + 1}月 (${groups[year][month]}条)</span><span class="arrow">></span>`;
-                monthsContainer.appendChild(monthEl);
-            });
+            const card = document.createElement('div');
+            card.className = 'memory-card';
+            card.innerHTML = `<div class="content">${escapeHtml(memory.content)}</div><div class="footer"><span class="timestamp">${formatTimestamp(memory.createdAt)}</span><div class="actions"><button class="btn-icon buttonlike btn-edit-memory" data-memory-id="${memory.id}" title="编辑"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-icon buttonlike btn-delete-memory" data-memory-id="${memory.id}" title="删除"><i class="fa-solid fa-trash-can"></i></button></div></div>`;
+            timelineContainer.appendChild(card);
         });
     }
 
-    async function expandMonthAndRenderMemories(monthExpander) { /* ... 此函数内容不变 ... */ 
-        monthExpander.classList.toggle('expanded');
-        let cardContainer = monthExpander.nextElementSibling;
-        if (monthExpander.classList.contains('expanded') && !cardContainer) {
-            cardContainer = document.createElement('div');
-            cardContainer.className = 'memory-cards-container';
-            cardContainer.style.padding = '10px 15px';
-            monthExpander.after(cardContainer);
-            cardContainer.innerHTML = '<div class="loading-spinner" style="margin: 10px auto;"></div>';
-            const year = parseInt(monthExpander.dataset.year);
-            const month = parseInt(monthExpander.dataset.month);
-            const startDate = new Date(year, month, 1);
-            const endDate = new Date(year, month + 1, 1);
-            const memories = await db.memories.where('createdAt').between(startDate.toISOString(), endDate.toISOString(), true, false).filter(memory => memory.userId === window.currentUser.id && memory.contactId === character.id).reverse().sortBy('createdAt');
-            cardContainer.innerHTML = '';
-            memories.forEach(memory => {
-                let typeLabel = '';
-                switch (memory.type) {
-                    case 'short-term': typeLabel = '短期记忆'; break;
-                    case 'archive': typeLabel = '归档总结'; break;
-                }
-                const card = document.createElement('div');
-                card.className = 'memory-card';
-                card.innerHTML = `<div class="content">${escapeHtml(memory.content)}</div><div class="footer"><span class="type-label">${typeLabel}</span><span class="timestamp">${formatTimestamp(memory.createdAt)}</span><div class="actions"><button class="btn-icon buttonlike btn-edit-memory" data-memory-id="${memory.id}" title="编辑"><i class="fa-solid fa-pen-to-square"></i></button><button class="btn-icon buttonlike btn-delete-memory" data-memory-id="${memory.id}" title="删除"><i class="fa-solid fa-trash-can"></i></button></div></div>`;
-                cardContainer.appendChild(card);
-            });
-        } else if (cardContainer) {
-            cardContainer.remove();
-        }
-    }
+    // ✨ 核心修改：不再需要 expandMonthAndRenderMemories 函数，也就不需要为 contentEl 绑定事件监听器了
 
-    contentEl.addEventListener('click', (e) => {
-        const monthExpander = e.target.closest('.month-expander');
-        if (monthExpander) {
-            expandMonthAndRenderMemories(monthExpander);
-        }
-    });
-
-    renderMemoryGroups();
+    // 初始加载
+    renderMemoryList();
 }
-// ▲▲▲ 替换到这里结束 ▲▲▲
-
 // ==========================================================
-
 // ▲▲▲ 替换到这里结束 ▲▲▲
 
 // ==========================================================
@@ -27224,96 +26855,6 @@ if (activeFilter === 'all') {
 })();
 // ==========================================================
 
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
-// ==========================================================
-// --- ✨✨✨【全新】“历史档案整理员”：手动回溯总结引擎 V1.0 ✨✨✨ ---
-// ==========================================================
-async function manuallyArchivePastMemories() {
- const character = window.currentProfileContact || window.currentChat;
-    if (!character) return false;
-
-    showLoadingModal("正在分析历史记录...");
-
-    try {
-        // 1. 获取所有已总结过的消息ID，建立一个“已读”清单
-        const allMemories = await db.memories.where({ userId: window.currentUser.id, contactId: character.id }).toArray();
-        const summarizedMessageIds = new Set(allMemories.flatMap(m => m.sourceTurnIds || []));
-
-        // 2. 获取所有历史消息，并筛选出那些“未读”的
-        const allMessages = await db.messages.where({ userId: window.currentUser.id, chatId: character.id }).sortBy('time');
-        const unsummarizedMessages = allMessages.filter(msg => !summarizedMessageIds.has(msg.id));
-
-        // 3. 将“未读”消息划分为轮次
-        const freshTurns = await extractCompletedTurns(unsummarizedMessages);
-        const batchesToProcess = Math.floor(freshTurns.length / 3);
-
-        if (batchesToProcess === 0) {
-            hideLoadingModal();
-            showNotification("没有需要整理的过往记录。");
-            return true;
-        }
-
-        // --- ✨ 核心修改：现在我们直接调用新的、带参数的 triggerMemorySummarization ---
-        for (let i = 0; i < batchesToProcess; i++) {
-            showLoadingModal(`正在总结第 ${i + 1}/${batchesToProcess} 批历史记忆...`);
-            
-            // a. 同样，精确地切出当前批次需要处理的3个轮次
-            const turnsForThisBatch = freshTurns.slice(i * 3, i * 3 + 3);
-            
-            // b. 将这一批次的任务交给“记忆熔炉”
-            //    由于“记忆熔炉”现在是异步的，但我们在这里不需要等待它完成，可以继续循环
-            if (turnsForThisBatch.length === 3) {
-                triggerMemorySummarization(turnsForThisBatch);
-                // 为了防止短时间内连续触发（虽然有锁，但以防万一），可以加一个小延迟
-                await new Promise(resolve => setTimeout(resolve, 500)); 
-            }
-        }
-
-
-        hideLoadingModal();
-        showNotification("历史记忆已整理完毕！");
-        return true; // 返回成功标记
-
-    } catch (error) {
-        hideLoadingModal();
-        console.error("手动整理历史记忆失败:", error);
-        showNotification("整理失败", error.message);
-        return false; // 返回失败标记
-    }
-}
-
-/**
- * 辅助函数：一个可复用的“总结并保存”模块
- */
-async function summarizeAndSave(turns, character) {
-    const conversationText = turns.flat().map(msg => {
-        const speaker = (msg.senderId === window.currentUser.id) ? window.currentUser.name : character.name;
-        return `${speaker}: ${msg.content}`;
-    }).join('\n');
-    
-    const prompt = `【任务】将以下对话总结成一段30-50字的“核心记忆”。\n\n【对话】:\n${conversationText}\n\n【要求】:只输出总结，不要任何额外解释。`;
-    
-  const response = await getSummaryAiReply([{ role: 'user', parts: [{ text: prompt }] }], null);
-    
-    let memoryText = '';
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    while (true) { /* ... (省略流式读取代码) ... */ const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); memoryText += parsed.choices?.[0]?.delta?.content || '' } catch (e) { } } } }
-    
-    memoryText = memoryText.trim();
-    if (memoryText) {
-        await db.memories.add({
-            userId: window.currentUser.id,
-            contactId: character.id,
-            type: 'short-term',
-            content: memoryText,
-            createdAt: new Date().toISOString(),
-            sourceTurnIds: turns.flat().map(msg => msg.id)
-        });
-        console.log(`🗄️ 历史归档: "${memoryText}"`);
-    }
-}
-// ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
 // ==========================================================
 // --- ✨✨✨【全新 V1】提示词预设管理中心-核心交互引擎 ✨✨✨ ---
 // ==========================================================
@@ -27794,105 +27335,113 @@ if (moduleListContainer) {
 
 // ▼▼▼ 请用这一整块全新的代码，完整替换旧的 openFixedPromptViewer 函数 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【V2 - 智能上下文版】固定Prompt模块查看器-核心引擎 ✨✨✨ ---
+// --- ✨✨✨【V3 - 实时上下文版】固定Prompt模块查看器-核心引擎 ✨✨✨ ---
 // ==========================================================
 /**
  * 核心函数: 打开查看器并根据当前上下文，智能填充模板内容
  * @param {string} moduleId - 被点击的模块的ID
  */
-window.openFixedPromptViewer = async function (moduleId) { // ✨ 核心修改：函数现在是异步的
-    // 1. 获取所有需要的DOM元素 (不变)
+window.openFixedPromptViewer = async function (moduleId) {
+    // 1. 获取所有需要的DOM元素
     const modal = document.getElementById('fixed-prompt-viewer-modal');
     const titleEl = document.getElementById('fixed-prompt-viewer-title');
     const contentEl = document.getElementById('fixed-prompt-viewer-content');
     
-    // 2. 初始化标题和内容
+    // 2. 初始化标题和内容，并显示弹窗
     let title = '模块内容';
-    let content = '无法预览此模块的内容。';
-    
+    let content = '加载中...';
+    titleEl.textContent = title;
+    contentEl.textContent = content;
+    showModal('fixed-prompt-viewer-modal');
+
     // 3. ✨ 核心修改：在函数开头，立即获取当前聊天对象和用户
     const character = window.currentChat;
     const user = window.currentUser;
 
-    // 4. 根据模块ID，提供不同的标题，并根据上下文智能填充内容
+    // 如果不在聊天上下文中，则显示默认模板（与之前逻辑类似）
+    if (!character || !user) {
+        contentEl.textContent = "请在聊天界面中查看此模块的实时内容。";
+        return;
+    }
+    
+    // 4. ✨ 核心修改：调用“数据供应商”，获取包含所有实时数据的 context 材料包
+    const context = await buildCoreContext(character.id, user.id);
+    if (!context) {
+        contentEl.textContent = '获取上下文失败。';
+        return;
+    }
+    const { chatHistory } = context; 
+
+    // 5. 根据模块ID，提供不同的标题，并根据上下文智能填充内容
     switch (moduleId) {
         case 'char_persona':
             title = '角色人设 (char) 模块';
             const CHAR_PERSONA_TEMPLATE = `【核心身份】\n你是“{{char}}”，你的人设是：“{{persona}}”。\n你正在和{{user}}进行线上聊天。`;
-            if (character && user) {
-                // 如果在聊天中，就用真实数据替换占位符
-                const userPersonaForDisplay = character.activeUserPersona || user;
-                content = CHAR_PERSONA_TEMPLATE
-                    .replace(/{{char}}/g, character.name)
-                    .replace(/{{persona}}/g, character.persona)
-                    .replace(/{{user}}/g, userPersonaForDisplay.name);
-            } else {
-                // 如果不在聊天中，就显示原始模板
-                content = CHAR_PERSONA_TEMPLATE;
-            }
+            const userPersonaForDisplay = character.activeUserPersona || user;
+            content = CHAR_PERSONA_TEMPLATE
+                .replace(/{{char}}/g, character.name)
+                .replace(/{{persona}}/g, character.persona)
+                .replace(/{{user}}/g, userPersonaForDisplay.name);
             break;
             
         case 'user_persona':
             title = '你的信息 (user) 模块';
             const USER_PERSONA_TEMPLATE = `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是{{gender}}，你应该称呼{{user}}的名字。\n\n【关于TA的详细档案】\n名字: {{name}}\n性别: {{gender}}\n生日: {{birthday}}\n年龄: {{age}}\n人设: {{bio}}`;
-            if (character && user) {
-                // 如果在聊天中，就用真实数据替换
-                const personaForDisplay = character.activeUserPersona || user;
-                content = USER_PERSONA_TEMPLATE
-                    .replace(/{{user}}/g, personaForDisplay.name || '未设置')
-                    .replace(/{{name}}/g, personaForDisplay.name || '未设置')
-                    .replace(/{{gender}}/g, personaForDisplay.gender || '未设置')
-                    .replace(/{{birthday}}/g, personaForDisplay.birthday || '未设置')
-                    .replace(/{{age}}/g, personaForDisplay.age || '未设置')
-                    .replace(/{{bio}}/g, personaForDisplay.bio || '无');
-            } else {
-                // 如果不在聊天中，显示带占位符的模板
-                content = USER_PERSONA_TEMPLATE
-                    .replace(/{{name}}/g, '{{user}}')
-                    .replace(/{{gender}}/g, '{{性别}}')
-                    .replace(/{{birthday}}/g, '{{生日}}')
-                    .replace(/{{age}}/g, '{{年龄}}')
-                    .replace(/{{bio}}/g, '{{人设}}');
-            }
+            const personaForDisplay = character.activeUserPersona || user;
+            content = USER_PERSONA_TEMPLATE
+                .replace(/{{user}}/g, personaForDisplay.name || '未设置')
+                .replace(/{{name}}/g, personaForDisplay.name || '未设置')
+                .replace(/{{gender}}/g, personaForDisplay.gender || '未设置')
+                .replace(/{{birthday}}/g, personaForDisplay.birthday || '未设置')
+                .replace(/{{age}}/g, personaForDisplay.age || '未设置')
+                .replace(/{{bio}}/g, personaForDisplay.bio || '无');
             break;
             
         case 'world_book':
-            title = '相关的世界书 模块';
-            content = `这里会根据您和「${character ? character.name : '角色'}」的聊天内容，动态填入被触发的世界书条目。\n\n例如：\n--- 龙裔的起源 ---\n在创世之初，巨龙曾是天空的霸主...`;
+            title = '相关的世界书 模块 (实时)';
+            // ✨ 核心修改：调用真正的数据获取函数！
+            const triggeredWorldBook = await getActiveWorldBookEntriesForTurn(chatHistory, character.linkedEntries);
+            const wbContent = [triggeredWorldBook.before_char, triggeredWorldBook.after_char].filter(Boolean).join('\n\n');
+            content = wbContent.trim() ? wbContent : '（当前对话没有触发任何世界书条目）';
             break;
             
         case 'core_memory':
-            title = '核心记忆 模块';
-            content = `这里会根据您和「${character ? character.name : '角色'}」的聊天内容，动态填入AI自动总结的短期核心记忆。\n\n例如：\n- 经过一番犹豫后，${character ? character.name : '角色'}最终同意了${user ? user.name : '你'}周末去看电影的邀请。`;
+            title = '核心记忆 模块 (实时)';
+            // ✨ 核心修改：调用真正的数据获取函数！
+            const memoryContent = await retrieveRelevantMemories(chatHistory, character.id, user.id);
+            // 清理一下前缀，让显示更干净
+            content = memoryContent.trim() ? memoryContent.replace('【你需要参考的、过去发生过的核心记忆】:\n', '') : '（当前对话没有检索到相关的核心记忆）';
             break;
 
         case 'chat_history':
             title = '聊天记录回顾 模块';
-            content = `这里会根据您和「${character ? character.name : '角色'}」的聊天内容，动态填入最近的对话记录。`;
+            const historyTranscript = chatHistory.length > 0
+                ? chatHistory.flatMap(msg => {
+                    const content = msg.content || '';
+                    if (content.trim().startsWith('<div')) return [];
+                    const speaker = msg.senderId === user.id ? (character.activeUserPersona || user).name : character.name;
+                    return [`${speaker}: ${content}`];
+                }).join('\n')
+                : "（你们最近没有聊天）";
+            content = historyTranscript;
             break;
             
         case 'jailbreak':
             title = '破限指令 模块';
-            // ✨ 这里是针对您问题的核心修复 ✨
             let rawContent = typeof JAILBREAK_PROMPT !== 'undefined' ? JAILBREAK_PROMPT.trim() : '加载指令失败...';
-            if (character && user) {
-                const userPersonaForDisplay = character.activeUserPersona || user;
-                // 在显示之前，手动执行一次占位符替换
-                content = rawContent
-                    .replace(/{{char}}/g, character.name)
-                    .replace(/{{user}}/g, userPersonaForDisplay.name);
-            } else {
-                content = rawContent; // 如果不在聊天中，还是显示原始模板
-            }
+            const userForDisplay = character.activeUserPersona || user;
+            content = rawContent
+                .replace(/{{char}}/g, character.name)
+                .replace(/{{user}}/g, userForDisplay.name);
             break;
     }
 
-    // 5. 将最终生成的内容填充到弹窗并显示 (不变)
+    // 6. 将最终生成的内容填充到弹窗
     titleEl.textContent = title;
-    contentEl.textContent = content; // 使用 .textContent 更安全
-    showModal('fixed-prompt-viewer-modal');
+    contentEl.textContent = content;
 }
-
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
     /**
      * 核心函数 2: 关闭查看器
      */
@@ -27909,44 +27458,37 @@ window.openFixedPromptViewer = async function (moduleId) { // ✨ 核心修改�
 
 })();
 // ==========================================================
-// ▼▼▼ 请将这一整块全新的代码，粘贴到 <script> 的末尾 ▼▼▼
+// ▼▼▼ 请用这一整块全新的代码，完整替换旧的 executePlotFastForward 函数 ▼▼▼
 // ==========================================================
-// --- ✨✨✨【全新补完】剧情快进核心功能引擎 ✨✨✨ ---
+// --- ✨✨✨【V2 - UI优化版】剧情快进核心功能引擎 ✨✨✨ ---
 // ==========================================================
 /**
  * 核心函数：执行剧情快进的完整流程
  */
 async function executePlotFastForward() {
-    // 1. 获取所有相关的 DOM 元素
     const dialog = document.getElementById('fast-forward-dialog');
     const timespanInput = document.getElementById('ff-timespan-input');
     const eventInput = document.getElementById('ff-event-input');
     const cancelBtn = document.getElementById('ff-dialog-cancel');
     const confirmBtn = document.getElementById('ff-dialog-confirm');
 
-    // 安全检查
     if (!dialog || !confirmBtn) {
         console.error("无法执行剧情快进：缺少必要的弹窗HTML元素。");
         return;
     }
 
-    // 2. 清空输入框并显示弹窗
     timespanInput.value = '';
     eventInput.value = '';
     dialog.classList.remove('hidden');
 
-    // 3. 定义一个统一的关闭和清理函数
     const closeDialog = () => {
         dialog.classList.add('hidden');
-        // 移除一次性的事件监听，防止内存泄漏
         confirmBtn.onclick = null;
         cancelBtn.onclick = null;
     };
 
-    // 4. 为“取消”按钮绑定事件
     cancelBtn.onclick = closeDialog;
 
-    // 5. 核心：为“确认快进”按钮绑定一次性的点击事件
     confirmBtn.onclick = async () => {
         const timespan = timespanInput.value.trim();
         const eventText = eventInput.value.trim();
@@ -27956,27 +27498,33 @@ async function executePlotFastForward() {
             return;
         }
 
-        // a. 组合成一条清晰的旁白消息
-        const systemContent = `[时间快进：${timespan}] [事件快进：${eventText}]`;
+        // ▼▼▼ ✨✨✨ 核心修改就在这里！ ✨✨✨ ▼▼▼
 
+        // 1. 准备给 AI 看的、包含全部信息的完整内容
+        const systemContentForAI = `[时间快进：${timespan}] [事件快进：${eventText}]`;
+        
+        // 2. 准备只给用户看的、简洁的显示内容
+        const displayContentForUser = `[---${timespan}---]`;
+
+        // 3. 在创建消息对象时，同时存入这两个字段
         const systemMessage = {
             userId: window.currentUser.id,
             chatId: window.currentChat.id,
             senderId: 'system',
             type: 'system',
-            content: systemContent,
+            content: systemContentForAI,       // <-- 完整内容给AI
+            displayContent: displayContentForUser, // <-- 简洁内容给UI
             time: new Date().toISOString()
         };
+        // ▲▲▲ ✨✨✨ 修改结束 ✨✨✨ ▲▲▲
 
         try {
-            // b. 保存旁白并更新UI
             const newMsgId = await db.messages.add(systemMessage);
             await addMessageToUI({ id: newMsgId, ...systemMessage });
             scrollToBottom(document.getElementById('chat-messages'));
 
-            closeDialog(); // 关闭输入弹窗
+            closeDialog();
 
-            // c. 自动触发一次AI回复，让AI对快进后的剧情做出反应
             const triggerAiBtn = document.getElementById('chat-trigger-ai');
             if (triggerAiBtn) {
                 triggerAiBtn.click();
@@ -27988,6 +27536,8 @@ async function executePlotFastForward() {
         }
     };
 }
+// ==========================================================
+// ▲▲▲ 替换到这里结束 ▲▲▲
 // ==========================================================
 // 这是正确的代码
 async function openBondsListModal(character) {
@@ -28138,7 +27688,233 @@ window.openBondsListModal = openBondsListModal;
                 }
             });
         })();
+// ==========================================================
+        // --- ✨✨✨【全新修复】导出选项弹窗-交互引擎 ✨✨✨ ---
+        // ==========================================================
+        (function () {
+            // 1. 获取所有相关的 DOM 元素
+            const exportOptionsDialog = document.getElementById('export-options-dialog');
+            const withTimestampsBtn = document.getElementById('export-with-timestamps');
+            const withoutTimestampsBtn = document.getElementById('export-without-timestamps');
+            const cancelBtn = document.getElementById('export-cancel');
 
+            // 安全检查
+            if (!exportOptionsDialog || !withTimestampsBtn || !withoutTimestampsBtn || !cancelBtn) {
+                return;
+            }
+
+            // 2. 核心逻辑：为弹窗内的按钮绑定各自的功能
+
+            // a. 点击“包含时间戳”
+            withTimestampsBtn.addEventListener('click', () => {
+                exportOptionsDialog.classList.add('hidden'); // 关闭弹窗
+                if (typeof exportFullArchive === 'function') {
+                    exportFullArchive(true); // 调用核心函数，并告诉它“需要时间戳”
+                }
+            });
+
+            // b. 点击“不包含时间戳”
+            withoutTimestampsBtn.addEventListener('click', () => {
+                exportOptionsDialog.classList.add('hidden'); // 关闭弹窗
+                if (typeof exportFullArchive === 'function') {
+                    exportFullArchive(false); // 调用核心函数，并告诉它“不需要时间戳”
+                }
+            });
+
+            // c. 点击“取消”
+            cancelBtn.addEventListener('click', () => {
+                exportOptionsDialog.classList.add('hidden');
+            });
+
+            // d. (推荐) 点击弹窗的灰色背景区域也可以关闭
+            exportOptionsDialog.addEventListener('click', (e) => {
+                if (e.target === exportOptionsDialog) {
+                    exportOptionsDialog.classList.add('hidden');
+                }
+            });
+        })();
+// ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
+// ==========================================================
+// --- ✨✨✨【全新】“查手机”内部-Auing App核心引擎 ✨✨✨ ---
+// ==========================================================
+(function () {
+    // --- 1. 获取所有相关的 DOM 元素 ---
+    const auingAppBtn = document.getElementById('char-app-auing');
+    const auingPage = document.getElementById('char-phone-auing-page');
+    if (!auingAppBtn || !auingPage) return;
+
+    const header = document.getElementById('auing-app-header');
+    const titleEl = document.getElementById('char-auing-title');
+    const backBtn = document.getElementById('char-auing-back-btn');
+    const listView = document.getElementById('auing-chat-list-view');
+    const detailView = document.getElementById('auing-chat-detail-view');
+    const messagesContainer = document.getElementById('auing-chat-messages');
+
+    let generatedAuingData = null; // 用于缓存AI生成的数据
+
+    /**
+     * 核心函数 1: 打开Auing App，生成并显示聊天列表
+     */
+    async function openAuingApp() {
+        if (!window.currentChat) {
+            showNotification("错误", "请先进入一个聊天才能查看TA的Auing。");
+            return;
+        }
+        showCharPhonePage('char-phone-auing-page');
+        switchToListView(); // 确保每次打开都显示列表页
+        listView.innerHTML = `<p class="char-app-loading">正在同步 ${window.currentChat.name} 的Auing消息...</p>`;
+        
+        try {
+            generatedAuingData = await generateAuingData();
+            renderAuingChatList(generatedAuingData.chat_list);
+        } catch (error) {
+            console.error("生成Auing数据失败:", error);
+            listView.innerHTML = `<p class="char-app-loading">消息同步失败...<br><small>(${error.message})</small></p>`;
+        }
+    }
+
+async function generateAuingData() {
+    const taskDescription = `
+【你的核心任务】
+生成你的聊天应用"Auing"中的数据。这必须完全符合你的角色设定、当前心情以及与“{{user}}”的关系。
+
+【步骤】
+1.  **构思联系人**: 想出 3 到 5 个你最近聊天的联系人。这个列表【必须】包含“{{user}}”。
+2.  **生成聊天记录**: 为每一个联系人（包括“{{user}}”），生成一段包含 5 到 8 条消息的、自然的、符合人设的最近聊天记录。
+3.  **提取最后一条消息**: 从每段聊天记录中，提取出最后一条消息作为“消息预览”。
+
+【输出格式 (一个严格的JSON对象)】
+{
+  "chat_list": [
+    { "contact_name": "{{user}}", "last_message": "这是你和{{user}}的最后一条消息", "timestamp": "1小时前" },
+    { "contact_name": "朋友A", "last_message": "这是和朋友A的最后一条消息", "timestamp": "3小时前" }
+  ],
+  "chat_histories": {
+    "{{user}}": [
+      { "sender": "{{char}}", "content": "你好" },
+      { "sender": "{{user}}", "content": "你好呀" }
+    ],
+    "朋友A": [
+      { "sender": "朋友A", "content": "在吗？" },
+      { "sender": "{{char}}", "content": "在，怎么了？" }
+    ]
+  }
+}
+
+【格式要求 (铁律)】
+- ` + "`chat_list`" + ` 中的 ` + "`contact_name`" + ` 必须与 ` + "`chat_histories`" + ` 中的键名完全一致。
+- ` + "`chat_histories`" + ` 中的 ` + "`sender`" + ` 必须是联系人的名字，或者是特殊的占位符“{{char}}”（代表你自己）或“{{user}}”（代表与你聊天的用户）。
+- 绝对禁止输出任何JSON之外的解释或Markdown标记。`;
+
+ // 这是修正后的新代码
+const userPersonaForThisContext = window.currentChat.activeUserPersona || window.currentUser;
+const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat, userPersonaForThisContext, taskDescription);
+    return await getAiGeneratedJson(finalPrompt);
+}
+
+    /**
+     * 核心函数 3: 渲染聊天列表
+     */
+    function renderAuingChatList(chatList) {
+        if (!chatList || chatList.length === 0) {
+            listView.innerHTML = `<p class="char-app-loading">最近没有聊天记录...</p>`;
+            return;
+        }
+        listView.innerHTML = '';
+        chatList.forEach(chat => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'chat-item buttonlike';
+            itemEl.style.backgroundColor = '#fff'; // 给列表项一个白色背景
+            itemEl.style.margin = '5px 10px';
+            itemEl.style.borderRadius = '8px';
+            
+            const avatarName = chat.contact_name === '{{user}}' ? (window.currentUser.name || '你') : chat.contact_name;
+            
+            itemEl.innerHTML = `
+                <div class="avatar-display" style="width: 48px; height: 48px; background-color: #eee;">${escapeHtml(avatarName.charAt(0))}</div>
+                <div class="chat-info">
+                    <div class="chat-name-line">
+                        <div class="chat-name">${escapeHtml(avatarName)}</div>
+                        <div class="chat-timestamp">${chat.timestamp}</div>
+                    </div>
+                    <div class="chat-last">${escapeHtml(chat.last_message)}</div>
+                </div>
+            `;
+            itemEl.addEventListener('click', () => showAuingChatView(chat.contact_name));
+            listView.appendChild(itemEl);
+        });
+    }
+    
+    /**
+     * 核心函数 4: 切换到聊天详情视图
+     */
+    function showAuingChatView(contactName) {
+        const history = generatedAuingData?.chat_histories?.[contactName];
+        if (!history) return;
+
+        listView.classList.add('hidden');
+        detailView.classList.remove('hidden');
+        
+        const avatarName = contactName === '{{user}}' ? (window.currentUser.name || '你') : contactName;
+        titleEl.textContent = avatarName;
+        
+// ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
+const currentBackBtn = document.getElementById('char-auing-back-btn');
+if (currentBackBtn) {
+    const newBackBtn = currentBackBtn.cloneNode(true);
+    currentBackBtn.parentNode.replaceChild(newBackBtn, currentBackBtn);
+    newBackBtn.addEventListener('click', switchToListView);
+}
+// ▲▲▲ 粘贴到这里结束 ▲▲▲
+        messagesContainer.innerHTML = '';
+        history.forEach(msg => {
+            const isCharMessage = msg.sender === '{{char}}';
+            const row = document.createElement('div');
+            row.className = `msg-row ${isCharMessage ? 'right' : 'left'}`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `msg ${isCharMessage ? 'right' : 'left'}`;
+            bubble.textContent = msg.content;
+            
+            const avatarBox = document.createElement('div');
+            avatarBox.className = "msg-avatar avatar-display";
+            avatarBox.textContent = isCharMessage ? escapeHtml(window.currentChat.name.charAt(0)) : escapeHtml(avatarName.charAt(0));
+            
+            if (isCharMessage) {
+                row.appendChild(bubble);
+                row.appendChild(avatarBox);
+            } else {
+                row.appendChild(avatarBox);
+                row.appendChild(bubble);
+            }
+            messagesContainer.appendChild(row);
+        });
+    }
+
+    /**
+     * 核心函数 5: 从详情返回列表视图
+     */
+    function switchToListView() {
+        detailView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        titleEl.textContent = 'Auing';
+        
+// ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
+const currentBackBtn = document.getElementById('char-auing-back-btn');
+if (currentBackBtn) {
+    const newBackBtn = currentBackBtn.cloneNode(true);
+    currentBackBtn.parentNode.replaceChild(newBackBtn, currentBackBtn);
+    newBackBtn.addEventListener('click', () => showCharPhonePage('char-phone-desktop'));
+}
+// ▲▲▲ 粘贴到这里结束 ▲▲▲
+    }
+
+    // --- 2. 绑定初始事件 ---
+    auingAppBtn.addEventListener('click', openAuingApp);
+
+})();
+// ==========================================================
+// ▲▲▲ 粘贴到这里结束 ▲▲▲
     </script>
 
 
