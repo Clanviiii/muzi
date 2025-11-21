@@ -502,7 +502,11 @@
             left: 12%;
         }
 
-
+/* 日历 App 定位 */
+        #app-calendar {
+            top: 66%;
+            left: 37%; /* 放在故事App的右边 */
+        }
         /* ✨ 全屏模式下，桌面网格也保持透明 */
         body.fullscreen-mode .home-grid {
             background-color: transparent;
@@ -7811,6 +7815,146 @@
 
 
 
+        /* --- 日历App 内部样式 --- */
+        .calendar-grid-view {
+            padding: 10px 15px;
+            background: #fff;
+            border-bottom: 1px solid var(--color-ui-border);
+        }
+        
+        .calendar-week-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+        
+        .calendar-days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px; /* 单元格间距 */
+            row-gap: 8px;
+        }
+        
+        .app-calendar-day {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 14px;
+            color: var(--color-tertiary-accent);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .app-calendar-day.other-month {
+            color: #e5e7eb;
+        }
+        
+        .app-calendar-day.today {
+            background-color: var(--color-primary-accent);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .app-calendar-day.selected:not(.today) {
+            background-color: var(--color-ui-border);
+        }
+
+        /* 日程列表 */
+        .calendar-schedule-list {
+            flex: 1;
+            background-color: #f9fafb;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .schedule-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .schedule-time {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-secondary-accent);
+            width: 50px;
+            text-align: right;
+        }
+        
+        .schedule-content {
+            flex: 1;
+            padding: 10px 12px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--color-primary-accent);
+        }
+        
+        .schedule-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-tertiary-accent);
+        }
+        
+        .schedule-desc {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+/* --- 日历选择器弹窗样式 --- */
+.picker-item {
+    padding: 8px 0;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid var(--color-ui-border);
+    background-color: var(--color-ui-subtle);
+    font-size: 14px;
+    color: var(--color-secondary-accent);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.picker-item:hover {
+    border-color: var(--color-primary-accent);
+}
+
+.picker-item.selected {
+    background-color: var(--color-primary-accent);
+    color: white;
+    border-color: var(--color-primary-accent);
+    font-weight: bold;
+}
+
+/* --- 日程红点样式 --- */
+.app-calendar-day {
+    position: relative; /* 确保红点相对于日期定位 */
+}
+
+/* 红点 */
+.app-calendar-day.has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;        /* 位于日期数字下方 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: #ef4444; /* 红色 */
+    border-radius: 50%;
+}
+
+/* 如果是“今天”或者“被选中”，红点变成白色，防止看不清 */
+.app-calendar-day.today.has-event::after,
+.app-calendar-day.selected.has-event::after {
+    background-color: #fff;
+}
+
 
     </style>
 
@@ -8023,7 +8167,15 @@
                             </div>
                         </button>
                         <!-- ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ -->
-
+<!-- 日历 -->
+                        <button class="app" role="listitem" aria-label="日历应用" id="app-calendar" data-app-id="calendar">
+                            <div class="app-visuals">
+                                <span class="icon buttonlike" aria-hidden="true">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </span>
+                                <span class="label">日历</span>
+                            </div>
+                        </button>
                         <!-- ========================================================== -->
                         <!-- --- ✨✨✨【全新】左上角“成对头像”小组件 ✨✨✨ --- -->
                         <!-- ========================================================== -->
@@ -8252,12 +8404,22 @@
                                 <div style="flex:1;"><label for="profile-age-modal" class="form-label">年龄:</label><input
                                         id="profile-age-modal" type="text" placeholder="年龄" class="form-input"></div>
                             </div>
-
-                            <div style="margin-bottom: 16px;">
-                                <label for="profile-bio-modal" class="form-label">人设：</label>
-                                <textarea id="profile-bio-modal" class="form-input form-textarea"
-                                    style="height:150px;"></textarea>
-                            </div>
+<div style="margin-bottom: 16px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <label for="profile-bio-modal" class="form-label" style="margin:0;">人设：</label>
+        
+        <!-- 右侧：快捷插入按钮组 -->
+        <div style="display:flex; gap:6px;">
+            <!-- 注意：这里不需要 {{char}}，因为这是用户的人设，主要是 {{user}} 指代自己 -->
+            <!-- 但为了保持一致性或特定玩法，也可以加上 {{char}} -->
+            <span class="insp-tag-insert buttonlike" onclick="insertAtCursor('profile-bio-modal', '{{char}}')" 
+                  style="font-size:10px; background:#e5e7eb; padding:2px 6px; border-radius:4px; cursor:pointer; color:#4b5563;">+角色名</span>
+            <span class="insp-tag-insert buttonlike" onclick="insertAtCursor('profile-bio-modal', '{{user}}')" 
+                  style="font-size:10px; background:#e5e7eb; padding:2px 6px; border-radius:4px; cursor:pointer; color:#4b5563;">+用户名</span>
+        </div>
+    </div>
+    <textarea id="profile-bio-modal" class="form-input form-textarea" style="height:150px; width: 100%;"></textarea>
+</div>
                         </main>
                     </div>
                 </div>
@@ -8504,11 +8666,25 @@
                                 </div>
 
                                 <!-- 角色设定输入框 -->
-                                <textarea id="contact-persona" placeholder="请在这里输入角色的详细设定..."
-                                    class="form-input form-textarea"
-                                    style="width:90%; max-width:300px; height:150px; resize:vertical;"></textarea>
-                                <!-- ▼▼▼ 请将这段全新的代码，粘贴到“角色设定输入框”的正后方 ▼▼▼ -->
-                                <!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 contact-sticker-tags 输入框及其label ▼▼▼ -->
+<!-- 角色设定输入框 -->
+<div style="width:90%; max-width:300px; margin-bottom: 10px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <!-- 左侧：普通的 Label (如果原来没有label，可以去掉这行，或者加上增强语义) -->
+        <label for="contact-persona" class="form-label" style="margin:0;">角色设定:</label>
+        
+        <!-- 右侧：快捷插入按钮组 -->
+        <div style="display:flex; gap:6px;">
+            <span class="insp-tag-insert buttonlike" onclick="insertAtCursor('contact-persona', '{{char}}')" 
+                  style="font-size:10px; background:#e5e7eb; padding:2px 6px; border-radius:4px; cursor:pointer; color:#4b5563;">+角色名</span>
+            <span class="insp-tag-insert buttonlike" onclick="insertAtCursor('contact-persona', '{{user}}')" 
+                  style="font-size:10px; background:#e5e7eb; padding:2px 6px; border-radius:4px; cursor:pointer; color:#4b5563;">+用户名</span>
+        </div>
+    </div>
+    
+    <textarea id="contact-persona" placeholder="请在这里输入角色的详细设定..." 
+              class="form-input form-textarea" 
+              style="width:100%; height:150px; resize:vertical;"></textarea>
+</div>
                                 <div style="margin-bottom: 16px; margin-top: 10px;">
                                     <label class="form-label">表情包偏好标签:</label>
                                     <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -9321,12 +9497,23 @@
                                     class="form-input">
                             </div>
 
-                            <!-- 内容 -->
-                            <div style="margin-bottom: 16px;">
-                                <label for="world-entry-content" class="form-label">内容 (Content):</label>
-                                <textarea id="world-entry-content" class="form-input form-textarea"
-                                    style="height: 200px;" placeholder="输入详细的背景设定..."></textarea>
-                            </div>
+<!-- 内容输入框 (带快捷键) -->
+<div style="margin-bottom: 16px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <label for="world-entry-content" class="form-label" style="margin:0;">内容 (Content):</label>
+        
+        <!-- 右侧：快捷插入按钮组 -->
+        <div style="display:flex; gap:6px;">
+            <span class="insp-tag-insert buttonlike" onclick="insertAtCursor('world-entry-content', '{{char}}')" 
+                  style="font-size:10px; background:#e5e7eb; padding:2px 6px; border-radius:4px; cursor:pointer; color:#4b5563;">+角色名</span>
+            <span class="insp-tag-insert buttonlike" onclick="insertAtCursor('world-entry-content', '{{user}}')" 
+                  style="font-size:10px; background:#e5e7eb; padding:2px 6px; border-radius:4px; cursor:pointer; color:#4b5563;">+用户名</span>
+        </div>
+    </div>
+    
+    <textarea id="world-entry-content" class="form-input form-textarea" 
+              style="height: 200px;" placeholder="输入详细的背景设定..."></textarea>
+</div>
 
                             <input type="hidden" id="world-entry-id">
                         </main>
@@ -9334,6 +9521,121 @@
                 </div>
             </div>
 
+
+
+<!-- 页面: 日历 App -->
+                <div id="calendar-app-page" class="page" style="display:none; flex-direction: column; background-color: #fff;">
+                    <header class="page-header">
+                        <div class="header-left">
+                            <button id="calendar-app-back-btn" class="btn-icon btn-back buttonlike">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                        </div>
+<div class="header-center">
+    <!-- ✨ 核心修改：增加了 ID 和 点击手型样式 -->
+    <div id="calendar-picker-trigger" style="display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 17px; cursor: pointer;">
+        <span id="app-calendar-title">2025年 11月</span>
+        <i class="fa-solid fa-caret-down" style="font-size: 12px; color: #9ca3af;"></i>
+    </div>
+</div>
+                        <div class="header-right">
+                            <button id="calendar-today-btn" class="btn-icon buttonlike" title="回到今天" style="font-size: 14px;">
+                                今
+                            </button>
+                            <button id="calendar-add-event-btn" class="btn-icon buttonlike">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </header>
+                    
+                    <main class="page-content" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+                        <!-- 日历视图 -->
+                        <div class="calendar-grid-view">
+                            <div class="calendar-week-header">
+                                <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+                            </div>
+                            <div id="app-calendar-grid" class="calendar-days-grid">
+                                <!-- JS生成 -->
+                            </div>
+                        </div>
+                        
+<!-- 选中的日期信息 -->
+<div style="padding: 10px 20px; background: #f9fafb; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: baseline;">
+    <span id="schedule-date-display" style="font-size: 16px; font-weight: bold; color: #333;">11月21日</span>
+    <!-- ✨ 我把那个农历的 span 删掉了，现在右边是空的，或者你可以放个“星期几” -->
+    <span id="schedule-weekday-display" style="font-size: 12px; color: #9ca3af;"></span>
+</div>
+
+                        <!-- 日程列表 -->
+                        <div id="calendar-schedule-container" class="calendar-schedule-list">
+                            <!-- 示例日程 -->
+                            <div class="schedule-item">
+                                <div class="schedule-time">09:00</div>
+                                <div class="schedule-content">
+                                    <div class="schedule-title">早安打卡</div>
+                                    <div class="schedule-desc">记得给TA发个早安消息</div>
+                                </div>
+                            </div>
+                            <div class="schedule-item">
+                                <div class="schedule-time">14:30</div>
+                                <div class="schedule-content" style="border-left-color: #3b82f6;">
+                                    <div class="schedule-title">下午茶</div>
+                                    <div class="schedule-desc">去楼下买杯咖啡</div>
+                                </div>
+                            </div>
+                             <div class="schedule-item">
+                                <div class="schedule-time">20:00</div>
+                                <div class="schedule-content" style="border-left-color: #8b5cf6;">
+                                    <div class="schedule-title">视频通话</div>
+                                    <div class="schedule-desc">和TA聊聊今天发生的趣事</div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【修复版】日历App-年月选择器弹窗 (可滚动) ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="calendar-date-picker-modal" class="modal-overlay hidden">
+    <!-- 1. max-height: 80vh 确保弹窗不会超过屏幕高度的80% -->
+    <div class="modal-content" style="width: 300px; max-height: 80vh; display: flex; flex-direction: column;">
+        
+        <header class="page-header" style="flex-shrink: 0;">
+            <span>跳转日期</span>
+            <button id="calendar-picker-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
+        </header>
+        
+        <!-- 2. overflow-y: auto 允许这个区域上下滚动 -->
+        <!-- 3. -webkit-overflow-scrolling: touch 让iOS滚动更丝滑 -->
+        <main class="page-content" style="padding: 15px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch;">
+            
+            <!-- 年份选择区 -->
+            <div>
+                <label class="form-label" style="text-align: center; margin-bottom: 10px;">年份</label>
+                <!-- 4. 移除了 max-height 限制，让它自然撑开 -->
+                <div id="picker-year-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                    <!-- JS填充年份 -->
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--color-ui-border); margin: 0;">
+
+            <!-- 月份选择区 -->
+            <div>
+                <label class="form-label" style="text-align: center; margin-bottom: 10px;">月份</label>
+                <div id="picker-month-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <!-- JS填充月份 -->
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="page-footer" style="flex-shrink: 0;">
+            <button id="calendar-picker-confirm-btn" class="btn btn-primary buttonlike btn-full-width">确认跳转</button>
+        </footer>
+    </div>
+</div>
         <!-- ========================================================== -->
 <!-- --- ✨✨✨【全新】线下App (Offline) 页面结构 ✨✨✨ --- -->
 <!-- ========================================================== -->
@@ -11398,6 +11700,59 @@
         </div>
     </div>
 
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【关联角色版】日程 编辑/添加 通用弹窗 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="add-schedule-modal" class="modal-overlay hidden">
+    <div class="modal-content" style="width: 300px;">
+        <header class="page-header">
+            <span id="schedule-modal-title">添加日程</span>
+            <button id="add-schedule-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
+        </header>
+        
+        <main class="page-content" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+            
+            <div style="text-align: center; color: var(--color-primary-accent); font-weight: bold; font-size: 16px;">
+                📅 <span id="add-schedule-date-display"></span>
+            </div>
+
+            <!-- 时间 -->
+            <div>
+                <label class="form-label">时间</label>
+                <input type="time" id="schedule-time-input" class="form-input" value="09:00">
+            </div>
+
+            <!-- ✨ 新增：关联角色选择 -->
+            <div>
+                <label class="form-label">关联角色 (选填)</label>
+                <select id="schedule-char-select" class="form-input">
+                    <option value="">-- 不关联 --</option>
+                    <!-- JS会自动填充角色列表 -->
+                </select>
+            </div>
+
+            <!-- 标题 -->
+            <div>
+                <label class="form-label">事项标题</label>
+                <input type="text" id="schedule-title-input" class="form-input" placeholder="例如：早安打卡">
+            </div>
+
+            <!-- 详情 -->
+            <div>
+                <label class="form-label">备注详情 (选填)</label>
+                <textarea id="schedule-desc-input" class="form-input form-textarea" style="height: 80px;" placeholder="写点什么..."></textarea>
+            </div>
+
+        </main>
+
+        <footer class="page-footer" style="display: flex; gap: 10px;">
+            <button id="delete-schedule-modal-btn" class="btn btn-secondary buttonlike" style="background-color: #fee2e2; color: #ef4444; display: none; flex: 1;">删除</button>
+            <button id="save-schedule-btn" class="btn btn-primary buttonlike" style="flex: 2;">保存</button>
+        </footer>
+    </div>
+</div>
+
+
     <script>
 
         const db = new Dexie("QQAppDB");
@@ -11405,8 +11760,9 @@
         // ==========================================================
         // --- ✨✨✨【V173 - 新增生理周期表】数据库结构 ✨✨✨ ---
         // ==========================================================
-        db.version(186).stores({
-
+        db.version(188).stores({
+   // ✨ 修改这一行，加上 characterId
+    schedules: '++id, date, time, title, content, characterId', 
             // ✨ 修改：novels 表增加 parentId (用于链接上一篇)
             novels: "++id, title, &uuid, characterId, inspirationId, perspective, content, author, parentId, createdAt",
             // ✨ 修改这一行，添加 title 字段
@@ -13724,15 +14080,14 @@
         (function () {
 
             // ✨ 核心修改：在这里把 'novel-page' 加进去！
-    // ✨ 核心修改：把 'offline-app-page' 加进去！
-    const pages = [
+const pages = [
         'home', 
         'qq-main', 
         'qq-chat', 
         'settings-menu',
         'novel-page',
-        'offline-app-page', // <--- ✅✅✅ 必须添加这一行！
-
+        'offline-app-page',
+        'calendar-app-page', // <--- ✅ 新增这一行
     ];
 
             let navigationHistory = [];
@@ -14331,42 +14686,95 @@ ${historyTranscript}
             dynamicContentMap.set('jailbreak', JAILBREAK_PROMPT);
 
             // b. 角色与用户人设
-            dynamicContentMap.set('char_persona', `【核心身份】\n你是“{{char}}”，你的人设是：“{{persona}}”。\n你正在和{{user}}进行线上聊天。`);
+                       // --- ✨✨✨ 核心修改：构建角色基础档案字符串 ✨✨✨ ---
+            let charBasicInfo = '';
+            if (ctxChar.gender) charBasicInfo += `性别: ${ctxChar.gender}\n`;
+            if (ctxChar.age) charBasicInfo += `年龄: ${ctxChar.age}\n`;
+            if (ctxChar.birthday) charBasicInfo += `生日: ${ctxChar.birthday}\n`;
+
+            // 将基础档案插入到 Prompt 中
+            dynamicContentMap.set('char_persona', 
+                `【核心身份】\n你是“{{char}}”。\n` + 
+                (charBasicInfo ? `【基础档案】\n${charBasicInfo}` : '') + 
+                `【人设详情】\n{{persona}}\n` + 
+                `你正在和{{user}}进行线上聊天。`
+            );
             dynamicContentMap.set('user_persona', `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是${ctxUser.gender || '未设置'}，你应该称呼{{user}}的名字。\n\n【关于TA的详细档案】\n名字: ${ctxUser.name}\n${ctxUser.gender ? `性别: ${ctxUser.gender}` : ''}\n${ctxUser.birthday ? `生日: ${ctxUser.birthday}` : ''}\n${ctxUser.age ? `年龄: ${ctxUser.age}` : ''}\n${ctxUser.bio ? `人设: ${ctxUser.bio}` : ''}`);
 
             // c. 世界书与核心记忆
             const triggeredWorldBook = await getActiveWorldBookEntriesForTurn(chatHistory, linkedEntries);
             dynamicContentMap.set('world_book', [triggeredWorldBook.before_char, triggeredWorldBook.after_char].filter(Boolean).join('\n\n'));
             dynamicContentMap.set('core_memory', await retrieveRelevantMemories(chatHistory, character.id, user.id));
-
-
-            // d. ✨✨✨ 核心新增：在这里准备“聊天记录”这份新配料！ ✨✨✨
+// d. ✨✨✨ 核心新增：聊天记录回顾 (文件+通话 全展开版) ✨✨✨
             const historyTranscript = chatHistory.length > 0
                 ? chatHistory.flatMap(msg => {
-                    const content = msg.content || '';
+                    let content = msg.content || '';
                     if (content.trim().startsWith('<div')) return []; // 过滤掉HTML卡片
-                    const speaker = msg.senderId === user.id ? ctxUser.name : ctxChar.name;
+                    
+                    // 1. 判断说话人 & 修复系统消息主语
+                    let speaker = '';
+                    if (msg.senderId === 'system' || msg.type === 'system') {
+                        speaker = '旁白';
+                        content = content.replace(/你/g, ctxUser.name).replace(/\[|\]/g, '');
+                    } else {
+                        speaker = msg.senderId === user.id ? ctxUser.name : ctxChar.name;
+                    }
+
+                    // 2. (原有) 文件内容展开
+                    if (msg.type === 'file' && msg.fileData && msg.fileData.content) {
+                        content += `\n【文件内容如下】:\n----------------\n${msg.fileData.content}\n----------------`;
+                    }
+
+                    // 3. ✨✨✨ 核心新增：视频通话记录展开！ ✨✨✨
+                    if (msg.videoCallHistory && msg.videoCallHistory.length > 0) {
+                        // 把数组里的每一句话都拿出来，简单清洗一下格式
+                        const callTranscript = msg.videoCallHistory.map(line => {
+                            // 去掉 "[ xx 说了]：" 这种前缀，直接显示内容，或者保留原样
+                            return `    > ${line}`; 
+                        }).join('\n');
+                        
+                        content += `\n\n    === 刚才的通话详细记录 ===\n${callTranscript}\n    ========================\n`;
+                    }
+                    // ✨✨✨ 新增结束 ✨✨✨
+
                     return [`${speaker}: ${content}`];
                 }).join('\n')
                 : "（你们最近没有聊天）";
+            
             dynamicContentMap.set('chat_history', `【最近的聊天记录回顾】\n${historyTranscript}`);
-            // ✨✨✨ 新增结束 ✨✨✨
-
-
             // d. 即时情境 (包含时间、天气、状态、撤回等)
+// d. 即时情境 (包含时间、天气、状态、撤回等)
             const timeWeatherSetting = await db.global_settings.get('isTimeWeatherAware');
             const isTimeWeatherAware = (timeWeatherSetting === undefined) ? true : timeWeatherSetting.value;
+            
             let timeWeatherComponent = '';
+            
             if (isTimeWeatherAware) {
                 const now = new Date();
-                const formattedTime = now.toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
-                let weatherContext = (window.worldWeather && window.worldWeather.city !== '查询中...') ? `- 当前天气: ${window.worldWeather.city} ${window.worldWeather.description}, 气温 ${window.worldWeather.temperature}°C。\n` : '';
+                
+                // ✨✨✨ 核心修改：使用更详细的时间格式 (包含年月日、星期、时分) ✨✨✨
+                const formattedDateTime = now.toLocaleString('zh-CN', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric', 
+                    weekday: 'long', // 这会显示 "星期X"
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    hour12: false 
+                });
+                
+                let weatherContext = (window.worldWeather && window.worldWeather.city !== '查询中...') 
+                    ? `- 当前天气: ${window.worldWeather.city} ${window.worldWeather.description}, 气温 ${window.worldWeather.temperature}°C。\n` 
+                    : '';
+                
                 let timeSinceLastChatContext = '';
                 const lastAiMessage = chatHistory.filter(m => m.senderId === ctxChar.id).pop();
                 if (lastAiMessage) {
                     timeSinceLastChatContext = `- 距离你们上次聊天: ${formatTimeDifference(lastAiMessage.time)}。\n `;
                 }
-                timeWeatherComponent = `当前时间是: ${formattedTime}\n${weatherContext}${timeSinceLastChatContext}`;
+
+                // 组合成完整的句子告诉 AI
+                timeWeatherComponent = `当前时间是: ${formattedDateTime}\n${weatherContext}${timeSinceLastChatContext}`;
             }
             const customStatusContext = ctxChar.customStatusText ? `- 【当前状态】: 你现在的状态是“${ctxChar.customStatusText}”。\n` : '';
 
@@ -20668,13 +21076,8 @@ ${commentsText || '(还没有评论)'}
 
         })();
 
-
-
-
-
-        // 【请将这个全新的代码块，完整地粘贴到 <script> 的末尾】
-        // ==========================================================
-        // --- ✨✨✨ AI视频通话请求交互逻辑 ✨✨✨ ---
+// ==========================================================
+        // --- ✨✨✨【V2 - 带拒绝反馈】AI视频通话请求交互逻辑 ✨✨✨ ---
         // ==========================================================
         (function () {
             // --- 1. 获取所有相关的 DOM 元素 ---
@@ -20686,7 +21089,7 @@ ${commentsText || '(还没有评论)'}
             const acceptBtn = document.getElementById('incoming-call-accept-btn');
 
             /**
-             * 核心函数 1: 显示来电界面 (已修复变量名错误)
+             * 核心函数 1: 显示来电界面
              * @param {object} character - 发起通话的角色对象
              */
             async function showIncomingCallScreen(character) {
@@ -20696,8 +21099,6 @@ ${commentsText || '(还没有评论)'}
                 nameEl.textContent = character.name;
                 renderAvatar(avatarEl, character.avatar, CHAR_FALLBACK_ICON);
 
-                // b. ✨✨✨ 核心修正在这里 ✨✨✨
-                //    将所有 background.style... 修改为 backgroundEl.style...
                 if (character.avatar && character.avatar instanceof Blob) {
                     const avatarUrl = URL.createObjectURL(character.avatar);
                     backgroundEl.style.backgroundImage = `url(${avatarUrl})`;
@@ -20705,9 +21106,10 @@ ${commentsText || '(还没有评论)'}
                     backgroundEl.style.backgroundImage = 'linear-gradient(135deg, #a8a29e, #44403c)';
                 }
 
-                // c. 显示界面 (后续逻辑不变)
+                // c. 显示界面
                 incomingCallScreen.classList.remove('hidden');
 
+                // --- 接听逻辑 (不变) ---
                 acceptBtn.onclick = () => {
                     hideIncomingCallScreen();
                     setTimeout(() => {
@@ -20717,9 +21119,33 @@ ${commentsText || '(还没有评论)'}
                     }, 300);
                 };
 
+                // --- 拒绝逻辑 (✨ 核心修改在这里 ✨) ---
                 declineBtn.onclick = async () => {
                     hideIncomingCallScreen();
-                    await silentlyInformAi('[系统提示：用户刚刚拒绝了你的视频通话请求，请在下一句回复中自然地对此作出反应。]');
+
+                    try {
+                        // 1. 构造一条“你拒绝了通话”的系统旁白
+                        const systemMsg = {
+                            userId: window.currentUser.id,
+                            chatId: character.id,
+                            senderId: 'system',
+                            type: 'system',
+                            content: `[你拒绝了 ${character.name} 的视频通话请求]`,
+                            time: new Date().toISOString()
+                        };
+
+                        // 2. 存入数据库
+                        const newId = await db.messages.add(systemMsg);
+
+                        // 3. 如果当前正在与该角色聊天，立即上屏显示
+                        if (window.currentChat && window.currentChat.id === character.id) {
+                            await addMessageToUI({ id: newId, ...systemMsg });
+                            scrollToBottom(document.getElementById('chat-messages'));
+                        }
+
+                    } catch (error) {
+                        console.error("保存拒绝通话记录失败:", error);
+                    }
                 };
             }
 
@@ -20754,9 +21180,6 @@ ${commentsText || '(还没有评论)'}
             window.showIncomingCallScreen = showIncomingCallScreen;
 
         })();
-
-
-
         // ==========================================================
         // --- ✨✨✨【最终纯净版】沉浸式视频通话引擎 ✨✨✨ ---
         // ==========================================================
@@ -20871,68 +21294,74 @@ ${commentsText || '(还没有评论)'}
                 scrollContainer.scrollTop = scrollContainer.scrollHeight;
             }
             // ▼▼▼ 这是全新重构的代码 ▼▼▼
-            // ==========================================================
-            // --- ✨✨✨【全新 V3】视频通话AI“总导演”引擎 ✨✨✨ ---
+// ==========================================================
+            // --- ✨✨✨【V4 - 增强记忆版】视频通话AI“总导演”引擎 ✨✨✨ ---
             // ==========================================================
             async function triggerAiVideoReply(turnType, initiator = 'user') {
-                const character = currentCallTarget; // 从全局获取当前通话的角色
-                // 优先使用当前通话对象的专属人设
+                const character = currentCallTarget; 
                 const user = character.activeUserPersona || window.currentUser;
                 if (!character || !user) return;
 
-                addVideoHistoryToUI('ai', '...'); // 显示“正在思考”占位符
+                addVideoHistoryToUI('ai', '...'); // 显示“正在思考”
 
                 try {
-                    // 1. 准备上下文：获取最近的聊天记录
-                    const history = await db.messages.where({ userId: user.id, chatId: character.id }).reverse().limit(10).sortBy('time');
-                    // ✨✨✨ 核心修改就在这里！ ✨✨✨
-                    // 我们在将聊天记录传递给 buildVideoCallSystemPrompt 之前，先在这里进行过滤
+                    // 1. 准备背景板：获取主聊天界面的历史记录 (作为长期背景)
+                    const history = await db.messages.where({ userId: user.id, chatId: character.id }).reverse().limit(20).sortBy('time'); // ✨ 增加到20条背景
+                    
                     const historyTranscript = history.length > 0 ? history.reverse().flatMap(msg => {
                         const content = msg.content || '';
-                        if (content.trim().startsWith('<div')) {
-                            return []; // 彻底跳过卡片消息
-                        }
+                        if (content.trim().startsWith('<div')) return []; 
                         const speaker = msg.senderId === user.id ? user.name : character.name;
                         return [`${speaker}: ${content}`];
                     }).join('\n') : "（你们最近没有聊天）";
-                    // ✨✨✨ 修改结束 ✨✨✨
-                    // 2. 调用我们刚刚升级的“大脑”，传入聊天记录
+
+                    // 2. 调用大脑：构建 System Prompt
                     const finalSystemPrompt = await buildVideoCallSystemPrompt(character, user, historyTranscript);
 
                     // 3. 设计剧本：根据不同情境，生成不同的“导演指令”
                     let finalUserPrompt = '';
+                    
                     if (turnType === "开场白") {
                         if (initiator === 'user') {
-                            // 剧本A：用户打来的电话
-                            finalUserPrompt = `[你刚刚接通了用户“${user.name}”打来的视频通话。请结合你们最近的聊天内容，说一句自然的开场白。]`;
+                            finalUserPrompt = `[你刚刚接通了用户“${user.name}”打来的视频通话。]`;
                         } else {
-                            // 剧本B：AI自己打的电话
-                            finalUserPrompt = `[${user.name}接通了你主动拨打的视频通话。请结合你们最近的聊天内容，说一句自然的开场白，可以解释一下你为什么突然想打给TA。]`;
+                            finalUserPrompt = `[${user.name}接通了你主动拨打的视频通话。]`;
                         }
                     } else { // 回应弹幕
-                        const videoTranscript = videoCallHistory.slice(-5).join('\n'); // 获取最近5条通话记录
+                        
+                        // ✨✨✨ 核心修复：大幅增加上下文记忆！ ✨✨✨
+                        // 从原来的 -5 改为 -50，基本覆盖整个通话过程
+                        // 如果通话特别长，它会只保留最近的50句，既保证流畅又不忘事
+                        const videoTranscript = videoCallHistory.slice(-80).join('\n'); 
+                        
                         finalUserPrompt = `
-[以下是本次通话的最近记录]:
+【当前视频通话记录 (正在进行中)】:
 ${videoTranscript}
-[现在，请对用户的最后一句话做出回应。]`;
+
+【指令】:
+请根据上下文，对用户的最后一句话做出自然、即时的回应。
+注意：这是一场实时的视频通话，请多描写你的神态、动作(使用[动作])，语气要口语化。`;
                     }
 
-                    // 4. 将最终指令打包发给AI
+                    // 4. 发送请求
                     const contents = [{ role: 'user', parts: [{ text: finalUserPrompt }] }];
                     const response = await getAiReply(contents, finalSystemPrompt);
 
-                    // ... (后续的流式读取和UI更新逻辑保持不变)
+                    // ... (流式读取保持不变)
                     let aiResponseText = '';
                     const reader = response.body.getReader(); const decoder = new TextDecoder();
                     while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); aiResponseText += parsed.choices?.[0]?.delta?.content || ''; } catch (e) { } } } }
 
+                    // 清除 loading
                     const loadingSubtitle = subtitlesContainer.querySelector('.subtitle-line:last-child');
                     if (loadingSubtitle && loadingSubtitle.textContent === '...') {
                         loadingSubtitle.remove();
                     }
+                    
                     const reply = aiResponseText.trim();
                     if (reply) {
-                        videoCallHistory.push(`[你 (${character.name}) 回应了]：${reply}`);
+                        // 记录到本次通话历史中
+                        videoCallHistory.push(`[你 (${character.name}) 回应]：${reply}`);
                         addVideoHistoryToUI('ai', reply);
                     } else {
                         addVideoHistoryToUI('ai', "(对方似乎没有说话)");
@@ -20941,14 +21370,9 @@ ${videoTranscript}
                 } catch (error) {
                     console.error("视频通话AI回复失败:", error);
                     const loadingSubtitle = subtitlesContainer.querySelector('.subtitle-line:last-child');
-                    if (loadingSubtitle && loadingSubtitle.textContent === '...') {
-                        loadingSubtitle.textContent = "(连接中断...)";
-                    } else {
-                        addVideoHistoryToUI('ai', "(连接中断...)");
-                    }
+                    if (loadingSubtitle) loadingSubtitle.textContent = "(连接中断...)";
                 }
             }
-            // ▲▲▲ 替换到这里结束 ▲▲▲
 
             // ▼▼▼ 请用这一整块全新的代码，完整替换旧的 closeVideoCall 函数 ▼▼▼
             // ==========================================================
@@ -26978,25 +27402,97 @@ ${videoTranscript}
                 }
             }
 
-            /**
-             * 核心函数 5: 从文件导入世界书和条目
+/**
+             * 核心函数 5: 从文件导入世界书和条目 (V2 - 兼容SillyTavern格式版)
              */
             function handleImportBooks(file) {
                 if (!file) return;
                 const reader = new FileReader();
                 reader.onload = async (e) => {
-                    showLoadingModal("正在导入世界书...");
+                    showLoadingModal("正在解析世界书...");
                     try {
-                        const data = JSON.parse(e.target.result);
-                        if (!data.books || !data.entries) throw new Error("文件格式不正确。");
-                        await db.transaction('rw', db.world_books, db.world_entries, async () => {
-                            await db.world_books.bulkPut(data.books);
-                            await db.world_entries.bulkPut(data.entries);
-                        });
+                        const rawData = JSON.parse(e.target.result);
+                        
+                        // --- 情况 A: 本应用的备份格式 (包含 books 和 entries) ---
+                        if (rawData.books && Array.isArray(rawData.entries)) {
+                            await db.transaction('rw', db.world_books, db.world_entries, async () => {
+                                // 对于本应用的备份，我们尝试保留ID（如果冲突可能会报错，但在bulkPut中通常会覆盖或新增）
+                                // 为了安全起见，最好是重新生成ID，或者由用户决定。
+                                // 这里为了简单，我们假设是恢复数据，直接使用 bulkPut
+                                await db.world_books.bulkPut(rawData.books);
+                                await db.world_entries.bulkPut(rawData.entries);
+                            });
+                            showNotification("数据恢复成功！");
+                        } 
+                        
+                        // --- 情况 B: SillyTavern 格式 (只有 entries 对象或数组) ---
+                        else if (rawData.entries) {
+                            // 1. 准备条目数据
+                            let stEntries = [];
+                            if (Array.isArray(rawData.entries)) {
+                                stEntries = rawData.entries;
+                            } else if (typeof rawData.entries === 'object') {
+                                // SillyTavern 经常使用 {"0": {}, "1": {}} 的对象格式
+                                stEntries = Object.values(rawData.entries);
+                            }
+
+                            if (stEntries.length === 0) {
+                                throw new Error("该文件中没有任何条目。");
+                            }
+
+                            // 2. 创建一本新的世界书来存放这些条目
+                            // 使用文件名作为书名 (去掉 .json 后缀)
+                            const bookName = file.name.replace(/\.[^/.]+$/, "");
+                            
+                            await db.transaction('rw', db.world_books, db.world_entries, async () => {
+                                // a. 添加书本，获取新ID
+                                const newBookId = await db.world_books.add({ name: bookName });
+
+                                // b. 转换条目格式
+                                const convertedEntries = stEntries.map(stItem => {
+                                    // 处理关键词：ST是数组，我们要转成逗号分隔的字符串
+                                    let keywordsStr = "";
+                                    if (Array.isArray(stItem.key)) {
+                                        keywordsStr = stItem.key.join(',');
+                                    } else if (typeof stItem.key === 'string') {
+                                        keywordsStr = stItem.key;
+                                    }
+
+                                    return {
+                                        bookId: newBookId, // 关联到新创建的书
+                                        title: stItem.comment || stItem.uid || '未命名条目', // ST用comment做标题
+                                        keywords: keywordsStr,
+                                        content: stItem.content || '',
+                                        isGlobal: 0, // 默认不全局启用
+                                        // 保留 ST 的一些高级设置 (可选)
+                                        priority: stItem.order || 100,
+                                        probability: stItem.probability || 100,
+                                        keywordLogic: (stItem.selectiveLogic === 0) ? 'any' : 'all', 
+                                        enabled: !stItem.disable,
+                                        position: 'global', // 默认插入位置
+                                        triggerStrategy: stItem.constant ? 'always' : 'keywords',
+                                        createdAt: new Date().toISOString()
+                                    };
+                                });
+
+                                // c. 批量添加条目
+                                await db.world_entries.bulkAdd(convertedEntries);
+                            });
+
+                            showNotification(`已成功导入酒馆世界书：「${bookName}」`);
+                        } 
+                        else {
+                            throw new Error("无法识别的文件格式。缺少 books 或 entries 字段。");
+                        }
+
+                        // 刷新UI
                         await renderGlobalWbSelector();
-                        await window.renderCharacterWbList(window.currentChat);
-                        showNotification("世界书数据导入成功！");
+                        if (window.currentChat) {
+                            await window.renderCharacterWbList(window.currentChat);
+                        }
+
                     } catch (error) {
+                        console.error("导入错误:", error);
                         showNotification(`导入失败: ${error.message}`);
                     } finally {
                         hideLoadingModal();
@@ -28606,9 +29102,8 @@ ${videoTranscript}
             const titleEl = document.getElementById('fixed-prompt-viewer-title');
             const contentEl = document.getElementById('fixed-prompt-viewer-content');
 
-            // ▼▼▼ 请用这一整块全新的代码，完整替换旧的 openFixedPromptViewer 函数 ▼▼▼
-            // ==========================================================
-            // --- ✨✨✨【V3 - 实时上下文版】固定Prompt模块查看器-核心引擎 ✨✨✨ ---
+// ==========================================================
+            // --- ✨✨✨【V3.1 - 占位符修复版】固定Prompt模块查看器-核心引擎 ✨✨✨ ---
             // ==========================================================
             /**
              * 核心函数: 打开查看器并根据当前上下文，智能填充模板内容
@@ -28627,18 +29122,17 @@ ${videoTranscript}
                 contentEl.textContent = content;
                 showModal('fixed-prompt-viewer-modal');
 
-                // 3. ✨ 核心修改：在函数开头，立即获取当前聊天对象和用户
+                // 3. 获取当前聊天对象和用户
                 const character = window.currentChat;
-                // 优先使用专属人设
-                const user = window.currentChat.activeUserPersona || window.currentUser;
+                const user = window.currentChat ? (window.currentChat.activeUserPersona || window.currentUser) : window.currentUser;
 
-                // 如果不在聊天上下文中，则显示默认模板（与之前逻辑类似）
+                // 如果不在聊天上下文中，则显示默认模板
                 if (!character || !user) {
                     contentEl.textContent = "请在聊天界面中查看此模块的实时内容。";
                     return;
                 }
 
-                // 4. ✨ 核心修改：调用“数据供应商”，获取包含所有实时数据的 context 材料包
+                // 4. 获取上下文数据
                 const context = await buildCoreContext(character.id, user.id);
                 if (!context) {
                     contentEl.textContent = '获取上下文失败。';
@@ -28648,65 +29142,114 @@ ${videoTranscript}
 
                 // 5. 根据模块ID，提供不同的标题，并根据上下文智能填充内容
                 switch (moduleId) {
-                    case 'char_persona':
+case 'char_persona':
                         title = '角色人设 (char) 模块';
-                        const CHAR_PERSONA_TEMPLATE = `【核心身份】\n你是“{{char}}”，你的人设是：“{{persona}}”。\n你正在和{{user}}进行线上聊天。`;
+                        
+                        // ✨ 核心修改：在查看器里也组装同样的结构
+                        let charInfoForView = '';
+                        if (character.gender) charInfoForView += `性别: ${character.gender}\n`;
+                        if (character.age) charInfoForView += `年龄: ${character.age}\n`;
+                        if (character.birthday) charInfoForView += `生日: ${character.birthday}\n`;
+
+                        const CHAR_PERSONA_TEMPLATE = 
+                            `【核心身份】\n你是“{{char}}”。\n` + 
+                            (charInfoForView ? `【基础档案】\n${charInfoForView}` : '') + 
+                            `【人设详情】\n{{persona}}\n` + 
+                            `你正在和{{user}}进行线上聊天。`;
+
                         const userPersonaForDisplay = character.activeUserPersona || user;
+                        
                         content = CHAR_PERSONA_TEMPLATE
                             .replace(/{{char}}/g, character.name)
                             .replace(/{{persona}}/g, character.persona)
                             .replace(/{{user}}/g, userPersonaForDisplay.name);
                         break;
-
                     case 'user_persona':
                         title = '你的信息 (user) 模块';
                         const USER_PERSONA_TEMPLATE = `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是{{gender}}，你应该称呼{{user}}的名字。\n\n【关于TA的详细档案】\n名字: {{name}}\n性别: {{gender}}\n生日: {{birthday}}\n年龄: {{age}}\n人设: {{bio}}`;
-                        const personaForDisplay = character.activeUserPersona || user;
+                        
+                        // 第一步：填入基本信息
                         content = USER_PERSONA_TEMPLATE
-                            .replace(/{{user}}/g, personaForDisplay.name || '未设置')
-                            .replace(/{{name}}/g, personaForDisplay.name || '未设置')
-                            .replace(/{{gender}}/g, personaForDisplay.gender || '未设置')
-                            .replace(/{{birthday}}/g, personaForDisplay.birthday || '未设置')
-                            .replace(/{{age}}/g, personaForDisplay.age || '未设置')
-                            .replace(/{{bio}}/g, personaForDisplay.bio || '无');
+                            .replace(/{{name}}/g, user.name || '未设置')
+                            .replace(/{{gender}}/g, user.gender || '未设置')
+                            .replace(/{{birthday}}/g, user.birthday || '未设置')
+                            .replace(/{{age}}/g, user.age || '未设置')
+                            .replace(/{{bio}}/g, user.bio || '无'); // 这里填入了包含 {{user}} 的 bio
+
+                        // ✨✨✨ 核心修复：填完所有内容后，再全局替换一次 {{user}} 和 {{char}} ✨✨✨
+                        // 这样就能处理 bio 里包含的占位符了
+                        content = content
+                            .replace(/{{user}}/g, user.name || '用户')
+                            .replace(/{{char}}/g, character.name || '角色');
                         break;
 
                     case 'world_book':
                         title = '相关的世界书 模块 (实时)';
-                        // ✨ 核心修改：调用真正的数据获取函数！
                         const triggeredWorldBook = await getActiveWorldBookEntriesForTurn(chatHistory, character.linkedEntries);
                         const wbContent = [triggeredWorldBook.before_char, triggeredWorldBook.after_char].filter(Boolean).join('\n\n');
+                        
                         content = wbContent.trim() ? wbContent : '（当前对话没有触发任何世界书条目）';
+                        
+                        // 同样对世界书内容也做一次替换，以防万一
+                        content = content
+                            .replace(/{{user}}/g, user.name)
+                            .replace(/{{char}}/g, character.name);
                         break;
 
                     case 'core_memory':
                         title = '核心记忆 模块 (实时)';
-                        // ✨ 核心修改：调用真正的数据获取函数！
                         const memoryContent = await retrieveRelevantMemories(chatHistory, character.id, user.id);
-                        // 清理一下前缀，让显示更干净
                         content = memoryContent.trim() ? memoryContent.replace('【你需要参考的、过去发生过的核心记忆】:\n', '') : '（当前对话没有检索到相关的核心记忆）';
                         break;
-
-                    case 'chat_history':
+case 'chat_history':
                         title = '聊天记录回顾 模块';
-                        const historyTranscript = chatHistory.length > 0
-                            ? chatHistory.flatMap(msg => {
-                                const content = msg.content || '';
-                                if (content.trim().startsWith('<div')) return [];
-                                const speaker = msg.senderId === user.id ? (character.activeUserPersona || user).name : character.name;
-                                return [`${speaker}: ${content}`];
-                            }).join('\n')
-                            : "（你们最近没有聊天）";
-                        content = historyTranscript;
+                        
+                        const totalCount = chatHistory.length;
+                        let hiddenCount = 0;
+
+                        const historyLines = chatHistory.flatMap(msg => {
+                            let content = msg.content || '';
+                            if (content.trim().startsWith('<div')) {
+                                hiddenCount++;
+                                return [];
+                            }
+
+                            let speaker = '';
+                            if (msg.senderId === 'system' || msg.type === 'system') {
+                                speaker = '旁白';
+                                content = content.replace(/你/g, user.name);
+                            } else {
+                                speaker = msg.senderId === user.id ? user.name : character.name;
+                            }
+
+                            // 2. 文件内容展开
+                            if (msg.type === 'file' && msg.fileData && msg.fileData.content) {
+                                content += `\n    [📄 文件内容]: ${msg.fileData.content.substring(0, 50)}... (略)`;
+                            }
+
+                            // 3. ✨✨✨ 核心新增：通话记录展开 ✨✨✨
+                            if (msg.videoCallHistory && msg.videoCallHistory.length > 0) {
+                                const callTranscript = msg.videoCallHistory.join('\n        ');
+                                content += `\n    [📞 通话记录]:\n        ${callTranscript}`;
+                            }
+                            // ✨✨✨ 新增结束 ✨✨✨
+
+                            return [`${speaker}: ${content}`];
+                        });
+
+                        const historyTranscript = historyLines.length > 0 
+                            ? historyLines.join('\n') 
+                            : "（范围内没有纯文本聊天记录）";
+
+                        content = `[统计: 共读取最近 ${totalCount} 条记录，其中 ${hiddenCount} 条为非文本消息(图片/卡片等)不在此显示]\n\n${historyTranscript}`;
                         break;
 
                     case 'jailbreak':
                         title = '破限指令 模块';
                         let rawContent = typeof JAILBREAK_PROMPT !== 'undefined' ? JAILBREAK_PROMPT.trim() : '加载指令失败...';
-                        const userForDisplay = character.activeUserPersona || user;
                         content = rawContent
                             .replace(/{{char}}/g, character.name)
-                            .replace(/{{user}}/g, userForDisplay.name);
+                            .replace(/{{user}}/g, user.name);
                         break;
                 }
 
@@ -30332,6 +30875,420 @@ ${knowledgeText}
             if (currentOfflineChar) openOfflineChat(currentOfflineChar); 
         }
     });
+})();
+// ==========================================================
+// --- ✨✨✨【V5 - 角色关联版】日历App核心引擎 ✨✨✨ ---
+// ==========================================================
+(function() {
+    // DOM 元素
+    const appBtn = document.getElementById('app-calendar');
+    const backBtn = document.getElementById('calendar-app-back-btn');
+    const titleEl = document.getElementById('app-calendar-title');
+    const gridEl = document.getElementById('app-calendar-grid');
+    const todayBtn = document.getElementById('calendar-today-btn');
+    const scheduleDateDisplay = document.getElementById('schedule-date-display');
+    const weekdayDisplay = document.getElementById('schedule-weekday-display');
+    const addEventBtn = document.getElementById('calendar-add-event-btn');
+    const scheduleListContainer = document.getElementById('calendar-schedule-container');
+
+    // 弹窗元素
+    const modal = document.getElementById('add-schedule-modal');
+    const modalTitle = document.getElementById('schedule-modal-title');
+    const modalCloseBtn = document.getElementById('add-schedule-close-btn');
+    const modalDateDisplay = document.getElementById('add-schedule-date-display');
+    const timeInput = document.getElementById('schedule-time-input');
+    const titleInput = document.getElementById('schedule-title-input');
+    const descInput = document.getElementById('schedule-desc-input');
+    const charSelect = document.getElementById('schedule-char-select'); // ✨ 新增
+    const saveBtn = document.getElementById('save-schedule-btn');
+    const deleteBtnInModal = document.getElementById('delete-schedule-modal-btn');
+
+    let currentDate = new Date(); 
+    let selectedDate = new Date(); 
+    let currentEditingId = null; 
+
+    function getDateStr(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    // --- 渲染日历网格 ---
+    async function renderAppCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth(); 
+        
+        if (titleEl) titleEl.textContent = `${year}年 ${month + 1}月`;
+        if (!gridEl) return;
+
+        const allSchedules = await db.schedules.toArray();
+        const scheduleSet = new Set(allSchedules.map(s => s.date));
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+        let html = '';
+
+        for (let i = 0; i < firstDay; i++) {
+            const day = daysInPrevMonth - firstDay + 1 + i;
+            html += `<div class="app-calendar-day other-month" data-action="prev-month">${day}</div>`;
+        }
+
+        const today = new Date();
+        for (let day = 1; day <= daysInMonth; day++) {
+            let className = 'app-calendar-day';
+            const currentDayStr = getDateStr(new Date(year, month, day));
+            
+            if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) className += ' today';
+            else if (day === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) className += ' selected';
+
+            if (scheduleSet.has(currentDayStr)) className += ' has-event';
+
+            html += `<div class="${className}" data-day="${day}">${day}</div>`;
+        }
+
+        const totalCells = firstDay + daysInMonth;
+        const nextMonthDays = 42 - totalCells;
+        for (let i = 1; i <= nextMonthDays; i++) {
+            html += `<div class="app-calendar-day other-month" data-action="next-month">${i}</div>`;
+        }
+
+        gridEl.innerHTML = html;
+        updateScheduleHeader();
+        renderScheduleList();
+    }
+
+    // --- 渲染日程列表 (带角色信息) ---
+    async function renderScheduleList() {
+        if (!scheduleListContainer) return;
+        
+        const dateStr = getDateStr(selectedDate);
+        const schedules = await db.schedules.where('date').equals(dateStr).sortBy('time');
+
+        // 预加载所有角色信息，方便显示名字
+        const allChars = await db.characters.toArray();
+        const charMap = {};
+        allChars.forEach(c => charMap[c.id] = c.name);
+
+        scheduleListContainer.innerHTML = '';
+
+        if (schedules.length === 0) {
+            scheduleListContainer.innerHTML = `
+                <div style="text-align:center; color:#ccc; padding-top:30px;">
+                    <i class="fa-regular fa-calendar-xmark" style="font-size: 32px; margin-bottom: 10px;"></i>
+                    <p style="font-size: 13px;">今日暂无安排</p>
+                </div>
+            `;
+            return;
+        }
+
+        schedules.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'schedule-item buttonlike';
+            
+            // 处理角色显示
+            let charBadge = '';
+            if (item.characterId && charMap[item.characterId]) {
+                charBadge = `<span style="font-size:10px; background:#e0f2fe; color:#0284c7; padding:2px 6px; border-radius:4px; margin-right:6px;">${escapeHtml(charMap[item.characterId])}</span>`;
+            }
+
+            div.innerHTML = `
+                <div class="schedule-time">${item.time}</div>
+                <div class="schedule-content" style="position: relative;">
+                    <div class="schedule-title">${charBadge}${escapeHtml(item.title)}</div>
+                    <div class="schedule-desc">${escapeHtml(item.content || '')}</div>
+                </div>
+            `;
+            
+            div.addEventListener('click', () => {
+                openScheduleModal('edit', item);
+            });
+
+            scheduleListContainer.appendChild(div);
+        });
+    }
+
+    function updateScheduleHeader() {
+        const m = selectedDate.getMonth() + 1;
+        const d = selectedDate.getDate();
+        const weekDay = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][selectedDate.getDay()];
+        
+        if (scheduleDateDisplay) scheduleDateDisplay.textContent = `${m}月${d}日`;
+        if (weekdayDisplay) weekdayDisplay.textContent = weekDay;
+    }
+
+    // --- ✨ 核心：打开弹窗 (带角色加载) ---
+    async function openScheduleModal(mode, item = null) {
+        const dateStr = getDateStr(selectedDate);
+        modalDateDisplay.textContent = dateStr;
+        
+        // 1. 动态填充角色下拉框
+        if (charSelect) {
+            charSelect.innerHTML = '<option value="">-- 不关联 --</option>';
+            const chars = await db.characters.toArray();
+            const validChars = chars.filter(c => !c.id.startsWith('npc-')); // 过滤掉系统NPC
+            validChars.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.name;
+                charSelect.appendChild(opt);
+            });
+        }
+
+        if (mode === 'add') {
+            currentEditingId = null;
+            modalTitle.textContent = "添加日程";
+            titleInput.value = '';
+            descInput.value = '';
+            timeInput.value = '09:00'; 
+            if(charSelect) charSelect.value = ""; // 重置选择
+            deleteBtnInModal.style.display = 'none';
+        } else if (mode === 'edit' && item) {
+            currentEditingId = item.id;
+            modalTitle.textContent = "编辑日程";
+            titleInput.value = item.title;
+            descInput.value = item.content;
+            timeInput.value = item.time;
+            if(charSelect) charSelect.value = item.characterId || ""; // 回填角色
+            deleteBtnInModal.style.display = 'block';
+        }
+
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('visible'), 10);
+    }
+
+    function closeScheduleModal() {
+        modal.classList.remove('visible');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    // --- 事件监听 ---
+    document.addEventListener('calendar-jump-date', (e) => {
+        const { year, month } = e.detail;
+        currentDate.setFullYear(year);
+        currentDate.setMonth(month);
+        currentDate.setDate(1);
+        selectedDate = new Date(year, month, 1);
+        renderAppCalendar();
+    });
+
+    if (appBtn) appBtn.addEventListener('click', () => {
+        currentDate = new Date();
+        selectedDate = new Date();
+        renderAppCalendar();
+        showPage('calendar-app-page');
+    });
+    if (backBtn) backBtn.addEventListener('click', () => showPage('home'));
+    if (todayBtn) todayBtn.addEventListener('click', () => {
+        const now = new Date();
+        currentDate = new Date(now);
+        selectedDate = new Date(now);
+        renderAppCalendar();
+    });
+
+    if (gridEl) {
+        gridEl.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.classList.contains('app-calendar-day')) {
+                if (target.dataset.action === 'prev-month') {
+                    currentDate.setMonth(currentDate.getMonth() - 1);
+                    renderAppCalendar(); return;
+                }
+                if (target.dataset.action === 'next-month') {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    renderAppCalendar(); return;
+                }
+                const day = parseInt(target.dataset.day);
+                if (day) {
+                    selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+                    renderAppCalendar(); 
+                }
+            }
+        });
+        let touchStartX = 0;
+        gridEl.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX, {passive: true});
+        gridEl.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            if (Math.abs(touchEndX - touchStartX) > 50) {
+                if (touchEndX - touchStartX > 0) currentDate.setMonth(currentDate.getMonth() - 1);
+                else currentDate.setMonth(currentDate.getMonth() + 1);
+                renderAppCalendar();
+            }
+        });
+    }
+    
+    if (addEventBtn && modal) {
+        addEventBtn.addEventListener('click', () => openScheduleModal('add'));
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeScheduleModal);
+
+        saveBtn.addEventListener('click', async () => {
+            const title = titleInput.value.trim();
+            if (!title) { alert('请输入日程标题'); return; }
+
+            const data = {
+                date: getDateStr(selectedDate),
+                time: timeInput.value,
+                title: title,
+                content: descInput.value.trim(),
+                characterId: charSelect ? charSelect.value : null, // ✨ 保存角色ID
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                if (currentEditingId) {
+                    await db.schedules.update(currentEditingId, data);
+                } else {
+                    await db.schedules.add(data);
+                }
+                closeScheduleModal();
+                renderAppCalendar();
+                renderScheduleList();
+            } catch (e) {
+                console.error(e);
+                alert('保存失败');
+            }
+        });
+
+        if (deleteBtnInModal) {
+            deleteBtnInModal.addEventListener('click', () => {
+                if (!currentEditingId) return;
+                
+                if (typeof showDeleteDialog === 'function') {
+                    showDeleteDialog('确定要删除这个日程吗？', async () => {
+                        await db.schedules.delete(currentEditingId);
+                        closeScheduleModal();
+                        renderAppCalendar();
+                        renderScheduleList();
+                    });
+                } else if(confirm('确定删除这个日程吗？')) {
+                    db.schedules.delete(currentEditingId).then(() => {
+                        closeScheduleModal();
+                        renderAppCalendar();
+                        renderScheduleList();
+                    });
+                }
+            });
+        }
+    }
+
+})();
+// ==========================================================
+// --- ✨✨✨【全新】日历App-年月跳转核心引擎 ✨✨✨ ---
+// ==========================================================
+(function() {
+    // 1. 获取 DOM 元素
+    const triggerBtn = document.getElementById('calendar-picker-trigger');
+    const modal = document.getElementById('calendar-date-picker-modal');
+    const closeBtn = document.getElementById('calendar-picker-close-btn');
+    const confirmBtn = document.getElementById('calendar-picker-confirm-btn');
+    const yearGrid = document.getElementById('picker-year-grid');
+    const monthGrid = document.getElementById('picker-month-grid');
+
+    if (!triggerBtn || !modal) return;
+
+    // 临时存储用户的选择
+    let tempYear = new Date().getFullYear();
+    let tempMonth = new Date().getMonth(); // 0-11
+
+    // --- 核心函数：渲染年份网格 ---
+    function renderYears() {
+        yearGrid.innerHTML = '';
+        // 生成前后20年的年份
+        const currentYear = new Date().getFullYear();
+        const startYear = currentYear - 25;
+        const endYear = currentYear + 10;
+
+        for (let y = startYear; y <= endYear; y++) {
+            const el = document.createElement('div');
+            el.className = `picker-item ${y === tempYear ? 'selected' : ''}`;
+            el.textContent = y;
+            el.onclick = () => {
+                tempYear = y;
+                // 重新渲染以更新高亮
+                Array.from(yearGrid.children).forEach(child => {
+                    child.classList.toggle('selected', parseInt(child.textContent) === tempYear);
+                });
+            };
+            yearGrid.appendChild(el);
+        }
+        
+        // 自动滚动到选中年份的位置
+        setTimeout(() => {
+            const selectedEl = yearGrid.querySelector('.selected');
+            if (selectedEl) {
+                selectedEl.scrollIntoView({ block: "center" });
+            }
+        }, 10);
+    }
+
+    // --- 核心函数：渲染月份网格 ---
+    function renderMonths() {
+        monthGrid.innerHTML = '';
+        for (let m = 0; m < 12; m++) {
+            const el = document.createElement('div');
+            el.className = `picker-item ${m === tempMonth ? 'selected' : ''}`;
+            el.textContent = `${m + 1}月`;
+            el.dataset.month = m;
+            el.onclick = () => {
+                tempMonth = m;
+                Array.from(monthGrid.children).forEach(child => {
+                    child.classList.toggle('selected', parseInt(child.dataset.month) === tempMonth);
+                });
+            };
+            monthGrid.appendChild(el);
+        }
+    }
+
+    // --- 事件绑定 ---
+
+    // 1. 点击标题打开弹窗
+    triggerBtn.addEventListener('click', () => {
+        // 获取日历App当前显示的年份和月份（假设日历App的引擎暴露了 currentDate）
+        // 为了安全起见，我们解析标题栏的文字，例如 "2025年 11月"
+        const titleText = document.getElementById('app-calendar-title').textContent;
+        const match = titleText.match(/(\d+)年\s*(\d+)月/);
+        
+        if (match) {
+            tempYear = parseInt(match[1]);
+            tempMonth = parseInt(match[2]) - 1; // 转换为 0-11
+        } else {
+            const now = new Date();
+            tempYear = now.getFullYear();
+            tempMonth = now.getMonth();
+        }
+
+        renderYears();
+        renderMonths();
+        showModal('calendar-date-picker-modal');
+    });
+
+    // 2. 关闭弹窗
+    closeBtn.addEventListener('click', () => hideModal('calendar-date-picker-modal'));
+
+    // 3. 确认跳转
+    confirmBtn.addEventListener('click', () => {
+        // 更新日历App的全局变量（这里我们假设日历App的逻辑在闭包内，
+        // 但我们可以通过重新触发日历渲染来更新它）
+        
+        // 由于之前的日历App逻辑封装在闭包里，我们需要一种方式通知它。
+        // 最简单的方法是：修改 title，然后手动触发一次“今天”按钮的变种逻辑，
+        // 或者更优雅地，我们在日历引擎里监听一个自定义事件。
+        
+        // 方案：我们将选中的日期存入 localStorage，然后刷新日历
+        // 但更好的方式是直接操作日历的 currentDate 变量。
+        
+        // 为了兼容性，我们创建一个自定义事件来通知日历App更新
+        const event = new CustomEvent('calendar-jump-date', { 
+            detail: { year: tempYear, month: tempMonth } 
+        });
+        document.dispatchEvent(event);
+
+        hideModal('calendar-date-picker-modal');
+        showNotification(`已跳转至 ${tempYear}年 ${tempMonth + 1}月`);
+    });
+
 })();
 
 
