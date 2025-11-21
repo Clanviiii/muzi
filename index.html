@@ -14924,12 +14924,15 @@ ${historyTranscript}
             // ▲▲▲ 替换到这里结束 ▲▲▲
 
             // 7. 替换所有占位符并返回
+// 7. 替换所有占位符并返回
+            // ✨✨✨ 核心修改：调整替换顺序！ ✨✨✨
+            // 必须先替换 {{persona}} 把内容填进去，然后再全局替换 {{char}} 和 {{user}}
             return finalComponents.map(comp => ({
                 ...comp,
                 content: comp.content
-                    .replace(/{{char}}/g, ctxChar.name)
-                    .replace(/{{persona}}/g, ctxChar.persona)
-                    .replace(/{{user}}/g, ctxUser.name)
+                    .replace(/{{persona}}/g, ctxChar.persona) // 1. 先把人设长文填进去
+                    .replace(/{{char}}/g, ctxChar.name)       // 2. 再把全文里的 {{char}} 换成名字
+                    .replace(/{{user}}/g, ctxUser.name)       // 3. 最后把 {{user}} 换成名字
             }));
         }
         // ==========================================================
@@ -17589,7 +17592,7 @@ ${MULTI_BUBBLE_SUFFIX}`;
                     const name = nameInput.value.trim();
                     if (!name) { showNotification("请至少填写姓名！"); return; }
 
-                    const presetName = await showInputDialog("请为这个预设取个名字：", name + "的模板");
+                    const presetName = await showInputDialog("请为这个预设取个名字：", name + "");
                     if (!presetName) return;
 
                     try {
@@ -18884,7 +18887,7 @@ ${MULTI_BUBBLE_SUFFIX}`;
             }
 
 // ==========================================================
-            // --- ✨✨✨【全新 V3.0 - 双模式触发版】世界书核心引擎 ✨✨✨ ---
+            // --- ✨✨✨【V3.1 - 增强分割版】世界书核心引擎 ✨✨✨ ---
             // ==========================================================
             async function getActiveWorldBookEntriesForTurn(chatHistory, characterLinkedEntries) {
                 // --- 1. 获取全局设置 ---
@@ -18897,7 +18900,6 @@ ${MULTI_BUBBLE_SUFFIX}`;
                 // --- 2. 准备工作 ---
                 const recentMessages = chatHistory.slice(-globalSettings.scanDepth);
                 
-                // 即使没有最近消息，常驻条目也应该触发，所以我们只检查配置是否存在
                 if (!characterLinkedEntries || characterLinkedEntries.length === 0) {
                     return { before_char: '', after_char: '' };
                 }
@@ -18908,56 +18910,68 @@ ${MULTI_BUBBLE_SUFFIX}`;
 
                 const triggeredEntries = [];
 
+                // 预处理聊天内容：合并成一个字符串方便扫描，并根据设置处理大小写
+                let combinedChatContent = recentMessages.map(m => m.content || '').join('\n');
+                if (!globalSettings.caseSensitive) {
+                    combinedChatContent = combinedChatContent.toLowerCase();
+                }
+
                 // --- 3. 遍历角色的“条目配置” ---
                 for (const config of characterLinkedEntries) {
-                    // a. 基础检查：开关
+                    // a. 基础检查
                     if (!config.enabled) continue;
-                    
                     const entry = entryDetailsMap.get(config.id);
                     if (!entry) continue;
 
-                    // b. 概率检查 (无论是常驻还是关键词，都要受概率控制)
-                    if (Math.random() * 100 > config.probability) {
-                        continue;
-                    }
+                    // b. 概率检查
+                    if (Math.random() * 100 > config.probability) continue;
 
-                    // c. ✨✨✨ 核心分支逻辑 ✨✨✨
-                    
-                    // 模式 1: 常驻生效 (Always)
-                    // 如果设置了 'always'，或者根本没有设置策略（旧数据）但关键词为空
+                    // c. 触发逻辑
+                    // 模式 1: 常驻生效
                     if (config.triggerStrategy === 'always') {
                         triggeredEntries.push({ ...entry, config });
-                        continue; // 直接触发，跳过后续匹配
+                        continue; 
                     }
 
-                    // 模式 2: 关键词触发 (Keywords)
-                    // 如果最近没有消息，关键词模式无法工作，跳过
+                    // 模式 2: 关键词触发
                     if (recentMessages.length === 0) continue;
 
+                    // ✨✨✨ 核心修复就在这里！ ✨✨✨
+                    // 使用万能正则分割：
+                    // ,   -> 英文逗号
+                    // \uff0c -> 中文逗号 (，)
+                    // \u3001 -> 中文顿号 (、)
+                    // |   -> 竖线
+                    // \n  -> 换行符
+                    // \s+ -> 连续空格 (如果你希望空格也作为分隔符，保留这个；如果不希望"Iron Man"被拆开，去掉\s)
+                    // 这里我保留了 \s+，因为大多数用户习惯用空格分隔标签。如果你想支持带空格的词组（如英文名），请删掉 \s
                     let keywords = (entry.keywords || '')
-                        .split(/[,，\s、]+/)
+                        .split(/[,，\u3001|\n\s]+/) 
                         .map(k => k.trim())
                         .filter(Boolean);
 
+                    // 是否包含标题作为关键词
                     if (globalSettings.includeName && entry.title) {
                         keywords.push(entry.title.trim());
                     }
                     
-                    if (keywords.length === 0) continue; // 没有关键词，又不常驻，跳过
+                    if (keywords.length === 0) continue;
 
                     let isTriggered = false;
+                    
+                    // 检查函数：根据设置决定是否区分大小写
+                    const checkMatch = (kw) => {
+                        if (!kw) return false;
+                        const target = globalSettings.caseSensitive ? kw : kw.toLowerCase();
+                        return combinedChatContent.includes(target);
+                    };
+
                     if (config.keywordLogic === 'all') {
-                        isTriggered = keywords.every(keyword =>
-                            recentMessages.some(message =>
-                                typeof message.content === 'string' && message.content.toLowerCase().includes(keyword.toLowerCase())
-                            )
-                        );
+                        // 必须包含所有关键词
+                        isTriggered = keywords.every(checkMatch);
                     } else {
-                        isTriggered = keywords.some(keyword =>
-                            recentMessages.some(message =>
-                                typeof message.content === 'string' && message.content.toLowerCase().includes(keyword.toLowerCase())
-                            )
-                        );
+                        // 包含任意一个即可
+                        isTriggered = keywords.some(checkMatch);
                     }
 
                     if (isTriggered) {
@@ -18985,7 +18999,8 @@ ${MULTI_BUBBLE_SUFFIX}`;
                     }
 
                     if (categorizedEntries[targetPosition]) {
-                        categorizedEntries[targetPosition].push(`--- ${entry.title} ---\n${entry.content}`);
+                        // 格式化输出，加上标题注释
+                        categorizedEntries[targetPosition].push(`---  ${entry.title} ---\n${entry.content}`);
                     }
                 });
 
@@ -29159,9 +29174,10 @@ case 'char_persona':
 
                         const userPersonaForDisplay = character.activeUserPersona || user;
                         
+      // ✨✨✨ 核心修改：调整替换顺序 ✨✨✨
                         content = CHAR_PERSONA_TEMPLATE
-                            .replace(/{{char}}/g, character.name)
-                            .replace(/{{persona}}/g, character.persona)
+                            .replace(/{{persona}}/g, character.persona) // 1. 先填坑
+                            .replace(/{{char}}/g, character.name)       // 2. 再换名
                             .replace(/{{user}}/g, userPersonaForDisplay.name);
                         break;
                     case 'user_persona':
