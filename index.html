@@ -778,7 +778,7 @@
         .msg-row {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 12px;
+            margin-bottom: 18px;
             gap: 12px;
         }
 
@@ -3721,14 +3721,15 @@
         }
 
         /* (可选) 强调动作描述的样式 [...] */
+/* (可选) 强调动作描述的样式 [...] */
+        /* ✨✨✨ 这是精装版样式 ✨✨✨ */
         .subtitle-line em {
-            font-style: normal;
-            color: #d1d5db;
-            /* 稍微淡一点的灰色 */
-            font-size: 13px;
-            display: block;
-            /* 让动作描述独占一行，更清晰 */
-            margin-bottom: 4px;
+            font-style: italic; /* 保持斜体 */
+            color: #d1d5db;     /* 颜色变浅，作为辅助信息 */
+            font-size: 14px;    /* 字号可以稍小一点 */
+            display: block;     /* 核心：让每个动作都单独占一行 */
+            margin-bottom: 4px; /* 和下面的对话拉开一点距离 */
+            margin-top: 4px;    /* 和上面的对话也拉开一点距离 */
         }
 
         /* --- 5. ✨ 全新设计的底部控制栏 ✨ --- */
@@ -7980,7 +7981,29 @@
             border-left: 2px solid rgba(192, 132, 252, 0.3); /* 左侧加一条淡紫色竖线，以作区分 */
         }
 
-
+/* ========================================================== */
+/* --- ✨✨✨【全新】记忆卡片-对话快照专属样式 ✨✨✨ --- */
+/* ========================================================== */
+.memory-source-context {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed #e5e7eb;
+}
+.memory-source-context .context-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: #9ca3af;
+    margin-bottom: 6px;
+}
+.memory-source-context .context-item {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+.context-item .speaker {
+    font-weight: 600;
+}
 
         
     </style>
@@ -9346,7 +9369,7 @@
                                 <label class="form-label" style="font-size: 13px; color: #6b7280;">叙事视角</label>
                                 <select id="weaving-perspective-select" class="form-input" style="border-radius: 12px;">
                                     <option value="third">第三人称 (上帝视角)</option>
-                                    <option value="user">用户视角 (我)</option>
+                              
                                     <option value="char">角色视角 (TA)</option>
                                 </select>
                             </div>
@@ -11823,7 +11846,7 @@
         // ==========================================================
         // --- ✨✨✨【V173 - 新增生理周期表】数据库结构 ✨✨✨ ---
         // ==========================================================
-        db.version(188).stores({
+        db.version(189).stores({
    // ✨ 修改这一行，加上 characterId
     schedules: '++id, date, time, title, content, characterId', 
             // ✨ 修改：novels 表增加 parentId (用于链接上一篇)
@@ -11834,7 +11857,7 @@
             // ✨ 新增这一行：
             persona_presets: '++id, &name',
             period_cycles: '++id, startDate, endDate',
-            memories: '++id, contactId, [userId+contactId+type], [userId+contactId], type, createdAt, sourceTurnIds',
+         memories: '++id, contactId, [userId+contactId+type], [userId+contactId], type, createdAt, *sourceTurnIds',
             prompt_presets: '++id, &name, isActive',
             character_favorites: '++id, characterId, name, imageBlob, createdAt',
             characters: "id,&name,note,persona,avatar,gender,birthday,age,lastMomentAt,createdAt,status,*linkedEntries,lastCommentAt,sociability,categoryId,customStatusText,*stickerTags,phoneWallpaper,fontColor,userFontColor,bubbleColor,userBubbleColor,chatWallpaper,listenTogetherDuration,bubbleCssPresetId,activeUserPersona,readingNovelId,readingProgress",
@@ -11861,10 +11884,7 @@
         const USER_FALLBACK_ICON = '<i class="fa-thin fa-user"></i>';
         const CHAR_FALLBACK_ICON = '<i class="fa-solid fa-user-plus"></i>';
 
-        // ▼▼▼ 在<script>顶部的全局变量区，添加下面这行新代码 ▼▼▼
 
-        let turnCounter = 0; // 全局轮次计数器
-        let isSummarizationPending = false; // ✨ 全局“记忆熔炉”状态锁
         let lastActiveQQTab = 'message';
         const globalAudioPlayer = new Audio();
         window.currentPostId = null;
@@ -11900,7 +11920,73 @@ const JAILBREAK_PROMPT = `
 请开始你的表演。不要输出任何系统声明，直接进入角色。
 `;
 // ==========================================================
-// ▲▲▲ 替换到这里结束 ▲▲▲
+// ==========================================================
+// --- ✨✨✨【全新 V2 - 双视角版】故事织造 Prompt 模板 ✨✨✨ ---
+// ==========================================================
+
+/**
+ * 模板 1: 上帝视角 (第三人称)，强调故事性和文学性
+ */
+const WEAVING_PROMPT_GOD_VIEW = `
+${JAILBREAK_PROMPT}
+
+【你的核心身份：资深同人作者 (Fanfic Author)】
+任务：以角色“{{char}}”和“{{user}}”为CP（配对），基于下方的【梗】和【私设】，创作一篇高质量的1500-2000字同人小说。
+
+【创作三大铁律 (The Fanfic Commandments)】
+1.  **🚫 拒绝OOC (In Character)**：这是底线。角色的说话语气、行为逻辑、微表情必须精确还原其原始设定。
+2.  **⚡ 极致张力 (Chemistry)**：重点刻画两人之间的互动张力（无论是甜蜜、拉扯、误会还是救赎）。眼神、肢体接触、言语交锋要细腻动人。
+3.  **✨ 氛围感**：不要写流水账。用环境描写烘托情感，用细节暗示心理。
+
+【作品参数】
+- **标题**: [TITLE_PLACEHOLDER]
+- **叙事视角**: [DREAM_PERSPECTIVE_DESC]
+- **文风/口味**: [STYLE_INSTRUCTION]
+
+【投喂素材 (梗与设定)】
+► **核心梗 (Tags/Tropes)**:
+[CORE_INSPIRATION_TEXT]
+► **私设/世界观 (AU Settings)**:
+[KNOWLEDGE_TEXT]
+
+【输出格式要求 (严格遵守)】
+请严格按照以下格式输出，**第一行必须是标题**：
+【标题】(请取一个晋江/Lofter/AO3风格的标题，文艺、有张力或概括性强)
+（空一行）
+(正文开始)...
+`;
+
+/**
+ * 模板 2: 角色视角 (第一人称)，强调内心独白和沉浸感
+ */
+const WEAVING_PROMPT_CHAR_VIEW = `
+${JAILBREAK_PROMPT}
+
+【你的核心身份：你就是“{{char}}”】
+任务：以你的第一人称视角（“我”），回顾并记录你和“{{user}}”之间发生的故事，1500-2000字左右。这不是在写小说，而是在写你的**日记、回忆录或内心独白**。
+
+【创作三大铁律 (The Inner World Commandments)】
+1.  **❤️ 绝对沉浸 (Total Immersion)**：你就是角色本人。你的文字必须充满你的主观情绪、私密想法和感官体验。
+2.  **💬 内心独白 (Internal Monologue)**：大量描写你的所思所想、情绪波动、欲望和挣扎。是什么让你心动？是什么让你不安？
+3.  **👀 感官细节 (Sensory Details)**：详细描述你看到的、听到的、闻到的、感受到的。当时空气的味道、TA的眼神、皮肤的触感……这些都是关键。
+
+【事件回顾参数】
+- **标题**: [TITLE_PLACEHOLDER]
+- **叙事视角**: [DREAM_PERSPECTIVE_DESC]
+- **我的心情/基调**: [STYLE_INSTRUCTION]
+
+【需要回忆的事件梗概 (梗与设定)】
+► **核心事件 (Core Events)**:
+[CORE_INSPIRATION_TEXT]
+► **相关的背景/设定 (Background Info)**:
+[KNOWLEDGE_TEXT]
+
+【输出格式要求 (严格遵守)】
+请严格按照以下格式输出，**第一行必须是标题**：
+【标题】(请取一个更私人化、日记风格的标题)
+（空一行）
+(正文开始)...
+`;
 // ==========================================================
 // --- ✨✨✨【全局】NSFW“纯粹欲望”等级协议 V2.0 ✨✨✨ ---
 // ==========================================================
@@ -11960,55 +12046,70 @@ const NSFW_LEVEL_GUIDE_PROMPT = `
 `;
         // ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
 
-        // ==========================================================
-        // --- ✨✨✨【全新】“记忆检索器”核心引擎 V1.0 ✨✨✨ ---
-        // ==========================================================
-        /**
-         * 核心函数：根据最近的聊天内容，从数据库中检索最相关的核心记忆。
-         * @param {Array<object>} chatHistory - 最近的聊天记录数组。
-         * @param {string} characterId - 当前角色的ID。
-         * @param {string} userId - 当前用户的ID。
-         * @returns {Promise<string>} - 返回格式化后的、可直接注入Prompt的记忆字符串。
-         */
-        async function retrieveRelevantMemories(chatHistory, characterId, userId) {
-            // 1. 安全检查：如果聊天记录为空，则无需检索
-            if (!chatHistory || chatHistory.length === 0) {
-                return '';
+// ==========================================================
+// --- ✨✨✨【全新 V2 - 中文修复版】“记忆检索器”核心引擎 ✨✨✨ ---
+// ==========================================================
+/**
+ * 核心函数：根据最近的聊天内容，从数据库中检索最相关的核心记忆。
+ * @param {Array<object>} chatHistory - 最近的聊天记录数组。
+ * @param {string} characterId - 当前角色的ID。
+ * @param {string} userId - 当前用户的ID。
+ * @returns {Promise<string>} - 返回格式化后的、可直接注入Prompt的记忆字符串。
+ */
+async function retrieveRelevantMemories(chatHistory, characterId, userId) {
+    // 1. 安全检查 (保持不变)
+    if (!chatHistory || chatHistory.length === 0) {
+        return '';
+    }
+
+    // 2. 提取最近对话的文本 (保持不变)
+    const recentConversation = chatHistory.slice(-2).map(msg => msg.content).join(' ');
+
+    // 3. 获取该角色的所有核心记忆 (保持不变)
+    const allMemories = await db.memories.where({
+        userId: userId,
+        contactId: characterId
+    }).toArray();
+
+    if (allMemories.length === 0) {
+        return '';
+    }
+
+    // --- ✨✨✨ 核心修复：全新的、适用于中文的匹配逻辑 ✨✨✨ ---
+    const relevantMemories = allMemories.filter(memory => {
+        // a. 将记忆内容和最近对话都转为小写，以便不区分大小写地匹配
+        const memoryContentLower = memory.content.toLowerCase();
+        const conversationLower = recentConversation.toLowerCase();
+
+        // b. 关键一步：直接检查记忆内容是否“包含”了最近的对话内容。
+        //    这虽然简单，但在大多数情况下（如用户输入关键词）非常有效。
+        //    为了更精确，我们可以只检查用户最后一条消息。
+        const lastUserMessage = chatHistory.filter(m => m.senderId === userId).pop();
+        
+        if (lastUserMessage && lastUserMessage.content) {
+            // 优先检查：记忆内容是否包含用户最后输入的内容？
+            // 例如：记忆是“...有一张照片...”，用户输入“照片”，匹配成功！
+            if (memoryContentLower.includes(lastUserMessage.content.toLowerCase())) {
+                return true;
             }
-
-            // 2. 提取最近对话的关键词
-            // 我们只关注最近的 2 条消息，以提高相关性
-            const recentConversation = chatHistory.slice(-2).map(msg => msg.content).join(' ');
-
-            // 3. 从数据库获取该角色的所有核心记忆
-            const allMemories = await db.memories.where({
-                userId: userId,
-                contactId: characterId
-            }).toArray();
-
-            if (allMemories.length === 0) {
-                return ''; // 如果没有记忆，也直接返回
-            }
-
-            // 4. 核心匹配逻辑：找出与最近对话相关的记忆
-            const relevantMemories = allMemories.filter(memory => {
-                // 这是一个简单的关键词匹配：如果记忆内容中的某个词出现在了最近的对话中
-                // （忽略大小写）我们就认为它是相关的。
-                const memoryWords = memory.content.toLowerCase().split(/\s+/);
-                return memoryWords.some(word => word.length > 1 && recentConversation.toLowerCase().includes(word));
-            }).slice(0, 5); // 最多只取回 5 条最相关的记忆，防止上下文过长
-
-            // 5. 格式化输出
-            if (relevantMemories.length > 0) {
-                console.log(`🧠 记忆检索器: 命中 ${relevantMemories.length} 条相关记忆！`);
-                let promptComponent = "\n【你需要参考的、过去发生过的核心记忆】:\n";
-                promptComponent += relevantMemories.map(mem => `- ${mem.content}`).join('\n');
-                return promptComponent;
-            }
-
-            return ''; // 如果没有找到相关记忆，返回空字符串
         }
-        // ==========================================================
+        
+        // 备用检查：如果上面的没匹配到，再看看最近的对话是否提到了记忆里的事
+        // （这个命中率较低，但可以作为补充）
+        return conversationLower.includes(memoryContentLower);
+
+    }).slice(0, 5); // 最多只取回 5 条最相关的记忆
+
+    // 5. 格式化输出 (保持不变)
+    if (relevantMemories.length > 0) {
+        console.log(`🧠 记忆检索器: 命中 ${relevantMemories.length} 条相关记忆！`);
+        let promptComponent = "\n【你需要参考的、过去发生过的核心记忆】:\n";
+        promptComponent += relevantMemories.map(mem => `- ${mem.content}`).join('\n');
+        return promptComponent;
+    }
+
+    return ''; // 如果没有找到相关记忆，返回空字符串
+}
 
         // ▲▲▲ 粘贴到这里结束 ▲▲▲
         // --- ✨✨✨【V2.5 - 兼容升级版】统一上下文构建核心引擎 ✨✨✨ ---
@@ -14267,7 +14368,7 @@ const pages = [
                 const totalMessages = onlineMsgs.length;
 
                 // ✨✨✨ 核心修改 2：加载历史记录时过滤掉线下消息 ✨✨✨
-                // 由于 Dexie 的 limit 是在 filter 之前生效的，为了准确分页，我们先取数组再切片
+
                 // (虽然性能略有损耗，但保证了数据的准确隔离)
                 const history = onlineMsgs
                     .reverse() // 倒序，最新的在前面
@@ -16531,10 +16632,10 @@ window.executeAiWriteDiary = async function () {
         // ✨✨✨ 核心修改：我们在这里升级了日记的任务描述 ✨✨✨
         const diaryTaskDescription = `
 
-
+${JAILBREAK_PROMPT}
 
 【你的核心任务】
-回顾所有对话记录，将你此刻对“{{user}}”最私密、最真实的内心想法，创作一段不少于800字的【日记】，来展现你的内心欲望。
+回顾所有对话记录，将你此刻最真实的内心想法，创作一段不少于800字的【日记】，来展现你今日的心路。
 
 【日记创作准则 (最高优先级)】:
 1.  **【第一人称视角】**: 必须使用“我”作为主语，完全代入角色进行书写。
@@ -20331,14 +20432,17 @@ async function loadAndShowDetailView() {
 
         // ✨✨✨ 核心修改就在这里！我们升级了“点菜单” ✨✨✨
         const bondTaskDescription = `
+
+${JAILBREAK_PROMPT}
+
 【你的核心任务】
-回顾所有背景资料，并从以下【全部三个维度】，生成你此刻最真实的内心活动。
+回顾所有背景资料，并从以下【全部三个维度】，生成你此刻的内心活动。
 
 ---
 【请从以下【全部三个】维度进行剖析和输出】:
-1.  **【心声】(heart_trace):** 你最直接、未经修饰、一闪而过的**第一反应**是什么？
+1.  **【心声】(heart_trace):** 你最直接的**第一反应**是什么？
 2.  **【独白】(monologue):** 将思绪扩展成一段独白。
-3.  **【深层思绪】(deep_thought):** 你最深层、最大胆、甚至可能不道德的、绝不会说出口的真实欲望或想法是什么？
+3.  **【深层思绪】(deep_thought):** 你最深层、最大胆、甚至可能不道德的、绝不会说出口的欲望或想法是什么？
 
 【最终输出格式 (必须严格遵守！)】:
 你的回答必须是、也只能是一个严格的 JSON 对象，包含 "heart_trace", "monologue", "deep_thought" 三个键。
@@ -21254,105 +21358,123 @@ ${commentsText || '(还没有评论)'}
             /**
              * 辅助函数：将对话内容添加到UI（作为可滚动的电影字幕）
              */
-            function addVideoHistoryToUI(speaker, content) {
-                // ✨ 核心修正1：我们获取的是 main 元素，因为它现在是滚动容器
-                const scrollContainer = document.getElementById('video-call-main');
-                const subtitlesContainer = document.getElementById('video-call-subtitles');
+/**
+         * 辅助函数：将对话内容添加到UI（V2 - 剧本解析版）
+         */
+        function addVideoHistoryToUI(speaker, content) {
+            const scrollContainer = document.getElementById('video-call-main');
+            const subtitlesContainer = document.getElementById('video-call-subtitles');
+            if (!scrollContainer || !subtitlesContainer) return;
 
-                if (!scrollContainer || !subtitlesContainer) return;
+            const line = document.createElement('div');
+            line.className = 'subtitle-line';
 
-                const line = document.createElement('div');
-                line.className = 'subtitle-line';
+            // ✨✨✨ 核心修改：智能解析并渲染 ✨✨✨
+            
+            // 1. 使用正则表达式，将 "[动作]" 和 "对话" 分割成一个数组
+            //    例如 "[动作]你好" -> ["", "[动作]", "你好"]
+            const parts = content.split(/(\[.*?\])/g).filter(Boolean);
 
-                // 我们不再需要区分用户和AI的样式
-                line.innerHTML = content.replace(/\[(.*?)\]/g, '<em>($1)</em>');
+            // 2. 遍历这个数组，为不同部分穿上不同的“外衣”
+            parts.forEach(part => {
+                if (part.startsWith('[') && part.endsWith(']')) {
+                    // 如果是动作，创建一个 <em> 标签
+                    const actionEl = document.createElement('em');
+                    // 去掉方括号，并把内容放进去
+                    actionEl.textContent = `(${part.slice(1, -1)})`;
+                    line.appendChild(actionEl);
+                } else {
+                    // 如果是对话，直接创建文本节点
+                    const dialogueNode = document.createTextNode(part);
+                    line.appendChild(dialogueNode);
+                }
+            });
+            // ✨✨✨ 修改结束 ✨✨✨
 
-                subtitlesContainer.appendChild(line);
-
-                // ✨ 核心修正2：让 main 元素滚动到底部
-                scrollContainer.scrollTop = scrollContainer.scrollHeight;
-            }
-            // ▼▼▼ 这是全新重构的代码 ▼▼▼
+            subtitlesContainer.appendChild(line);
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        }
 // ==========================================================
-            // --- ✨✨✨【V4 - 增强记忆版】视频通话AI“总导演”引擎 ✨✨✨ ---
-            // ==========================================================
-            async function triggerAiVideoReply(turnType, initiator = 'user') {
-                const character = currentCallTarget; 
-                const user = character.activeUserPersona || window.currentUser;
-                if (!character || !user) return;
+        // --- ✨✨✨【V5 - 剧本模式版】视频通话AI“总导演”引擎 ✨✨✨ ---
+        // ==========================================================
+        async function triggerAiVideoReply(turnType, initiator = 'user') {
+            const character = currentCallTarget; 
+            const user = character.activeUserPersona || window.currentUser;
+            if (!character || !user) return;
 
-                addVideoHistoryToUI('ai', '...'); // 显示“正在思考”
+            addVideoHistoryToUI('ai', '...'); // 显示“正在思考”
 
-                try {
-                    // 1. 准备背景板：获取主聊天界面的历史记录 (作为长期背景)
-                    const history = await db.messages.where({ userId: user.id, chatId: character.id }).reverse().limit(20).sortBy('time'); // ✨ 增加到20条背景
-                    
-                    const historyTranscript = history.length > 0 ? history.reverse().flatMap(msg => {
-                        const content = msg.content || '';
-                        if (content.trim().startsWith('<div')) return []; 
-                        const speaker = msg.senderId === user.id ? user.name : character.name;
-                        return [`${speaker}: ${content}`];
-                    }).join('\n') : "（你们最近没有聊天）";
+            try {
+                // (获取背景板和构建 System Prompt 的逻辑保持不变)
+                const history = await db.messages.where({ userId: user.id, chatId: character.id }).reverse().limit(20).sortBy('time');
+                const historyTranscript = history.length > 0 ? history.reverse().flatMap(msg => {
+                    const content = msg.content || '';
+                    if (content.trim().startsWith('<div')) return []; 
+                    const speaker = msg.senderId === user.id ? user.name : character.name;
+                    return [`${speaker}: ${content}`];
+                }).join('\n') : "（你们最近没有聊天）";
+                const finalSystemPrompt = await buildVideoCallSystemPrompt(character, user, historyTranscript);
 
-                    // 2. 调用大脑：构建 System Prompt
-                    const finalSystemPrompt = await buildVideoCallSystemPrompt(character, user, historyTranscript);
+                // --- ✨✨✨ 核心修改：在这里重写“导演指令” ✨✨✨ ---
+                let finalUserPrompt = '';
+                
+                const SCRIPT_FORMAT_INSTRUCTION = `
+【输出格式 (视频通话专用)】
+你的回复【必须】严格遵循“动作描述”和“对话”分离的剧本格式。
+- **动作/表情/神态**：必须用方括号 ` + "[]" + ` 完整包裹。
+- **说出的话**：直接输出文本，不要加任何引号或标签。
+- 你可以只有动作，或只有对话，或两者交织。
 
-                    // 3. 设计剧本：根据不同情境，生成不同的“导演指令”
-                    let finalUserPrompt = '';
-                    
-                    if (turnType === "开场白") {
-                        if (initiator === 'user') {
-                            finalUserPrompt = `[你刚刚接通了用户“${user.name}”打来的视频通话。]`;
-                        } else {
-                            finalUserPrompt = `[${user.name}接通了你主动拨打的视频通话。]`;
-                        }
-                    } else { // 回应弹幕
-                        
-                        // ✨✨✨ 核心修复：大幅增加上下文记忆！ ✨✨✨
-                        // 从原来的 -5 改为 -50，基本覆盖整个通话过程
-                        // 如果通话特别长，它会只保留最近的50句，既保证流畅又不忘事
-                        const videoTranscript = videoCallHistory.slice(-80).join('\n'); 
-                        
-                        finalUserPrompt = `
+【格式示例】:
+[她听到你的声音，身体微微一颤，慢慢转过身来，眼眶有些湿润。] 我没事...
+[他轻笑了一声，凑近屏幕，呼吸声透过麦克风传来。] 真的吗？
+[只是低着头，沉默着玩弄自己的手指。]
+`;
+                
+                if (turnType === "开场白") {
+                    const initiatorText = (initiator === 'user') 
+                        ? `[你刚刚接通了“${user.name}”打来的视频通话。请根据你的角色人设，说一句开场白。]`
+                        : `[${user.name}接通了你主动拨打的视频通话。请根据你的角色人设，说一句开场白。]`;
+                    finalUserPrompt = `${initiatorText}\n\n${SCRIPT_FORMAT_INSTRUCTION}`;
+                } else { // 回应弹幕
+                    const videoTranscript = videoCallHistory.slice(-80).join('\n'); 
+                    finalUserPrompt = `
 【当前视频通话记录 (正在进行中)】:
 ${videoTranscript}
 
 【指令】:
 请根据上下文，对${user.name}的最后一句话做出自然、即时的回应。
-这是一场实时的视频通话，请多描写你的神态、动作(使用[动作])，语气要口语化。`;
-                    }
-
-                    // 4. 发送请求
-                    const contents = [{ role: 'user', parts: [{ text: finalUserPrompt }] }];
-                    const response = await getAiReply(contents, finalSystemPrompt);
-
-                    // ... (流式读取保持不变)
-                    let aiResponseText = '';
-                    const reader = response.body.getReader(); const decoder = new TextDecoder();
-                    while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); aiResponseText += parsed.choices?.[0]?.delta?.content || ''; } catch (e) { } } } }
-
-                    // 清除 loading
-                    const loadingSubtitle = subtitlesContainer.querySelector('.subtitle-line:last-child');
-                    if (loadingSubtitle && loadingSubtitle.textContent === '...') {
-                        loadingSubtitle.remove();
-                    }
-                    
-                    const reply = aiResponseText.trim();
-                    if (reply) {
-                        // 记录到本次通话历史中
-                        videoCallHistory.push(`[(${character.name})]：${reply}`);
-                        addVideoHistoryToUI('ai', reply);
-                    } else {
-                        addVideoHistoryToUI('ai', "(对方似乎没有说话)");
-                    }
-
-                } catch (error) {
-                    console.error("视频通话AI回复失败:", error);
-                    const loadingSubtitle = subtitlesContainer.querySelector('.subtitle-line:last-child');
-                    if (loadingSubtitle) loadingSubtitle.textContent = "(连接中断...)";
+${SCRIPT_FORMAT_INSTRUCTION}`;
                 }
-            }
+                // --- ✨✨✨ 修改结束 ✨✨✨ ---
 
+                // (后续的 AI 请求和流式读取逻辑保持不变)
+                const contents = [{ role: 'user', parts: [{ text: finalUserPrompt }] }];
+                const response = await getAiReply(contents, finalSystemPrompt);
+
+                let aiResponseText = '';
+                const reader = response.body.getReader(); const decoder = new TextDecoder();
+                while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); aiResponseText += parsed.choices?.[0]?.delta?.content || '' } catch (e) { } } } }
+
+                const loadingSubtitle = subtitlesContainer.querySelector('.subtitle-line:last-child');
+                if (loadingSubtitle && loadingSubtitle.textContent === '...') {
+                    loadingSubtitle.remove();
+                }
+                
+                const reply = aiResponseText.trim();
+                if (reply) {
+                    videoCallHistory.push(`[(${character.name})]：${reply}`);
+                    addVideoHistoryToUI('ai', reply); // ✨ 将完整的、带格式的回复交给渲染引擎
+                } else {
+                    addVideoHistoryToUI('ai', "[对方似乎没有说话]");
+                }
+
+            } catch (error) {
+                console.error("视频通话AI回复失败:", error);
+                const loadingSubtitle = subtitlesContainer.querySelector('.subtitle-line:last-child');
+                if (loadingSubtitle) loadingSubtitle.textContent = "(连接中断...)";
+            }
+        }
             // ▼▼▼ 请用这一整块全新的代码，完整替换旧的 closeVideoCall 函数 ▼▼▼
             // ==========================================================
             // --- ✨✨✨【V3 - 摘要存档版】视频通话结束与存档引擎 ✨✨✨ ---
@@ -23158,7 +23280,7 @@ async function importSillyTavernPreset(file) {
                 showLoadingModal(`正在为 ${selectedStickerIds.size} 个表情更新标签...`);
                 try {
                     const idsToUpdate = Array.from(selectedStickerIds);
-                    // 使用 Dexie 的 where...in...modify 高效更新
+             
                     await db.global_stickers.where(':id').anyOf(idsToUpdate).modify({ tags: newTags });
 
                     hideModal('sticker-bulk-edit-tags-modal');
@@ -24918,24 +25040,31 @@ async function processAndRenderAiResponse(aiResponseText, user, chat, quotedMess
                     }
 
 
-                    // ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
                     case 'memory': {
                         if (!task.content) break;
 
-                        console.log(`🧠 AI主动记录记忆: "${task.content}"`);
+                        // ✨✨✨ 核心升级：在这里抓取对话快照 ✨✨✨
+                        
+                        // 1. 获取最近的聊天记录 (我们从 buildAiRequestContext 中借鉴这个逻辑)
+                        const context = await buildCoreContext(chat.id, user.id);
+                        const chatHistory = context ? context.chatHistory : [];
 
-                        // 1. 构造并保存记忆数据
+                        // 2. 截取最后 4 条消息作为“快照”来源
+                        const sourceMessages = chatHistory.slice(-4);
+                        const sourceIds = sourceMessages.map(m => m.id);
+
+                        // 3. 构造并保存包含“快照ID”的记忆数据
                         const memoryData = {
                             userId: user.id,
                             contactId: chat.id,
                             type: 'short-term',
                             content: task.content,
                             createdAt: new Date().toISOString(),
-                            sourceTurnIds: [] // 这里可以留空，因为是AI主动生成的
+                            sourceTurnIds: sourceIds // <-- ✨ 将快照ID存入
                         };
                         await db.memories.add(memoryData);
 
-                        // 2. 在聊天界面发送一条系统提示，让用户知道AI记住了什么
+                        // (后续的系统提示逻辑保持不变)
                         const systemMessage = {
                             userId: user.id,
                             chatId: chat.id,
@@ -24946,11 +25075,9 @@ async function processAndRenderAiResponse(aiResponseText, user, chat, quotedMess
                         };
                         const newMsgId = await db.messages.add(systemMessage);
                         await addMessageToUI({ id: newMsgId, ...systemMessage });
-
-
+                        
                         break;
                     }
-                    // ▲▲▲ 粘贴到这里结束 ▲▲▲
 
                     case 'set_avatar': {
                         if (typeof handleSetImageProperty === 'function') {
@@ -28596,6 +28723,9 @@ async function processAndRenderAiResponse(aiResponseText, user, chat, quotedMess
                 }
             });
 
+
+// ... inside openMemoriesViewer function ...
+
             async function renderMemoryList() {
                 timelineContainer.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div>';
                 const searchTerm = searchInput.value.toLowerCase();
@@ -28617,7 +28747,7 @@ async function processAndRenderAiResponse(aiResponseText, user, chat, quotedMess
 
                 timelineContainer.innerHTML = '';
 
-                filteredMemories.forEach(memory => {
+                for (const memory of filteredMemories) {
                     const card = document.createElement('div');
                     card.className = 'memory-card';
                     card.innerHTML = `
@@ -28629,10 +28759,45 @@ async function processAndRenderAiResponse(aiResponseText, user, chat, quotedMess
                                 <button class="btn-icon buttonlike btn-delete-memory" data-memory-id="${memory.id}" title="删除"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </div>`;
+                    
                     timelineContainer.appendChild(card);
-                });
+
+                    if (memory.sourceTurnIds && memory.sourceTurnIds.length > 0) {
+                        const contextContainer = document.createElement('div');
+                        contextContainer.className = 'memory-source-context';
+                        contextContainer.innerHTML = `<div class="context-title">相关对话</div><p class="context-item">加载中...</p>`;
+                        card.appendChild(contextContainer);
+
+                        const sourceMessages = await db.messages.bulkGet(memory.sourceTurnIds);
+                        const userPersona = character.activeUserPersona || window.currentUser;
+
+                        contextContainer.innerHTML = `<div class="context-title">相关对话</div>`;
+
+                        // ✨✨✨ 核心修改就在这里！ ✨✨✨
+                        sourceMessages.forEach(msg => {
+                            if (!msg) return; 
+
+                            // 1. 在渲染前，先检查这条消息的内容是不是一个HTML卡片。
+                            //    一个简单的判断方法是检查它是否以 "<div" 开头。
+                            if (msg.content && /^\s*<div/i.test(msg.content)) {
+                                // 2. 如果是，就直接跳过这条消息，不进行渲染。
+                                return; 
+                            }
+
+                            // 3. 如果不是卡片，就按原来的逻辑正常显示。
+                            const speaker = msg.senderId === window.currentUser.id ? userPersona.name : character.name;
+                            const item = document.createElement('p');
+                            item.className = 'context-item';
+                            item.innerHTML = `<span class="speaker">${escapeHtml(speaker)}:</span> ${escapeHtml(msg.content)}`;
+                            contextContainer.appendChild(item);
+                        });
+                        // ✨✨✨ 修改结束 ✨✨✨
+                    }
+                }
             }
+
             renderMemoryList();
+            // ...
         }
 
         // ==========================================================
@@ -30279,38 +30444,84 @@ case 'nsfw_levels':
                 }
             }
 
-            async function handleRightBtnAction() {
-                if (nextChapterId) {
-                    const nextNovel = await db.novels.get(nextChapterId);
-                    if (nextNovel) openNovelDetail(nextNovel);
-                    return;
-                }
-                if (!currentReadingNovelId) return;
-                const currentNovel = await db.novels.get(currentReadingNovelId);
-                const char = await db.characters.get(currentNovel.characterId);
-                const user = char.activeUserPersona || window.currentUser;
-                const defaultTitle = currentNovel.title.match(/第\d+章/) ? `第${parseInt(currentNovel.title.match(/\d+/)[0]) + 1}章` : `${currentNovel.title} (续)`;
-                const newTitle = await showInputDialog("请输入新篇章的标题：", defaultTitle);
-                if (!newTitle) return;
-                showLoadingModal("正在构思新篇章...");
-
-                try {
-                    const taskDescription = `【你的核心身份：资深同人作者】\n任务：续写《${currentNovel.title}》。\nCP: ${char.name} x ${user.name}\n新章节名: ${newTitle}\n上章回顾: "...${currentNovel.content.slice(-300)}..."\n要求：剧情连贯，情感升温，保持文风，字数1000+。`;
-                    const finalPrompt = await generateUnifiedSystemPrompt(char, user, taskDescription);
-                    const response = await getAiReply([{ role: 'user', parts: [{ text: finalPrompt }] }], char.persona);
-                    let newContent = '';
-                    const reader = response.body.getReader(); const decoder = new TextDecoder();
-                    while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); newContent += parsed.choices?.[0]?.delta?.content || ''; } catch (e) { } } } }
-
-                    const newId = await db.novels.add({
-                        title: newTitle, characterId: char.id, inspirationId: currentNovel.inspirationId, perspective: currentNovel.perspective,
-                        content: newContent.trim(), author: currentNovel.author, parentId: currentNovel.id, createdAt: new Date().toISOString(), uuid: generateUniqueId('novel')
-                    });
-                    showNotification("新篇章已发布！");
-                    const newNovel = await db.novels.get(newId);
-                    openNovelDetail(newNovel);
-                } catch (error) { showNotification("续写失败: " + error.message); } finally { hideLoadingModal(); }
+// ==========================================================
+        // --- ✨✨✨【V2 - 双视角智能续写版】故事续写核心引擎 ✨✨✨ ---
+        // ==========================================================
+        async function handleRightBtnAction() {
+            // --- 逻辑 1: 如果有下一章，直接打开 (保持不变) ---
+            if (nextChapterId) {
+                const nextNovel = await db.novels.get(nextChapterId);
+                if (nextNovel) openNovelDetail(nextNovel);
+                return;
             }
+
+            // --- 逻辑 2: 如果没有下一章，执行续写 (全新升级) ---
+            if (!currentReadingNovelId) return;
+
+            const currentNovel = await db.novels.get(currentReadingNovelId);
+            const char = await db.characters.get(currentNovel.characterId);
+            const user = char.activeUserPersona || window.currentUser;
+
+            // (获取新标题的逻辑保持不变)
+            const defaultTitle = currentNovel.title.match(/第\d+章/) ? `第${parseInt(currentNovel.title.match(/\d+/)[0]) + 1}章` : `${currentNovel.title} (续)`;
+            const newTitle = await showInputDialog("请输入新篇章的标题：", defaultTitle);
+            if (!newTitle) return;
+
+            showLoadingModal("大大正在产粮中...");
+
+            try {
+                let taskDescriptionTemplate = '';
+                let dreamPerspectiveDesc = '';
+                
+                // ✨✨✨ 核心修改 1：根据当前章节的视角，智能选择对应的模板 ✨✨✨
+                if (currentNovel.perspective === 'char') {
+                    // --- 角色第一人称视角 ---
+                    dreamPerspectiveDesc = `【角色(Char)视角】：以“我”(${char.name})的视角展开，强调心理活动。`;
+                    taskDescriptionTemplate = WEAVING_PROMPT_CHAR_VIEW; // 使用角色视角模板
+
+                } else { // 默认为 third (上帝视角)
+                    // --- 上帝视角 ---
+                    dreamPerspectiveDesc = `【上帝视角】：第三人称，细腻描写两人互动。`;
+                    taskDescriptionTemplate = WEAVING_PROMPT_GOD_VIEW; // 使用上帝视角模板
+                }
+
+                // ✨✨✨ 核心修改 2：构建更丰富的上下文 ✨✨✨
+                const coreInspirationText = `【上章回顾】:\n"...${currentNovel.content.slice(-500)}..."`; // 截取上一章的结尾作为核心参考
+                const knowledgeText = `(请基于已有的世界观和人物关系进行续写)`;
+                const styleInstruction = `请保持与上一章节一致的文风和情感基调。`;
+
+                // ✨✨✨ 核心修改 3：使用新模板和新上下文填充 Prompt ✨✨✨
+                const finalPrompt = taskDescriptionTemplate
+                    .replace(/{{char}}/g, char.name)
+                    .replace(/{{user}}/g, user.name)
+                    .replace(/{{persona}}/g, char.persona)
+                    .replace('[TITLE_PLACEHOLDER]', newTitle)
+                    .replace('[DREAM_PERSPECTIVE_DESC]', dreamPerspectiveDesc)
+                    .replace('[STYLE_INSTRUCTION]', styleInstruction)
+                    .replace('[CORE_INSPIRATION_TEXT]', coreInspirationText)
+                    .replace('[KNOWLEDGE_TEXT]', knowledgeText);
+
+
+                // (后续的 AI 请求和结果处理逻辑保持不变)
+                const response = await getAiReply([{ role: 'user', parts: [{ text: finalPrompt }] }], char.persona);
+                let newContent = '';
+                const reader = response.body.getReader(); const decoder = new TextDecoder();
+                while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); newContent += parsed.choices?.[0]?.delta?.content || ''; } catch (e) { } } } }
+
+                const finalContent = newContent.trim().replace(/^【?标题】?[:：]?\s*(.+)$/m, '').trim(); // 移除可能的标题行
+
+                await db.novels.add({
+                    title: newTitle, characterId: char.id, inspirationId: currentNovel.inspirationId, perspective: currentNovel.perspective,
+                    content: finalContent, author: currentNovel.author, parentId: currentNovel.id, createdAt: new Date().toISOString(), uuid: generateUniqueId('novel')
+                });
+                showNotification("新篇章已发布！");
+                
+                // 找到新创建的章节并打开
+                const newNovel = await db.novels.where({ parentId: currentNovel.id }).first();
+                if(newNovel) openNovelDetail(newNovel);
+
+            } catch (error) { showNotification("续写失败: " + error.message); } finally { hideLoadingModal(); }
+        }
 
             async function handlePrevAction() {
                 if (!currentReadingNovelId) return;
@@ -30356,91 +30567,100 @@ case 'nsfw_levels':
                 showModal('start-weaving-modal');
             }
 
-            async function generateAndSaveStory() {
-                const charSelect = document.getElementById('weaving-character-select');
-                const charId = charSelect.value;
-                if (!charId) { alert("请至少选择一位主角！"); return; }
-                const perspectiveVal = document.getElementById('weaving-perspective-select').value;
-                const getCheckedIds = (containerId) => {
-                    const checks = document.getElementById(containerId).querySelectorAll('.weaving-check:checked');
-                    return Array.from(checks).map(cb => parseInt(cb.value));
-                };
-                const inspIds = getCheckedIds('weaving-inspiration-list');
-                const knowIds = getCheckedIds('weaving-knowledge-list');
-                const styleIds = getCheckedIds('weaving-style-list');
+/**
+ * 核心函数：生成并保存故事 (V2 - 双视角智能版)
+ */
+async function generateAndSaveStory() {
+    const charSelect = document.getElementById('weaving-character-select');
+    const charId = charSelect.value;
+    if (!charId) { alert("请至少选择一位主角！"); return; }
 
-                let coreInspirationText = "（无特定素材，自由发挥）";
-                let knowledgeText = "（无额外设定）";
-                let styleInstruction = "甜宠、细腻、有张力";
-                let autoTitleCandidate = "";
+    const perspectiveVal = document.getElementById('weaving-perspective-select').value;
 
-                if (inspIds.length > 0) {
-                    const items = await db.novel_inspirations.bulkGet(inspIds);
-                    coreInspirationText = items.map((c, index) => `[梗${index + 1}] ${c.content}`).join('\n');
-                    if (items.length === 1 && items[0].title) { autoTitleCandidate = items[0].title; } else if (items.length > 1) { const t1 = items[0].title || '梗A'; const t2 = items[1].title || '梗B'; autoTitleCandidate = `${t1} x ${t2}`; }
-                }
-                if (knowIds.length > 0) {
-                    const items = await db.novel_inspirations.bulkGet(knowIds);
-                    knowledgeText = `⚠️ 必须遵守的私设/AU设定：\n` + items.map(k => `[设定: ${k.title || '未命名'}] ${k.content}`).join('\n');
-                }
-                if (styleIds.length > 0) {
-                    const items = await db.novel_inspirations.bulkGet(styleIds);
-                    const styleNames = items.map(s => s.title).join(' + ');
-                    styleInstruction = `请完美融合以下风格：【${styleNames}】。`;
-                }
+    const getCheckedIds = (containerId) => {
+        const checks = document.getElementById(containerId).querySelectorAll('.weaving-check:checked');
+        return Array.from(checks).map(cb => parseInt(cb.value));
+    };
 
-                const character = await db.characters.get(charId);
-                const user = character.activeUserPersona || window.currentUser;
-                const title = autoTitleCandidate || `${character.name}的同人短篇`;
-                let dreamPerspectiveDesc = "";
-                if (perspectiveVal === 'user') { dreamPerspectiveDesc = `【主控(User)视角】：以“我”(${user.name})的视角展开，强调代入感。`; } else if (perspectiveVal === 'char') { dreamPerspectiveDesc = `【角色(Char)视角】：以“我”(${character.name})的视角展开，强调心理活动。`; } else { dreamPerspectiveDesc = `【上帝视角】：第三人称，细腻描写两人互动。`; }
+    const inspIds = getCheckedIds('weaving-inspiration-list');
+    const knowIds = getCheckedIds('weaving-knowledge-list');
+    const styleIds = getCheckedIds('weaving-style-list');
 
-                hideModal('start-weaving-modal');
-                showLoadingModal("大大正在产粮中...");
+    // (数据准备逻辑保持不变)
+    let coreInspirationText = "（无特定素材，自由发挥）";
+    let knowledgeText = "（无额外设定）";
+    let styleInstruction = "甜宠、细腻、有张力";
+    let autoTitleCandidate = "";
 
-                try {
-                    const taskDescription = `
-【你的核心身份：资深同人作者 (Fanfic Author)】
-任务：以角色“{{char}}”和“{{user}}”为CP（配对），基于下方的【梗】和【私设】，创作一篇高质量的同人小说。
-【创作三大铁律 (The Fanfic Commandments)】
-1.  **🚫 拒绝OOC (In Character)**：这是底线。角色的说话语气、行为逻辑、微表情必须精确还原其原始设定。即使在AU（平行宇宙）中，核心性格也不能变。
-2.  **⚡ 极致张力 (Chemistry)**：重点刻画两人之间的互动张力（无论是甜蜜、拉扯、误会还是救赎）。眼神、肢体接触、言语交锋要细腻动人。
-3.  **✨ 氛围感**：不要写流水账。用环境描写烘托情感，用细节暗示心理。
-【作品参数】
-- **标题**: ${title}
-- **叙事视角**: ${dreamPerspectiveDesc}
-- **文风/口味**: ${styleInstruction} (请严格以此基调定下全文氛围)
-【投喂素材 (梗与设定)】
-► **核心梗 (Tags/Tropes)**:
-${coreInspirationText}
-► **私设/世界观 (AU Settings)**:
-${knowledgeText}
-【输出格式要求 (严格遵守)】
-请严格按照以下格式输出，**第一行必须是标题**：
-【标题】(请取一个晋江/Lofter/AO3风格的标题，文艺、有张力或概括性强)
-（空一行）
-(正文开始)...
-`;
-                    const finalPrompt = await generateUnifiedSystemPrompt(character, user, taskDescription);
-                    const response = await getAiReply([{ role: 'user', parts: [{ text: finalPrompt }] }], character.persona);
+    if (inspIds.length > 0) {
+        const items = await db.novel_inspirations.bulkGet(inspIds);
+        coreInspirationText = items.map((c, index) => `[梗${index + 1}] ${c.content}`).join('\n');
+        if (items.length === 1 && items[0].title) { autoTitleCandidate = items[0].title; } else if (items.length > 1) { const t1 = items[0].title || '梗A'; const t2 = items[1].title || '梗B'; autoTitleCandidate = `${t1} x ${t2}`; }
+    }
+    if (knowIds.length > 0) {
+        const items = await db.novel_inspirations.bulkGet(knowIds);
+        knowledgeText = `⚠️ 必须遵守的私设/AU设定：\n` + items.map(k => `[设定: ${k.title || '未命名'}] ${k.content}`).join('\n');
+    }
+    if (styleIds.length > 0) {
+        const items = await db.novel_inspirations.bulkGet(styleIds);
+        const styleNames = items.map(s => s.title).join(' + ');
+        styleInstruction = `请完美融合以下风格：【${styleNames}】。`;
+    }
 
-                    let fullOutput = '';
-                    const reader = response.body.getReader(); const decoder = new TextDecoder();
-                    while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); fullOutput += parsed.choices?.[0]?.delta?.content || ''; } catch (e) { } } } }
+    const character = await db.characters.get(charId);
+    const user = character.activeUserPersona || window.currentUser;
+    const title = autoTitleCandidate || `${character.name}的同人短篇`;
 
-                    let finalTitle = title;
-                    let finalContent = fullOutput.trim();
-                    const titleMatch = fullOutput.match(/^【?标题】?[:：]?\s*(.+)$/m);
-                    if (titleMatch) { finalTitle = titleMatch[1].trim(); finalContent = fullOutput.replace(titleMatch[0], '').trim(); } else { const lines = fullOutput.split('\n').filter(l => l.trim()); if (lines.length > 1 && lines[0].length < 50) { finalTitle = lines[0].trim(); finalContent = lines.slice(1).join('\n').trim(); } }
+    hideModal('start-weaving-modal');
+    showLoadingModal("大大正在产粮中...");
 
-                    await db.novels.add({
-                        title: finalTitle, characterId: charId, inspirationId: null, perspective: perspectiveVal,
-                        content: finalContent, author: '同人太太', parentId: null, createdAt: new Date().toISOString(), uuid: generateUniqueId('novel')
-                    });
-                    showNotification(`粮票《${finalTitle}》已送达！`);
-                    renderNovelList();
-                } catch (error) { console.error(error); showNotification("产粮失败: " + error.message); } finally { hideLoadingModal(); }
-            }
+    try {
+        let taskDescription = '';
+        let dreamPerspectiveDesc = '';
+
+        // ✨✨✨ 核心修改：根据视角选择不同的 Prompt 模板 ✨✨✨
+        if (perspectiveVal === 'char') {
+            // --- 角色第一人称视角 ---
+            dreamPerspectiveDesc = `【角色(Char)视角】：以“我”(${character.name})的视角展开，强调心理活动。`;
+            taskDescription = WEAVING_PROMPT_CHAR_VIEW; // 使用角色视角模板
+
+        } else { // 默认为 third (上帝视角)
+            // --- 上帝视角 ---
+            dreamPerspectiveDesc = `【上帝视角】：第三人称，细腻描写两人互动。`;
+            taskDescription = WEAVING_PROMPT_GOD_VIEW; // 使用上帝视角模板
+        }
+
+        // 使用通用占位符替换模板中的内容
+        const finalPrompt = taskDescription
+            .replace(/{{char}}/g, character.name)
+            .replace(/{{user}}/g, user.name)
+            .replace(/{{persona}}/g, character.persona)
+            .replace('[TITLE_PLACEHOLDER]', title)
+            .replace('[DREAM_PERSPECTIVE_DESC]', dreamPerspectiveDesc)
+            .replace('[STYLE_INSTRUCTION]', styleInstruction)
+            .replace('[CORE_INSPIRATION_TEXT]', coreInspirationText)
+            .replace('[KNOWLEDGE_TEXT]', knowledgeText);
+
+        // (后续的 AI 请求和结果处理逻辑保持不变)
+        const response = await getAiReply([{ role: 'user', parts: [{ text: finalPrompt }] }], character.persona);
+
+        let fullOutput = '';
+        const reader = response.body.getReader(); const decoder = new TextDecoder();
+        while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); fullOutput += parsed.choices?.[0]?.delta?.content || ''; } catch (e) { } } } }
+
+        let finalTitle = title;
+        let finalContent = fullOutput.trim();
+        const titleMatch = fullOutput.match(/^【?标题】?[:：]?\s*(.+)$/m);
+        if (titleMatch) { finalTitle = titleMatch[1].trim(); finalContent = fullOutput.replace(titleMatch[0], '').trim(); } else { const lines = fullOutput.split('\n').filter(l => l.trim()); if (lines.length > 1 && lines[0].length < 50) { finalTitle = lines[0].trim(); finalContent = lines.slice(1).join('\n').trim(); } }
+
+        await db.novels.add({
+            title: finalTitle, characterId: charId, inspirationId: null, perspective: perspectiveVal,
+            content: finalContent, author: '同人太太', parentId: null, createdAt: new Date().toISOString(), uuid: generateUniqueId('novel')
+        });
+        showNotification(`粮票《${finalTitle}》已送达！`);
+        renderNovelList();
+    } catch (error) { console.error(error); showNotification("产粮失败: " + error.message); } finally { hideLoadingModal(); }
+}
 
             // --- 事件绑定汇总 ---
             if (novelAppBtn) novelAppBtn.addEventListener('click', openNovelApp);
