@@ -14,8 +14,12 @@
     <link rel="icon" href="https://i.postimg.cc/d1RGR4RF/1.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+<!-- Dexie (已存在) -->
     <script src="https://unpkg.com/dexie@4.0.7/dist/dexie.min.js"></script>
-
+    
+    <!-- ▼▼▼ ✨✨✨ 新增：Supabase 客户端 SDK ✨✨✨ ▼▼▼ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ▲▲▲ 粘贴结束 ▲▲▲ -->
 
     <!-- ✨✨✨【iOS全屏适配 - 核心代码】✨✨✨ -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3424,7 +3428,7 @@
 
         /* 4. ✨✨✨ 标题过长省略的核心样式 ✨✨✨ */
 #chat-title {
-font-size: 16px;
+font-size: 17px;
     font-weight: 700;
     /* ... 其他代码保持不变 ... */
     width: 100%;
@@ -7133,14 +7137,12 @@ font-size: 16px;
         .prompt-module-item .module-title i {
             font-size: 14px;
         }
-
         /* 4. 自定义模块的文本输入框 */
         .prompt-module-item .custom-prompt-input {
             min-height: 80px;
             font-size: 13px;
             resize: vertical;
         }
-
         /* 5. 右侧的操作区 (开关和删除按钮) */
         .prompt-module-item .module-actions {
             flex-shrink: 0;
@@ -7148,7 +7150,6 @@ font-size: 16px;
             align-items: center;
             gap: 12px;
         }
-
         /* 6. 拖拽时的视觉效果 */
         .prompt-module-item.dragging {
             opacity: 0.5;
@@ -8090,8 +8091,8 @@ font-size: 16px;
         /* 1. 状态点的基础样式：一个8x8像素的小圆点 */
         #status-dot {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             margin-right: 6px;
             /* 和后面的文字拉开一点距离 */
@@ -8747,7 +8748,10 @@ font-size: 16px;
 #period-tracker-page.page,
 #period-history-page.page,
 #prompt-viewer-page.page,
-#character-profile-page.page { /* 如果你也想让角色主页用这套，加上它 */
+#prompt-preset-page.page,
+#character-profile-page.page,
+#world-book-page.page,
+#beautify-page.page  { /* 如果你也想让角色主页用这套，加上它 */
     display: block;
     /* 强制变为“相框”模式 */
     position: relative !important;
@@ -8761,7 +8765,10 @@ font-size: 16px;
 #period-tracker-page .page-header,
 #period-history-page .page-header,
 #prompt-viewer-page .page-header,
-#character-profile-page .page-header {
+#prompt-preset-page .page-header,
+#character-profile-page .page-header,
+#beautify-page .page-header ,
+#world-book-page .page-header {
     position: absolute !important;
     top: 0;
     left: 0;
@@ -8786,12 +8793,13 @@ font-size: 16px;
 #period-tracker-page .page-content,
 #period-history-page .page-content,
 #prompt-viewer-page .page-content,
+#prompt-preset-page .page-content,
+#world-book-page .page-content,
+#beautify-page .page-content ,
 #character-profile-page .page-content {
     position: absolute !important;
-    
     /* 上边距：精准避开页眉 */
     top: 90px !important;
-    
     /* 下边距：默认触底 (如果有页脚，可以在下面单独覆盖) */
     bottom: 0 !important;
     
@@ -8910,15 +8918,6 @@ font-size: 16px;
             <div id="statusbar" class="statusbar">
                 <div id="statusbar-left" class="statusbar-left">
                     <span id="statusbar-time">00:00</span>
-                    <button id="statusbar-preset-btn" class="btn-icon buttonlike" title="提示词预设">
-                        <i class="fa-solid fa-t"></i>
-                    </button>
-
-                    <button id="statusbar-world-book-btn" class="btn-icon buttonlike" title="世界书"
-                        style="display: none;">
-                        <i class="fa-solid fa-book-atlas"></i>
-                    </button>
-
                 </div>
 
 
@@ -9188,8 +9187,6 @@ font-size: 16px;
                 </div>
 
                 <!-- ========================================================== -->
-
-
                 <!-- 页面3：QQ 主界面 -->
                 <div id="qq-main" class="page" style="display:none; flex-direction:column; height:100%;">
                     <!-- ========================================================== -->
@@ -9198,19 +9195,15 @@ font-size: 16px;
                     <header class="page-header">
                         <!-- 左侧区域 (保持不变) -->
                         <div class="header-left">
-                            <button id="qq-main-back-btn" class="btn-icon btn-back buttonlike"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                            <button id="qq-main-back-btn" class="btn-icon btn-back buttonlike">
                                 <i class="fa-solid fa-chevron-left"></i></button>
                         </div>
-
                         <!-- 中间区域 (✨✨✨ 核心修改就在这里！ ✨✨✨) -->
                         <div class="header-center">
                             <!-- 我们在这里为消息页眉也创建了一个和聊天页眉完全一样的两行结构 -->
                             <div class="chat-title-container">
                                 <!-- 第一行：标题 (保持不变) -->
                                 <div style="font-weight: bold; font-size: 18px;">消息</div>
-                                <!-- 第二行：一个隐形的、高度固定的占位符，用来撑开与聊天页眉完全相同的空间 -->
-                                <div style="height: 7px;"></div>
                             </div>
                         </div>
 
@@ -9218,17 +9211,15 @@ font-size: 16px;
                         <!-- 右侧区域：现在包含两个按钮 -->
                         <div class="header-right">
                             <!-- 这是我们新添加的“角色表情包”按钮 -->
-                            <button id="open-global-stickers-from-main-btn" class="btn-icon buttonlike" title="角色表情包"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                            <button id="open-global-stickers-from-main-btn" class="btn-icon buttonlike" title="角色表情包">
                                 <i class="fa-solid fa-grin-wink"></i>
                             </button>
 
                             <!-- 这是原来的“添加”按钮 -->
                             <button id="qq-add-btn" class="btn-icon buttonlike"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                                title="添加角色">
                                 <i class="fa-solid fa-plus"></i>
                             </button>
-
                         </div>
                     </header>
                     <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
@@ -9243,8 +9234,6 @@ font-size: 16px;
                         <button class="qq-tab" data-tab="moments">动态</button>
                     </nav>
                 </div>
-
-
                 <!-- ========================================================== -->
                 <!-- --- ✨✨✨【V2 - 带预设功能】专属人设编辑器弹窗 ✨✨✨ --- -->
                 <!-- ========================================================== -->
@@ -9333,19 +9322,14 @@ font-size: 16px;
                 <!-- 【请用这个增加了新元素的版本，替换旧的 #qq-chat div】 -->
 
                 <div id="qq-chat" class="page">
-                    <!-- 【请用这个全新的“三栏式”版本，替换旧的 chat-header】 -->
-                    <!-- ▼▼▼ 请用这一整块全新的代码，完整替换旧的 <header class="page-header chat-header">...</header> ▼▼▼ -->
-                    <header class="page-header"> <!-- ✨ 核心修改 1: 移除了 .chat-header 类 -->
+                    <header class="page-header"> 
 
                         <!-- 第1栏：左侧按钮区 (保持不变) -->
                         <div class="header-left">
                             <button id="chat-back" class="btn-icon btn-back buttonlike"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                                title="返回">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </button>
-
-                            <!-- a. 这是聊天模式下显示的标题容器 (保持不变) -->
-                            <!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 chat-title-container ▼▼▼ -->
                             <div class="chat-title-container">
                                 <!-- 这是“展示位”，名字和“对方正在回复”将在这里轮流显示 -->
                                 <div class="chat-title-line">
@@ -9357,13 +9341,9 @@ font-size: 16px;
                                 <div id="subtitle-container"
                                     style="height: 14px; line-height: 14px; position: relative; width: 100%; text-align: left;">
                                     <span id="status-dot"></span>
-                                    <span id="custom-status-display"
-                                        style="font-size: 11px; font-weight: normal; color: var(--color-primary-accent); cursor: pointer; transition: opacity 0.3s ease;">在线</span>
-                                    <!-- ✨ 核心修改2：“对方正在回复”已经从这里搬走了 -->
+                                    <span id="custom-status-display">在线</span>
                                 </div>
                             </div>
-                            <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-
                         </div>
 
                         <!-- 第2栏：居中的标题区 (✨ 核心修改 2: 结构与标准页眉完全对齐) -->
@@ -9386,14 +9366,12 @@ font-size: 16px;
                         <div class="header-right">
 
                             <!-- ✨ 核心新增：“查手机”按钮被移动到了这里 ✨ -->
-                            <button id="chat-header-check-phone-btn" class="btn-icon buttonlike" title="查手机"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                            <button id="chat-header-check-phone-btn" class="btn-icon buttonlike" title="查手机">
                                 <i class="fa-solid fa-tablet-screen-button"></i>
                             </button>
 
                             <!-- 角色主页按钮 (保持不变) -->
-                            <button id="goto-contact-profile" class="btn-icon buttonlike" title="聊天设置"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                            <button id="goto-contact-profile" class="btn-icon buttonlike" title="聊天设置">
                                 <i class="fa-solid fa-address-book"></i>
                             </button>
                         </div>
@@ -9539,30 +9517,13 @@ font-size: 16px;
                         <!-- 主视图容器 -->
                         <div id="profile-main-view" style="padding-top: 10px;">
                             <!-- 顶部信息卡片 -->
+<!-- 顶部信息卡片 (已交换位置：左角色，右用户) -->
                             <div id="profile-panel-header-modal" class="profile-section-glass"
                                 style="padding-bottom: 24px; position: relative; margin: 24px 12px;">
                                 <div
                                     style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
-                                    <!-- 用户信息 -->
-                                    <div class="user-profile-side"
-                                        style="display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; position: relative;">
-                                        <div id="profile-modal-user-avatar" class="avatar-display"
-                                            style="width: 64px; height: 64px; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-                                        </div>
-                                        <h2 id="profile-modal-user-name" style="font-size: 16px; margin: 0;">User</h2>
-                                        <p id="profile-modal-user-signature"
-                                            style="font-size: 12px; opacity: 0.8; margin: 2px 0 0;"></p>
-                                        <button id="profile-modal-edit-user-btn" class="btn-icon buttonlike"
-                                            style="position: absolute; top: -5px; right: -5px; font-size: 14px; background: rgba(0, 0, 0, 0.1); border-radius: 50%; width: 28px; height: 28px;">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                    </div>
-                                    <!-- 关系图标 -->
-                                    <div class="relationship-icon" style="flex-shrink: 0; margin-top: 20px;">
-                                        <i class="fa-solid fa-heart-pulse"
-                                            style="font-size: 24px; color: rgba(236, 72, 154, 0.3); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></i>
-                                    </div>
-                                    <!-- 角色信息 -->
+                                    
+                                    <!-- 1. 角色信息 (现在在左边) -->
                                     <div class="character-profile-side"
                                         style="display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; position: relative;">
                                         <div id="contact-profile-avatar-modal" class="avatar-display"
@@ -9572,29 +9533,74 @@ font-size: 16px;
                                             Character</h2>
                                         <p id="contact-profile-note-modal"
                                             style="font-size: 12px; opacity: 0.8; margin: 2px 0 0;"></p>
-                                        <button id="profile-modal-edit-btn" class="btn-icon buttonlike"
-                                            style="position: absolute; top: -5px; right: -5px; font-size: 14px; background: rgba(0, 0, 0, 0.1); border-radius: 50%; width: 28px; height: 28px;">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
                                     </div>
+
+                                    <!-- 2. 关系图标 (保持在中间) -->
+                                    <div class="relationship-icon" style="flex-shrink: 0; margin-top: 20px;">
+                                        <i class="fa-solid fa-heart-pulse"
+                                            style="font-size: 24px; color: rgba(236, 72, 154, 0.3); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></i>
+                                    </div>
+
+                                    <!-- 3. 用户信息 (现在在右边) -->
+                                    <div class="user-profile-side"
+                                        style="display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; position: relative;">
+                                        <div id="profile-modal-user-avatar" class="avatar-display"
+                                            style="width: 64px; height: 64px; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                        </div>
+                                        <h2 id="profile-modal-user-name" style="font-size: 16px; margin: 0;">User</h2>
+                                        <p id="profile-modal-user-signature"
+                                            style="font-size: 12px; opacity: 0.8; margin: 2px 0 0;"></p>
+                                    </div>
+
                                 </div>
-                                <!-- 心电图和详情 -->
+
+                                <!-- 心电图 (JS会自动适应位置，无需修改) -->
                                 <svg id="heartbeat-svg" width="100%" height="30"
                                     style="position: absolute; bottom: -35px; left: 0; pointer-events: none;">
                                     <path id="heartbeat-path" d="M 0 15" stroke="rgba(0,0,0,0.4)" stroke-width="2"
                                         fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
                                 </svg>
+
+                                <!-- 底部详情栏 (也同步交换了顺序) -->
                                 <div id="profile-modal-details-bar"
                                     style="display: flex; justify-content: space-around; align-items: center; font-size: 13px; opacity: 0.9; position: absolute; bottom: 12px; left: 0; right: 0;">
-                                    <span id="profile-modal-user-details">? · 未知 · ?岁</span>
-                                    <span>☆.。.:*・°☆</span>
+                                    <!-- 左边显示角色详情 -->
                                     <span id="profile-modal-char-details">? · 未知 · ?岁</span>
+                                    <span>☆.。.:*・°☆</span>
+                                    <!-- 右边显示用户详情 -->
+                                    <span id="profile-modal-user-details">? · 未知 · ?岁</span>
                                 </div>
                             </div>
-                            <!-- 下方卡片列表 -->
-                            <!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 #profile-panel-body-modal ▼▼▼ -->
-                            <div id="profile-panel-body-modal" >
-                                <!-- 组 1: 个性化 -->
+<div id="profile-panel-body-modal" style="padding: 1px 12px;">
+
+                                <!-- ========================================================== -->
+                                <!-- 组 1: 聊天核心 (原“聊天相关功能”中的按钮，移到最上方) -->
+                                <!-- ========================================================== -->
+                                <div class="settings-section-header-ios">聊天核心</div>
+                                <div class="settings-group-ios">
+                                    <!-- 提示词 -->
+                                    <button id="profile-prompt-btn" class="settings-item buttonlike">
+                                        <span class="icon"><i class="fa-solid fa-t"></i></span>
+                                        <span class="label">提示词</span>
+                                        <span class="arrow"><i class="fa-solid fa-caret-right"></i></span>
+                                    </button>
+                                    <!-- 预设 -->
+                                    <button id="profile-preset-btn" class="settings-item buttonlike">
+                                        <span class="icon"><i class="fa-solid fa-sliders"></i></span>
+                                        <span class="label">预设</span>
+                                        <span class="arrow"><i class="fa-solid fa-caret-right"></i></span>
+                                    </button>
+                                    <!-- 世界书 -->
+                                    <button id="profile-worldbook-btn" class="settings-item buttonlike">
+                                        <span class="icon"><i class="fa-solid fa-book-atlas"></i></span>
+                                        <span class="label">世界书</span>
+                                        <span class="arrow"><i class="fa-solid fa-caret-right"></i></span>
+                                    </button>
+                                </div>
+
+                                <!-- ========================================================== -->
+                                <!-- 组 2: 个性化 (下移到第二位) -->
+                                <!-- ========================================================== -->
                                 <div class="settings-section-header-ios">个性化</div>
                                 <div class="settings-group-ios">
                                     <!-- 气泡样式 -->
@@ -9609,57 +9615,53 @@ font-size: 16px;
                                         <span class="label">聊天背景</span>
                                         <span class="arrow">更换背景</span>
                                     </button>
-
-                                    <!-- ✨ 新增：气泡时间戳 (占位) -->
+                                    <!-- 气泡时间戳 -->
                                     <button id="placeholder-timestamp-btn" class="settings-item buttonlike">
                                         <span class="icon"><i class="fa-regular fa-clock"></i></span>
                                         <span class="label">气泡时间戳</span>
                                         <span class="arrow"><i class="fa-solid fa-caret-right"></i></span>
                                     </button>
-
                                 </div>
-    <!-- ✨✨✨ 新增组: 聊天相关功能 (占位) ✨✨✨ -->
-    <div class="settings-section-header-ios">聊天相关功能</div>
-    <div class="settings-group-ios">
-        <!-- 提示词 -->
-        <button id="profile-prompt-btn" class="settings-item buttonlike">
-            <span class="icon"><i class="fa-solid fa-t"></i></span>
-            <span class="label">提示词</span>
-            <span class="arrow"><i class="fa-solid fa-caret-right"></i></span>
-        </button>
-<!-- 小剧场开关 -->
-<div class="settings-item">
-    <span class="icon"><i class="fa-solid fa-masks-theater"></i></span>
-    <span class="label">小剧场模式</span>
-    <input type="checkbox" id="profile-theater-toggle" class="toggle-switch">
-</div>
-<p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
-    开启后，允许角色通过指令触发HTML/CSS渲染的特殊剧情卡片。
-</p>
 
-<!-- 时间感知开关 -->
-<div class="settings-item">
-    <span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
-    <span class="label">时间与天气感知</span>
-    <input type="checkbox" id="profile-time-aware-toggle" class="toggle-switch">
-</div>
-<p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
-    开启后，角色将感知现实世界的时间流逝和天气变化。
-</p>
-        <!-- 生理期 -->
-<!-- 生理期开关 (已修改) -->
-<div class="settings-item">
-    <span class="icon"><i class="fa-solid fa-droplet"></i></span>
-    <span class="label">生理期上下文注入</span>
-    <!-- 这里的 checked 稍后会由 JS 控制 -->
-    <input type="checkbox" id="profile-period-toggle" class="toggle-switch">
-</div>
-<p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
-    开启后，会将你的生理期状态（如痛经、心情）写入该角色的提示词中。
-</p>
-    </div>
-    <!-- ========================================================== -->
-                                <!-- 组 2: 剧情工具 (带小标题) -->
+                                <!-- ========================================================== -->
+                                <!-- 组 3: AI增强功能 (剩下的三个开关，新命名的分组) -->
+                                <!-- ========================================================== -->
+                                <div class="settings-section-header-ios">增强功能</div>
+                                <div class="settings-group-ios">
+                                    <!-- 小剧场开关 -->
+                                    <div class="settings-item">
+                                        <span class="icon"><i class="fa-solid fa-masks-theater"></i></span>
+                                        <span class="label">小剧场模式</span>
+                                        <input type="checkbox" id="profile-theater-toggle" class="toggle-switch">
+                                    </div>
+                                    <p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
+                                        开启后，允许角色通过指令触发HTML/CSS渲染的特殊剧情卡片。
+                                    </p>
+
+                                    <!-- 时间感知开关 -->
+                                    <div class="settings-item">
+                                        <span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                                        <span class="label">时间与天气感知</span>
+                                        <input type="checkbox" id="profile-time-aware-toggle" class="toggle-switch">
+                                    </div>
+                                    <p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
+                                        开启后，角色将感知现实世界的时间流逝和天气变化。
+                                    </p>
+
+                                    <!-- 生理期开关 -->
+                                    <div class="settings-item">
+                                        <span class="icon"><i class="fa-solid fa-droplet"></i></span>
+                                        <span class="label">生理期上下文注入</span>
+                                        <input type="checkbox" id="profile-period-toggle" class="toggle-switch">
+                                    </div>
+                                    <p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
+                                        开启后，会将你的生理期状态（如痛经、心情）写入该角色的提示词中。
+                                    </p>
+                                </div>
+
+                                <!-- ========================================================== -->
+                                <!-- 组 4: 剧情工具 (保持不变) -->
+                                <!-- ========================================================== -->
                                 <div class="settings-section-header-ios">剧情工具</div>
                                 <div class="settings-group-ios">
                                     <!-- 记忆总结 -->
@@ -9681,17 +9683,15 @@ font-size: 16px;
                                         <span class="arrow"><i class="fa-solid fa-caret-right"></i></span>
                                     </button>
                                     <!-- 导出记录 -->
-                                    <!-- 修改后 -->
                                     <button id="profilesetting-export-chat-btn" class="settings-item buttonlike">
                                         <span class="icon"><i class="fa-solid fa-file-export"></i></span>
                                         <span class="label">导出记录</span>
                                         <span class="arrow"><i class="fa-solid fa-caret-right"></i></span>
                                     </button>
                                 </div>
-                                <!-- ▼▼▼ 请将这一整块全新的“危险操作”卡片，粘贴到 <main> 的末尾 ▼▼▼ -->
 
                                 <!-- ========================================================== -->
-                                <!-- --- ✨✨✨【新增】危险操作分组 ✨✨✨ --- -->
+                                <!-- 组 5: 危险操作 (保持不变) -->
                                 <!-- ========================================================== -->
                                 <div class="settings-section-header-ios">危险操作</div>
                                 <div class="settings-group-ios">
@@ -9712,10 +9712,6 @@ font-size: 16px;
                                                 class="fa-solid fa-caret-right"></i></span>
                                     </button>
                                 </div>
-                                <!-- ========================================================== -->
-
-                                <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
-                                <!-- ========================================================== -->
 
                             </div>
                             <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
@@ -10428,8 +10424,7 @@ font-size: 16px;
                     <!-- 1. 顶部页眉 (复用 Auing 风格) -->
                     <header class="page-header">
                         <div class="header-left">
-                            <button id="novel-back-btn" class="btn-icon btn-back buttonlike"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                            <button id="novel-back-btn" class="btn-icon btn-back buttonlike">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </button>
                         </div>
@@ -10776,14 +10771,262 @@ font-size: 16px;
                                 保存所有气泡配置
                             </button>
                         </div>
-
                     </main>
-
-
-
                 </div>
                 <!-- ========================================================== -->
-                <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】美化中心页面 (Page版) ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="beautify-page" class="page" style="display:none; flex-direction: column;">
+    
+    <!-- 1. 标准页眉 -->
+    <header class="page-header">
+        <div class="header-left">
+            <button id="beautify-page-back-btn" class="btn-icon btn-back buttonlike">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="chat-title-container">
+                <div style="font-weight: bold; font-size: 18px;">美化中心 (CSS)</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <!-- 预留空间 -->
+        </div>
+    </header>
+
+    <!-- 2. 主内容区 -->
+    <main class="page-content" style="background-color: #f3f4f6; display: flex; flex-direction: column; gap: 15px;">
+        
+        <!-- CSS 编辑区 -->
+        <div style="flex-grow: 1; display: flex; flex-direction: column;">
+            <textarea id="custom-css-input" class="form-input form-textarea" 
+                style="flex-grow: 1; min-height: 300px; resize: none; font-family: monospace; font-size: 13px; width: 100%; white-space: pre; border: 1px solid var(--color-ui-border); box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);" 
+                placeholder="在此处粘贴或输入你的CSS美化代码..."></textarea>
+        </div>
+
+        <!-- 底部控制面板 (卡片样式) -->
+        <div style="background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px; flex-shrink: 0;">
+            
+            <!-- 第一行：预设选择和删除 -->
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <select id="beautify-preset-select" class="form-input" style="flex-grow: 1; font-weight: bold;"></select>
+                <button id="delete-beautify-preset-btn" class="btn buttonlike" style="background-color: #fee2e2; color: #ef4444; flex-shrink: 0; padding: 0 12px;">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+
+            <!-- 第二行：保存与另存为 -->
+            <div style="display: flex; gap: 10px;">
+                <button id="save-beautify-preset-btn" class="btn btn-secondary buttonlike" style="flex: 1;">保存改动</button>
+                <button id="beautify-save-as-new-preset-btn" class="btn btn-secondary buttonlike" style="flex: 1;">另存为...</button>
+            </div>
+
+            <!-- 第三行：应用按钮 (大号) -->
+            <button id="apply-beautify-preset-btn" class="btn btn-primary buttonlike btn-full-width" style="padding: 12px; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                应用选中方案
+            </button>
+
+            <!-- 第四行：导入导出 (小字) -->
+            <div style="display: flex; gap: 10px; border-top: 1px solid #f3f4f6; padding-top: 10px; margin-top: 5px;">
+                <button id="import-beautify-btn" class="btn btn-secondary buttonlike" style="flex: 1; font-size: 12px;">
+                    <i class="fa-solid fa-file-import"></i> 导入
+                </button>
+                <button id="export-beautify-btn" class="btn btn-secondary buttonlike" style="flex: 1; font-size: 12px;">
+                    <i class="fa-solid fa-file-export"></i> 导出
+                </button>
+            </div>
+        </div>
+
+        <!-- 隐藏的文件选择器 -->
+        <input type="file" id="import-beautify-input" accept=".json" class="hidden" />
+
+    </main>
+</div>
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】世界书管理页面 (Page版) ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="world-book-page" class="page" style="display:none; flex-direction: column;">
+    
+    <!-- 1. 标准页眉 -->
+    <header class="page-header">
+        <div class="header-left">
+            <button id="world-book-back-btn" class="btn-icon btn-back buttonlike">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="chat-title-container">
+                <div style="font-weight: bold; font-size: 18px;">世界书管理</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <!-- 右侧留空，保持标题居中 -->
+        </div>
+    </header>
+
+    <!-- 2. 主内容区 -->
+    <main class="page-content" style="background-color: #f3f4f6;">
+        
+        <!-- 操作栏 (控制卡片) -->
+        <div id="wb-manager-action-bar" style="background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; gap: 10px; margin-bottom: 15px; border: 1px solid var(--color-ui-border);">
+            <button id="wb-manager-add-book" class="btn btn-secondary buttonlike" style="flex: 1;">
+                <i class="fa-solid fa-plus"></i> 新建
+            </button>
+            <button id="wb-manager-import-books" class="btn btn-secondary buttonlike" style="flex: 1;">
+                <i class="fa-solid fa-file-import"></i> 导入
+            </button>
+            <button id="wb-manager-export-books" class="btn btn-secondary buttonlike" style="flex: 1;">
+                <i class="fa-solid fa-file-export"></i> 导出
+            </button>
+            <button id="wb-manager-delete-book" class="btn btn-secondary buttonlike" style="flex: 1; color: #ef4444;">
+                <i class="fa-solid fa-trash-can"></i> 删除
+            </button>
+        </div>
+
+        <!-- 隐藏的文件输入框 -->
+        <input type="file" id="wb-manager-import-input" accept=".json" class="hidden">
+
+        <!-- 区域 1: 全局世界书 -->
+        <section class="world-book-section" style="background: #fff; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--color-ui-border);">
+            <!-- 自定义下拉菜单 -->
+            <div id="global-wb-select-container" class="custom-wb-select-container">
+                <div id="global-wb-selector-value" class="wb-placeholder-bar buttonlike">
+                    <span id="global-wb-active-names">No Worlds active.</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div id="global-wb-options-container" class="custom-wb-options"></div>
+            </div>
+
+            <!-- 全局设置手风琴 -->
+            <div class="customization-group" id="global-wb-settings-accordion" style="margin-top: 10px;">
+                <div class="group-header" style="background: var(--color-ui-subtle);">
+                    <span class="icon"><i class="fa-solid fa-sliders"></i></span>
+                    <span class="label">全局激活设置</span>
+                    <span class="arrow">&lt;</span>
+                </div>
+                <div id="wb-activation-settings" class="group-content">
+                    <div class="group-content-inner">
+                        <!-- (设置内容保持不变，由JS填充或保持原有结构) -->
+                        <div class="setting-row">
+                            <div class="setting-item"><label>扫描深度</label><input type="number" class="form-input" value="2"></div>
+                            <div class="setting-item"><label>上下文%</label><input type="number" class="form-input" value="25"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-item"><label>Token预算</label><input type="number" class="form-input" value="0"></div>
+                            <div class="setting-item"><label>最小参数</label><input type="number" class="form-input" value="0"></div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-item"><label>最大深度</label><input type="number" class="form-input" value="0"></div>
+                            <div class="setting-item"><label>最大递归</label><input type="number" class="form-input" value="0"></div>
+                        </div>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox"> 包括名称</label>
+                            <label><input type="checkbox"> 递归扫描</label>
+                            <label><input type="checkbox"> 区分大小写</label>
+                            <label><input type="checkbox"> 匹配整词</label>
+                            <label><input type="checkbox"> 群组评分</label>
+                            <label><input type="checkbox"> 淡出警报</label>
+                        </div>
+                        <select class="form-input" style="margin-top: 10px;">
+                            <option>角色定义之前</option>
+                            <option>角色定义之后</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 已启用的全局条目列表 -->
+            <div class="wb-entry-list" style="margin-top: 10px;">
+                <div class="wb-entry-item-placeholder">全局世界书条目...</div>
+            </div>
+        </section>
+
+        <!-- 区域 2: 角色世界书 -->
+        <section class="world-book-section" style="background: #fff; border-radius: 12px; padding: 15px; border: 1px solid var(--color-ui-border);">
+            <div class="wb-section-header">
+                <h3 id="character-wb-title" style="font-size: 16px; font-weight: bold;">角色世界书</h3>
+                <button id="manage-character-wb-btn" class="btn btn-secondary buttonlike" style="font-size: 12px; padding: 4px 10px;">管理</button>
+            </div>
+            <div id="character-wb-entry-list" class="wb-entry-list" style="border: none; padding: 0; margin-top: 10px;">
+                <div class="wb-entry-item-placeholder">角色专属条目...</div>
+            </div>
+        </section>
+
+    </main>
+</div>
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】提示词预设管理页面 (Page版) ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="prompt-preset-page" class="page" style="display:none; flex-direction: column;">
+    
+    <!-- 1. 标准页眉 -->
+    <header class="page-header">
+        <div class="header-left">
+            <button id="prompt-preset-back-btn" class="btn-icon btn-back buttonlike">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="chat-title-container">
+                <div style="font-weight: bold; font-size: 18px;">预设管理</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <!-- 导入按钮移到右上角 -->
+            <button id="import-st-preset-btn" class="btn-icon buttonlike" title="导入酒馆预设">
+                <i class="fa-solid fa-file-import"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 2. 主内容区 (包含控制台和列表) -->
+    <main class="page-content" style="background-color: #f3f4f6;">
+        
+        <!-- 控制台卡片 -->
+        <div style="background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px; margin-bottom: 10px;">
+            
+            <!-- 第一行：选择与重命名 -->
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <select id="prompt-preset-selector" class="form-input" style="flex-grow: 1; font-weight: bold;"></select>
+                <button id="rename-preset-btn" class="btn-icon buttonlike" title="重命名" style="color: var(--color-secondary-accent);">
+                    <i class="fa-solid fa-pen-ruler"></i>
+                </button>
+                <button id="prompt-preset-delete-btn" class="btn-icon buttonlike" title="删除" style="color: #ef4444;">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+
+            <!-- 第二行：操作按钮 -->
+            <div style="display: flex; gap: 10px;">
+                <button id="add-new-preset-btn" class="btn btn-secondary buttonlike" style="flex: 1;">
+                    <i class="fa-solid fa-plus"></i> 新建
+                </button>
+                <button id="prompt-preset-save-btn" class="btn btn-primary buttonlike" style="flex: 2;">
+                    <i class="fa-solid fa-floppy-disk"></i> 保存并应用
+                </button>
+            </div>
+        </div>
+
+        <!-- 模块列表容器 -->
+        <div id="prompt-module-list" style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px;">
+            <!-- 模块将在这里生成 -->
+        </div>
+
+    </main>
+
+    <!-- 3. 页脚：添加模块按钮 -->
+    <footer class="page-footer">
+        <button id="add-custom-prompt-module-btn" class="btn btn-secondary buttonlike btn-full-width">
+            <i class="fa-solid fa-plus"></i> 添加自定义Prompt模块
+        </button>
+    </footer>
+
+    <!-- 隐藏的文件输入框 (位置随意，只要在body内即可) -->
+    <input type="file" id="import-st-preset-input" accept=".json" class="hidden" />
+</div>
+
 
                 <!-- 页面 12：设置主菜单 (这是缺失的部分) -->
                 <div id="settings-menu" class="page" style="display:none;">
@@ -10903,22 +11146,70 @@ font-size: 16px;
                                 style="font-size: 16px;"><i class="fa-solid fa-x"></i></button>
                         </header>
 
-                        <!-- 2. 弹窗的主体内容 (原封不动地从旧页面搬过来) -->
-                        <main class="page-content" style="padding: 20px;">
-                            <p style="font-size: 14px; color: #6b7280; text-align: center; margin-bottom: 24px;">
-                                您可以将所有数据导出为文件进行备份，或从备份文件恢复数据。</p>
-                            <div style="display: flex; flex-direction: column; gap: 16px;">
-                                <button id="export-data-btn" class="btn btn-secondary buttonlike"
-                                    style="font-size: 16px;">导出数据</button>
-                                <button id="import-data-btn" class="btn btn-primary buttonlike"
-                                    style="font-size: 16px;">导入数据</button>
-                            </div>
+<!-- 2. 弹窗的主体内容 -->
+            <main class="page-content" style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+                
+                <!-- 区域 1: 本地备份 (旧功能) -->
+                <div style="background: #f9fafb; padding: 15px; border-radius: 12px; border: 1px solid var(--color-ui-border);">
+                    <h4 style="margin: 0 0 10px; font-size: 14px; color: var(--color-secondary-accent);">本地文件备份</h4>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="export-data-btn" class="btn btn-secondary buttonlike" style="flex: 1; font-size: 13px;">导出 JSON</button>
+                        <button id="import-data-btn" class="btn btn-secondary buttonlike" style="flex: 1; font-size: 13px;">导入 JSON</button>
+                    </div>
+                </div>
 
-                            <!-- 隐藏的文件选择器也一起搬过来 -->
-                            <input type="file" id="import-file-input" accept=".json" class="hidden" />
-                            <input type="file" id="chat-wallpaper-input" accept="image/*" class="hidden" />
-                        </main>
+                <!-- 区域 2: 云端同步 (BYODB) -->
+                <div style="background: #fff; padding: 15px; border-radius: 12px; border: 1px solid var(--color-ui-border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <h4 style="margin: 0 0 5px; font-size: 14px; color: var(--color-primary-accent); display: flex; align-items: center; justify-content: space-between;">
+                        <span>☁️ 云端同步 (Supabase)</span>
+                        <span id="cloud-status-badge" style="font-size: 10px; background: #e5e7eb; color: #666; padding: 2px 6px; border-radius: 4px;">未连接</span>
+                    </h4>
+                    <p style="font-size: 11px; color: #a1a1aa; margin-bottom: 15px;">
+                        连接你自己的 Supabase 数据库，实现多端实时同步。
+                    </p>
 
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div>
+                            <label style="font-size: 12px; color: #666;">Project URL</label>
+                            <input type="text" id="supabase-url-input" class="form-input" placeholder="https://xyz.supabase.co" style="font-size: 12px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #666;">API Key (anon/public)</label>
+                            <input type="password" id="supabase-key-input" class="form-input" placeholder="eyJh..." style="font-size: 12px;">
+                        </div>
+                        
+<!-- 按钮区：保存配置 -->
+                        <div style="margin-top: 5px;">
+                            <button id="btn-save-cloud-config" class="btn btn-primary buttonlike" style="width: 100%;">保存配置并连接</button>
+                        </div>
+
+                        <!-- 按钮区：操作 (默认禁用，连接成功后启用) -->
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button id="btn-cloud-upload" class="btn btn-secondary buttonlike" style="flex: 1;" disabled>
+                                <i class="fa-solid fa-cloud-arrow-up"></i> 上传到云端
+                            </button>
+                            <button id="btn-cloud-download" class="btn btn-secondary buttonlike" style="flex: 1;" disabled>
+                                <i class="fa-solid fa-cloud-arrow-down"></i> 下载到本地
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 帮助信息 -->
+                    <details style="margin-top: 15px; font-size: 11px; color: #9ca3af; cursor: pointer;">
+                        <summary>如何获取 URL 和 Key？</summary>
+                        <p style="margin-top: 5px; line-height: 1.5;">
+                            1. 访问 supabase.com 注册并新建项目。<br>
+                            2. 进入 Project Settings -> API。<br>
+                            3. 复制 URL 和 anon public key。<br>
+                            4. ⚠️ 注意：这是你自己的私有数据库，请勿泄露 Key 给他人。
+                        </p>
+                    </details>
+                </div>
+
+                <!-- 隐藏的文件选择器 -->
+                <input type="file" id="import-file-input" accept=".json" class="hidden" />
+                <input type="file" id="chat-wallpaper-input" accept="image/*" class="hidden" />
+            </main>
                     </div>
                 </div>
 
@@ -10932,7 +11223,7 @@ font-size: 16px;
                         <header class="page-header">
                             <!-- ▼▼▼ 这是新的返回按钮 ▼▼▼ -->
                             <button id="world-editor-back" class="btn-icon btn-back buttonlike"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                                 >
                                 <i class="fa-solid fa-chevron-left"></i></button>
                             <span id="world-editor-title" style="font-weight: bold; font-size: 18px;">创建新条目</span>
                             <button id="save-world-entry-btn" class="btn btn-primary buttonlike"
@@ -11117,8 +11408,7 @@ font-size: 16px;
                     <header class="page-header">
                         <!-- 左侧：返回按钮 -->
                         <div class="header-left">
-                            <button id="offline-list-back-btn" class="btn-icon btn-back buttonlike"
-                                style="width: 32px; height: 32px; border-radius: 50%;">
+                            <button id="offline-list-back-btn" class="btn-icon btn-back buttonlike">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </button>
                         </div>
@@ -11144,9 +11434,6 @@ font-size: 16px;
                         <!-- 角色列表将由JS渲染 -->
                     </main>
                 </div>
-
-                <!-- 视图 B: 线下互动 (聊天页) -->
-                <!-- 视图 B: 线下互动 (聊天页) -->
                 <div id="offline-chat-view" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
 
                     <header class="page-header">
@@ -11615,67 +11902,6 @@ font-size: 16px;
         </div>
     </div>
 
-
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新】美化功能弹窗 (大屏滚动版) ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="beautify-modal" class="modal-overlay hidden">
-        <div class="modal-content"
-            style="width: 95%; max-width: 450px; max-height: 85vh; display: flex; flex-direction: column;">
-
-            <!-- 头部 (保持固定) -->
-            <header class="page-header" style="flex-shrink: 0;">
-                <span>美化中心 (CSS)</span>
-                <button id="beautify-modal-close-btn" class="btn-icon buttonlike" style="font-size: 16px;"><i
-                        class="fa-solid fa-x"></i></button>
-            </header>
-
-            <!-- 主体内容区 (包含输入框和所有按钮)，可上下滚动 -->
-            <main class="page-content"
-                style="padding: 15px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
-
-                <!-- 1. CSS输入框 (✨ 核心修改：高度加大到 400px) -->
-                <textarea id="custom-css-input" class="form-input form-textarea"
-                    style="min-height: 400px; resize: vertical; font-family: monospace; font-size: 13px; width: 100%; white-space: pre;"
-                    placeholder="在此处粘贴或输入你的CSS美化代码..."></textarea>
-
-                <!-- 2. 原来的页脚按钮区 (现在移到了这里，跟随滚动) -->
-                <div style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 10px;">
-
-                    <!-- 第一行：预设选择和删除 -->
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <select id="beautify-preset-select" class="form-input" style="flex-grow: 1;"></select>
-                        <button id="delete-beautify-preset-btn" class="btn buttonlike"
-                            style="background-color: #fecaca; color: #b91c1c; flex-shrink: 0;">删除</button>
-                    </div>
-
-                    <!-- 第二行：保存改动 -->
-                    <div style="display: flex; gap: 10px;">
-                        <button id="save-beautify-preset-btn" class="btn btn-secondary buttonlike"
-                            style="flex: 1;">保存改动</button>
-                        <button id="beautify-save-as-new-preset-btn" class="btn btn-secondary buttonlike"
-                            style="flex: 1;">另存为...</button>
-                    </div>
-
-                    <!-- 第三行：应用按钮 -->
-                    <button id="apply-beautify-preset-btn"
-                        class="btn btn-primary buttonlike btn-full-width">应用选中方案</button>
-
-                    <!-- 第四行：导入和导出 -->
-                    <div
-                        style="display: flex; gap: 10px; border-top: 1px solid var(--color-ui-border); padding-top: 15px; margin-top: 5px;">
-                        <button id="import-beautify-btn" class="btn btn-secondary buttonlike"
-                            style="flex: 1;">导入方案</button>
-                        <button id="export-beautify-btn" class="btn btn-secondary buttonlike"
-                            style="flex: 1;">导出方案</button>
-                    </div>
-
-                    <!-- 隐藏的文件选择器 -->
-                    <input type="file" id="import-beautify-input" accept=".json" class="hidden" />
-                </div>
-            </main>
-        </div>
-    </div>
     <!-- 【请将这个全新的输入弹窗HTML，粘贴到 body 的末尾】 -->
     <!-- 【请将这个升级版的输入弹窗HTML，替换旧的 id="input-dialog"】 -->
     <div id="input-dialog" class="hidden"
@@ -12149,7 +12375,7 @@ font-size: 16px;
                         <span id="char-diary-title" style="font-weight: bold; color: #374151;">日记</span>
                         <!-- 这是我们新增的“写日记”按钮 -->
                         <button class="btn-icon buttonlike" id="char-diary-new-btn"
-                            style="width: 32px; height: 32px; border-radius: 50%;">
+                             >
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                         <!-- ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ -->
@@ -12289,7 +12515,7 @@ font-size: 16px;
                         <span style="font-weight: bold; color: #374151;">收藏</span>
                         <!-- ✨ 核心修改：在右侧添加了“+”号按钮 -->
                         <button class="btn-icon buttonlike" id="add-favorite-from-user-btn"
-                            style="width: 32px; height: 32px; border-radius: 50%;">
+                             >
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </header>
@@ -12589,142 +12815,6 @@ font-size: 16px;
             </footer>
         </div>
     </div>
-
-    <!-- ▼▼▼ 请将这一整块全新的代码，粘贴到 </body> 的正上方 ▼▼▼ -->
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新】世界书管理中心弹窗 ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="world-book-manager-modal" class="modal-overlay hidden">
-        <!-- 我们复用一个大尺寸的弹窗样式 -->
-        <div class="modal-content" style="width: 95%; max-width: 420px; height: 85%;">
-            <header class="page-header">
-                <span><i class="fa-solid fa-book-atlas"></i> 世界书管理</span>
-                <button id="wb-manager-close-btn" class="btn-icon buttonlike"><i class="fa-solid fa-x"></i></button>
-            </header>
-
-            <!-- 可滚动的主内容区 -->
-            <main class="page-content"
-                style="padding: 10px; display: flex; flex-direction: column; gap: 15px; background-color: var(--color-ui-border);">
-
-
-                <!-- ========================================================== -->
-                <!-- --- ✨✨✨【全新】世界书管理器-顶部操作栏 ✨✨✨ --- -->
-                <!-- ========================================================== -->
-                <div id="wb-manager-action-bar">
-                    <button id="wb-manager-add-book" class="btn btn-secondary buttonlike">
-                        <i class="fa-solid fa-plus"></i> 添加
-                    </button>
-                    <button id="wb-manager-delete-book" class="btn btn-secondary buttonlike">
-                        <i class="fa-solid fa-trash-can"></i> 删除
-                    </button>
-                    <button id="wb-manager-import-books" class="btn btn-secondary buttonlike">
-                        <i class="fa-solid fa-upload"></i> 导入
-                    </button>
-                    <button id="wb-manager-export-books" class="btn btn-secondary buttonlike">
-                        <i class="fa-solid fa-download"></i> 导出
-                    </button>
-                </div>
-                <input type="file" id="wb-manager-import-input" accept=".json" class="hidden">
-                <!-- ========================================================== -->
-
-
-
-                <section class="world-book-section">
-                    <!-- 这是我们改造后的自定义下拉菜单 -->
-                    <div id="global-wb-select-container" class="custom-wb-select-container">
-                        <!-- 头部：显示当前激活的世界书 -->
-                        <div id="global-wb-selector-value" class="wb-placeholder-bar buttonlike">
-                            <span id="global-wb-active-names">No Worlds active. Click here to select.</span>
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </div>
-                        <!-- 下拉选项列表 (默认隐藏) -->
-                        <div id="global-wb-options-container" class="custom-wb-options">
-                            <!-- 世界书条目将由JS动态生成到这里 -->
-                        </div>
-                    </div>
-
-                    <!-- ✨ 核心修改：全新的手风琴式设置菜单 -->
-                    <div class="customization-group" id="global-wb-settings-accordion">
-                        <div class="group-header">
-                            <span class="icon"><i class="fa-solid fa-sliders"></i></span>
-                            <span class="label">全局激活设置</span>
-                            <span class="arrow">&lt;</span>
-                        </div>
-                        <div id="wb-activation-settings" class="group-content">
-                            <div class="group-content-inner">
-                                <div class="setting-row">
-                                    <div class="setting-item">
-                                        <label>扫描深度</label>
-                                        <input type="number" class="form-input" value="2">
-                                    </div>
-                                    <div class="setting-item">
-                                        <label>上下文百分比</label>
-                                        <input type="number" class="form-input" value="25">
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <div class="setting-item">
-                                        <label>Token预算上限</label>
-                                        <input type="number" class="form-input" value="0">
-                                    </div>
-                                    <div class="setting-item">
-                                        <label>最小参数</label>
-                                        <input type="number" class="form-input" value="0">
-                                    </div>
-                                </div>
-                                <div class="setting-row">
-                                    <div class="setting-item">
-                                        <label>最大深度</label>
-                                        <input type="number" class="form-input" value="0">
-                                    </div>
-                                    <div class="setting-item">
-                                        <label>最大递归深度</label>
-                                        <input type="number" class="form-input" value="0">
-                                    </div>
-                                </div>
-                                <div class="checkbox-grid">
-                                    <label><input type="checkbox"> 包括名称</label>
-                                    <label><input type="checkbox"> 递归扫描</label>
-                                    <label><input type="checkbox"> 区分大小写</label>
-                                    <label><input type="checkbox"> 匹配整个单词</label>
-                                    <label><input type="checkbox"> 使用群组评分</label>
-                                    <label><input type="checkbox"> 淡出警报</label>
-                                </div>
-                                <select class="form-input" style="margin-top: 10px;">
-                                    <option>角色定义之前</option>
-                                    <option>角色定义之后</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 修改结束 -->
-
-                    <!-- 已启用的全局条目列表 (保持不变) -->
-                    <div class="wb-entry-list">
-                        <div class="wb-entry-item-placeholder">已启用的全局世界书将显示在这里...</div>
-                    </div>
-                </section>
-
-                <!-- 区域 2: 角色世界书 -->
-                <!-- ▼▼▼ 请用这一整块全新的代码，替换旧的“角色世界书”<section> ▼▼▼ -->
-                <section class="world-book-section">
-                    <div class="wb-section-header">
-                        <h3 id="character-wb-title">角色世界书</h3>
-                        <!-- 我们为这个按钮添加一个ID，方便JS调用 -->
-                        <button id="manage-character-wb-btn" class="btn btn-secondary buttonlike"
-                            style="font-size: 12px; padding: 4px 10px;">管理</button>
-                    </div>
-                    <!-- 这是新的列表容器，将用来显示带设置的条目卡片 -->
-                    <div id="character-wb-entry-list" class="wb-entry-list" style="border: none; padding: 0;">
-                        <!-- 角色专属条目将由JS动态生成到这里 -->
-                        <div class="wb-entry-item-placeholder">当前角色的专属世界书条目将显示在这里...</div>
-                    </div>
-                </section>
-                <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-
-            </main>
-        </div>
-    </div>
     <!-- ========================================================== -->
     <!-- ========================================================== -->
     <!-- --- ✨✨✨【全新】世界书-批量删除弹窗 ✨✨✨ --- -->
@@ -12824,49 +12914,6 @@ font-size: 16px;
         </div>
     </div>
 
-    <!-- ▼▼▼ 请将这一整块全新的代码，粘贴到 </body> 的正上方 ▼▼▼ -->
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新】预设管理中心弹窗 ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="prompt-preset-manager-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="width: 95%; max-width: 420px; height: 85%;">
-            <!-- 1. 顶部操作栏 -->
-            <header class="page-header" style="flex-shrink: 0; display: block; padding: 10px;">
-                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
-                    <select id="prompt-preset-selector" class="form-input" style="flex-grow: 1;"></select>
-                    <button id="rename-preset-btn" class="btn-icon buttonlike" title="重命名当前预设"><i
-                            class="fa-solid fa-pen-ruler"></i></button>
-                    <button id="prompt-preset-delete-btn" class="btn-icon buttonlike" title="删除当前预设"><i
-                            class="fa-solid fa-trash-can"></i></button>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button id="add-new-preset-btn" class="btn btn-secondary buttonlike" style="flex: 1;">添加</button>
-                    <!-- ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ -->
-                    <button id="import-st-preset-btn" class="btn btn-secondary buttonlike" style="flex: 1;">导入</button>
-                    <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
-                    <button id="prompt-preset-save-btn" class="btn btn-primary buttonlike" style="flex: 2;">保存</button>
-                </div>
-            </header>
-            <!-- ▼▼▼ 将这个隐藏的 input 标签粘贴到 <header> 标签的紧后方 ▼▼▼ -->
-            <input type="file" id="import-st-preset-input" accept=".json" class="hidden" />
-            <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
-            <!-- 2. 可拖拽的模块列表 -->
-            <main id="prompt-module-list" class="page-content"
-                style="background: var(--color-ui-border); padding: 10px; display: flex; flex-direction: column; gap: 10px;">
-                <!-- 模块将由 JavaScript 动态生成到这里 -->
-            </main>
-
-            <!-- 3. 底部操作栏 -->
-            <footer class="page-footer" style="flex-shrink: 0;">
-                <button id="add-custom-prompt-module-btn" class="btn btn-secondary buttonlike btn-full-width">
-                    <i class="fa-solid fa-plus"></i> 添加自定义Prompt模块
-                </button>
-            </footer>
-        </div>
-    </div>
-    <!-- ========================================================== -->
-    <!-- ▲▲▲ 粘贴到这里结束 ▲▲▲ -->
-    <!-- ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼ -->
     <!-- ========================================================== -->
     <!-- --- ✨✨✨【全新】自定义Prompt模块编辑器弹窗 ✨✨✨ --- -->
     <!-- ========================================================== -->
@@ -13079,35 +13126,35 @@ font-size: 16px;
 
     <script>
 
-        const db = new Dexie("QQAppDB");
+    
+
+const db = new Dexie("QQAppDB");
 
         // ==========================================================
-        // --- ✨✨✨【V173 - 新增生理周期表】数据库结构 ✨✨✨ ---
+        // --- ✨✨✨【V191 - 修复缺失的 world_books 表】数据库结构 ✨✨✨ ---
         // ==========================================================
-        db.version(190).stores({
-            // ✨ 修改这一行，加上 characterId
+        // 注意：我把版本号从 190 改为了 191，这样浏览器才会更新数据库结构
+        db.version(191).stores({
             schedules: '++id, date, time, title, content, characterId',
-            // ✨ 修改：novels 表增加 parentId (用于链接上一篇)
             novels: "++id, title, &uuid, characterId, inspirationId, perspective, content, author, parentId, createdAt",
-            // ✨ 修改这一行，添加 title 字段
             novel_inspirations: "++id, title, content, type, group, createdAt",
-
-            // ✨ 新增这一行：
             persona_presets: '++id, &name',
             period_cycles: '++id, startDate, endDate',
             period_logs: '&date, pain, mood, flow', 
             memories: '++id, contactId, [userId+contactId+type], [userId+contactId], type, createdAt, *sourceTurnIds',
             prompt_presets: '++id, &name, isActive',
             character_favorites: '++id, characterId, name, imageBlob, createdAt',
-characters: "id,&name,note,persona,avatar,gender,birthday,age,lastMomentAt,createdAt,status,*linkedEntries,lastCommentAt,sociability,categoryId,customStatusText,*stickerTags,phoneWallpaper,fontColor,userFontColor,bubbleColor,userBubbleColor,chatWallpaper,listenTogetherDuration,bubbleCssPresetId,activeUserPersona,readingNovelId,readingProgress,enablePeriodHelp,enableTimeAwareness,enableSmallTheater",
+            characters: "id,&name,note,persona,avatar,gender,birthday,age,lastMomentAt,createdAt,status,*linkedEntries,lastCommentAt,sociability,categoryId,customStatusText,*stickerTags,phoneWallpaper,fontColor,userFontColor,bubbleColor,userBubbleColor,chatWallpaper,listenTogetherDuration,bubbleCssPresetId,activeUserPersona,readingNovelId,readingProgress,enablePeriodHelp,enableTimeAwareness,enableSmallTheater",
+            
+            // ✨ 核心修复：补上了这张之前漏掉的表
+            world_books: "++id, &name", 
 
-world_entries: "++id, userId, title, createdAt, keywords, content, isGlobal, categoryId, bookId",
+            world_entries: "++id, userId, title, createdAt, keywords, content, isGlobal, categoryId, bookId",
             users: "id,name,avatar,bio,background,signature,playerCover,gender,birthday,age,displayId",
             contact_categories: "++id, &name, userId",
             world_book_categories: "++id, &name, userId",
             diaries: "++id, [userId+contactId], contactId, createdAt",
             bonds: "++id,[userId+contactId],contactId,category,aspectRatio,createdAt",
-
             messages: "++id,[userId+chatId],chatId,senderId,time,videoCallHistory,[userId+chatId+isAnalyzed],recalledContent,sceneName",
             moments: "++id,[userId+contactId],contactId,createdAt",
             comments: "++id,momentId,authorId,createdAt,replyToAuthorName",
@@ -13117,7 +13164,8 @@ world_entries: "++id, userId, title, createdAt, keywords, content, isGlobal, cat
             global_stickers: "++id, &description, *tags",
             beautify_presets: "++id, &name",
             bubble_css_presets: "++id, &name",
-            world_book_settings: "&key, value"
+            world_book_settings: "&key, value",
+            songs: "++id, title, artist, songUrl, audioData, coverArt, lyrics" // 顺便确保歌曲表也在
         });
 
         const USER_FALLBACK_ICON = '<i class="fa-thin fa-user"></i>';
@@ -15126,7 +15174,7 @@ ${JAILBREAK_PROMPT}
         (function () {
             // 1. 获取所有编辑器相关的DOM元素 (不变)
             const modal = document.getElementById('world-entry-editor-modal');
-            if (!modal) return;
+ 
 
             const titleEl = document.getElementById('world-editor-title');
             const closeBtn = document.getElementById('world-editor-back');
@@ -15432,7 +15480,10 @@ ${JAILBREAK_PROMPT}
                 'character-profile-page',
                 'period-tracker-page',
                 'period-history-page',
-                'prompt-viewer-page'// <--- ✨ 在这里添加新页面ID
+                'prompt-viewer-page',
+                'prompt-preset-page',
+                'world-book-page',
+                'beautify-page'// <--- ✨ 在这里添加新页面ID
             ];
 
             let navigationHistory = [];
@@ -15508,17 +15559,6 @@ if (statusbar) {
                         const adaptiveClass = await getAdaptiveTextColor(wallpaperBlob);
                         statusbar.className = 'statusbar ' + adaptiveClass;
                     }
-
-                    // --- 图标显隐逻辑 (这部分保持不变) ---
-                    const isChatPage = (id === 'qq-chat');
-                    const promptBtn = document.getElementById('statusbar-preset-btn');
-                    const worldBookBtn = document.getElementById('statusbar-world-book-btn');
-                    // 注意：statusbar-ai-features-btn 的显示逻辑现在由 updateStatusbarFeatureIcons 全权管理，这里不再需要控制它
-                    
-                    const displayValue = isChatPage ? 'inline-flex' : 'none';
-
-                    if (promptBtn) promptBtn.style.display = displayValue;
-                    if (worldBookBtn) worldBookBtn.style.display = displayValue;
                 }
                 } else {
                     console.error(`导航错误：无法找到 ID 为 "${id}" 的页面！`);
@@ -17724,6 +17764,44 @@ ${MULTI_BUBBLE_SUFFIX}`;
                 }
                 return;
             }
+
+     // ▼▼▼ ✨✨✨ 在这里粘贴下面的新代码 ✨✨✨ ▼▼▼
+
+// 1. 处理“预设”按钮 -> 跳转到预设管理页面
+            if (e.target.closest('#profile-preset-btn')) {
+                // 先渲染数据
+                if (typeof window.renderPromptPresetManager === 'function') {
+                    await window.renderPromptPresetManager();
+                }
+                // ✨ 核心修改：从 showModal 改为 navigateTo
+                navigateTo('prompt-preset-page');
+                return;
+            }
+// 2. 处理“世界书”按钮 -> 打开世界书管理器 (修复版)
+            if (e.target.closest('#profile-worldbook-btn')) {
+                // a. 确定目标角色：优先取当前聊天对象，如果没有，就取当前正在查看档案的角色
+                const targetChar = window.currentChat || window.currentProfileContact;
+
+                if (!targetChar) {
+                    showNotification("错误", "无法获取当前角色信息。");
+                    return;
+                }
+
+                // b. 【关键修复】如果 currentChat 为空（比如是从通讯录进来的），
+                // 我们必须临时把它指向当前角色，否则世界书管理器不知道该给谁管理。
+                if (!window.currentChat) {
+                    window.currentChat = targetChar;
+                }
+
+                // c. 调用打开函数
+                if (typeof window.openWorldBookManager === 'function') {
+                    window.openWorldBookManager(); 
+                } else {
+                    console.error("错误：找不到 openWorldBookManager 函数，请检查世界书引擎代码。");
+                }
+                return;
+            }
+            // ▲▲▲ 粘贴结束 ▲▲▲
             // 小剧场
             if (e.target.closest('#profile-theater-btn')) {
                 showNotification("功能规划中", "这里未来将支持开启/关闭该角色的小剧场模式。");
@@ -17824,27 +17902,28 @@ ${JAILBREAK_PROMPT}
             }
         };
         // ▲▲▲ 替换到这里结束 ▲▲▲
-        // ▲▲▲ 粘贴到这里结束 ▲▲▲
-        document.getElementById('profile-modal-edit-btn').addEventListener('click', async () => {
-            // 1. 先从全局“剪贴板”获取到当前正在查看的角色ID (这步不变)
-            const characterToEdit = window.currentProfileContact;
-            if (characterToEdit && characterToEdit.id) {
-                // 2. 关闭当前的角色主页弹窗
-                hideModal('contact-profile-modal');
+        const oldCharEditBtn = document.getElementById('profile-modal-edit-btn');
+        if (oldCharEditBtn) {
+            oldCharEditBtn.addEventListener('click', async () => {
+                // 1. 先从全局“剪贴板”获取到当前正在查看的角色ID (这步不变)
+                const characterToEdit = window.currentProfileContact;
+                if (characterToEdit && characterToEdit.id) {
+                    // 2. 关闭当前的角色主页弹窗
+                    hideModal('contact-profile-modal');
 
-                // 3. ✨✨✨ 核心修复：我们不再直接使用 characterToEdit 这个旧数据！✨✨✨
-                // 而是调用我们早已写好的“智能合并”函数，去数据库里拿一份最新的、合并了所有自定义信息的数据。
-                const mergedCharacter = await getMergedCharacterForUser(window.currentUser.id, characterToEdit.id);
+                    // 3. 获取最新的角色数据
+                    const mergedCharacter = await getMergedCharacterForUser(window.currentUser.id, characterToEdit.id);
 
-                // 4. 将这份【绝对最新】的数据，传递给编辑器函数
-                if (mergedCharacter) {
-                    openContactEditor(mergedCharacter, true); // isFriend 依然是 true
-                } else {
-                    // 如果因为某些原因找不到，给一个提示
-                    alert("无法打开编辑器：找不到该角色的信息。");
+                    // 4. 将这份【绝对最新】的数据，传递给编辑器函数
+                    if (mergedCharacter) {
+                        openContactEditor(mergedCharacter, true); // isFriend 依然是 true
+                    } else {
+                        alert("无法打开编辑器：找不到该角色的信息。");
+                    }
                 }
-            }
-        });
+            });
+        }
+      
 // ==========================================================
     // --- ✨✨✨【V2 - 角色独立版】状态栏AI功能图标更新引擎 ✨✨✨ ---
     // ==========================================================
@@ -19664,30 +19743,28 @@ ${JAILBREAK_PROMPT}
             }
         });
         // ==========================================================
-        // ▲▲▲ 替换到这里结束 ▲▲▲
-        // ==========================================================
-        // --- ✨✨✨【全新】CSS美化功能核心引擎 (带预设管理 - 已修复) ✨✨✨ ---
+// ==========================================================
+        // --- ✨✨✨【全新 V2 - 页面版】CSS美化功能核心引擎 ✨✨✨ ---
         // ==========================================================
         (function () {
-            // 1. 获取所有相关的 DOM 元素 (不变)
-            const beautifyModal = document.getElementById('beautify-modal');
-            if (!beautifyModal) return;
-
+            // 1. 获取所有相关的 DOM 元素
+            const page = document.getElementById('beautify-page');
             const openBeautifyBtn = document.getElementById('app-beautify');
-            const closeBeautifyBtn = document.getElementById('beautify-modal-close-btn');
+            
+            // 如果关键元素不存在，不启动引擎
+            if (!page || !openBeautifyBtn) return;
+
+            // 获取页面内的元素
+            const backBtn = document.getElementById('beautify-page-back-btn');
             const cssInput = document.getElementById('custom-css-input');
             const applyBtn = document.getElementById('apply-beautify-preset-btn');
-            // ✨ 核心修正：使用新的、唯一的ID
             const saveAsBtn = document.getElementById('beautify-save-as-new-preset-btn');
+            const saveBtn = document.getElementById('save-beautify-preset-btn');
             const deleteBtn = document.getElementById('delete-beautify-preset-btn');
             const presetSelect = document.getElementById('beautify-preset-select');
             const customStyleTag = document.getElementById('custom-user-styles');
-            // ✨✨✨ 在这里粘贴下面的新代码 ✨✨✨
-            const saveBtn = document.getElementById('save-beautify-preset-btn');
-            // ✨✨✨ 粘贴结束 ✨✨✨
-            /**
-             * 核心函数 1: 渲染预设下拉列表 (不变)
-             */
+
+            // --- 核心函数 1: 渲染预设下拉列表 ---
             async function renderPresetList() {
                 const presets = await db.beautify_presets.toArray();
                 const activePresetName = localStorage.getItem('activeBeautifyPreset');
@@ -19703,13 +19780,15 @@ ${JAILBREAK_PROMPT}
                     presetSelect.appendChild(option);
                 });
 
-                deleteBtn.style.display = (presetSelect.value === 'default') ? 'none' : 'inline-block';
+                // 更新删除按钮状态
+                if (deleteBtn) {
+                    deleteBtn.style.display = (presetSelect.value === 'default') ? 'none' : 'inline-block';
+                }
             }
 
-            // a. 升级 loadPresetToEditor，让“保存改动”按钮变得更智能
+            // --- 核心函数 2: 加载选中预设到编辑器 ---
             async function loadPresetToEditor() {
                 const selectedId = presetSelect.value;
-                const saveBtn = document.getElementById('save-beautify-preset-btn'); // 再次获取，确保安全
 
                 if (selectedId === 'default') {
                     const activePresetName = localStorage.getItem('activeBeautifyPreset');
@@ -19719,56 +19798,17 @@ ${JAILBREAK_PROMPT}
                     } else {
                         cssInput.value = '';
                     }
-                    deleteBtn.style.display = 'none';
-                    if (saveBtn) saveBtn.disabled = true; // ✨ 核心修改：选择默认时，禁用“保存改动”
+                    if (deleteBtn) deleteBtn.style.display = 'none';
+                    if (saveBtn) saveBtn.disabled = true; // 默认外观不能保存修改
                 } else {
                     const preset = await db.beautify_presets.get(parseInt(selectedId, 10));
                     if (preset) cssInput.value = preset.cssCode;
-                    deleteBtn.style.display = 'inline-block';
-                    if (saveBtn) saveBtn.disabled = false; // ✨ 核心修改：选择预设时，启用“保存改动”
+                    if (deleteBtn) deleteBtn.style.display = 'inline-block';
+                    if (saveBtn) saveBtn.disabled = false;
                 }
             }
 
-            // b. 为我们全新的“保存改动”按钮绑定功能
-            const newSaveBtn = document.getElementById('save-beautify-preset-btn');
-            if (newSaveBtn) {
-                newSaveBtn.addEventListener('click', savePresetChanges);
-            }
-
-            // 【请将这个全新的函数，粘贴到 loadPresetToEditor 函数的下方】
-
-            /**
-             * 核心函数 4 (全新): 保存对当前选中预设的修改
-             */
-            async function savePresetChanges() {
-                const selectedId = presetSelect.value;
-                const cssCode = cssInput.value;
-
-                // a. 增加一个“保护锁”，防止用户意外修改“默认外观”
-                if (selectedId === 'default' || !selectedId) {
-                    showNotification("不能修改默认外观哦，请使用“另存为”创建新方案。");
-                    return;
-                }
-
-                try {
-                    // b. 使用 update 方法，精确地更新数据库中对应ID的记录
-                    await db.beautify_presets.update(parseInt(selectedId, 10), {
-                        cssCode: cssCode
-                    });
-
-                    // c. 给出成功的反馈
-                    const presetName = presetSelect.options[presetSelect.selectedIndex].text;
-                    showNotification(`方案「${presetName}」已成功保存！`);
-
-                } catch (error) {
-                    console.error("更新预设失败:", error);
-                    showNotification("保存失败，请稍后再试。");
-                }
-            }
-
-            /**
-             * 核心函数 3: 应用当前选中的预设 (不变)
-             */
+            // --- 核心函数 3: 应用当前方案 ---
             async function applySelectedPreset() {
                 const selectedId = presetSelect.value;
                 let cssToApply = '';
@@ -19786,125 +19826,117 @@ ${JAILBREAK_PROMPT}
                 localStorage.setItem('activeBeautifyPreset', presetName);
 
                 showNotification(`已应用美化方案: 「${presetName}」`);
-                hideModal('beautify-modal');
+                // 应用后不自动退出页面，方便用户微调
             }
 
-            // ▼▼▼ 请用这个【自给自足】的新版本进行替换 ▼▼▼
-            window.saveAsNewPreset = async function () {
-                // ✨ 核心修复：在函数内部重新获取它需要的所有元素
-                const cssInput = document.getElementById('bubble-css-input');
-                const presetSelect = document.getElementById('profile-bubble-preset-selector');
-
-                if (!cssInput || !presetSelect) {
-                    console.error("'另存为'失败：找不到CSS输入框或预设下拉菜单。");
-                    showNotification("操作失败，页面元素缺失。");
-                    return;
-                }
-
+            // --- 核心函数 4: 保存对当前预设的修改 ---
+            async function savePresetChanges() {
+                const selectedId = presetSelect.value;
                 const cssCode = cssInput.value;
-                if (!cssCode.trim()) {
-                    showNotification("代码是空的，无法保存哦！");
+
+                if (selectedId === 'default' || !selectedId) {
+                    showNotification("不能修改默认外观哦，请使用“另存为”。");
                     return;
                 }
-
-                const presetName = await showInputDialog("请输入新预设的名称：", "我的气泡主题");
-                if (!presetName || !presetName.trim()) return;
 
                 try {
-                    // ✨ 核心修改 1: 在添加时，接收数据库返回的新ID
-                    const newId = await db.bubble_css_presets.add({ name: presetName.trim(), cssCode: cssCode });
-
-                    // 核心修改 2: 保存后，立即调用函数刷新【所有】相关的下拉菜单
-                    if (typeof window.populateAllPresetSelectors === 'function') {
-                        await window.populateAllPresetSelectors();
-                    }
-
-                    // ✨ 核心修改 3: 使用新ID，强制将下拉菜单选中到我们刚刚创建的这个新方案上
-                    presetSelect.value = newId;
-
-                    // 核心修改 4: 再次调用加载函数，确保编辑器和预览区也同步更新为新方案的内容
-                    if (typeof window.loadPresetToEditor === 'function') {
-                        const editorSelect = document.getElementById('bubble-css-preset-select');
-                        if (editorSelect) editorSelect.value = newId; // 同步另一个可能存在的下拉菜单
-                        await window.loadPresetToEditor();
-                    }
-
-                    showNotification(`新预设「${presetName.trim()}」已保存！`);
-
+                    await db.beautify_presets.update(parseInt(selectedId, 10), { cssCode: cssCode });
+                    const presetName = presetSelect.options[presetSelect.selectedIndex].text;
+                    showNotification(`方案「${presetName}」已保存！`);
                 } catch (error) {
-                    if (error.name === 'ConstraintError') {
-                        showNotification("保存失败：已存在同名的预设！");
-                    } else {
-                        showNotification("保存失败，请稍后再试。");
-                    }
+                    console.error("更新预设失败:", error);
+                    showNotification("保存失败，请重试。");
                 }
             }
-            // ▲▲▲ 替换到这里结束 ▲▲▲
-            // ▲▲▲ 替换到这里结束 ▲▲▲
 
-            // c. 升级“删除”按钮的逻辑，确保它能正确处理按钮状态
+            // --- 核心函数 5: 删除预设 ---
             async function deleteSelectedPreset() {
                 const selectedId = presetSelect.value;
                 if (selectedId === 'default') return;
+                
                 const selectedOption = presetSelect.options[presetSelect.selectedIndex];
                 const presetName = selectedOption.text;
+                
                 showDeleteDialog(`确定要删除预设「${presetName}」吗？`, async () => {
                     await db.beautify_presets.delete(parseInt(selectedId, 10));
+                    // 如果删除的是当前正在使用的，恢复默认
                     if (localStorage.getItem('activeBeautifyPreset') === presetName) {
                         customStyleTag.innerHTML = '';
                         localStorage.setItem('activeBeautifyPreset', '默认外观');
                     }
                     await renderPresetList();
-                    await loadPresetToEditor(); // ✨ 核心修改：重新加载，这会自动禁用“保存改动”按钮
+                    await loadPresetToEditor();
                     showNotification(`预设「${presetName}」已删除。`);
                 });
             }
-            if (deleteBtn) {
-                deleteBtn.addEventListener('click', deleteSelectedPreset);
+
+            // --- 核心函数 6: 另存为新预设 ---
+            async function handleSaveAs() {
+                 const cssCode = cssInput.value;
+                 if (!cssCode.trim()) {
+                     showNotification("代码是空的，无法保存哦！");
+                     return;
+                 }
+                 const presetName = await showInputDialog("请输入新方案的名称：", "我的美化方案");
+                 if (!presetName || !presetName.trim()) return;
+
+                 try {
+                     const newId = await db.beautify_presets.add({ name: presetName.trim(), cssCode: cssCode });
+                     await renderPresetList();
+                     presetSelect.value = newId; // 选中新创建的
+                     await loadPresetToEditor();
+                     showNotification(`新方案「${presetName.trim()}」已保存！`);
+                 } catch (error) {
+                     if (error.name === 'ConstraintError') showNotification("保存失败：名称重复！");
+                     else showNotification("保存失败，请稍后再试。");
+                 }
             }
 
-            /**
-             * 核心函数 6: 打开弹窗 (不变)
-             */
-            async function openBeautifyModal() {
-                await renderPresetList();
-                await loadPresetToEditor();
-                showModal('beautify-modal');
-            }
+            // --- 7. 初始化与事件绑定 ---
 
-            /**
-             * 关键函数：在程序启动时，自动加载并应用“已激活”的预设 (已修复)
-             */
-            async function initializeCustomCss() {
+            // 初始化函数（暴露给全局，以便应用启动时调用）
+            window.initializeCustomCss = async function() {
                 const activePresetName = localStorage.getItem('activeBeautifyPreset');
                 if (activePresetName && activePresetName !== '默认外观') {
                     const activePreset = await db.beautify_presets.where('name').equals(activePresetName).first();
-
                     if (activePreset && activePreset.cssCode) {
                         customStyleTag.innerHTML = activePreset.cssCode;
-                        console.log(`√ 已成功加载并应用了美化预设: 「${activePresetName}」`);
+                        console.log(`√ 已加载美化预设: ${activePresetName}`);
                     }
                 }
-            }
+            };
+            
+            // 暴露渲染函数给导入功能使用
+            window.renderBeautifyPresetList = renderPresetList;
 
-            // 2. 绑定所有事件 (不变)
-            if (openBeautifyBtn) openBeautifyBtn.addEventListener('click', openBeautifyModal);
-            if (closeBeautifyBtn) closeBeautifyBtn.addEventListener('click', () => hideModal('beautify-modal'));
-            if (beautifyModal) beautifyModal.addEventListener('click', (e) => {
-                if (e.target === beautifyModal) hideModal('beautify-modal');
+            // 绑定打开页面事件
+            openBeautifyBtn.addEventListener('click', async () => {
+                await renderPresetList();
+                await loadPresetToEditor();
+                navigateTo('beautify-page');
             });
 
+            // 绑定返回按钮
+            if (backBtn) backBtn.addEventListener('click', () => navigateBack());
+
+            // 绑定功能按钮
             if (presetSelect) presetSelect.addEventListener('change', loadPresetToEditor);
             if (applyBtn) applyBtn.addEventListener('click', applySelectedPreset);
-            if (saveAsBtn) saveAsBtn.addEventListener('click', saveAsNewPreset);
+            if (saveBtn) saveBtn.addEventListener('click', savePresetChanges);
             if (deleteBtn) deleteBtn.addEventListener('click', deleteSelectedPreset);
-
-            // 3. 将初始化函数暴露到全局 (不变)
-            window.initializeCustomCss = initializeCustomCss;
+            if (saveAsBtn) saveAsBtn.addEventListener('click', handleSaveAs);
 
         })();
 
-
+        // ==========================================================
+        // --- ✨✨✨【单独保留】美化中心 导入/导出逻辑 ✨✨✨ ---
+        // ==========================================================
+        (function () {
+            // (这段代码保持原样不动，或者你可以检查一下 ID 是否匹配)
+            // 我们的新页面里 ID 依然是 import-beautify-btn, export-beautify-btn, import-beautify-input
+            // 所以这段逻辑不需要修改，它会自动找到新页面里的按钮。
+            // (此处省略代码，保持原文件末尾那段导入导出逻辑即可)
+        })();
         // ▼▼▼ 请用这个最终纯净版，替换旧的启动函数 ▼▼▼
         // ==========================================================
         // --- ✨✨✨【V5 - “单一宇宙”最终版】应用启动引擎 ✨✨✨ ---
@@ -23692,15 +23724,10 @@ ${SCRIPT_FORMAT_INSTRUCTION}`;
             function closeTutorialModal() {
                 hideModal('tutorial-modal');
             }
-
-            // 2. 绑定所有事件
-
             // a. 点击设置页的“新手教程”按钮，打开弹窗
             openBtn.addEventListener('click', openTutorialModal);
-
             // b. 点击弹窗内的关闭按钮
             closeBtn.addEventListener('click', closeTutorialModal);
-
             // c. (推荐) 点击弹窗的灰色背景区域也可以关闭
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
@@ -23708,9 +23735,6 @@ ${SCRIPT_FORMAT_INSTRUCTION}`;
                 }
             });
         })();
-
-
-
         // ==========================================================
         // --- ✨✨✨【全新版】通话记录弹窗及点击引擎 ✨✨✨ ---
         // ==========================================================
@@ -28161,54 +28185,66 @@ async function generateMemoData() {
             });
         })();
 
-        // ==========================================================
-
-        // --- ✨✨✨【V5 - 全功能最终版】世界书管理中心核心引擎 ✨✨✨ ---
+// ==========================================================
+        // --- ✨✨✨【V5 - 页面版】世界书管理中心核心引擎 ✨✨✨ ---
         // ==========================================================
         (function () {
-            // 1. 获取所有相关的 DOM 元素 (新增了条目删除弹窗的元素)
-            const worldBookBtn = document.getElementById('statusbar-world-book-btn');
-            const modal = document.getElementById('world-book-manager-modal');
-            const closeBtn = document.getElementById('wb-manager-close-btn');
+            // 1. 获取新的页面容器
+            const page = document.getElementById('world-book-page');
+            
+            // 绑定新的返回按钮
+            const backBtn = document.getElementById('world-book-back-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', () => navigateBack());
+            }
+
+            // 如果页面不存在，停止运行
+            if (!page) return;
+
+            // 获取内部操作按钮
             const addBtn = document.getElementById('wb-manager-add-book');
             const deleteBookBtn = document.getElementById('wb-manager-delete-book');
             const importBtn = document.getElementById('wb-manager-import-books');
             const exportBtn = document.getElementById('wb-manager-export-books');
             const importFileInput = document.getElementById('wb-manager-import-input');
+            
+            // 弹窗元素 (用于删除确认等)
             const deleteBooksModal = document.getElementById('wb-delete-books-modal');
             const deleteBooksList = document.getElementById('wb-delete-books-list');
             const deleteBooksCloseBtn = document.getElementById('wb-delete-books-close-btn');
             const deleteBooksConfirmBtn = document.getElementById('wb-delete-books-confirm-btn');
 
-            // ✨ 新增：条目删除弹窗元素
             const deleteEntriesModal = document.getElementById('wb-delete-entries-modal');
             const deleteEntriesList = document.getElementById('wb-delete-entries-list');
             const deleteEntriesCloseBtn = document.getElementById('wb-delete-entries-close-btn');
             const deleteEntriesConfirmBtn = document.getElementById('wb-delete-entries-confirm-btn');
-
             // (其他旧的DOM元素获取保持不变)
             const globalSelectContainer = document.getElementById('global-wb-select-container');
             const characterTitleEl = document.getElementById('character-wb-title');
             const manageCharacterWbBtn = document.getElementById('manage-character-wb-btn');
             const characterWbListContainer = document.getElementById('character-wb-entry-list');
 
-            if (!worldBookBtn || !modal) return;
-
-            /**
-             * 核心函数 1: 打开世界书管理弹窗 (已升级)
+/**
+             * 核心函数 1: 打开世界书管理页面 (Page版)
              */
             async function openWorldBookManager() {
                 if (!window.currentChat) {
                     showNotification("请先进入一个聊天", "才能管理与该角色相关的世界书。");
                     return;
                 }
-                // 渲染上半部分：全局世界书
+                
+                // 1. 渲染上半部分：全局世界书
                 await renderGlobalWbSelector();
-                // ✨ 核心新增：渲染下半部分：角色世界书
+                // 2. 渲染下半部分：角色世界书
                 await renderCharacterWbList(window.currentChat);
 
-                showModal('world-book-manager-modal');
+                // 3. ✨ 核心修改：使用 navigateTo 跳转页面
+                navigateTo('world-book-page');
             }
+            
+            // 在 openWorldBookManager 函数定义结束后，立刻添加这一行：
+            window.openWorldBookManager = openWorldBookManager;
+
             // ==========================================================
             // --- ✨✨✨【全新 V3】全局世界书渲染引擎 (全功能版) ✨✨✨ ---
             // ==========================================================
@@ -28218,8 +28254,8 @@ async function generateMemoData() {
                 const globalActiveNames = document.getElementById('global-wb-active-names');
                 const globalOptionsContainer = document.getElementById('global-wb-options-container');
                 const globalActivationSettings = document.getElementById('wb-activation-settings');
-                const globalActiveEntriesList = document.querySelector('#world-book-manager-modal .world-book-section:first-of-type .wb-entry-list');
-
+// 修复后的代码：
+const globalActiveEntriesList = document.querySelector('#world-book-page .world-book-section:first-of-type .wb-entry-list');
                 const allBooks = await db.world_books.toArray();
                 const globalSettings = await db.global_settings.get('globallyActiveBooks');
                 const activeBookIds = globalSettings ? globalSettings.value : [];
@@ -28320,9 +28356,9 @@ async function generateMemoData() {
                 }
             }
 
-            // ✨✨✨ 核心新增：为全局世界书列表绑定事件委托 ✨✨✨
-            // 请将这段代码放在 (function(){...}) 闭包的末尾
-            const globalList = document.querySelector('#world-book-manager-modal .world-book-section:first-of-type .wb-entry-list');
+// 修复后的代码：
+const globalList = document.querySelector('#world-book-page .world-book-section:first-of-type .wb-entry-list');
+           
             if (globalList) {
                 globalList.addEventListener('click', async (e) => {
                     const bookGroup = e.target.closest('.book-group');
@@ -28723,14 +28759,9 @@ async function generateMemoData() {
                 }
             }
             // --- 事件绑定 ---
-            worldBookBtn.addEventListener('click', openWorldBookManager);
-            closeBtn.addEventListener('click', () => hideModal('world-book-manager-modal'));
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) hideModal('world-book-manager-modal');
-            });
+             ;
 
             // --- ✨✨✨ 全新的功能函数 ---
-
             /**
              * 核心函数 1: 添加一本新书
              */
@@ -29014,15 +29045,8 @@ async function generateMemoData() {
                     }
                 });
             }
-
-
-
-
             // --- 事件绑定 ---
-            worldBookBtn.addEventListener('click', openWorldBookManager);
-            closeBtn.addEventListener('click', () => hideModal('world-book-manager-modal'));
-            modal.addEventListener('click', (e) => { if (e.target === modal) hideModal('world-book-manager-modal'); });
-
+             ;
             // ✨ 新增：为操作栏按钮绑定功能
             addBtn.addEventListener('click', handleAddBook);
             deleteBookBtn.addEventListener('click', openDeleteBookModal);
@@ -30064,92 +30088,20 @@ async function generateMemoData() {
             });
 
         })();
-        // ==========================================================
 
-        // ==========================================================
-        // --- ✨✨✨【全新 V1】提示词预设管理中心-核心交互引擎 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // 1. 获取所有相关的 DOM 元素
-            const openBtn = document.getElementById('statusbar-preset-btn');
-            const modal = document.getElementById('prompt-preset-manager-modal');
-
-            // 安全检查，如果最关键的元素不存在，则引擎不启动
-            if (!openBtn || !modal) {
-                console.error("错误：未能找到提示词预设管理器的触发按钮或弹窗本身，功能将失效。");
-                return;
-            }
-
-            // --- 弹窗内部的元素 ---
-            const closeBtn = modal.querySelector('.fa-x'); // 假设关闭按钮在header里
-            const presetSelector = document.getElementById('prompt-preset-selector');
-            const moduleListContainer = document.getElementById('prompt-module-list');
-
-            /**
-             * 核心函数 1: 打开提示词预设管理弹窗
-             */
-            async function openPromptPresetManager() {
-                // 在打开弹窗前，先执行数据填充的逻辑
-                // 目前这里是空的，我们下一个步骤再来填充
-
-                // 渲染预设下拉列表 (占位)
-                presetSelector.innerHTML = '<option>加载中...</option>';
-
-                // 渲染模块列表 (占位)
-                moduleListContainer.innerHTML = '<p style="text-align: center; color: #a1a1aa; padding: 40px;">正在加载预设模块...</p>';
-
-                // 调用我们早已写好的通用函数来显示弹窗
-                showModal('prompt-preset-manager-modal');
-
-                // --- 在这里，我们将调用真正的数据渲染函数 ---
-                // (下一个步骤，我们会在这里添加代码)
-                if (typeof renderPromptPresetManager === 'function') {
-                    await renderPromptPresetManager();
-                }
-            }
-
-            /**
-             * 核心函数 2: 关闭弹窗
-             */
-            function closePromptPresetManager() {
-                hideModal('prompt-preset-manager-modal');
-            }
-
-            // 2. 绑定所有事件
-
-            // a. 为状态栏的“预设”按钮绑定打开功能
-            openBtn.addEventListener('click', openPromptPresetManager);
-
-            // b. 为弹窗内的关闭按钮绑定功能 (需要找到它)
-            //    由于我们没有为关闭按钮设置ID，可以通过class来查找并绑定
-            const actualCloseBtn = modal.querySelector('.page-header .btn-icon[title="关闭"]'); // 假设有关闭按钮
-            if (actualCloseBtn) {
-                actualCloseBtn.addEventListener('click', closePromptPresetManager);
-            }
-
-            // c. (推荐) 点击弹窗的灰色背景区域也可以关闭
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closePromptPresetManager();
-                }
-            });
-
-        })();
-        // ==========================================================
-        // ▼▼▼ 请用这个【带调试日志】的版本，替换旧的 V2 引擎 ▼▼▼
-        // ==========================================================
-        // --- ✨✨✨【V2.1 - 调试版】提示词预设管理中心-核心引擎 ✨✨✨ ---
+// ==========================================================
+        // --- ✨✨✨ 【V2.1 - 页面版】提示词预设管理中心-核心引擎 ✨✨✨ ---
         // ==========================================================
         (function () {
-            // 1. 获取所有相关的 DOM 元素
-            const modal = document.getElementById('prompt-preset-manager-modal');
-            if (!modal) {
-                console.error("引擎 V2.1 错误：找不到 modal 元素，引擎终止。");
-                return;
+            // 1. 获取页面容器 (从 modal 改为 page)
+            const page = document.getElementById('prompt-preset-page');
+            
+            // 绑定返回按钮
+            const backBtn = document.getElementById('prompt-preset-back-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', () => navigateBack());
             }
 
-            // (其他元素获取保持不变)
-            const openBtn = document.getElementById('statusbar-preset-btn');
             const presetSelector = document.getElementById('prompt-preset-selector');
             const moduleListContainer = document.getElementById('prompt-module-list');
             const saveBtn = document.getElementById('prompt-preset-save-btn'); // <--- 核心修改在这里！
@@ -30339,7 +30291,6 @@ async function generateMemoData() {
             }
 
             // --- 绑定顶层操作按钮的事件 ---
-
             if (presetSelector) {
                 presetSelector.addEventListener('change', async () => { /* ... */
                     const selectedId = parseInt(presetSelector.value, 10);
@@ -30350,7 +30301,6 @@ async function generateMemoData() {
                     await renderPromptPresetManager();
                 });
             }
-            // ▼▼▼ 在这里粘贴下面的新代码 ▼▼▼
             // ==========================================================
             // --- ✨✨✨【全新】为“导入”按钮绑定功能 ✨✨✨ ---
             // ==========================================================
@@ -32968,7 +32918,436 @@ item.innerHTML = `
         });
     }
 })();
+// ==========================================================
+// --- ✨✨✨【全新补完】桌面小组件-生理期状态显示引擎 ✨✨✨ ---
+// ==========================================================
+(function() {
+    /**
+     * 核心函数：更新桌面日历组件上的生理期提示文字
+     */
+    window.updateDesktopWidgetPeriodDisplay = async function() {
+        const indicatorEl = document.getElementById('calendar-period-indicator');
+        if (!indicatorEl) return;
 
+        // 1. 初始化状态
+        indicatorEl.textContent = '';
+        indicatorEl.className = ''; // 清除之前的样式类 (如 period-active-indicator)
+
+        // 2. 获取数据
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const allCycles = await db.period_cycles.toArray();
+
+        if (allCycles.length === 0) return;
+
+        // 3. 判断：是否处于经期中？
+        const activeCycle = allCycles.find(c => {
+            const start = new Date(c.startDate); 
+            start.setHours(0, 0, 0, 0);
+            
+            // 如果没有结束日期，说明还在进行中
+            if (!c.endDate) {
+                // 简单的防错：如果开始日期是未来，不算
+                if (start > today) return false;
+                // 如果开始日期距离现在超过30天没结束，可能忘记点了，暂不显示或视为结束
+                // 这里我们假设还在进行
+                return true; 
+            }
+            
+            const end = new Date(c.endDate); 
+            end.setHours(23, 59, 59, 999);
+            return today >= start && today <= end;
+        });
+
+        if (activeCycle) {
+            const start = new Date(activeCycle.startDate); 
+            start.setHours(0, 0, 0, 0);
+            const dayCount = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
+            
+            // ✨ 显示内容：经期第 X 天
+            indicatorEl.textContent = `经期第 ${dayCount} 天`;
+            indicatorEl.className = 'period-active-indicator'; // 应用粉色胶囊样式
+            return;
+        }
+
+        // 4. 判断：预测下次经期 (仅当至少有一次完整历史记录时)
+        const completedCycles = allCycles.filter(c => c.startDate && c.endDate).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        
+        if (completedCycles.length >= 1) {
+            // 计算平均周期长度 (如果有多次记录取平均，只有一次取默认28)
+            let avgCycleLen = 28 * 24 * 60 * 60 * 1000; // 默认28天
+            
+            if (completedCycles.length >= 2) {
+                let totalTime = 0;
+                for (let i = 1; i < completedCycles.length; i++) {
+                    const prevStart = new Date(completedCycles[i-1].startDate);
+                    const currStart = new Date(completedCycles[i].startDate);
+                    totalTime += (currStart - prevStart);
+                }
+                avgCycleLen = totalTime / (completedCycles.length - 1);
+            }
+
+            // 预测下次开始时间
+            const lastStart = new Date(completedCycles[completedCycles.length - 1].startDate);
+            const nextStart = new Date(lastStart.getTime() + avgCycleLen);
+            
+            // 计算剩余天数
+            const diffDays = Math.ceil((nextStart - today) / (1000 * 60 * 60 * 24));
+
+            // ✨ 显示内容：只有在临近7天内才显示预测，避免平时看着心烦
+            if (diffDays > 0 && diffDays <= 7) {
+                indicatorEl.textContent = `${diffDays}天后开始生理期`;
+                indicatorEl.className = 'prediction-text'; // 应用灰色文字样式
+            } else if (diffDays === 0) {
+                indicatorEl.textContent = `预计今天来`;
+                indicatorEl.className = 'prediction-text';
+            } else if (diffDays < 0 && diffDays > -10) {
+                 // 简单的推迟提示
+                indicatorEl.textContent = `推迟 ${Math.abs(diffDays)} 天`;
+                indicatorEl.className = 'prediction-text';
+            }
+        }
+    };
+
+    // 立即运行一次，确保页面加载时就有显示
+    window.updateDesktopWidgetPeriodDisplay();
+})();
+// ==========================================================
+// --- ✨✨✨【全新】云同步核心引擎 (阶段一：连接) ✨✨✨ ---
+// ==========================================================
+(function() {
+    // 1. 全局变量
+    window.supabaseClient = null;
+    
+    // DOM 元素
+    const urlInput = document.getElementById('supabase-url-input');
+    const keyInput = document.getElementById('supabase-key-input');
+    const saveBtn = document.getElementById('btn-save-cloud-config');
+    const syncBtn = document.getElementById('btn-manual-sync');
+    const statusBadge = document.getElementById('cloud-status-badge');
+
+    if (!urlInput || !saveBtn) return;
+
+    /**
+     * 初始化 Supabase 客户端
+     */
+    function initSupabase() {
+        const savedUrl = localStorage.getItem('supabaseUrl');
+        const savedKey = localStorage.getItem('supabaseKey');
+
+        if (savedUrl && savedKey) {
+            // 回填输入框
+            urlInput.value = savedUrl;
+            keyInput.value = savedKey;
+
+            try {
+                // 创建客户端
+                window.supabaseClient = supabase.createClient(savedUrl, savedKey);
+                testConnection(); // 测试连接
+            } catch (error) {
+                console.error("Supabase 初始化失败:", error);
+                updateStatus("配置错误", "error");
+            }
+        }
+    }
+
+    /**
+     * 测试连接状态
+     */
+    async function testConnection() {
+        if (!window.supabaseClient) return;
+
+        updateStatus("连接中...", "loading");
+        try {
+            // 尝试读取一个不存在的表来测试连通性
+            // 如果返回 code 404 或其他数据库错误，说明连接通了（只是表不存在）
+            // 如果网络不通，会报 fetch failed
+            const { data, error } = await window.supabaseClient.from('users').select('count').limit(1);
+            
+            // 只要不是网络错误或鉴权错误，就认为连接成功
+            if (error && (error.code === 'PGRST301' || error.message.includes('fetch'))) { 
+                // 鉴权失败或网络不通
+                throw error;
+            }
+
+            updateStatus("已连接", "success");
+            syncBtn.disabled = false; // 启用同步按钮
+            
+            // TODO: 这里未来会启动自动同步监听
+            
+        } catch (error) {
+            console.error("连接测试失败:", error);
+            if (error.code === 'PGRST301' || error.message.includes('JWT')) {
+                updateStatus("Key 无效", "error");
+            } else if (error.message.includes('relation "public.users" does not exist')) {
+                 // 这是好消息！说明连上了，只是没建表
+                 updateStatus("已连接 (未建表)", "warning");
+                 syncBtn.disabled = false;
+            } else {
+                updateStatus("连接失败", "error");
+            }
+        }
+    }
+
+    function updateStatus(text, type) {
+        statusBadge.textContent = text;
+        if (type === 'success') {
+            statusBadge.style.background = '#d1fae5'; statusBadge.style.color = '#059669';
+        } else if (type === 'error') {
+            statusBadge.style.background = '#fee2e2'; statusBadge.style.color = '#dc2626';
+        } else if (type === 'warning') {
+            statusBadge.style.background = '#fef3c7'; statusBadge.style.color = '#d97706';
+        } else {
+            statusBadge.style.background = '#e5e7eb'; statusBadge.style.color = '#666';
+        }
+    }
+
+    // --- 事件绑定 ---
+    
+    // 保存配置
+    saveBtn.addEventListener('click', () => {
+        const url = urlInput.value.trim();
+        const key = keyInput.value.trim();
+
+        if (!url || !key) {
+            alert("请输入完整的 URL 和 Key");
+            return;
+        }
+
+        localStorage.setItem('supabaseUrl', url);
+        localStorage.setItem('supabaseKey', key);
+        
+        // 重新初始化
+        window.supabaseClient = supabase.createClient(url, key);
+        testConnection();
+        showNotification("配置已保存，正在尝试连接...");
+    });
+
+    // 启动时初始化
+    initSupabase();
+
+})();
+// ==========================================================
+// --- ✨✨✨【全新 V2】云同步核心引擎 (分离上传/下载版) ✨✨✨ ---
+// ==========================================================
+(function() {
+    const saveBtn = document.getElementById('btn-save-cloud-config');
+    const uploadBtn = document.getElementById('btn-cloud-upload');     // ✨ 新按钮
+    const downloadBtn = document.getElementById('btn-cloud-download'); // ✨ 新按钮
+    const statusBadge = document.getElementById('cloud-status-badge');
+    const urlInput = document.getElementById('supabase-url-input');
+    const keyInput = document.getElementById('supabase-key-input');
+
+    // 定义表名和 Blob 处理列表 (保持不变)
+    const TABLES_TO_SYNC = [
+        'users', 'characters', 'messages', 'moments', 'comments', 
+        'schedules', 'memories', 'bonds', 'diaries', 'novels', 
+        'novel_inspirations', 'world_books', 'world_entries', 
+        'period_cycles', 'period_logs', 'global_settings', 
+        'api_presets', 'prompt_presets', 'persona_presets', 
+        'global_stickers', 'character_favorites', 'beautify_presets',
+        'bubble_css_presets', 'world_book_settings', 'songs', 'favorites'
+    ];
+    const TABLES_WITH_BLOBS = ['users', 'characters', 'moments', 'messages', 'app_icons', 'global_stickers', 'character_favorites', 'global_settings'];
+
+    // --- 辅助工具函数 (保持不变) ---
+    function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    function base64ToBlob(dataURL) {
+        if (typeof dataURL !== 'string' || !dataURL.startsWith('data:image')) return null;
+        const arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]);
+        let n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--) u8arr[n] = bstr.charCodeAt(n);
+        return new Blob([u8arr], {type:mime});
+    }
+
+    // --- 初始化与连接测试 ---
+    function initSupabase() {
+        window.supabaseClient = null;
+        const savedUrl = localStorage.getItem('supabaseUrl');
+        const savedKey = localStorage.getItem('supabaseKey');
+
+        if (savedUrl && savedKey) {
+            if (urlInput) urlInput.value = savedUrl;
+            if (keyInput) keyInput.value = savedKey;
+            try {
+                window.supabaseClient = supabase.createClient(savedUrl, savedKey);
+                testConnection();
+            } catch (error) {
+                console.error("Supabase 初始化失败:", error);
+                updateStatus("配置错误", "error");
+            }
+        }
+    }
+
+    async function testConnection() {
+        if (!window.supabaseClient) return;
+        updateStatus("连接中...", "loading");
+        try {
+            const { data, error } = await window.supabaseClient.from('users').select('count').limit(1);
+            if (error && (error.code === 'PGRST301' || error.message.includes('fetch'))) throw error;
+            
+            updateStatus("已连接", "success");
+            // ✨ 连接成功后，启用两个按钮
+            if(uploadBtn) uploadBtn.disabled = false;
+            if(downloadBtn) downloadBtn.disabled = false;
+            
+        } catch (error) {
+            console.error("连接测试失败:", error);
+            if (error.message && error.message.includes('relation "public.users" does not exist')) {
+                 updateStatus("已连接 (未建表)", "warning");
+                 if(uploadBtn) uploadBtn.disabled = false; // 未建表也可以尝试点上传（虽然会报错提示建表）
+                 if(downloadBtn) downloadBtn.disabled = false;
+            } else {
+                updateStatus("连接失败", "error");
+            }
+        }
+    }
+
+    function updateStatus(text, type) {
+        if(!statusBadge) return;
+        statusBadge.textContent = text;
+        if (type === 'success') { statusBadge.style.background = '#d1fae5'; statusBadge.style.color = '#059669'; } 
+        else if (type === 'error') { statusBadge.style.background = '#fee2e2'; statusBadge.style.color = '#dc2626'; }
+        else if (type === 'warning') { statusBadge.style.background = '#fef3c7'; statusBadge.style.color = '#d97706'; }
+        else { statusBadge.style.background = '#e5e7eb'; statusBadge.style.color = '#666'; }
+    }
+
+    // ======================================================
+    // --- 核心功能 1: 上传 (Push) ---
+    // ======================================================
+    async function performUpload() {
+        if (!window.supabaseClient) return alert("请先连接 Supabase！");
+
+        const confirmUpload = confirm("⬆️ 准备上传到云端\n\n这会将当前的【本地数据】推送到云端数据库。\n如果有相同 ID 的数据，云端的内容将被【覆盖】。\n\n确定要上传吗？");
+        if (!confirmUpload) return;
+
+        showLoadingModal("正在上传数据...");
+        try {
+            let totalUpload = 0;
+            for (const tableName of TABLES_TO_SYNC) {
+                // showLoadingModal(`正在上传: ${tableName}...`); // 频繁闪烁不好看，可以去掉或保留
+                
+                const localData = await db[tableName].toArray();
+                if (localData.length > 0) {
+                    const dataToUpload = await Promise.all(localData.map(async (item) => {
+                        const processedItem = { ...item };
+                        // 图片转 Base64
+                        if (TABLES_WITH_BLOBS.includes(tableName)) {
+                            for (let key in processedItem) {
+                                if (processedItem[key] instanceof Blob) processedItem[key] = await blobToBase64(processedItem[key]);
+                                if (key === 'activeUserPersona' && processedItem[key]?.avatar instanceof Blob) {
+                                    processedItem[key].avatar = await blobToBase64(processedItem[key].avatar);
+                                }
+                            }
+                        }
+                        // 适配主键
+                        let primaryKey = processedItem.id;
+                        if (tableName === 'period_logs') primaryKey = processedItem.date;
+                        if (tableName.includes('settings')) primaryKey = processedItem.key;
+                        
+                        return {
+                            [tableName === 'period_logs' ? 'date' : (tableName.includes('settings') ? 'key' : 'id')]: primaryKey,
+                            data: processedItem
+                        };
+                    }));
+
+                    // 分批上传
+                    const BATCH_SIZE = 100;
+                    for (let i = 0; i < dataToUpload.length; i += BATCH_SIZE) {
+                        const batch = dataToUpload.slice(i, i + BATCH_SIZE);
+                        const { error } = await window.supabaseClient.from(tableName).upsert(batch);
+                        if (error) throw error;
+                    }
+                    totalUpload += localData.length;
+                }
+            }
+            hideLoadingModal();
+            showNotification("⬆️ 上传成功！", `已将 ${totalUpload} 条本地数据同步至云端。`);
+        } catch (error) {
+            hideLoadingModal();
+            console.error("上传出错:", error);
+            alert(`上传失败: ${error.message}\n请检查是否已在 Supabase 运行建表 SQL。`);
+        }
+    }
+
+    // ======================================================
+    // --- 核心功能 2: 下载 (Pull) ---
+    // ======================================================
+    async function performDownload() {
+        if (!window.supabaseClient) return alert("请先连接 Supabase！");
+
+        const confirmDownload = confirm("⬇️ 准备从云端下载\n\n这会拉取云端数据并【合并】到本地。\n如果有相同 ID 的数据，本地内容将被【云端版本覆盖】。\n\n建议先点左边的「导出 JSON」备份一下。\n确定要下载吗？");
+        if (!confirmDownload) return;
+
+        showLoadingModal("正在下载数据...");
+        try {
+            let totalDownload = 0;
+            for (const tableName of TABLES_TO_SYNC) {
+                // showLoadingModal(`正在下载: ${tableName}...`);
+
+                const { data: cloudRows, error } = await window.supabaseClient.from(tableName).select('*');
+                if (error) throw error;
+
+                if (cloudRows && cloudRows.length > 0) {
+                    const dataToSave = cloudRows.map(row => {
+                        const item = row.data;
+                        // 图片还原
+                        if (TABLES_WITH_BLOBS.includes(tableName)) {
+                            for (let key in item) {
+                                if (typeof item[key] === 'string' && item[key].startsWith('data:image')) {
+                                    item[key] = base64ToBlob(item[key]);
+                                }
+                                if (key === 'activeUserPersona' && typeof item[key]?.avatar === 'string') {
+                                    item[key].avatar = base64ToBlob(item[key].avatar);
+                                }
+                            }
+                        }
+                        return item;
+                    });
+
+                    // 写入本地 (覆盖模式)
+                    await db[tableName].bulkPut(dataToSave);
+                    totalDownload += cloudRows.length;
+                }
+            }
+            hideLoadingModal();
+            showNotification("⬇️ 下载成功！", `已从云端拉取 ${totalDownload} 条数据。正在刷新...`);
+            setTimeout(() => window.location.reload(), 1500);
+
+        } catch (error) {
+            hideLoadingModal();
+            console.error("下载出错:", error);
+            alert(`下载失败: ${error.message}`);
+        }
+    }
+
+    // --- 事件绑定 ---
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            const key = keyInput.value.trim();
+            if (!url || !key) return alert("请输入 URL 和 Key");
+            localStorage.setItem('supabaseUrl', url);
+            localStorage.setItem('supabaseKey', key);
+            window.supabaseClient = supabase.createClient(url, key);
+            testConnection();
+        });
+    }
+
+    if (uploadBtn) uploadBtn.addEventListener('click', performUpload);
+    if (downloadBtn) downloadBtn.addEventListener('click', performDownload);
+
+    // 启动时初始化
+    initSupabase();
+})();
 
     </script>
 
