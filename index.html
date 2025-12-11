@@ -1087,18 +1087,34 @@
             width: 100px;
         }
 
-        .moment-menu-popup button {
-            display: block;
-            width: 100%;
-            padding: 8px 16px;
-            text-align: left;
-            font-size: 14px;
+/* --- 动态菜单按钮样式优化 --- */
+.moment-menu-popup button {
+    display: flex;             /* ✨ 改为 Flex 布局 */
+    align-items: center;       /* 垂直居中 */
+    gap: 10px;                 /* 图标和文字的间距 */
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 14px;
+    color: var(--color-secondary-accent);
+    transition: background-color 0.1s;
+}
 
-        }
+.moment-menu-popup button i {
+    width: 16px;              /* 固定图标宽度，保证文字对齐 */
+    text-align: center;
+    color: #9ca3af;           /* 图标颜色稍浅 */
+}
 
-        .moment-menu-popup button:hover {
-            background: var(--color-ui-border);
-        }
+.moment-menu-popup button:hover {
+    background: var(--color-ui-border);
+    color: var(--color-primary-accent);
+}
+
+/* 悬浮时图标也变色 */
+.moment-menu-popup button:hover i {
+    color: var(--color-primary-accent);
+}
 
         .moment-actions {
             display: flex;
@@ -1255,8 +1271,20 @@
             border-radius: 16px;
         }
 
-        /* --- 动态发布页 --- */
-
+   /* --- 评论发送按钮 (圆形图标版) --- */
+.comment-send-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50% !important; /* 强制圆形 */
+    padding: 0 !important;          /* 移除文字按钮的内边距 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;                 /* 防止被输入框挤扁 */
+    font-size: 14px;                /* 图标大小 */
+    line-height: 1;
+    margin-left: 4px;               /* 与输入框拉开一点距离 */
+}
 
         #moment-editor-close {
             font-size: 16px;
@@ -7150,7 +7178,7 @@
         /* 1. 定义卡片的“骨架”：固定的白色背景、尺寸和边框 */
         .special-card-container {
             width: 250px;
-            max-width: 80%;
+            max-width: 100%;
             background-color: #FFFFFF;
             color: #111827;
             /* 深黑色文字 */
@@ -8982,8 +9010,96 @@ font-size: 17px;
     font-weight: 600;
 }
 
+/* --- ✨ 通用弹窗质感包 (建议使用这个替换上面的) ✨ --- */
+#delete-dialog > div, 
+#input-dialog > div,
+#notification-dialog > div,
+#recall-options-dialog > div,
+#export-options-dialog > div,
+#fast-forward-dialog > div,
+#download-link-modal > div,
+body.fullscreen-mode #phone {
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
 
+/* --- 评论区输入框容器 --- */
+.comment-input-area {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    /* ✨ 新增：垂直居中对齐，让头像和输入框对齐 */
+    align-items: center; 
+}
 
+/* ✨ 新增：评论区左侧的小头像 */
+.comment-user-avatar {
+    width: 32px;     /* 小一点的尺寸 */
+    height: 32px;
+    flex-shrink: 0;  /* 防止被压缩 */
+    /* 继承全局 avatar-display 的圆角和溢出隐藏 */
+}
+/* ========================================================== */
+/* --- ✨✨✨【位置修正】动态页面 - 正在输入提示条 ✨✨✨ --- */
+/* ========================================================== */
+#moments-typing-bar {
+    position: absolute;
+    /* ✨ 核心修改：下移到 ID 下方 (原为 60px) */
+    top: 310px; 
+    left: 50%;
+    
+    /* 初始状态：向上隐身 (保持不变) */
+    transform: translateX(-50%) translateY(-10px); 
+    
+    /* 外观：保持精致的磨砂质感 */
+    background-color: rgba(255, 255, 255, 0.9); /*稍微不透明一点，防止背景太花看不清*/
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    padding: 6px 14px;
+    border-radius: 20px;
+    
+    /* 阴影加深一点，因为现在是在白底上 */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); 
+    border: 1px solid rgba(0, 0, 0, 0.05); /* 边框变淡 */
+    
+    /* 布局 */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    /* ✨ 层级提高，防止被动态内容遮挡 */
+    z-index: 999; 
+    
+    /* 动画 */
+    opacity: 0;
+    pointer-events: none; 
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 显示状态 */
+#moments-typing-bar.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* 滑入到位 */
+}
+
+/* 里面的文字 */
+#moments-typing-text {
+    font-size: 12px;
+    color: var(--color-primary-accent);
+    font-weight: 600; /*稍微加粗*/
+}
+
+/* 图标动画 */
+.typing-icon-bounce {
+    animation: bounce 1s infinite;
+    color: var(--color-primary-accent); /* 图标颜色跟随主题 */
+    font-size: 12px;
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
 
     </style>
 
@@ -9719,17 +9835,34 @@ font-size: 17px;
             </div>
         </header>
 
-        <main class="page-content" style="padding: 0;">
+<main class="page-content" style="padding: 0; display: flex; flex-direction: column;">
+            <!-- 收件人 -->
             <div style="padding: 10px 15px; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center;">
                 <span style="color: #9ca3af; width: 50px;">收件人:</span>
                 <select id="mail-compose-recipient" class="form-input" style="border: none; background: transparent; flex: 1; outline: none;"></select>
             </div>
+            <!-- 主题 -->
             <div style="padding: 10px 15px; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center;">
                 <span style="color: #9ca3af; width: 50px;">主题:</span>
                 <input type="text" id="mail-compose-subject" class="form-input" style="border: none; background: transparent; flex: 1; outline: none;">
             </div>
+            
+            <!-- 正文 (让它占据剩余空间，但留出底部给附件区) -->
             <textarea id="mail-compose-body" class="form-input" placeholder="撰写邮件内容..." 
-                      style="width: 100%; height: 100%; border: none; background: transparent; padding: 15px; resize: none; outline: none; font-size: 16px; line-height: 1.6;"></textarea>
+                      style="flex: 1; border: none; background: transparent; padding: 15px; resize: none; outline: none; font-size: 16px; line-height: 1.6;"></textarea>
+
+            <!-- ✨✨✨ 新增：附件预览区域 ✨✨✨ -->
+            <div id="mail-compose-attachments-preview" style="padding: 0 15px; display: flex; flex-wrap: wrap; gap: 8px;">
+                <!-- 动态生成的附件标签将放在这里 -->
+            </div>
+
+            <!-- ✨✨✨ 新增：附件工具栏 ✨✨✨ -->
+            <div id="mail-compose-toolbar" style="padding: 10px 15px; border-top: 1px solid #f3f4f6; display: flex; gap: 20px; align-items: center; background-color: #fff;">
+                <button class="btn-icon buttonlike" id="mail-add-image" title="添加图片" style="color: #6b7280;"><i class="fa-regular fa-image fa-lg"></i></button>
+                <button class="btn-icon buttonlike" id="mail-add-file" title="添加文件" style="color: #6b7280;"><i class="fa-solid fa-paperclip fa-lg"></i></button>
+                <button class="btn-icon buttonlike" id="mail-add-voice" title="添加语音" style="color: #6b7280;"><i class="fa-solid fa-microphone fa-lg"></i></button>
+                <button class="btn-icon buttonlike" id="mail-add-video" title="添加视频" style="color: #6b7280;"><i class="fa-solid fa-video fa-lg"></i></button>
+            </div>
         </main>
     </div>
 </div>
@@ -9951,6 +10084,16 @@ font-size: 17px;
                                         向角色发送信号，让TA主动给你写一封邮件。
                                     </p>
                                 
+    <!-- 2. ✨ 新增：发布动态 ✨ -->
+                                    <button id="profilesetting-trigger-moment-btn" class="settings-item buttonlike">
+                                        <span class="icon" style="color: #f59e0b;"><i class="fa-regular fa-images"></i></span>
+                                        <span class="label">发布动态</span>
+                                        <span class="arrow"><i class="fa-solid fa-caret-right"></i></span>
+                                    </button>
+                                    <p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
+                                        请求角色立刻更新一条朋友圈动态。
+                                    </p>
+
                                 <!-- ========================================================== -->
                                 <!-- 组 5: 危险操作 (保持不变) -->
                                 <!-- ========================================================== -->
@@ -13422,9 +13565,11 @@ font-size: 17px;
     </div>
 
 
-    <script>
 
-    
+<!-- 指挥浏览器：先读第一本笔记 -->
+<script>
+
+
 
 const db = new Dexie("QQAppDB");
 
@@ -13941,21 +14086,19 @@ async function retrieveRelevantMemories(chatHistory, characterId, userId) {
         }
 
 
-        /**
-         * 辅助函数: 根据ID获取行动者（用户或角色）的信息 (V2 - 健壮版)
+/**
+         * 辅助函数: 根据ID获取行动者（用户或角色）的信息 (V3 - 修复默认用户识别 bug)
          * @param {string | number} actorId - 行动者的ID
          */
         async function getActorById(actorId) {
-            // ✨✨✨ 核心修正：在这里增加一个“安全门卫” ✨✨✨
-            // 在执行任何操作前，先检查传入的 actorId 是否是一个字符串。
-            // 如果不是 (例如，它是一个数字类型的 groupId)，就直接返回 null，
-            // 因为我们知道它不可能是用户或角色。
+            // 安全门卫
             if (typeof actorId !== 'string') {
                 return null;
             }
 
-            // 只有通过了上面的检查，我们才能安全地调用 startsWith 方法
-            if (actorId.startsWith('user-')) {
+            // ✨✨✨ 核心修复：显式支持 'default-user' ✨✨✨
+            // 之前的代码漏掉了 default-user，导致无法获取当前用户的信息
+            if (actorId === 'default-user' || actorId.startsWith('user-')) {
                 return await db.users.get(actorId);
             } else if (actorId.startsWith('character-')) {
                 return await db.characters.get(actorId);
@@ -14017,37 +14160,56 @@ async function retrieveRelevantMemories(chatHistory, characterId, userId) {
             };
         }
 
-        // 自定义删除确认（升级版）
-        // 自定义删除确认（升级版）
-        function showDeleteDialog(message, onConfirm) {
-            const dialog = document.getElementById("delete-dialog");
-            const text = document.getElementById("delete-dialog-text");
-            const btnCancel = document.getElementById("delete-cancel");
-            const btnConfirm = document.getElementById("delete-confirm");
+/**
+ * 核心函数: 显示通用确认弹窗 (升级版 V2 - 防止状态污染)
+ * @param {string} message - 弹窗主体内容
+ * @param {Function} onConfirm - 点击确定后的回调
+ * @param {object} options - 可选配置 { confirmText: "确定", cancelText: "取消", confirmColor: "#1f2937" }
+ */
+function showDeleteDialog(message, onConfirm, options = {}) {
+    const dialog = document.getElementById("delete-dialog");
+    const text = document.getElementById("delete-dialog-text");
+    const btnCancel = document.getElementById("delete-cancel");
+    const btnConfirm = document.getElementById("delete-confirm");
 
-            text.textContent = message;
-            dialog.style.display = "flex";
+    if (!dialog || !text || !btnCancel || !btnConfirm) return;
 
-            // 为了防止事件穿透，我们需要克隆并替换按钮来移除旧的监听器
-            const newCancelBtn = btnCancel.cloneNode(true);
-            const newConfirmBtn = btnConfirm.cloneNode(true);
-            btnCancel.parentNode.replaceChild(newCancelBtn, btnCancel);
-            btnConfirm.parentNode.replaceChild(newConfirmBtn, btnConfirm);
+    // 1. 设置内容
+    // 使用 innerHTML 支持换行，但要小心 XSS，这里 message 通常是可控的文本
+    text.innerHTML = message.replace(/\n/g, '<br>');
 
-            // 为新按钮绑定带事件处理的监听
-            newCancelBtn.onclick = (e) => {
-                e.stopPropagation(); // ✨ 核心修复：阻止事件继续传播
-                dialog.style.display = "none";
-            };
+    // 2. ✨✨✨ 核心修复：每次打开都强制重置按钮文字 ✨✨✨
+    // 如果 options 里传了文字就用传的，否则恢复默认的 "取消" 和 "确定"
+    btnCancel.textContent = options.cancelText || "取消";
+    btnConfirm.textContent = options.confirmText || "确定";
+    
+    // 3. (可选) 支持自定义按钮颜色 (例如删除用红色，发送用黑色)
+    if (options.confirmColor) {
+        btnConfirm.style.backgroundColor = options.confirmColor;
+    } else {
+        // 恢复默认颜色 (通常是黑色或主题色，这里假设默认是 #1f2937)
+        btnConfirm.style.backgroundColor = "#1f2937"; 
+    }
 
-            newConfirmBtn.onclick = async (e) => {
-                e.stopPropagation(); // ✨ 核心修复：阻止事件继续传播
-                dialog.style.display = "none";
-                await onConfirm();
-            };
-        }
+    dialog.style.display = "flex";
 
+    // 4. 清理旧事件并绑定新事件 (保持不变)
+    const newCancelBtn = btnCancel.cloneNode(true);
+    const newConfirmBtn = btnConfirm.cloneNode(true);
+    btnCancel.parentNode.replaceChild(newCancelBtn, btnCancel);
+    btnConfirm.parentNode.replaceChild(newConfirmBtn, btnConfirm);
 
+    newCancelBtn.onclick = (e) => {
+        e.stopPropagation();
+        dialog.style.display = "none";
+    };
+
+    newConfirmBtn.onclick = async (e) => {
+        e.stopPropagation();
+        dialog.style.display = "none";
+        await onConfirm();
+    };
+}
 
 
 
@@ -16492,6 +16654,7 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
 【聊天扩展功能】
 - 当对话情节合理时，你可以主动使用以下【功能指令】（必须严格使用尖括号包裹）：
   - 使用 <mem>你认为需要记下的核心事件或信息</mem> 来【记录一条记忆】。这条记忆必须是你认为对未来剧情走向至关重要的、客观的第三人称陈述。
+  - 使用 <send_email subject="邮件标题" content="邮件正文"/> 给用户发送一封邮件。
   - 使用 <vc/> 来【发起视频通话】。
   - 在新回复的【最开头】使用 <r/> 【撤回】上一句话
   - 使用 <img>你想展示的画面</img> 来【发送一张描述性的图片】。
@@ -17171,12 +17334,15 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
             cancelBtn.onclick = closeAndCleanup;
         });
 
-        // ✨ 用这个新版本替换旧的 delete-message-btn 点击事件
-        document.getElementById('delete-message-btn').addEventListener('click', async () => {
-            messageMenu.classList.add('hidden');
-            if (selectedMsgForMenu.id && selectedMsgForMenu.element) {
-                showDeleteDialog('确定要删除这条消息吗？', async () => {
-                    try {
+// (script_part1.js 中的删除消息逻辑)
+document.getElementById('delete-message-btn').addEventListener('click', async () => {
+    messageMenu.classList.add('hidden');
+    if (selectedMsgForMenu.id && selectedMsgForMenu.element) {
+        // 调用时，可以显式传入 { confirmColor: '#ef4444' } 让删除按钮变红，提示危险操作
+        showDeleteDialog(
+            '确定要删除这条消息吗？', 
+            async () => {
+                                   try {
                         await db.messages.delete(selectedMsgForMenu.id);
 
                         // ✨ 核心修改：智能判断被删除的是什么
@@ -17197,10 +17363,14 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
                         console.error('删除消息失败:', error);
                         alert('删除失败！');
                     }
-                });
+            },
+            { 
+                confirmText: "删除",
+                confirmColor: "#ef4444" // 红色警告色
             }
-        });
-
+        );
+    }
+});
 
 
 
@@ -18051,20 +18221,6 @@ if (blockBtnLabel) {
             }
             // ▲▲▲ 粘贴结束 ▲▲▲
             // 小剧场
-            if (e.target.closest('#profile-theater-btn')) {
-                showNotification("功能规划中", "这里未来将支持开启/关闭该角色的小剧场模式。");
-                return;
-            }
-            // 时间感知
-            if (e.target.closest('#profile-time-aware-btn')) {
-                showNotification("功能规划中", "这里未来将支持设置该角色是否感知现实时间。");
-                return;
-            }
-            // 生理期 (虽然我们已经做了App，但按照您的要求，这里先做占位)
-            if (e.target.closest('#profile-period-btn')) {
-                showNotification("功能规划中", "这里未来将快速跳转到该角色的生理期记录。");
-                return;
-            }
         });
 
         // ▼▼▼ 请用这个【V1.2 - NSFW等级感知版】的全新版本，完整替换旧的 executeAiWriteDiary 函数 ▼▼▼
@@ -18384,7 +18540,7 @@ ${JAILBREAK_PROMPT}
             if (typeof checkAndPostRandomMoment === 'function') {
                 checkAndPostRandomMoment(currentUser);
             }
-            clearPendingMomentInteractions();
+         
 
             const content = document.getElementById('qq-content');
             if (!currentUser || !content) return;
@@ -18398,8 +18554,7 @@ ${JAILBREAK_PROMPT}
             const momentsPage = document.createElement('div');
             momentsPage.className = 'moments-page-container';
 
-            // ▼▼▼ 请用这一整块全新的代码，替换旧的 momentsPage.innerHTML 模板 ▼▼▼
-            // ▼▼▼ 请用这一整块【已拆除页眉】的代码，替换旧的 momentsPage.innerHTML 模板 ▼▼▼
+// ▼▼▼ 请用这一整块代码替换旧的 momentsPage.innerHTML ▼▼▼
             momentsPage.innerHTML = `
     <header class="moments-header-bg">
         <label for="moments-bg-input" class="bg-image-wrapper">
@@ -18407,6 +18562,12 @@ ${JAILBREAK_PROMPT}
         </label>
         <input type="file" id="moments-bg-input" accept="image/*" class="hidden" />
     </header>
+
+    <!-- ✨✨✨ 新增：正在输入提示条 ✨✨✨ -->
+    <div id="moments-typing-bar">
+        <i class="fa-solid fa-pen-nib typing-icon-bounce"></i>
+        <span id="moments-typing-text">正在连接...</span>
+    </div>
 
     <div class="moments-user-info">
         <div class="inner">
@@ -18418,6 +18579,7 @@ ${JAILBREAK_PROMPT}
     
     <main class="moments-feed"></main>
 `;
+            // ▲▲▲ 替换结束 ▲▲▲
             // ▲▲▲ 替换到这里结束 ▲▲▲
             // ▲▲▲ 替换到这里结束 ▲▲▲
 
@@ -18702,7 +18864,8 @@ ${JAILBREAK_PROMPT}
                             </div>
                         `;
                     }
-                    // ▼▼▼ 请用这一整块全新的代码，替换旧的 momentCard.innerHTML 模板字符串 ▼▼▼
+                    // ▼▼▼ 请用这一整块全新的 HTML 模板替换 ▼▼▼
+                    // ▼▼▼ 请用这一整块 HTML 模板替换 (添加了图标和互动按钮) ▼▼▼
                     momentCard.innerHTML = `
     <div class="moment-header">
       <div class="moment-publisher-avatar avatar-display"></div>
@@ -18711,44 +18874,52 @@ ${JAILBREAK_PROMPT}
         <div class="time">${formatTimestamp(moment.createdAt)}</div>
       </div>
       <button class="moment-menu-btn buttonlike" title="更多选项">···</button>
+      
+      <!-- ✨ 菜单区域 -->
       <div class="moment-menu-popup">
-        <button class="moment-favorite-btn buttonlike" data-id="${moment.id}">收藏</button>
-        <button class="moment-delete-btn buttonlike" data-id="${moment.id}">删除</button>
+        <!-- 1. 互动按钮 (新增) -->
+        <button class="moment-interact-btn buttonlike" data-id="${moment.id}">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> 互动
+        </button>
+        <!-- 2. 收藏按钮 -->
+        <button class="moment-favorite-btn buttonlike" data-id="${moment.id}">
+            <i class="fa-regular fa-star"></i> 收藏
+        </button>
+        <!-- 3. 删除按钮 -->
+        <button class="moment-delete-btn buttonlike" data-id="${moment.id}">
+            <i class="fa-regular fa-trash-can"></i> 删除
+        </button>
       </div>
     </div>
+
     <p class="moment-text">${moment.content}</p>
     ${imageHTML}
-<!-- ▼▼▼ 修改 "moment-actions" 这部分 ▼▼▼ -->
-<div class="moment-actions">
-  <button class="moment-like-btn buttonlike">
-    <i class="fa-regular fa-heart"></i> 
-    <span class="like-count">${moment.likedBy?.length || 0}</span>
-  </button>
-  <button class="moment-comment-btn buttonlike">
-    <i class="fa-regular fa-comment"></i> 
-    <span class="comment-count">0</span>
-  </button>
 
-  <!-- ✨✨✨ 核心新增：这是我们的“讨论”按钮 ✨✨✨ -->
-  <button class="moment-discuss-btn buttonlike" title="和TA聊聊这条动态">
-    <i class="fa-solid fa-share"></i>
-  </button>
-  <!-- ✨✨✨ 新增结束 ✨✨✨ -->
-  
-</div>
-<!-- ▲▲▲ 修改结束 ▲▲▲ -->
-    <div class="moment-comments-section" style="display:none;">
+    <div class="moment-actions">
+      <button class="moment-like-btn buttonlike"><i class="fa-regular fa-heart"></i> <span class="like-count">${moment.likedBy?.length || 0}</span></button>
+      <button class="moment-comment-btn buttonlike"><i class="fa-regular fa-comment"></i> <span class="comment-count">0</span></button>
+      <button class="moment-discuss-btn buttonlike" title="和TA聊聊这条动态"><i class="fa-solid fa-share"></i></button>
+    </div>
+
+    <div class="moment-comments-section">
       <div class="moment-comments-list"></div>
-      <div class="comment-input-area" >
+      <div class="comment-input-area">
+        <div class="comment-user-avatar avatar-display"></div>
         <input type="text" class="comment-input form-input" placeholder="留下你的评论...">
-        <button class="comment-send-btn btn btn-primary buttonlike">发送</button>
+        <button class="comment-send-btn btn btn-primary buttonlike"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     </div>
 `;
-                    // ▲▲▲ 替换到这里结束 ▲▲▲
+                    // ▲▲▲ 替换结束 ▲▲▲                 // ▲▲▲ 替换结束 ▲▲▲
 
                     feedEl.appendChild(momentCard);
+
+                    // 1. 渲染发布者头像 (保持不变)
                     renderAvatar(momentCard.querySelector('.moment-publisher-avatar'), publisher.avatar, publisher.name.charAt(0));
+
+                    // 2. ✨✨✨ 核心新增：渲染评论区左侧的“当前用户”头像 ✨✨✨
+                    // freshUser 是我们在 renderMoments 开头获取的当前最新用户数据
+                    renderAvatar(momentCard.querySelector('.comment-user-avatar'), freshUser.avatar, USER_FALLBACK_ICON);
 
                     const menuBtn = momentCard.querySelector('.moment-menu-btn');
                     const menuPopup = momentCard.querySelector('.moment-menu-popup');
@@ -18797,6 +18968,179 @@ ${JAILBREAK_PROMPT}
                         e.stopPropagation();
                         document.querySelectorAll('.moment-menu-popup').forEach(p => { if (p !== menuPopup) p.style.display = 'none'; });
                         menuPopup.style.display = menuPopup.style.display === 'block' ? 'none' : 'block';
+                    });
+
+// ==========================================================
+                    // --- ✨✨✨【V7 - 终极融合版】动画+身份+剧本 互动引擎 ✨✨✨ ---
+                    // ==========================================================
+                    const interactBtn = momentCard.querySelector('.moment-interact-btn');
+                    interactBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        menuPopup.style.display = 'none';
+
+                        // 1. 获取候选人
+                        const allChars = await db.characters.toArray();
+                        let candidates = allChars.filter(c => c.id !== moment.contactId && !c.id.startsWith('npc-'));
+
+                        if (candidates.length === 0) {
+                            showNotification("没有好友", "快去添加一些角色吧！");
+                            return;
+                        }
+                        
+                        candidates = candidates.sort(() => 0.5 - Math.random()).slice(0, 8);
+
+                        // 2. 构建“演员表”
+                        const castListText = candidates.map(c => {
+                            const shortPersona = (c.persona || "").substring(0, 50).replace(/\n/g, " ");
+                            return `- ${c.name}: ${shortPersona}`;
+                        }).join('\n');
+                        
+                        const nameToIdMap = {};
+                        candidates.forEach(c => nameToIdMap[c.name] = c.id);
+
+                        // 3. 获取评论上下文
+                        const existingComments = await db.comments.where({ momentId: moment.id }).sortBy('createdAt');
+                        let commentsContext = "(评论区目前是空的)";
+                        
+                        if (existingComments.length > 0) {
+                            const recentComments = existingComments.slice(-15);
+                            const commentLines = await Promise.all(recentComments.map(async (c) => {
+                                let authorName = '未知用户';
+                                if (c.authorId === window.currentUser.id) {
+                                    authorName = window.currentUser.name;
+                                } else {
+                                    const char = allChars.find(char => char.id === c.authorId);
+                                    if (char) authorName = char.name;
+                                }
+                                return `[${authorName}]: ${c.content}`;
+                            }));
+                            commentsContext = commentLines.join('\n');
+                        }
+
+                        // --- ✨✨✨ 核心回归：启动“正在输入”悬浮条动画 ✨✨✨ ---
+                        const typingBar = document.getElementById('moments-typing-bar');
+                        const typingText = document.getElementById('moments-typing-text');
+                        let typingInterval = null;
+
+                        if (typingBar && typingText) {
+                            // a. 显示悬浮条
+                            typingBar.classList.add('visible');
+                            
+                            // b. 定义轮播逻辑
+                            const updateTypingName = () => {
+                                const char = candidates[Math.floor(Math.random() * candidates.length)];
+                                const actions = ["正在输入...", "正在思考...", "正在组织语言...", "正在吃瓜..."];
+                                const action = actions[Math.floor(Math.random() * actions.length)];
+                                typingText.textContent = `${char.name} ${action}`;
+                            };
+                            
+                            // c. 启动轮播
+                            updateTypingName();
+                            typingInterval = setInterval(updateTypingName, 1200);
+                        }
+                        // -----------------------------------------------------
+
+                        // --- ✨✨✨ 核心保留：身份精准识别 ✨✨✨ ---
+                        let publisherIdentity = "";
+                        let relationshipContext = "";
+
+                        if (publisher.id === window.currentUser.id) {
+                            publisherIdentity = `你的特别关注对象 {{user}} (${publisher.name})`;
+                            relationshipContext = "注意：这是 {{user}} 发的动态。大家通常会表现得比较关注，或者根据对 {{user}} 的好感度来互动。";
+                        } else {
+                            publisherIdentity = `列表里的好友 “${publisher.name}”`;
+                            relationshipContext = `注意：这是角色 “${publisher.name}” 发的动态。请根据其他角色与 TA 的关系（朋友、死对头、陌生人）来决定态度。`;
+                        }
+                        // -----------------------------------------------------
+
+                        try {
+                            const taskDescription = `
+【社交网络评论区模拟器 (连续剧模式)】
+**事件**：朋友圈里，【${publisherIdentity}】 更新了一条动态。
+现在有一群好友看到了这条动态，以及**现有的评论区内容**。
+请你作为“上帝/编剧”，基于他们的人设和当前的讨论氛围，模拟出接下来的反应。
+
+[动态内容]: “${moment.content}”
+[发布者身份]: ${publisherIdentity}
+
+【当前评论区现状 (Context)】:
+${commentsContext}
+
+【当前在线的好友名单 (Cast)】:
+${castListText}
+
+【模拟规则】
+1. **身份识别 (最重要)**：${relationshipContext}
+2. **上下文连贯**：不要重复角色自己说过的废话。
+3. **互动性**：角色之间可以互相回复（盖楼）。
+4. **真实性**：不需要每个人都说话。只输出那些**有话要说**的角色。
+
+【输出格式 (JSON Array)】
+[
+  { "name": "角色名字", "content": "评论内容" },
+  { "name": "角色名字", "content": "回复 @某人: 你的观点..." }
+]
+`;
+                            const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat || candidates[0], window.currentUser, taskDescription);
+                            const responseList = await getAiGeneratedJson(finalPrompt);
+
+                            // --- 停止动画 ---
+                            if (typingInterval) clearInterval(typingInterval);
+                            if (typingBar) typingBar.classList.remove('visible');
+                            // ---------------
+
+                            if (Array.isArray(responseList) && responseList.length > 0) {
+                                let delayIndex = 0;
+                                for (const item of responseList) {
+                                    const charId = nameToIdMap[item.name];
+                                    if (!charId) continue; 
+
+                                    let replyToName = null;
+                                    let finalContent = item.content;
+                                    const replyMatch = item.content.match(/回复\s*@?(.+?)[:：]\s*(.*)/);
+                                    if (replyMatch) {
+                                        replyToName = replyMatch[1];
+                                        finalContent = replyMatch[2];
+                                    }
+
+                                    const delay = (delayIndex++) * 1500 + Math.random() * 1500;
+
+                                    setTimeout(async () => {
+                                        const newComment = {
+                                            momentId: moment.id,
+                                            authorId: charId,
+                                            content: finalContent,
+                                            replyToAuthorName: replyToName,
+                                            createdAt: new Date().toISOString()
+                                        };
+                                        const newId = await db.comments.add(newComment);
+
+                                        if (typeof addCommentToUI === 'function') {
+                                            addCommentToUI({ id: newId, ...newComment });
+                                        }
+
+                                        const countSpan = momentCard.querySelector('.comment-count');
+                                        if (countSpan) {
+                                            const currentCount = parseInt(countSpan.textContent) || 0;
+                                            countSpan.textContent = currentCount + 1;
+                                        }
+                                        await db.characters.update(charId, { lastCommentAt: new Date().toISOString() });
+
+                                    }, delay);
+                                }
+                                // 不再显示弹窗通知，因为评论上屏本身就是最好的反馈
+                            } else {
+                                // showNotification("话题终结", "大家似乎没什么想补充的了...");
+                            }
+
+                        } catch (error) {
+                            // 出错也要停止动画
+                            if (typingInterval) clearInterval(typingInterval);
+                            if (typingBar) typingBar.classList.remove('visible');
+
+                            console.error("剧本模拟失败:", error);
+                            showNotification("互动失败", "AI 导演罢工了...");
+                        }
                     });
 
                     deleteBtn.addEventListener('click', (e) => {
@@ -18939,9 +19283,7 @@ ${JAILBREAK_PROMPT}
                     if (existingComments.length > 0) {
                         existingComments.forEach(addCommentToUI);
 
-                    } else {
-                        commentsSection.style.display = 'none';
-                    }
+                    } 
 
                     commentBtn.addEventListener('click', () => {
                         // 1. 切换整个评论区“大盒子”的显示/隐藏状态
@@ -19021,11 +19363,8 @@ ${JAILBREAK_PROMPT}
                     });
                 }
 
-
-
-                triggerInterCharacterInteractions(moments, authorsMap);
             } catch (error) {
-                console.error("加载好友圈动态失败:", error);
+                console.error("加载朋友圈动态失败:", error);
                 feedEl.innerHTML = '<div style="text-align:center; padding:40px; color:#be185d;">加载动态失败，请稍后再试。</div>';
             }
         }
@@ -20336,9 +20675,6 @@ async function upgradePromptPresets() {
         // 【请将这行代码，粘贴到 <script> 标签内的全局作用域】
         let proactiveCheckInterval = null; // 用于存放我们的“心跳”计时器
         // 在主逻辑的顶层，和其他全局变量放在一起
-
-        // 【请将这行新代码，粘贴到 <script> 的全局作用域】
-        let momentInteractionTimeouts = []; // 用于管理动态页面的AI互动计时器
 
         let currentEditingContactId = null; // null 表示创建模式，有值表示编辑模式
         let tempContactBgBlob = null; // 暂存背景图
@@ -22178,163 +22514,6 @@ ${contents.deepThought}
                 document.querySelectorAll('.bond-card-menu').forEach(m => m.style.display = 'none');
             }
         });
-
-
-        /**
-         * 清除所有待处理的“动态”AI互动计时器，防止重复执行。
-         */
-        function clearPendingMomentInteractions() {
-            if (momentInteractionTimeouts.length > 0) {
-                console.log(`🧹 清理引擎：正在清除 ${momentInteractionTimeouts.length} 个待处理的“动态”AI互动任务...`);
-                momentInteractionTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
-                momentInteractionTimeouts = []; // 清空管理器
-            }
-        }
-        // ==========================================================
-        // 修改后的 triggerInterCharacterInteractions 函数
-        async function triggerInterCharacterInteractions(moments, authorsMap) {
-            console.log("AI社交模拟器启动 (V9 - 中央厨房版)...");
-
-            const allCharacters = await db.characters.toArray();
-            if (allCharacters.length === 0) return;
-
-            for (const moment of moments) {
-                // ... (循环和前置检查的代码保持不变) ...
-                const potentialInteractor = allCharacters[Math.floor(Math.random() * allCharacters.length)];
-                if (!potentialInteractor || potentialInteractor.id === moment.contactId) continue;
-                const now = new Date().getTime();
-                const momentTime = new Date(moment.createdAt).getTime();
-                const hoursSincePosted = (now - momentTime) / (1000 * 60 * 60);
-                if (hoursSincePosted > 24) continue;
-                const lastCommentTime = potentialInteractor.lastCommentAt ? new Date(potentialInteractor.lastCommentAt).getTime() : 0;
-                if ((now - lastCommentTime) / (1000 * 60) < 1) continue;
-
-                // ▼ ▼ ▼ ▼ ▼ ▼ ▼ ▼ ▼ ▼ ▼ 核心修改从这里开始 ▼ ▼ ▼ ▼ ▼ ▼ ▼ ▼ ▼ ▼ ▼
-
-                // 1. 准备评论区的上下文 (这部分不变)
-                const comments = await db.comments.where({ momentId: moment.id }).sortBy('createdAt');
-                const commentAuthorsMap = new Map();
-                for (const c of comments) {
-                    if (!commentAuthorsMap.has(c.authorId)) {
-                        const author = await getActorById(c.authorId);
-                        if (author) commentAuthorsMap.set(c.authorId, author.name);
-                    }
-                }
-                const commentsText = comments.map((c, index) =>
-                    `- [评论 ${index + 1}] - ${commentAuthorsMap.get(c.authorId) || '未知用户'}: "${c.content}"`
-                ).join('\n');
-                const momentAuthorName = authorsMap.get(moment.contactId)?.name || '某人';
-
-                // 2. 定义一份专属的“回复动态”任务菜单
-                const taskDescription = `
-【当前社交事件】
-你的好友“[AUTHOR_NAME]”发布了一条动态。
-- [动态原文]: “[MOMENT_CONTENT]”
-
-【当前评论区讨论】
-${commentsText || '(还没有评论)'}
----
-【你的核心任务：使用正确的工具进行社交】
-请你综合**所有背景资料**，特别是你的**人设**、你和**好友的关系**、以及你们**最近的聊天内容**，然后决定你的行动。
-
-你有两个工具可选：
-1.  **<reply>工具:** 如果你想针对**动态原文**发表评论，请使用此标签。
-    *   *格式示例:* <reply>我觉得你说的很有道理。</reply>
-
-2.  **<reply@>工具:** 如果你想回复**评论区里的某个人**，请使用此标签。
-    *   *格式示例:* <reply@>评论者A:你说的不对...</reply@>
-
----
-【最高优先级指令 (必须严格遵守！)】
-- 你**必须**从以上两个工具中选择一个来包裹你的回复。
-- 你的最终输出**只能包含一个**工具标签和你的内容。
-- 绝对禁止任何解释、开场白或标签之外的文字。`
-                    .replace('[AUTHOR_NAME]', momentAuthorName)
-                    .replace('[MOMENT_CONTENT]', moment.content);
-
-                // 3. 将任务菜单交给“中央厨房”
-                // 注意：这里的 user 上下文是 window.currentUser，因为这是所有角色互动的“观察者”
-                const finalPrompt = await generateUnifiedSystemPrompt(potentialInteractor, window.currentUser, taskDescription);
-
-                // ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ 核心修改到这里结束 ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲
-                // (后续的API调用、解析和UI更新逻辑完全保持不变)
-                const delay = Math.random() * 8000 + 3000;
-                const timeoutId = setTimeout(async () => {
-                    try {
-                        console.log(`💬 ${potentialInteractor.name} 正在决策如何回应 ${momentAuthorName} 的动态...`);
-
-                        const response = await getAiReply([{ role: 'user', parts: [{ text: finalPrompt }] }], potentialInteractor.persona);
-                        let fullResponse = '';
-                        // (流式读取代码保持不变)
-                        const reader = response.body.getReader(); const decoder = new TextDecoder(); while (true) { const { done, value } = await reader.read(); if (done) break; const chunk = decoder.decode(value, { stream: true }); const lines = chunk.split('\n'); for (const line of lines) { if (line.startsWith('data: ')) { const data = line.substring(6).trim(); if (data === '[DONE]') continue; try { const parsed = JSON.parse(data); fullResponse += parsed.choices?.[0]?.delta?.content || ''; } catch (e) { } } } }
-
-                        fullResponse = fullResponse.trim();
-                        if (!fullResponse) return;
-
-                        // ✨ 4. 解析AI返回的指令标签
-                        let newCommentData = {
-                            momentId: moment.id,
-                            authorId: potentialInteractor.id,
-                            createdAt: new Date().toISOString(),
-                            content: '',
-                            replyToAuthorName: null
-                        };
-
-                        const replyMatch = fullResponse.match(/<reply>([\s\S]*)<\/reply>/);
-                        const replyAtMatch = fullResponse.match(/<reply@>([\s\S]*)<\/reply@>/);
-
-                        if (replyAtMatch) {
-                            // AI决定回复某条评论
-                            const contentInside = replyAtMatch[1];
-                            const separatorIndex = contentInside.indexOf(':');
-                            if (separatorIndex > -1) {
-                                newCommentData.replyToAuthorName = contentInside.substring(0, separatorIndex).trim();
-                                newCommentData.content = contentInside.substring(separatorIndex + 1).trim();
-                            }
-                        } else if (replyMatch) {
-                            // AI决定回复动态原文
-                            newCommentData.content = replyMatch[1].trim();
-                        } else {
-                            // 如果AI没按格式来，就当作是普通评论
-                            newCommentData.content = fullResponse;
-                        }
-
-                        // ✨ 5. 保存评论并更新UI
-                        if (newCommentData.content) {
-                            const newId = await db.comments.add(newCommentData);
-                            await db.characters.update(potentialInteractor.id, { lastCommentAt: new Date().toISOString() });
-
-                            // (UI更新和通知逻辑保持不变)
-                            const momentCard = document.querySelector(`.moment-card[data-moment-id="${moment.id}"]`);
-                            if (momentCard) {
-                                const commentCountSpan = momentCard.querySelector('.comment-count');
-                                commentCountSpan.textContent = (parseInt(commentCountSpan.textContent) || 0) + 1;
-
-                                const commentsSection = momentCard.querySelector('.moment-comments-section');
-                                if (commentsSection.style.display === 'block') {
-                                    if (typeof addCommentToUI === 'function') {
-                                        addCommentToUI({ id: newId, ...newCommentData });
-                                    }
-                                }
-                            }
-
-                            const isUserPost = (await db.moments.get(moment.id)).contactId === window.currentUser.id;
-                            if (isUserPost) {
-                                const notificationMessage = newCommentData.replyToAuthorName
-                                    ? `回复了 ${newCommentData.replyToAuthorName} 的评论: "${newCommentData.content}"`
-                                    : `评论了你的动态: "${newCommentData.content}"`;
-                                showNotification(potentialInteractor.name, notificationMessage, potentialInteractor.avatar);
-                            }
-                        }
-
-                    } catch (error) {
-                        console.error(` ${potentialInteractor.name} 互动失败:`, error);
-                    }
-                }, delay);
-
-                momentInteractionTimeouts.push(timeoutId);
-            }
-        }
 
 // ==========================================================
         // --- ✨✨✨【V10.1 - 过滤版】提示词查看器核心引擎 ✨✨✨ ---
@@ -24822,8 +25001,7 @@ ${SCRIPT_FORMAT_INSTRUCTION}`;
             // ▲▲▲ 新增结束 ▲▲▲
 
         })();
-        // --- ✨✨✨【全新 V1.2 - TXT纯文本优化版】“回忆录”导出核心引擎 ✨✨✨ ---
-        // ==========================================================
+   
 
         /**
          * 辅助函数：将日期对象格式化为 YYYY-MM-DD
@@ -26293,9 +26471,8 @@ async function generateMemoData() {
 
         })();
 
-        // ▼▼▼ 请用这一整块全新的代码，完整替换旧的 processAndRenderAiResponse 函数 ▼▼▼
-        // ==========================================================
-        // --- ✨✨✨【V11.2 - 列表精准更新版】AI回复渲染与指令处理引擎 ✨✨✨ ---
+// ==========================================================
+        // --- ✨✨✨【V12.0 - 邮件工具集成版】AI回复渲染与指令处理引擎 ✨✨✨ ---
         // ==========================================================
         async function processAndRenderAiResponse(aiResponseText, user, chat, quotedMessageContext) {
             const fullResponse = aiResponseText.trim();
@@ -26323,6 +26500,7 @@ async function generateMemoData() {
                 if (content === '<vc/>') {
                     renderingQueue.push({ type: 'video_call_start' });
                 }
+                // ... (中间的其他指令 vo, sk, st, img, file, loc, transfer 等保持不变) ...
                 else if (content.startsWith('<vo>')) {
                     const match = content.match(/<vo>(.*?)<\/vo>/s);
                     if (match && match[1]) renderingQueue.push({ type: 'voice', content: match[1].trim() });
@@ -26392,6 +26570,20 @@ async function generateMemoData() {
                 else if (content === '<block/>') {
                     renderingQueue.push({ type: 'block' });
                 }
+                // ▼▼▼ ✨✨✨ 核心新增：邮件发送指令 ✨✨✨ ▼▼▼
+                else if (content.startsWith('<send_email')) {
+                    // 解析格式: <send_email subject="标题" content="正文"/>
+                    const subjectMatch = content.match(/subject="([^"]*)"/);
+                    const bodyMatch = content.match(/content="([^"]*)"/);
+                    if (bodyMatch) {
+                        renderingQueue.push({ 
+                            type: 'send_email_tool', 
+                            subject: subjectMatch ? subjectMatch[1] : '无标题',
+                            content: bodyMatch[1]
+                        });
+                    }
+                }
+                // ▲▲▲ 新增结束 ▲▲▲
                 else {
                     renderingQueue.push({ type: 'text', content: content });
                 }
@@ -26400,111 +26592,26 @@ async function generateMemoData() {
             // 3. 将任务清单交给渲染引擎去逐个执行
             await executeRenderingQueue(renderingQueue, user, chat, quotedMessageContext);
 
-            // ✨✨✨ 核心修改就在这里！✨✨✨
-            // 4. 在所有气泡都渲染完毕后，调用“精准更新”来刷新消息列表预览，告别闪回
+            // 4. 精准更新预览 (保持不变)
             if (typeof updateChatItemPreview === 'function') {
-                // a. 提取AI回复的所有有效文本气泡
                 const bubbles = [...aiResponseText.matchAll(/\[s\](.*?)\[\/s\]/gs)].map(match => match[1].trim());
-
-                // b. 智能筛选出“最后一句人类能看懂的话”作为预览
                 let lastMessageForPreview = '';
                 for (let i = bubbles.length - 1; i >= 0; i--) {
                     const bubbleContent = bubbles[i];
-                    if (!bubbleContent.startsWith('<')) { // 简单判断：只要不是以 '<' 开头的，都当作普通文本
+                    if (!bubbleContent.startsWith('<')) { 
                         lastMessageForPreview = bubbleContent;
                         break;
                     }
                 }
-
-                // c. 如果所有气泡都是特殊指令，给一个默认的预览文本
                 if (!lastMessageForPreview) {
                     lastMessageForPreview = `[${chat.name} 发送了多媒体消息]`;
                 }
-
-                // d. 调用我们的“工匠”函数，只更新这一行
                 updateChatItemPreview(chat.id, lastMessageForPreview, new Date());
             }
-            // ✨✨✨ 修改结束 ✨✨✨
 
-            // 5. 智能滚动到底部 (保持不变)
             scrollToBottom(document.getElementById('chat-messages'));
         }
-        // ==========================================================
-        // ▲▲▲ 替换到这里结束 ▲▲▲
 
-
-// ==========================================================
-// --- ✨✨✨【全新】自动挽回邮件生成引擎 ✨✨✨ ---
-// ==========================================================
-async function triggerAutomaticEmailAfterBlock(character, user, failedMessageContent) {
-    console.log("🚫 检测到拉黑拦截，正在后台触发挽回邮件...");
-    
-    // 1. 定义专门的任务描述
-    const taskDescription = `
-【系统强制事件：消息发送失败】
-你刚才试图发送给“{{user}}”的消息：“${failedMessageContent}” **发送失败**了。
-系统提示：**“对方拒收了您的消息（已被拉黑）”**。
-
-【你的反应】
-你意识到自己被{{user}}拉黑了。你现在唯一的联系方式是【邮件】。
-请根据你的人设（以及刚才没发出去的话），立刻给{{user}}写一封邮件。
-内容可以是道歉、解释、挽留，或者是你性格会做出的任何反应（比如生气、冷淡但又忍不住写信）。
-
-【输出格式】
-请直接输出一个 JSON 对象：
-{
-  "subject": "邮件标题",
-  "content": "邮件正文"
-}
-`;
-
-    try {
-        // 2. 稍微延迟一下，模拟“反应过来”的时间
-        await new Promise(r => setTimeout(r, 2000));
-
-        // 3. 调用中央厨房生成 Prompt
-        // 注意：这里我们用 user (当前登录用户) 作为对象
-        const finalPrompt = await generateUnifiedSystemPrompt(character, user, taskDescription);
-
-        // 4. 调用 AI 生成 JSON
-        const emailData = await getAiGeneratedJson(finalPrompt);
-
-        if (emailData && emailData.content) {
-            // 5. 存入邮箱数据库
-            await db.mails.add({
-                userId: user.id,
-                contactId: character.id,
-                subject: emailData.subject || "无标题",
-                content: emailData.content,
-                time: new Date().toISOString(),
-                isRead: 0,
-                type: 'inbox'
-            });
-
-            // 6. 在聊天界面插入一条“收到邮件”的系统通知
-            const sysMsg = {
-                userId: user.id,
-                chatId: character.id,
-                senderId: 'system',
-                type: 'system',
-                content: `[收到一封来自 ${character.name} 的邮件]`,
-                time: new Date().toISOString()
-            };
-            const newMsgId = await db.messages.add(sysMsg);
-            
-            // 如果当前还在窗口，就上屏
-            if (window.currentChat && window.currentChat.id === character.id) {
-                await addMessageToUI({ id: newMsgId, ...sysMsg });
-                scrollToBottom(document.getElementById('chat-messages'));
-            }
-
-            showNotification("收到新邮件", `来自 ${character.name}`);
-        }
-
-    } catch (error) {
-        console.error("自动生成挽回邮件失败:", error);
-    }
-}
 
         /**
          * 引擎第二部分：“顺序渲染引擎”
@@ -26518,10 +26625,10 @@ async function triggerAutomaticEmailAfterBlock(character, user, failedMessageCon
 
                 // ✨ 沉浸感的核心：在渲染每条消息前，都加入一个随机的短暂延迟 ✨
                 await new Promise(resolve => setTimeout(resolve, Math.random() * 400 + 300));
-
-                // 使用 switch 语句，清晰地处理每一种任务类型
                 switch (task.type) {
-case 'text': {
+// 在 switch (task.type) 内部：
+
+            case 'text': {
                 if (!task.content) break;
 
                 const aiMessage = {
@@ -26532,34 +26639,52 @@ case 'text': {
                     time: new Date().toISOString(),
                 };
 
-                // ✨✨✨ 核心修复：强制检查全局最新拉黑状态 ✨✨✨
-                let isBlockedTriggered = false;
-                
-                // 我们直接检查 window.currentChat，这是最稳的
+                // ✨ 检查是否被用户拉黑，如果是，则标记为失败
                 if (window.currentChat && window.currentChat.blockStatus === 'user_blocks_char') {
-                    console.log("🚫 渲染引擎检测到拉黑状态！标记消息为失败。");
-                    aiMessage.isBlockedFail = true; // 1. 标记为失败（红感叹号）
-                    isBlockedTriggered = true;      // 2. 设置触发标记
+                    console.log("🚫 (渲染层) 检测到拉黑状态，消息标记为发送失败。");
+                    aiMessage.isBlockedFail = true; 
                 }
                 
-                // 3. 正常存入数据库并上屏
-                // (如果 isBlockedFail 为 true，createMessageRowElement 会自动渲染红感叹号)
+                // 存入数据库并上屏
                 const newId = await db.messages.add(aiMessage);
                 await addMessageToUI({ id: newId, ...aiMessage });
 
-                // 4. 如果触发了拉黑，启动写邮件流程
-                if (isBlockedTriggered) {
-                    console.log("🚀 启动后台邮件补救流程...");
-                    // 必须确保 triggerAutomaticEmailAfterBlock 函数已定义
-                    if (typeof triggerAutomaticEmailAfterBlock === 'function') {
-                        triggerAutomaticEmailAfterBlock(chat, user, task.content);
-                    } else {
-                        console.error("❌ 错误：找不到 triggerAutomaticEmailAfterBlock 函数！");
-                    }
-                }
+                // ✨✨✨ 核心修改：删除了 triggerAutomaticEmailAfterBlock 的调用 ✨✨✨
+                // 因为现在 AI 会在同一个回复里，自己决定是否使用 <send_email> 工具
                 
                 break;
             }
+
+            // ▼▼▼ ✨✨✨ 核心新增：邮件工具的执行逻辑 ✨✨✨ ▼▼▼
+            case 'send_email_tool': {
+                // 1. 存入收件箱
+                await db.mails.add({
+                    userId: user.id,
+                    contactId: chat.id,
+                    subject: task.subject,
+                    content: task.content,
+                    time: new Date().toISOString(),
+                    isRead: 0,
+                    type: 'inbox'
+                });
+
+                // 2. 在聊天界面显示系统通知
+                const sysMsg = {
+                    userId: user.id,
+                    chatId: chat.id,
+                    senderId: 'system',
+                    type: 'system',
+                    content: `[收到一封来自 ${chat.name} 的邮件]`,
+                    time: new Date().toISOString()
+                };
+                const newMsgId = await db.messages.add(sysMsg);
+                await addMessageToUI({ id: newMsgId, ...sysMsg });
+
+                // 3. 弹出通知
+                showNotification(`📧 收到 ${chat.name} 的来信`, "对方给您发了一封邮件，请去邮箱查看。");
+                break;
+            }
+            // ▲▲▲ 新增结束 ▲▲▲
 
                     case 'sticker': {
                         const sticker = await db.global_stickers.where('description').equals(task.description).first();
@@ -32864,29 +32989,37 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
 
 // --- 按钮 5.5: 让TA写信 (新增) ---
         else if (e.target.closest('#profilesetting-trigger-email-btn')) {
-            // 使用自定义弹窗进行确认
+            // ✨ 核心修改：直接在第三个参数里传入按钮文字，不再使用 setTimeout hack
             showDeleteDialog(
                 `确定要让 ${character.name} 给你写一封信吗？\n\n这将消耗一定的 Token 来生成内容。`, 
                 async () => {
                     // 用户点击确定后执行
                     if (typeof window.triggerAiInitiatedEmail === 'function') {
-        
-                        // 执行写信逻辑
                         await window.triggerAiInitiatedEmail(character);
                     }
+                },
+                { 
+                    confirmText: "确定发送请求", // ✨ 这里定义确认按钮
+                    cancelText: "再想想"         // ✨ 这里定义取消按钮
                 }
             );
-            
-            // 修正弹窗按钮的文字（因为 showDeleteDialog 默认是“删除/确定”）
-            // 我们利用微任务队列，在弹窗显示后立即修改按钮文字
-            setTimeout(() => {
-                const confirmBtn = document.getElementById('delete-confirm');
-                const cancelBtn = document.getElementById('delete-cancel');
-                if (confirmBtn) confirmBtn.textContent = "确定发送请求";
-                if (cancelBtn) cancelBtn.textContent = "取消";
-            }, 10);
         }
-
+// --- 按钮 5.6: 发布动态 (新增) ---
+        else if (e.target.closest('#profilesetting-trigger-moment-btn')) {
+            showDeleteDialog(
+                `确定要让 ${character.name} 发布一条新动态吗？\n\nAI 将根据当前人设和心情生成内容。`, 
+                async () => {
+                    // 调用核心引擎
+                    if (typeof window.triggerAiInitiatedMoment === 'function') {
+                        await window.triggerAiInitiatedMoment(character);
+                    }
+                },
+                { 
+                    confirmText: "确定发布", 
+                    cancelText: "取消"
+                }
+            );
+        }
 
 // --- 按钮 6: 拉黑/解除 (核心逻辑) ---
         else if (e.target.closest('#profilesetting-block-user-btn')) {
@@ -32897,11 +33030,22 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
             if (currentStatus === 'normal') {
                 // --- 执行拉黑 ---
                 showDeleteDialog(`确定要拉黑 ${character.name} 吗？\n\n拉黑后，您将不再接收TA的消息。`, async () => {
+                    // 1. 更新数据库
                     await db.characters.update(character.id, { blockStatus: 'user_blocks_char' });
+                    
+                    // 2. 更新当前操作的角色对象
                     character.blockStatus = 'user_blocks_char';
+                    
+                    // ✨✨✨ 核心修复：同步更新全局聊天对象 ✨✨✨
+                    if (window.currentChat && window.currentChat.id === character.id) {
+                        window.currentChat.blockStatus = 'user_blocks_char';
+                        // 立即刷新输入框状态（变灰）
+                        updateChatInputState(window.currentChat);
+                    }
+
                     if (label) label.textContent = "解除拉黑";
                     
-                    // ✨ 核心新增：插入“你已拉黑对方”的系统消息
+                    // 3. 插入“你已拉黑对方”的系统消息
                     const sysMsg = {
                         userId: window.currentUser.id,
                         chatId: character.id,
@@ -32915,30 +33059,35 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
                     // 如果正在聊天，立即显示
                     if (window.currentChat && window.currentChat.id === character.id) {
                         await addMessageToUI({id: newId, ...sysMsg});
-                        updateChatInputState(character);
                         scrollToBottom(document.getElementById('chat-messages'));
                     }
                     showNotification(`已拉黑 ${character.name}。`);
                 });
 
         
-            }else if (currentStatus === 'user_blocks_char') {
+            } else if (currentStatus === 'user_blocks_char') {
                 // --- 执行解除 ---
                 
                 // 1. 更新数据库状态
                 await db.characters.update(character.id, { blockStatus: 'normal' });
                 character.blockStatus = 'normal';
+
+                // ✨✨✨ 核心修复：同步更新全局聊天对象 ✨✨✨
+                if (window.currentChat && window.currentChat.id === character.id) {
+                    window.currentChat.blockStatus = 'normal';
+                    // 立即刷新输入框状态（恢复）
+                    updateChatInputState(window.currentChat);
+                }
                 
                 // 2. 更新按钮文字
                 if (label) label.textContent = "拉黑对方";
                 
-                // 3. ✨✨✨ 核心新增：插入“解除拉黑”的系统通知 ✨✨✨
+                // 3. 插入“解除拉黑”的系统通知
                 const sysMsg = {
                     userId: window.currentUser.id,
                     chatId: character.id,
                     senderId: 'system',
                     type: 'system',
-                    // 这句话是给 AI 看的，也是给用户看的，非常重要
                     content: `[你已解除对 ${character.name} 的屏蔽，对方现在可以正常发送消息了]`,
                     time: new Date().toISOString()
                 };
@@ -32948,13 +33097,11 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
                 showNotification(`已解除对 ${character.name} 的拉黑。`);
 
                 if (window.currentChat && window.currentChat.id === character.id) {
-                    // 解锁输入框
-                    updateChatInputState(character);
                     // 显示系统消息
                     await addMessageToUI({id: newId, ...sysMsg});
                     scrollToBottom(document.getElementById('chat-messages'));
                 }
-            }else {
+            } else {
                 // 如果是 char_blocks_user (对方拉黑我)，这个按钮应该禁用或者显示不同状态
                 showNotification("对方把你拉黑了，你无法回复。", "试试写邮件挽回。");
             }
@@ -34164,6 +34311,103 @@ item.innerHTML = `
 
 })();
 
+
+// ==========================================================
+// --- ✨✨✨【全新】AI主动发布动态核心引擎 ✨✨✨ ---
+// ==========================================================
+window.triggerAiInitiatedMoment = async function(character) {
+    const user = character.activeUserPersona || window.currentUser;
+
+    showNotification("请求已发送", `${character.name} 正在构思文案...`);
+
+    // 1. 定义任务 Prompt
+    const taskDescription = `
+【系统指令：强制发布社交动态】
+用户希望你（{{char}}）现在立刻发布一条“朋友圈动态/推文”。
+
+【你的任务】
+请根据你当前的人设、心情、以及最近发生的事情（如果有），构思一条动态。
+
+【内容指南】
+- **内容**：可以是分享日常、抒发感悟、吐槽、或者展示照片。
+- **风格**：必须完全符合你的说话语气。
+- **配图**：你可以决定是否要配图。如果想配图，请提供画面的文字描述。
+
+【输出格式 (严格JSON)】
+请直接输出 JSON 对象：
+{
+    "content": "动态的正文内容",
+    "image_description": "（可选）如果你想配图，请简短描述画面；不想配图则留空或填null"
+}
+`;
+
+    try {
+        // 2. 生成 Prompt & 调用 AI
+        const finalPrompt = await generateUnifiedSystemPrompt(character, user, taskDescription);
+        const responseData = await getAiGeneratedJson(finalPrompt);
+
+        // 3. 处理结果
+        if (responseData && responseData.content) {
+            
+            const momentData = {
+                userId: window.currentUser.id,
+                contactId: character.id, // 发布者是该角色
+                content: responseData.content,
+                createdAt: new Date().toISOString(),
+                likedBy: []
+            };
+
+            // --- 处理配图逻辑 ---
+            if (responseData.image_description) {
+                // 既然是 AI 想象的图片，我们使用“文字描述图片”类型
+                // 随机选一张占位图作为背景
+                const PLACEHOLDER_IMAGE_URLS = [
+                    'https://i.postimg.cc/Cx5jQpcs/QWQ-1-Ssssslo-Th.jpg', 
+                    'https://i.postimg.cc/Prtb1wZc/pyq-1.jpg', 
+                    'https://i.postimg.cc/vH3rhZtm/pyq-2.jpg', 
+                    'https://i.postimg.cc/2jdFqwqh/pyq-3.jpg', 
+                    'https://i.postimg.cc/J0Qb9rwP/pyq-4.jpg'
+                ];
+                const randomUrl = PLACEHOLDER_IMAGE_URLS[Math.floor(Math.random() * PLACEHOLDER_IMAGE_URLS.length)];
+
+                momentData.type = 'text_with_described_image';
+                momentData.describedImage = {
+                    description: responseData.image_description,
+                    url: randomUrl
+                };
+            } else {
+                momentData.type = 'text';
+            }
+
+            // 4. 存入数据库
+            await db.moments.add(momentData);
+
+            // 5. 插入系统通知 (在聊天界面)
+            const sysMsg = {
+                userId: window.currentUser.id,
+                chatId: character.id,
+                senderId: 'system',
+                type: 'system',
+                content: `[${character.name} 刚刚发布了一条新动态]`,
+                time: new Date().toISOString()
+            };
+            await db.messages.add(sysMsg);
+            
+            // 如果当前在聊天窗口，刷新一下
+            if (window.currentChat && window.currentChat.id === character.id) {
+                if(typeof addMessageToUI === 'function') addMessageToUI({id: await db.messages.orderBy('id').last().then(m=>m.id), ...sysMsg});
+                scrollToBottom(document.getElementById('chat-messages'));
+            }
+
+            // 6. 弹出通知
+            showNotification(`✨ ${character.name} 发布了新动态`, "快去好友圈看看并互动吧！");
+        }
+
+    } catch (error) {
+        console.error("AI发布动态失败:", error);
+    }
+};
+
 // ==========================================================
 // --- ✨✨✨【V2 - 静默后台版】AI主动写信核心引擎 ✨✨✨ ---
 // ==========================================================
@@ -34246,29 +34490,59 @@ ${user.name} 向你发送了一个信号，希望你能主动写一封邮件给T
 
 
 // ==========================================================
-// --- ✨✨✨【全局定义】AI邮件回复核心引擎 (V3) ✨✨✨ ---
+// --- ✨✨✨【V4 - 带历史上下文版】AI邮件回复核心引擎 ✨✨✨ ---
 // ==========================================================
 window.triggerAiEmailReply = async function(character, subject, content) {
     console.log(`📧 正在请求 ${character.name} 回复邮件...`);
 
-    // 1. 构建专门针对“写回信”的任务描述
+    // --- 1. 获取邮件历史上下文 (Context) ---
+    // 我们需要让 AI 知道之前发生了什么，否则它会重复发送同样的内容
+    let emailThreadText = "（无历史记录）";
+    try {
+        // 获取该用户和该角色之间的最近 5 封邮件
+        const recentMails = await db.mails
+            .where('[userId+contactId]')
+            .equals([window.currentUser.id, character.id])
+            .reverse() // 最新的在前
+            .limit(5)
+            .toArray();
+        
+        // 重新按时间正序排列（旧 -> 新），方便 AI 理解逻辑流
+        const sortedMails = recentMails.reverse();
+
+        if (sortedMails.length > 0) {
+            emailThreadText = sortedMails.map(m => {
+                const senderName = m.type === 'sent' ? '{{user}}' : '{{char}}';
+                return `[发件人: ${senderName}]\n[主题: ${m.subject}]\n[内容]: ${m.content}`;
+            }).join('\n\n----------------\n\n');
+        }
+    } catch (e) {
+        console.error("获取邮件历史失败:", e);
+    }
+
+    // --- 2. 构建任务描述 ---
+    // ✨ 核心修改：加入了 【邮件往来历史】 板块
     const taskDescription = `
-【收到新邮件】
-发件人：${window.currentUser.name}
+【当前任务：回复邮件】
+请你根据以下【邮件往来历史】，回复“{{user}}”的最新邮件。
+
+【邮件往来历史 (Email Thread)】
+${emailThreadText}
+
+【最新收到的邮件 (你需要回复这封)】
+发件人：{{user}}
 主题：${subject}
 内容：${content}
 
-【你的任务】
-请以邮件的格式回复。
-1. **主题**：必须是对原主题的回复（例如：Re: ${subject}）。
-2. **语气**：根据你的人设、当前的心情状态以及你与发件人的关系（亲密、疏远、或者正在拉黑冷战中），决定回信的语气。
-3. **内容**：针对发件人的内容进行回应。
+【回复要求】
+1. **连续性**：你的回复必须承接上下文。如果你上一封信在生气，这封信不要突然变得很开心（除非对方道歉了）。
+2. **主题**：必须是对原主题的回复（例如：Re: ${subject}）。
+3. **语气**：保持人设。如果你们处于冷战/拉黑状态，你的语气应该是冷淡、愤怒或拒绝的；如果关系亲密，则是温柔的。
 
-// ✨✨✨ 特殊指令：解除拉黑权 ✨✨✨
+// ✨ 特殊指令：解除拉黑权
 // 如果发件人目前处于被你【拉黑/屏蔽】的状态，而这封信的内容打动了你，让你决定原谅TA：
 // 请在邮件正文中悄悄包含指令：<unblock/>
 // (系统检测到此指令会自动解除拉黑状态，用户看不到这个标签)
-// 如果你不想原谅，就不要包含此标签。
 
 【输出格式 (严格JSON)】
 {
@@ -34278,42 +34552,34 @@ window.triggerAiEmailReply = async function(character, subject, content) {
 `;
 
     try {
-        // 2. 获取正确的人设 (绑定人设优先)
+        // 3. 获取正确的人设
         const userPersona = character.activeUserPersona || window.currentUser;
         
-        // 3. 调用中央厨房生成 Prompt
+        // 4. 调用中央厨房生成 Prompt
         const finalPrompt = await generateUnifiedSystemPrompt(character, userPersona, taskDescription);
         
-        // 4. 获取 AI 生成的 JSON
+        // 5. 获取 AI 生成的 JSON
         const responseData = await getAiGeneratedJson(finalPrompt);
 
-        // 5. 处理结果
+        // 6. 处理结果
         if (responseData && responseData.content) {
             let finalContent = responseData.content;
             
-            // --- ✨ 检查解除拉黑指令 ✨ ---
+            // --- 检查解除拉黑指令 ---
             if (finalContent.includes('<unblock/>')) {
-                // a. 移除标签
                 finalContent = finalContent.replace('<unblock/>', '').trim();
-                
-                // b. 更新数据库状态
                 await db.characters.update(character.id, { blockStatus: 'normal' });
                 
-                // c. 更新内存状态
                 if (window.currentChat && window.currentChat.id === character.id) {
                     window.currentChat.blockStatus = 'normal';
-                    // 尝试刷新聊天输入框状态
                     if (typeof updateChatInputState === 'function') {
                         updateChatInputState(window.currentChat);
                     }
                 }
-                
-                // d. 通知
                 showNotification(`${character.name} 已解除对你的拉黑`);
             }
-            // ---------------------------
 
-            // 6. 存入收件箱
+            // 7. 存入收件箱
             await db.mails.add({
                 userId: window.currentUser.id,
                 contactId: character.id,
@@ -34325,18 +34591,13 @@ window.triggerAiEmailReply = async function(character, subject, content) {
             });
             
             showNotification(`收到 ${character.name} 的新邮件！`);
-            
-            // 7. 如果当前正好开着邮箱列表，尝试刷新它
-            // (我们尝试调用 Muzi 邮箱引擎里可能暴露的刷新方法，或者不做处理等待用户手动刷新)
-            // 由于 Muzi 邮箱使用的是闭包，外部很难直接刷新列表，除非我们重新打开页面。
-            // 这里我们依靠 Notification 提醒用户去查看即可。
         }
     } catch (e) {
         console.error("AI回复邮件失败:", e);
     }
 };
 // ==========================================================
-// --- ✨✨✨【全新 V2 - 发件箱支持版】Muzi 邮箱核心引擎 ✨✨✨ ---
+// --- ✨✨✨【全新 V3 - 附件支持版】Muzi 邮箱核心引擎 ✨✨✨ ---
 // ==========================================================
 (function() {
     // 1. 获取 DOM 元素
@@ -34349,12 +34610,12 @@ window.triggerAiEmailReply = async function(character, subject, content) {
     const composeView = document.getElementById('mail-compose-view');
     
     // 列表页元素
-    const listBackBtn = document.getElementById('mail-app-back-btn');
     const listContainer = document.getElementById('mail-list-container');
     const composeFab = document.getElementById('mail-compose-fab');
     const refreshBtn = document.getElementById('mail-refresh-btn');
-    const searchInput = document.getElementById('mail-search-input'); // ✨ 搜索框
-    const tabs = document.querySelectorAll('.mail-nav-tab'); // ✨ 标签按钮
+    const searchInput = document.getElementById('mail-search-input');
+    const tabs = document.querySelectorAll('.mail-nav-tab');
+    const listBackBtn = document.getElementById('mail-app-back-btn');
     
     // 详情页元素
     const readBackBtn = document.getElementById('mail-read-back-btn');
@@ -34364,7 +34625,7 @@ window.triggerAiEmailReply = async function(character, subject, content) {
     const readBody = document.getElementById('mail-read-body');
     const readAvatar = document.getElementById('mail-read-avatar');
     const readDeleteBtn = document.getElementById('mail-read-delete-btn');
-    const readReplyBtn = document.getElementById('mail-read-reply-btn'); // ✨ 回复按钮
+    const readReplyBtn = document.getElementById('mail-read-reply-btn');
     
     // 写信页元素
     const composeCancelBtn = document.getElementById('mail-compose-cancel-btn');
@@ -34372,64 +34633,87 @@ window.triggerAiEmailReply = async function(character, subject, content) {
     const recipientSelect = document.getElementById('mail-compose-recipient');
     const subjectInput = document.getElementById('mail-compose-subject');
     const bodyInput = document.getElementById('mail-compose-body');
+    const attachmentsPreview = document.getElementById('mail-compose-attachments-preview'); // ✨ 新增
+
+    // 附件工具栏按钮
+    const btnAddImage = document.getElementById('mail-add-image');
+    const btnAddFile = document.getElementById('mail-add-file');
+    const btnAddVoice = document.getElementById('mail-add-voice');
+    const btnAddVideo = document.getElementById('mail-add-video');
 
     // 当前状态
     let currentMailId = null;
-    let currentBoxType = 'inbox'; // 'inbox' 或 'sent'
+    let currentBoxType = 'inbox'; 
+    let draftAttachments = []; // ✨ 暂存当前草稿的附件
 
-    /**
-     * 核心函数 1: 打开邮箱应用
-     */
+    // --- 附件辅助逻辑 ---
+    function addDraftAttachment(type, data) {
+        draftAttachments.push({ type, data });
+        renderDraftAttachments();
+    }
+
+    function renderDraftAttachments() {
+        if (!attachmentsPreview) return;
+        attachmentsPreview.innerHTML = '';
+        draftAttachments.forEach((att, index) => {
+            const chip = document.createElement('div');
+            chip.className = 'buttonlike';
+            chip.style.cssText = `
+                background: #f3f4f6; border-radius: 8px; padding: 6px 10px; 
+                font-size: 12px; color: #374151; display: flex; align-items: center; gap: 6px;
+                border: 1px solid #e5e7eb;
+            `;
+            
+            let icon = '';
+            let text = '';
+            if (att.type === 'image') { icon = '<i class="fa-regular fa-image"></i>'; text = '图片: ' + att.data.description; }
+            else if (att.type === 'file') { icon = '<i class="fa-solid fa-paperclip"></i>'; text = '文件: ' + att.data.name; }
+            else if (att.type === 'voice') { icon = '<i class="fa-solid fa-microphone"></i>'; text = '语音: ' + att.data.duration + 's'; }
+            else if (att.type === 'video') { icon = '<i class="fa-solid fa-video"></i>'; text = '视频: ' + att.data.description; }
+
+            // 截断过长文本
+            if (text.length > 15) text = text.substring(0, 15) + '...';
+
+            chip.innerHTML = `${icon} <span>${escapeHtml(text)}</span> <i class="fa-solid fa-xmark" style="color:#9ca3af; cursor:pointer; margin-left:4px;"></i>`;
+            
+            // 点击删除
+            chip.querySelector('.fa-xmark').addEventListener('click', (e) => {
+                e.stopPropagation();
+                draftAttachments.splice(index, 1);
+                renderDraftAttachments();
+            });
+
+            attachmentsPreview.appendChild(chip);
+        });
+    }
+
+    // --- 核心函数 ---
+
     async function openMailApp() {
         showPage(pageId);
         showListView();
-        // 默认显示收件箱
         switchTab('inbox');
     }
 
-    /**
-     * 辅助函数：切换标签页
-     */
     function switchTab(type) {
         currentBoxType = type;
-        
-        // 更新 UI 高亮
         tabs.forEach(tab => {
-            if (tab.dataset.type === type) {
-                tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
-            }
+            tab.classList.toggle('active', tab.dataset.type === type);
         });
-
-        // 重新渲染列表
         renderMailList();
     }
 
-    /**
-     * 核心函数 2: 渲染邮件列表 (支持收件/发件过滤)
-     */
     async function renderMailList() {
         listContainer.innerHTML = '<div class="loading-spinner" style="margin: 40px auto;"></div>';
-        
         try {
             const searchTerm = searchInput.value.toLowerCase().trim();
-
-            // 1. 获取所有邮件
             const allMails = await db.mails.where('userId').equals(window.currentUser.id).toArray();
 
-            // 2. 根据当前标签页类型进行过滤
             let filteredMails = allMails.filter(m => {
-                if (currentBoxType === 'inbox') {
-                    // 收件箱：type 为 'inbox' 或者 undefined (兼容旧数据)
-                    return m.type === 'inbox' || m.type === undefined;
-                } else {
-                    // 发件箱：type 为 'sent'
-                    return m.type === 'sent';
-                }
+                if (currentBoxType === 'inbox') return m.type === 'inbox' || m.type === undefined;
+                else return m.type === 'sent';
             });
 
-            // 3. 根据搜索词进行过滤
             if (searchTerm) {
                 filteredMails = filteredMails.filter(m => 
                     m.subject.toLowerCase().includes(searchTerm) || 
@@ -34437,23 +34721,15 @@ window.triggerAiEmailReply = async function(character, subject, content) {
                 );
             }
 
-            // 4. 按时间倒序排列
             filteredMails.sort((a, b) => new Date(b.time) - new Date(a.time));
-
             listContainer.innerHTML = '';
             
             if (filteredMails.length === 0) {
-                const emptyText = currentBoxType === 'inbox' ? '收件箱空空如也' : '还没有发送过邮件';
-                listContainer.innerHTML = `
-                    <div style="text-align: center; color: #a1a1aa; margin-top: 100px;">
-                        <i class="fa-regular fa-envelope-open" style="font-size: 48px; opacity: 0.3; margin-bottom: 15px;"></i>
-                        <p>${emptyText}</p>
-                    </div>`;
+                listContainer.innerHTML = `<div style="text-align: center; color: #a1a1aa; margin-top: 100px;"><i class="fa-regular fa-envelope-open" style="font-size: 48px; opacity: 0.3; margin-bottom: 15px;"></i><p>${currentBoxType === 'inbox' ? '收件箱空空如也' : '还没有发送过邮件'}</p></div>`;
                 return;
             }
 
-            // 预加载相关角色信息
-            // 无论是收件还是发件，contactId 都指向那个角色
+            // 预加载角色
             const contactIds = [...new Set(filteredMails.map(m => m.contactId))];
             const contactsMap = new Map();
             for (const id of contactIds) {
@@ -34464,18 +34740,13 @@ window.triggerAiEmailReply = async function(character, subject, content) {
             for (const mail of filteredMails) {
                 const contact = contactsMap.get(mail.contactId);
                 const contactName = contact ? contact.name : '未知';
-                const avatar = contact ? contact.avatar : null;
                 
                 const item = document.createElement('div');
                 item.className = `mail-list-item ${mail.isRead ? '' : 'unread'}`;
                 
-                const timeStr = formatTimeDifference(mail.time);
-
-                // ✨ 逻辑差异：
-                // 收件箱显示：发件人是角色
-                // 发件箱显示：收件人是角色
                 const displayPrefix = currentBoxType === 'sent' ? '致: ' : '';
                 const displayName = displayPrefix + contactName;
+                const hasAttachment = mail.attachments && mail.attachments.length > 0 ? '<i class="fa-solid fa-paperclip" style="font-size:12px; margin-left:6px; color:#6b7280;"></i>' : '';
 
                 item.innerHTML = `
                     <div class="mail-avatar-container" style="position: relative;">
@@ -34485,45 +34756,34 @@ window.triggerAiEmailReply = async function(character, subject, content) {
                     <div class="mail-content-wrapper">
                         <div class="mail-header-row">
                             <span class="mail-sender-name">${escapeHtml(displayName)}</span>
-                            <span class="mail-time">${timeStr}</span>
+                            <span class="mail-time">${formatTimeDifference(mail.time)}</span>
                         </div>
-                        <div class="mail-subject">${escapeHtml(mail.subject)}</div>
+                        <div class="mail-subject">${escapeHtml(mail.subject)}${hasAttachment}</div>
                         <div class="mail-preview">${escapeHtml(mail.content.substring(0, 30))}...</div>
                     </div>
                 `;
-
-                renderAvatar(item.querySelector('.avatar-display'), avatar, contactName.charAt(0));
-
+                renderAvatar(item.querySelector('.avatar-display'), contact ? contact.avatar : null, contactName.charAt(0));
                 item.addEventListener('click', () => openMailDetail(mail, contact));
-
                 listContainer.appendChild(item);
             }
-
         } catch (error) {
-            console.error("加载邮件列表失败:", error);
+            console.error("加载邮件失败:", error);
             listContainer.innerHTML = '<p style="text-align:center; padding:20px;">加载失败</p>';
         }
     }
 
-    /**
-     * 核心函数 3: 打开邮件详情
-     */
+    // --- ✨ 详情页渲染 (含附件) ---
     async function openMailDetail(mail, contact) {
         currentMailId = mail.id;
-        
-        // 如果是收件箱未读邮件，标记为已读
         if (currentBoxType === 'inbox' && !mail.isRead) {
             await db.mails.update(mail.id, { isRead: 1 });
         }
 
-        // 填充内容
         const contactName = contact ? contact.name : '未知';
-        
         if (mail.type === 'sent') {
             readSender.textContent = `我 发送给 ${contactName}`;
-            // 发送的邮件显示我的头像（或者保持显示对方头像也行，这里显示我的比较合理）
             renderAvatar(readAvatar, window.currentUser.avatar, '我');
-            if (readReplyBtn) readReplyBtn.style.display = 'none'; // 自己发的邮件不能回复
+            if (readReplyBtn) readReplyBtn.style.display = 'none';
         } else {
             readSender.textContent = contactName;
             renderAvatar(readAvatar, contact ? contact.avatar : null, contactName.charAt(0));
@@ -34532,15 +34792,67 @@ window.triggerAiEmailReply = async function(character, subject, content) {
 
         readSubject.textContent = mail.subject;
         readTime.textContent = new Date(mail.time).toLocaleString();
-        readBody.innerText = mail.content;
         
-        // 切换视图
+        // 1. 渲染正文
+        let bodyHtml = mail.content.replace(/\n/g, '<br>');
+        
+        // 2. ✨ 渲染附件区域
+        if (mail.attachments && mail.attachments.length > 0) {
+            bodyHtml += `<br><br><hr style="border:none; border-top:1px dashed #e5e7eb; margin: 20px 0;"><div style="font-size:12px; color:#6b7280; margin-bottom:10px;">${mail.attachments.length} 个附件</div>`;
+            
+            // 附件容器
+            bodyHtml += `<div style="display:flex; flex-direction:column; gap:10px;">`;
+            
+            mail.attachments.forEach(att => {
+                // 复用聊天气泡的 CSS 类，但内联一些样式修正以适应邮件背景
+                if (att.type === 'file') {
+                    bodyHtml += `
+                        <div class="special-card-container" data-card-type="file" style="border:1px solid #e5e7eb; max-width:100%;">
+                            <div class="file-card-content">
+                                <div class="file-card-icon"><i class="fa-solid fa-file-lines fa-2x"></i></div>
+                                <div class="file-card-info"><div class="file-card-name">${escapeHtml(att.data.name)}</div><div class="file-card-size">${att.data.size}</div></div>
+                            </div>
+                        </div>`;
+                } else if (att.type === 'image') {
+                    // 使用文字描述图片的样式
+                    bodyHtml += `
+                        <div class="image-description-message reveal" style="max-width:200px;">
+                             <img src="${att.data.url || 'https://i.postimg.cc/Prtb1wZc/pyq-1.jpg'}" class="placeholder-image">
+                             <div class="image-text-overlay" style="opacity:1; pointer-events:auto; position:relative; background:rgba(0,0,0,0.6);">
+                                <p>${escapeHtml(att.data.description)}</p>
+                             </div>
+                        </div>`;
+                } else if (att.type === 'voice') {
+                     bodyHtml += `
+                        <div style="background:#f3f4f6; padding:10px; border-radius:8px; display:flex; align-items:center; gap:10px;">
+                            <i class="fa-solid fa-circle-play" style="color:var(--color-primary-accent); font-size:24px;"></i>
+                            <div style="flex:1;">
+                                <div style="height:4px; background:#d1d5db; border-radius:2px; width:100%;"></div>
+                            </div>
+                            <span style="font-size:12px; color:#6b7280;">${att.data.duration}s</span>
+                        </div>
+                        <div style="font-size:12px; color:#6b7280; margin-top:4px;">[语音内容]: ${escapeHtml(att.data.content)}</div>
+                     `;
+                } else if (att.type === 'video') {
+                     bodyHtml += `
+                        <div style="position:relative; max-width:240px; aspect-ratio:16/9; background:#000; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                            <div style="color:white; z-index:10; display:flex; flex-direction:column; align-items:center;">
+                                <i class="fa-solid fa-play-circle" style="font-size:32px; opacity:0.8;"></i>
+                            </div>
+                            <div style="position:absolute; bottom:0; left:0; right:0; padding:6px; background:rgba(0,0,0,0.6); color:white; font-size:10px;">
+                                ${escapeHtml(att.data.description)}
+                            </div>
+                        </div>
+                     `;
+                }
+            });
+            bodyHtml += `</div>`;
+        }
+
+        readBody.innerHTML = bodyHtml;
         showReadView();
     }
 
-    /**
-     * 核心函数 4: 发送邮件
-     */
     async function sendMail() {
         const recipientId = recipientSelect.value;
         const subject = subjectInput.value.trim();
@@ -34548,55 +34860,56 @@ window.triggerAiEmailReply = async function(character, subject, content) {
 
         if (!recipientId) return showNotification("请选择收件人");
         if (!subject) return showNotification("请输入邮件主题");
-        if (!content) return showNotification("请输入邮件内容");
+        if (!content && draftAttachments.length === 0) return showNotification("请输入邮件内容或添加附件");
 
         const targetChar = await db.characters.get(recipientId);
         
-        // 1. 保存到“发件箱”
+        // ✨ 构建给 AI 看的文本内容（包含附件描述）
+        let contentForAI = content;
+        if (draftAttachments.length > 0) {
+            contentForAI += "\n\n【附件列表】:\n";
+            draftAttachments.forEach(att => {
+                if(att.type === 'file') contentForAI += `- [文件] ${att.data.name}\n`;
+                if(att.type === 'image') contentForAI += `- [图片] 描述: ${att.data.description}\n`;
+                if(att.type === 'voice') contentForAI += `- [语音] 内容: ${att.data.content}\n`;
+                if(att.type === 'video') contentForAI += `- [视频] 描述: ${att.data.description}\n`;
+            });
+        }
+
+        // 1. 保存到数据库 (包含 attachments 数组)
         await db.mails.add({
             userId: window.currentUser.id,
             contactId: recipientId,
             subject: subject,
             content: content,
+            attachments: [...draftAttachments], // ✨ 保存附件数据
             time: new Date().toISOString(),
-            isRead: 1, // 自己发的默认已读
-            type: 'sent' // ✨ 标记为发件箱
+            isRead: 1,
+            type: 'sent'
         });
 
-        // 2. 触发AI回复
+        // 2. 触发 AI 回复 (传入包含附件描述的 contentForAI)
         if (targetChar) {
-            // 稍作延迟触发，模拟网络延迟
             setTimeout(() => {
-                triggerAiEmailReply(targetChar, subject, content);
+                triggerAiEmailReply(targetChar, subject, contentForAI);
             }, 2000);
         }
 
         showNotification("邮件已发送！");
-        // 发送成功后，自动跳转到发件箱查看
         showListView();
         switchTab('sent');
     }
 
-    // ... (triggerAiEmailReply 函数在全局，这里不需要重复定义) ...
-
-    // --- 视图切换辅助函数 ---
-    function showListView() {
-        listView.classList.remove('hidden');
-        readView.classList.add('hidden');
-        composeView.classList.add('hidden');
-    }
-    function showReadView() {
-        listView.classList.add('hidden');
-        readView.classList.remove('hidden');
-        composeView.classList.add('hidden');
-    }
+    // --- 视图切换 ---
+    function showListView() { listView.classList.remove('hidden'); readView.classList.add('hidden'); composeView.classList.add('hidden'); }
+    function showReadView() { listView.classList.add('hidden'); readView.classList.remove('hidden'); composeView.classList.add('hidden'); }
     function showComposeView() {
-        listView.classList.add('hidden');
-        readView.classList.add('hidden');
-        composeView.classList.remove('hidden');
+        listView.classList.add('hidden'); readView.classList.add('hidden'); composeView.classList.remove('hidden');
         loadRecipients();
         subjectInput.value = '';
         bodyInput.value = '';
+        draftAttachments = []; // 清空附件
+        renderDraftAttachments();
     }
 
     async function loadRecipients() {
@@ -34611,67 +34924,66 @@ window.triggerAiEmailReply = async function(character, subject, content) {
         });
     }
 
-    // --- 绑定事件 ---
+    // --- 事件绑定 ---
+    // (基础导航事件保持不变，略)
     if (appBtn) appBtn.addEventListener('click', openMailApp);
-    if (listBackBtn) {
-        const newBtn = listBackBtn.cloneNode(true);
-        listBackBtn.parentNode.replaceChild(newBtn, listBackBtn);
-        newBtn.addEventListener('click', () => showPage('home'));
-    }
-
-    // 标签切换事件
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            switchTab(tab.dataset.type);
-        });
-    });
-
-    // 搜索事件
-    if (searchInput) {
-        searchInput.addEventListener('input', () => {
-            renderMailList(); // 实时搜索
-        });
-    }
-
+    if (listBackBtn) { const n = listBackBtn.cloneNode(true); listBackBtn.parentNode.replaceChild(n, listBackBtn); n.addEventListener('click', () => showPage('home')); }
+    tabs.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.type)));
+    if (searchInput) searchInput.addEventListener('input', renderMailList);
     if (composeFab) composeFab.addEventListener('click', showComposeView);
     if (readBackBtn) readBackBtn.addEventListener('click', () => { showListView(); renderMailList(); }); 
     if (composeCancelBtn) composeCancelBtn.addEventListener('click', showListView);
     if (composeSendBtn) composeSendBtn.addEventListener('click', sendMail);
+    if (refreshBtn) refreshBtn.addEventListener('click', () => { renderMailList(); showNotification("已刷新"); });
     
-    if (refreshBtn) refreshBtn.addEventListener('click', () => {
-        renderMailList();
-        showNotification("已刷新");
+    // 回复
+    if (readReplyBtn) readReplyBtn.addEventListener('click', async () => {
+        const mail = await db.mails.get(currentMailId);
+        if (!mail) return;
+        showComposeView();
+        recipientSelect.value = mail.contactId;
+        subjectInput.value = `Re: ${mail.subject}`;
+        bodyInput.value = `\n\n------------------\n原始邮件:\n${mail.content.substring(0, 100)}...`;
+        bodyInput.setSelectionRange(0, 0); bodyInput.focus();
     });
-    
-    // 回复按钮
-    if (readReplyBtn) {
-        readReplyBtn.addEventListener('click', async () => {
-            const mail = await db.mails.get(currentMailId);
-            if (!mail) return;
-            
-            showComposeView();
-            // 自动填充回复信息
-            recipientSelect.value = mail.contactId;
-            subjectInput.value = `Re: ${mail.subject}`;
-            bodyInput.value = `\n\n------------------\n原始邮件:\n${mail.content.substring(0, 100)}...`;
-            bodyInput.setSelectionRange(0, 0); // 光标置顶
-            bodyInput.focus();
+    // 删除
+    if (readDeleteBtn) readDeleteBtn.addEventListener('click', () => {
+        showDeleteDialog("确定要删除这封邮件吗？", async () => {
+            await db.mails.delete(currentMailId);
+            showNotification("已删除");
+            showListView();
+            renderMailList();
         });
-    }
+    });
 
-    if (readDeleteBtn) {
-        readDeleteBtn.addEventListener('click', () => {
-            showDeleteDialog("确定要删除这封邮件吗？", async () => {
-                await db.mails.delete(currentMailId);
-                showNotification("已删除");
-                showListView();
-                renderMailList();
-            });
-        });
-    }
+    // ✨✨✨ 附件按钮事件绑定 ✨✨✨
+    if(btnAddImage) btnAddImage.addEventListener('click', async () => {
+        const desc = await showInputDialog("描述这张图片:", "例如：一张海边的风景照");
+        if(desc) addDraftAttachment('image', { description: desc, url: 'https://i.postimg.cc/Prtb1wZc/pyq-1.jpg' });
+    });
+
+    if(btnAddFile) btnAddFile.addEventListener('click', async () => {
+        const name = await showInputDialog("输入文件名:", "项目计划书.docx");
+        if(name) {
+            const size = (Math.random() * 5 + 1).toFixed(1) + ' MB';
+            addDraftAttachment('file', { name: name, size: size });
+        }
+    });
+
+    if(btnAddVoice) btnAddVoice.addEventListener('click', async () => {
+        const content = await showInputDialog("语音内容文本:", "你好呀");
+        if(content) {
+            const duration = Math.max(2, Math.min(60, content.length));
+            addDraftAttachment('voice', { content: content, duration: duration });
+        }
+    });
+
+    if(btnAddVideo) btnAddVideo.addEventListener('click', async () => {
+        const desc = await showInputDialog("描述视频内容:", "一只正在奔跑的小狗");
+        if(desc) addDraftAttachment('video', { description: desc });
+    });
 
 })();
-// ==========================================================
 // --- ✨✨✨【V3 - 发送完整邮件内容版】智能邮件检索引擎 ✨✨✨ ---
 // ==========================================================
 /**
@@ -34727,9 +35039,8 @@ async function retrieveRelevantEmails(chatHistory, characterId, userId) {
     return promptText;
 }
 
-    </script>
 
-
+</script>
 
 </body>
 
