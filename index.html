@@ -13614,6 +13614,27 @@ db.version(193).stores({
     mails: "++id, userId, contactId, subject, content, time, isRead, type, [userId+type], [userId+contactId]" 
     // ▲▲▲ 修改结束 ▲▲▲
 });
+
+// ==========================================================
+// --- ✨✨✨【核心升级】数据库自动时间戳钩子 ✨✨✨ ---
+// ==========================================================
+// 这段代码会让数据库自动记录每一条数据的“最后修改时间”
+db.tables.forEach(table => {
+    // 1. 当创建新数据时
+    table.hook('creating', function (primKey, obj, transaction) {
+        // 如果对象里没有 updatedAt，或者是为了强制更新，我们自动加上当前时间
+        obj.updatedAt = new Date().toISOString();
+        // 有些表可能有特殊的 date 字段作为主键，这里通用处理
+    });
+
+    // 2. 当更新数据时
+    table.hook('updating', function (mods, primKey, obj, transaction) {
+        // 自动更新修改时间
+        return { ...mods, updatedAt: new Date().toISOString() };
+    });
+});
+
+
         const USER_FALLBACK_ICON = '<i class="fa-thin fa-user"></i>';
         const CHAR_FALLBACK_ICON = '<i class="fa-solid fa-user-plus"></i>';
 
@@ -33625,27 +33646,44 @@ item.innerHTML = `
         else { statusBadge.style.background = '#e5e7eb'; statusBadge.style.color = '#666'; }
     }
 
-    // ======================================================
-    // --- 核心功能 1: 上传 (Push) - 已替换弹窗 ---
+// ======================================================
+    // --- ✨✨✨【V5 - 智能增量同步版】上传 (Push) ✨✨✨ ---
     // ======================================================
     async function performUpload() {
         if (!window.supabaseClient) return showNotification("请先保存配置并连接 Supabase！");
         
-        // ✨ 使用自定义确认弹窗
         showDeleteDialog(
-            "⬆️ 准备上传到云端\n\n这会将本地数据推送并【覆盖】云端的对应记录。\n\n确定要上传吗？",
+            "⬆️ 准备智能上传\n\n系统将自动对比时间，仅上传**有变动**的数据。\n这比全量上传更快、更省流量。\n\n确定要开始吗？",
             async () => {
-                showLoadingModal("正在准备上传...");
+                showLoadingModal("正在计算差异...");
                 try {
-                    let totalUpload = 0;
+                    // 1. 获取上次同步的时间点
+                    const lastSyncTime = localStorage.getItem('lastCloudPushTime') || '1970-01-01T00:00:00.000Z';
+                    let totalUploadCount = 0;
+                    
+                    console.log(`上次同步时间: ${lastSyncTime}`);
+
                     for (const tableName of TABLES_TO_SYNC) {
-                        const localData = await db[tableName].toArray();
-                        if (localData.length > 0) {
-                            showLoadingModal(`正在上传 ${tableName} (${localData.length}条)...`);
+                        // 2. ✨ 核心逻辑：只查询 updatedAt 晚于上次同步时间的数据
+                        // 注意：如果数据是旧版本没有 updatedAt 字段，我们视为新数据上传一次以防万一
+                        const allData = await db[tableName].toArray();
+                        
+                        // 筛选出 新增的 或 修改过的 数据
+                        const changedData = allData.filter(item => {
+                            // 如果没有时间戳，或者时间戳晚于上次同步，就上传
+                            return !item.updatedAt || item.updatedAt > lastSyncTime;
+                        });
+
+                        if (changedData.length > 0) {
+                            showLoadingModal(`正在上传 ${tableName} (${changedData.length}条变动)...`);
                             
-                            // 1. 处理图片 Base64
-                            const dataToUpload = await Promise.all(localData.map(async (item) => {
+                            // 3. 处理 Blob 转 Base64 (保持不变)
+                            const dataToUpload = await Promise.all(changedData.map(async (item) => {
                                 const processedItem = { ...item };
+                                
+                                // 确保云端也有 updated_at 字段
+                                processedItem.updated_at = processedItem.updatedAt || new Date().toISOString(); 
+
                                 if (TABLES_WITH_BLOBS.includes(tableName)) {
                                     for (let key in processedItem) {
                                         if (processedItem[key] instanceof Blob) processedItem[key] = await blobToBase64(processedItem[key]);
@@ -33654,28 +33692,40 @@ item.innerHTML = `
                                         }
                                     }
                                 }
+                                
+                                // 确定主键
                                 let primaryKey = processedItem.id;
                                 if (tableName === 'period_logs') primaryKey = processedItem.date;
                                 if (tableName.includes('settings')) primaryKey = processedItem.key;
                                 
                                 return {
                                     [tableName === 'period_logs' ? 'date' : (tableName.includes('settings') ? 'key' : 'id')]: primaryKey,
-                                    data: processedItem
+                                    data: processedItem,
+                                    updated_at: processedItem.updated_at // 显式写入云端的时间字段
                                 };
                             }));
 
-                            // 2. 分批上传
-                            const BATCH_SIZE = 20; 
+                            // 4. 分批上传
+                            const BATCH_SIZE = 10; // 稍微调小一点，防止大包超时
                             for (let i = 0; i < dataToUpload.length; i += BATCH_SIZE) {
                                 const batch = dataToUpload.slice(i, i + BATCH_SIZE);
                                 const { error } = await window.supabaseClient.from(tableName).upsert(batch);
                                 if (error) throw error;
                             }
-                            totalUpload += localData.length;
+                            totalUploadCount += changedData.length;
                         }
                     }
+
+                    // 5. 记录本次同步时间
+                    localStorage.setItem('lastCloudPushTime', new Date().toISOString());
+
                     hideLoadingModal();
-                    showNotification("⬆️ 上传成功！", `已同步 ${totalUpload} 条数据。`);
+                    if (totalUploadCount === 0) {
+                        showNotification("☁️ 云端已是最新", "本地没有检测到新的变动。");
+                    } else {
+                        showNotification("⬆️ 智能上传成功！", `仅同步了 ${totalUploadCount} 条变动的数据。`);
+                    }
+
                 } catch (error) {
                     hideLoadingModal();
                     console.error("上传出错:", error);
@@ -33686,39 +33736,50 @@ item.innerHTML = `
     }
 
     // ======================================================
-    // --- 核心功能 2: 下载 (Pull) - 已替换弹窗 ---
+    // --- ✨✨✨【V5 - 智能增量同步版】下载 (Pull) ✨✨✨ ---
     // ======================================================
     async function performDownload() {
         if (!window.supabaseClient) return showNotification("请先保存配置并连接 Supabase！");
         
-        // ✨ 使用自定义确认弹窗
         showDeleteDialog(
-            "⬇️ 准备从云端下载\n\n这会拉取云端数据并【合并】到本地。\n最新的数据会自动生效。\n\n确定要下载吗？",
+            "⬇️ 准备智能下载\n\n系统将从云端拉取**最新修改**的数据并合并到本地。\n\n确定要开始吗？",
             async () => {
                 showLoadingModal("正在连接云端...");
                 try {
-                    let totalDownload = 0;
+                    // 1. 获取上次下载的时间点
+                    const lastSyncTime = localStorage.getItem('lastCloudPullTime') || '1970-01-01T00:00:00.000Z';
+                    let totalDownloadCount = 0;
                     const PAGE_SIZE = 1000; 
 
                     for (const tableName of TABLES_TO_SYNC) {
                         let from = 0;
                         let hasMore = true;
-                        let tableCount = 0;
 
                         while (hasMore) {
                             const to = from + PAGE_SIZE - 1;
-                            showLoadingModal(`正在下载 ${tableName} (${from}-${to})...`);
-
-                            const { data: cloudRows, error } = await window.supabaseClient
+                            
+                            // 2. ✨ 核心逻辑：向 Supabase 请求 updated_at > lastSyncTime 的数据
+                            // 注意：如果这是第一次运行，updated_at 列可能为空，所以我们要么全量，要么由于 OR 逻辑复杂，
+                            // 建议第一次还是全量，之后就是增量。
+                            
+                            let query = window.supabaseClient
                                 .from(tableName)
                                 .select('*')
+                                .gt('updated_at', lastSyncTime) // 只拿新的！
                                 .range(from, to);
+
+                            const { data: cloudRows, error } = await query;
 
                             if (error) throw error;
 
                             if (cloudRows && cloudRows.length > 0) {
+                                showLoadingModal(`正在更新 ${tableName} (${cloudRows.length}条)...`);
+
                                 const dataToSave = cloudRows.map(row => {
                                     const item = row.data;
+                                    // 确保本地也有 updatedAt
+                                    item.updatedAt = row.updated_at; 
+
                                     if (TABLES_WITH_BLOBS.includes(tableName)) {
                                         for (let key in item) {
                                             if (typeof item[key] === 'string' && item[key].startsWith('data:image')) {
@@ -33732,10 +33793,10 @@ item.innerHTML = `
                                     return item;
                                 });
 
+                                // 3. 智能合并：bulkPut 会覆盖旧的，添加新的
                                 await db[tableName].bulkPut(dataToSave);
                                 
-                                tableCount += cloudRows.length;
-                                totalDownload += cloudRows.length;
+                                totalDownloadCount += cloudRows.length;
 
                                 if (cloudRows.length < PAGE_SIZE) {
                                     hasMore = false;
@@ -33746,12 +33807,18 @@ item.innerHTML = `
                                 hasMore = false;
                             }
                         }
-                        console.log(`📥 表 ${tableName} 同步完成，共 ${tableCount} 条。`);
                     }
 
+                    // 4. 记录下载时间
+                    localStorage.setItem('lastCloudPullTime', new Date().toISOString());
+
                     hideLoadingModal();
-                    showNotification("⬇️ 下载成功！", `已同步 ${totalDownload} 条数据。即将刷新...`);
-                    setTimeout(() => window.location.reload(), 1500);
+                    if (totalDownloadCount === 0) {
+                        showNotification("☁️ 本地已是最新", "云端没有检测到更新的数据。");
+                    } else {
+                        showNotification("⬇️ 智能下载成功！", `同步更新了 ${totalDownloadCount} 条数据。即将刷新...`);
+                        setTimeout(() => window.location.reload(), 1500);
+                    }
 
                 } catch (error) {
                     hideLoadingModal();
