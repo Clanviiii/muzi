@@ -542,7 +542,7 @@
 
             /* (其他样式保持不变) */
             border-top: 1px solid var(--color-ui-border);
-            background: var(--color-ui-subtle);
+            background: white;
         }
 
         /* ▲▲▲ 替换到这里结束 ▲▲▲ */
@@ -643,8 +643,6 @@
             transition: background-color 0.2s ease;
             /* 增加平滑过渡 */
         }
-
-
 
         /* 1. 升级 .chat-info，让它能容纳两行内容 */
         .chat-info {
@@ -893,7 +891,7 @@
         .moments-header-bg {
             position: relative;
             flex-shrink: 0;
-            height: 180px;
+            height: 160px;
             /* 高度可以稍微减小一点 */
             color: white;
             cursor: pointer;
@@ -930,10 +928,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1px;
-            /* ✨ 核心修改：间距从 8px 减小到 4px */
-
-            padding-bottom: 12px;
+            padding-bottom: 4px;
             /* 增加一点下内边距 */
 
         }
@@ -1176,13 +1171,19 @@
             border-top: 1px solid var(--color-ui-border);
         }
 
-        .moment-comments-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
+/* ========================================================== */
+/* --- ✨✨✨ 修复：动态评论区自动撑开 (无滚动条) ✨✨✨ --- */
+/* ========================================================== */
+.moment-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    
+    /* ✨ 核心修改：移除高度限制，让它根据内容自动变高 */
+    max-height: none !important; 
+    overflow-y: visible !important;
+    height: auto !important;
+}
 
         .comment-item {
             position: relative;
@@ -1923,7 +1924,7 @@
 
 
         /* --- ✨ 为消息列表区域添加独立的背景色 --- */
-        #qq-content {
+        #qq-content-container {
             background-color: #f9fafb;
             /* 一个非常非常浅的灰色 */
         }
@@ -9515,8 +9516,178 @@ body.fullscreen-mode #phone {
     opacity: 0.6;
     font-weight: bold;
 }
+/* ========================================================== */
+/* --- ✨✨✨【全新】果冻弹性切换动画 CSS (Jelly Effect) ✨✨✨ --- */
+/* ========================================================== */
 
+/* 1. 基础页面设置 */
+.page {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 10;
+    /* 关键：设置变换原点为中心，保证缩放从中间开始 */
+    transform-origin: center center;
+    backface-visibility: hidden;
+    /* 启用3D加速 */
+    transform: translate3d(0, 0, 0); 
+}
 
+/* --- 场景 A: 前进 (点进去) --- */
+
+/* 旧页面：变暗并稍微缩小 (退后感) */
+.page-scale-down {
+    animation: scaleDown 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+/* 新页面：从中间弹出来 (果冻感！) */
+.page-pop-in {
+    z-index: 20 !important;
+    /* 这里的贝塞尔曲线 (0.34, 1.56...) 就是“弹一下”的关键 */
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* --- 场景 B: 后退 (返回) --- */
+
+/* 旧页面：缩小并消失 */
+.page-pop-out {
+    z-index: 20 !important;
+    animation: popOut 0.3s cubic-bezier(0.4, 0.0, 1, 1) forwards;
+}
+
+/* 新页面：从后面放大回来 */
+.page-scale-up {
+    z-index: 9 !important;
+    animation: scaleUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+/* --- 关键帧定义 --- */
+
+/* 缩小退后 */
+@keyframes scaleDown {
+    from { transform: scale(1); opacity: 1; filter: brightness(1); }
+    to { transform: scale(0.92); opacity: 0.8; filter: brightness(0.8); }
+}
+
+/* 放大归位 */
+@keyframes scaleUp {
+    from { transform: scale(0.92); opacity: 0.8; filter: brightness(0.8); }
+    to { transform: scale(1); opacity: 1; filter: brightness(1); }
+}
+
+/* 果冻弹出 (带回弹) */
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    /* 因为贝塞尔曲线有 >1 的值，它会自动放大到约 1.05 倍再弹回 1 */
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 快速缩小消失 */
+@keyframes popOut {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.8); opacity: 0; }
+}
+/* 1. 页面容器 */
+.me-page-container {
+    padding: 0;
+}
+
+/* 2. 个人信息卡片 */
+.me-info-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    background: var(--color-ui-base, #ffffff);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 头像与文字 */
+.me-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    flex-shrink: 0; /* 防止被挤扁 */
+}
+
+.me-name {
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--color-tertiary-accent, #333);
+}
+
+.me-id {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+/* 3. 功能按钮组容器 */
+.me-btn-group {
+    background: var(--color-ui-base, #ffffff);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 单个按钮样式 */
+.me-action-btn {
+    width: 100%;
+    padding: 16px 20px;
+    text-align: left;
+    border: none;
+    background: transparent; /* 背景由容器决定 */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* 给除了最后一个按钮以外的所有按钮加下划线 */
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.me-action-btn:last-child {
+    border-bottom: none;
+}
+
+/* 按钮左侧的彩色图标框 */
+.me-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    font-size: 16px; /* 图标大小 */
+}
+
+/* 针对不同按钮的配色类 */
+.me-icon-box.fav { background: #fffbeb; color: #fbbf24; } /* 收藏-黄 */
+.me-icon-box.acc { background: #eff6ff; color: #3b82f6; } /* 账户-蓝 */
+
+/* 按钮文字 */
+.me-btn-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-secondary-accent, #374151);
+}
+
+/* 右侧箭头 */
+.me-arrow {
+    margin-left: auto;
+    color: #d1d5db;
+    font-size: 12px;
+}
+
+/* 4. 底部版权文字 */
+.me-footer-text {
+    text-align: center;
+    color: #d1d5db;
+    font-size: 12px;
+    margin-top: 30px;
+}
 
     </style>
 
@@ -9921,42 +10092,49 @@ body.fullscreen-mode #phone {
         <input type="file" id="moments-avatar-input" accept="image/*" class="hidden">
     </main>
 
-    <!-- 视图 3: 我的 (默认隐藏) -->
-    <main id="qq-view-me" class="qq-tab-view page-content hidden" style="height: 100%; overflow-y: auto; background-color: #f9fafb;">
-        <div class="me-page-container">
-            <!-- 1. 个人信息卡片 -->
-            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                <div id="auing-me-avatar" class="avatar-display" style="width: 64px; height: 64px; border-radius: 50%;"></div>
-                <div>
-                    <div id="auing-me-name" style="font-weight: bold; font-size: 20px; color: #333;">User</div>
-                    <div id="auing-me-id" style="font-size: 13px; color: #9ca3af; margin-top: 4px;">ID: --</div>
-                </div>
-            </div>
-
-            <!-- 2. 功能按钮组 -->
-            <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                <!-- 收藏按钮 -->
-                <button id="auing-btn-favorites" class="buttonlike" style="width: 100%; padding: 16px 20px; text-align: left; border: none; background: white; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 32px; height: 32px; background: #fffbeb; border-radius: 8px; display: grid; place-items: center;">
-                        <i class="fa-solid fa-star" style="color: #fbbf24; font-size: 16px;"></i>
-                    </div>
-                    <span style="font-size: 15px; font-weight: 500; color: #374151;">我的收藏</span>
-                    <i class="fa-solid fa-chevron-right" style="margin-left: auto; color: #d1d5db; font-size: 12px;"></i>
-                </button>
-
-                <!-- 账户按钮 -->
-                <button id="auing-btn-account" class="buttonlike" style="width: 100%; padding: 16px 20px; text-align: left; border: none; background: white; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 32px; height: 32px; background: #eff6ff; border-radius: 8px; display: grid; place-items: center;">
-                        <i class="fa-solid fa-user-gear" style="color: #3b82f6; font-size: 16px;"></i>
-                    </div>
-                    <span style="font-size: 15px; font-weight: 500; color: #374151;">账户设置</span>
-                    <i class="fa-solid fa-chevron-right" style="margin-left: auto; color: #d1d5db; font-size: 12px;"></i>
-                </button>
-            </div>
+<main id="qq-view-me" class="qq-tab-view page-content hidden" style="height: 100%; overflow-y: auto; background-color: #f9fafb;">
+    <div class="me-page-container">
+        
+        <!-- 1. 个人信息卡片 -->
+        <div class="me-info-card">
+            <!-- 头像容器 -->
+            <div id="auing-me-avatar" class="avatar-display me-avatar"></div>
             
-            <p style="text-align: center; color: #d1d5db; font-size: 12px; margin-top: 30px;">Auing OS v2.0</p>
+            <!-- 文字信息 -->
+            <div>
+                <div id="auing-me-name" class="me-name"></div>
+                <div id="auing-me-id" class="me-id"></div>
+            </div>
         </div>
-    </main>
+
+        <!-- 2. 功能按钮组 -->
+        <div class="me-btn-group">
+            
+            <!-- 收藏按钮 -->
+            <button id="auing-btn-favorites" class="buttonlike me-action-btn">
+                <!-- 左侧图标框 (加了 fav 类) -->
+                <div class="me-icon-box fav">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <span class="me-btn-text">我的收藏</span>
+                <i class="fa-solid fa-chevron-right me-arrow"></i>
+            </button>
+
+            <!-- 账户按钮 -->
+            <button id="auing-btn-account" class="buttonlike me-action-btn">
+                <!-- 左侧图标框 (加了 acc 类) -->
+                <div class="me-icon-box acc">
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+                <span class="me-btn-text">账户设置</span>
+                <i class="fa-solid fa-chevron-right me-arrow"></i>
+            </button>
+
+        </div>
+        
+        <p class="me-footer-text">Auing OS v2.0</p>
+    </div>
+</main>
 </div>
 <!-- ▲▲▲ 替换结束 ▲▲▲ -->
                     <!-- ========================================================== -->
@@ -14211,7 +14389,68 @@ body.fullscreen-mode #phone {
         </div>
     </div>
 
+<!-- ✨✨✨ 动态卡片模板 (Template) ✨✨✨ -->
+<template id="moment-card-template">
+    <div class="moment-card">
+        <div class="moment-header">
+            <!-- 头像 -->
+            <div class="moment-publisher-avatar avatar-display"></div>
+            
+            <!-- 名字和时间 -->
+            <div>
+                <div class="name"></div>
+                <div class="time"></div>
+            </div>
 
+            <!-- 菜单按钮 -->
+            <button class="moment-menu-btn buttonlike" title="更多选项">···</button>
+            
+            <!-- 隐藏的菜单 -->
+            <div class="moment-menu-popup" style="display: none;">
+                <button class="moment-interact-btn buttonlike">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 互动
+                </button>
+                <button class="moment-favorite-btn buttonlike">
+                    <i class="fa-regular fa-star"></i> 收藏
+                </button>
+                <button class="moment-delete-btn buttonlike">
+                    <i class="fa-regular fa-trash-can"></i> 删除
+                </button>
+            </div>
+        </div>
+
+        <!-- 正文内容 -->
+        <p class="moment-text"></p>
+
+        <!-- ✨ 图片/卡片挂载点 (JS会把图片插入到这里) -->
+        <div class="moment-media-container"></div>
+
+        <!-- 底部操作栏 -->
+        <div class="moment-actions">
+            <button class="moment-like-btn buttonlike">
+                <i class="fa-regular fa-heart"></i> <span class="like-count">0</span>
+            </button>
+            <button class="moment-comment-btn buttonlike">
+                <i class="fa-regular fa-comment"></i> <span class="comment-count">0</span>
+            </button>
+            <button class="moment-discuss-btn buttonlike" title="和TA聊聊这条动态">
+                <i class="fa-solid fa-share"></i>
+            </button>
+        </div>
+
+        <!-- 评论区 -->
+        <div class="moment-comments-section" style="display:none;">
+            <div class="moment-comments-list"></div>
+            <div class="comment-input-area">
+                <div class="comment-user-avatar avatar-display"></div>
+                <input type="text" class="comment-input form-input" placeholder="留下你的评论...">
+                <button class="comment-send-btn btn btn-primary buttonlike">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
 
 <!-- 指挥浏览器：先读第一本笔记 -->
 <script>
@@ -14273,6 +14512,67 @@ db.version(195).stores({
     // ▲▲▲ 修改结束 ▲▲▲
 });
 
+// ==========================================================
+// --- ✨✨✨【终极合并版】全能消息同步引擎 (Universal Hook) ✨✨✨ ---
+// ==========================================================
+
+// 1. 定义一个“通用逻辑函数”：不管发生了什么，我去数据库查最新状态，然后刷新UI
+async function syncChatListPreview(chatId) {
+    // 稍微延迟，等待数据库写入完成
+    setTimeout(async () => {
+        try {
+            // 核心：直接去数据库查“现在最后一条消息是谁？”
+            const lastMsg = await db.messages.where({ chatId: chatId }).last();
+
+            let previewText = '可以开始聊天了'; // 默认文案（如果是删光了）
+            let timestamp = new Date();        // 默认时间
+
+            if (lastMsg) {
+                // 如果还有消息，提取内容
+                timestamp = new Date(lastMsg.time);
+                previewText = lastMsg.content || '';
+
+                // 统一处理特殊类型的预览文字
+                if (lastMsg.type === 'image') {
+                    if (previewText.includes('[发送了表情')) {
+                         const match = previewText.match(/\[发送了表情：(.*?)\]/);
+                         previewText = `[表情] ${match ? match[1] : ''}`;
+                    } else {
+                        previewText = '[图片]';
+                    }
+                } 
+                else if (lastMsg.type === 'voice') previewText = '[语音]';
+                else if (lastMsg.type === 'file') previewText = '[文件]';
+                else if (lastMsg.type === 'location') previewText = '[位置]';
+                else if (lastMsg.type === 'transfer') previewText = '[转账]';
+                else if (lastMsg.type === 'image_description') previewText = '[图片]';
+                else if (lastMsg.videoCallHistory) previewText = '[视频通话]';
+            }
+
+            // 更新 UI
+            if (typeof window.updateChatItemPreview === 'function') {
+                window.updateChatItemPreview(chatId, previewText, timestamp);
+            }
+        } catch (error) {
+            console.error("同步消息状态失败:", error);
+        }
+    }, 100);
+}
+
+// 2. 批量注册监听器：发消息(creating)、删消息(deleting)、改消息(updating)
+//    无论发生什么，都统一呼叫上面的 syncChatListPreview
+['creating', 'deleting', 'updating'].forEach(eventType => {
+    db.messages.hook(eventType, function (primKey, obj, transaction) {
+        // 注意：deleting 时 obj 是被删除的对象，creating/updating 时 obj 是新对象
+        // 但它们都有 chatId，这就够了
+        const targetChatId = obj.chatId;
+        
+        // 只有当数据库操作成功后，才刷新 UI
+        this.onsuccess = function () {
+            syncChatListPreview(targetChatId);
+        };
+    });
+});
 // ==========================================================
 // --- ✨✨✨【核心升级】数据库自动时间戳钩子 ✨✨✨ ---
 // ==========================================================
@@ -15772,8 +16072,6 @@ const saveLogic = async (isNew = false) => {
             // ==========================================================
             (function () {
                 // 在这里粘贴刚刚剪切的所有代码
-
-
                 const chatInput = document.getElementById('chat-input');
 
                 if (!chatInput) {
@@ -15812,13 +16110,6 @@ const saveLogic = async (isNew = false) => {
                     resetQuoteState();
                     const msgBox = document.getElementById('chat-messages');
                     scrollToBottom(msgBox);
-
-                    // ✨ 调用我们的“精准工匠”！
-                    if (typeof updateChatItemPreview === 'function') {
-                        // 假设 userMsg 是您正在发送的消息对象
-                        updateChatItemPreview(userMsg.chatId, userMsg.content, new Date(userMsg.time));
-                    }
-
 
                 }
 
@@ -16450,132 +16741,157 @@ const saveLogic = async (isNew = false) => {
             }, 300);
         }
 
-
-   // ==========================================================
-        // ==========================================================
-        // --- ✨✨✨【V3.3 - 修复重叠版】应用导航核心引擎 ✨✨✨ ---
+// ==========================================================
+        // --- ✨✨✨【V4.0 - 丝滑动画版】应用导航核心引擎 ✨✨✨ ---
         // ==========================================================
         (function () {
 
             const pages = [
-                'home',
-                'qq-main',
-                'qq-chat',
-                'settings-menu',
-                'offline-app-page',
-                'calendar-app-page',
-                'bubble-settings-page',
-                'character-profile-page',
-                'period-tracker-page',
-                'period-history-page',
-                'prompt-viewer-page',
-                'prompt-preset-page',
-                'world-book-page',
-                'data-management-page',
-                'memory-page',
-                'muzi-mail-app-page',
-                'beautify-page',
-                'forum-app-page',
-                'favorites-app-page'// <--- ✨ 在这里添加新页面ID
+                'home', 'qq-main', 'qq-chat', 'settings-menu', 'offline-app-page',
+                'calendar-app-page', 'bubble-settings-page', 'character-profile-page',
+                'period-tracker-page', 'period-history-page', 'prompt-viewer-page',
+                'prompt-preset-page', 'world-book-page', 'data-management-page',
+                'memory-page', 'muzi-mail-app-page', 'beautify-page',
+                'forum-app-page', 'favorites-app-page',
+                'char-phone-desktop', 'char-phone-browser-page', 'char-phone-music-page', // 查手机相关页面
+                'char-phone-album-page', 'char-phone-cart-page', 'char-phone-memo-page',
+                'char-phone-favorites-page', 'char-phone-diary-page', 'char-phone-auing-page',
+                'char-phone-food-delivery-page'
             ];
 
             let navigationHistory = [];
             let currentPageId = 'home';
+            let isAnimating = false; // ✨ 防止快速点击导致的动画冲突
 
-            /**
-             * 全局可访问的函数，用于安全地获取当前页面的ID
-             */
+            // 获取当前页面ID
             function getCurrentPageId() {
                 return currentPageId;
             }
             window.getCurrentPageId = getCurrentPageId;
 
-            // a. 导航到新页面 (会记录历史)
+            // a. 导航到新页面 (前进 -> 动画: 从右滑入)
             function navigateTo(newPageId) {
-                if (currentPageId === newPageId) return;
+                if (currentPageId === newPageId || isAnimating) return;
                 navigationHistory.push(currentPageId);
-                _renderPage(newPageId);
+                _renderPageWithAnimation(newPageId, 'forward');
                 currentPageId = newPageId;
             }
             window.navigateTo = navigateTo;
 
-            // b. 返回上一页
+            // b. 返回上一页 (后退 -> 动画: 向右滑出)
             function navigateBack() {
+                if (isAnimating) return;
                 const lastPageId = navigationHistory.pop();
                 if (lastPageId) {
-                    _renderPage(lastPageId);
+                    _renderPageWithAnimation(lastPageId, 'back');
                     currentPageId = lastPageId;
                 } else {
-                    // console.warn(`历史记录为空，默认返回桌面。`);
-                    showPage('home');
+                    navigateBack(); // 历史记录空了，直接回桌面
                 }
             }
             window.navigateBack = navigateBack;
 
-            // c. 直接跳转到某个页面 (会清空历史)
+            // c. 直接跳转 (无动画，用于重置或特殊场景)
             function showPage(pageId) {
                 navigationHistory = [];
-                _renderPage(pageId);
+                _renderPageWithAnimation(pageId, 'none');
                 currentPageId = pageId;
             }
             window.showPage = showPage;
 
-            async function _renderPage(id) {
+/**
+             * ✨ 核心动画渲染函数 (果冻版)
+             * @param {string} targetId - 目标页面ID
+             * @param {string} direction - 'forward' | 'back' | 'none'
+             */
+            async function _renderPageWithAnimation(targetId, direction) {
                 const statusbar = document.getElementById('statusbar');
+                const oldPage = document.getElementById(currentPageId);
+                const newPage = document.getElementById(targetId);
 
-                // --- 页面切换逻辑 ---
-                pages.forEach(pid => {
-                    const el = document.getElementById(pid);
-                    if (el) el.style.display = 'none'; // ✨ 这一步现在能正确隐藏桌面了
-                });
+                if (!newPage) return;
 
-                const targetEl = document.getElementById(id);
-                if (targetEl) {
-                    // 针对不同页面设置不同的 display 模式
-                    const displayStyle = ['qq-main', 'qq-chat', 'novel-page'].includes(id) ? 'flex' : 'block';
-                    targetEl.style.display = displayStyle;
-
-if (statusbar) {
-                    // ✨ 核心修改：我们把图标更新的调用放在了这里
-                    // 这样无论是进入还是离开聊天页，图标都能正确刷新
-                    if (typeof updateStatusbarFeatureIcons === 'function') {
-                        updateStatusbarFeatureIcons();
-                    }
-
-                    if (id !== 'home') {
-                        // 非桌面页面，强制深色状态栏
+                // 1. 更新状态栏颜色 (逻辑保持不变)
+                if (statusbar) {
+                    if (typeof updateStatusbarFeatureIcons === 'function') updateStatusbarFeatureIcons();
+                    if (targetId !== 'home' && !targetId.startsWith('char-phone')) {
                         statusbar.className = 'statusbar light-mode';
-                    } else {
-                        // 桌面，根据壁纸自适应
+                    } else if (targetId === 'home') {
                         const wallpaperSetting = await db.global_settings.get('wallpaper');
                         const wallpaperBlob = (wallpaperSetting && wallpaperSetting.value instanceof Blob) ? wallpaperSetting.value : null;
                         const adaptiveClass = await getAdaptiveTextColor(wallpaperBlob);
                         statusbar.className = 'statusbar ' + adaptiveClass;
                     }
                 }
-                } else {
-                    console.error(`导航错误：无法找到 ID 为 "${id}" 的页面！`);
-                }
-            }
 
-            // --- 绑定事件 ---
-            document.getElementById('qq-main-back-btn')?.addEventListener('click', () => showPage('home'));
-      // ==========================================================
-// --- ✨✨✨【V2 - 状态清理版】聊天返回按钮核心引擎 ✨✨✨ ---
-// ==========================================================
-document.getElementById('chat-back')?.addEventListener('click', () => {
-    // ✨ 核心修改：在返回之前，告诉程序“忘记当前在和谁聊天”
-    window.currentChat = null;
-    
-    // (原来的返回逻辑保持不变)
-    navigateBack();
-});
+                // 2. 准备显示
+                const getDisplayStyle = (id) => ['qq-main', 'qq-chat', 'novel-page'].includes(id) ? 'flex' : 'block';
+
+                // --- 无动画模式 ---
+                if (direction === 'none' || !oldPage) {
+                    pages.forEach(pid => {
+                        const el = document.getElementById(pid);
+                        if (el) {
+                            el.style.display = 'none';
+                            // 清除所有可能残留的果冻类名
+                            el.classList.remove('page-pop-in', 'page-scale-down', 'page-pop-out', 'page-scale-up');
+                        }
+                    });
+                    newPage.style.display = getDisplayStyle(targetId);
+                    return;
+                }
+
+                // --- 果冻动画模式 ---
+                isAnimating = true;
+
+                // 显示新页面，准备进场
+                newPage.style.display = getDisplayStyle(targetId);
+                
+                // 根据方向应用不同的果冻效果
+                if (direction === 'forward') {
+                    // 前进：旧页后退变暗，新页Q弹弹出
+                    oldPage.className = `page ${oldPage.dataset.originalClass || ''} page-scale-down`;
+                    newPage.className = `page ${newPage.dataset.originalClass || ''} page-pop-in`;
+                } else if (direction === 'back') {
+                    // 后退：旧页缩小消失，新页放大归位
+                    oldPage.className = `page ${oldPage.dataset.originalClass || ''} page-pop-out`;
+                    newPage.className = `page ${newPage.dataset.originalClass || ''} page-scale-up`;
+                }
+
+                // 3. 动画结束后清理 (时间稍微延长一点点以匹配弹跳结束)
+                setTimeout(() => {
+                    oldPage.style.display = 'none';
+                    
+                    // 移除动画类
+                    oldPage.classList.remove('page-scale-down', 'page-pop-out');
+                    newPage.classList.remove('page-pop-in', 'page-scale-up');
+                    
+                    isAnimating = false;
+                }, 500); // 500ms 足够让果冻弹完
+            }
+            // --- 绑定基础事件 ---
+            document.getElementById('qq-main-back-btn')?.addEventListener('click', () => navigateBack());
+            
+            document.getElementById('chat-back')?.addEventListener('click', () => {
+                window.currentChat = null;
+                navigateBack();
+            });
+            
             document.getElementById('settings-menu-back')?.addEventListener('click', () => navigateBack());
             document.getElementById('contacts-lib-back')?.addEventListener('click', () => navigateBack());
-            // 故事页面的返回按钮逻辑已经在它自己的引擎里绑定了，这里不需要重复绑定
+
+            // 初始化：给所有页面保存原始 class，防止动画类残留
+            document.querySelectorAll('.page').forEach(p => {
+                if (!p.dataset.originalClass) {
+                    // 移除 page 类本身，只保留其他的 (如 home-grid)
+                    p.dataset.originalClass = p.className.replace('page', '').trim();
+                }
+            });
 
         })();
-        // ==========================================================
+        
+        
+        
         // --- ✨✨✨【V2 - “单一宇宙”版】聊天个性化应用引擎 ✨✨✨ ---
         // ==========================================================
         async function applyChatCustomization(characterOrGroup) {
@@ -19168,55 +19484,46 @@ ${JAILBREAK_PROMPT}
                     if (!publisher) continue; // 找不到作者就跳过
 
                     // --- 构建卡片 HTML ---
-                    const momentCard = document.createElement('div');
-                    momentCard.className = 'moment-card';
+// --- 构建卡片 (Template 模式) ---
+                    
+                    // 1. 获取模板并克隆
+                    const template = document.getElementById('moment-card-template');
+                    // 克隆模板内容
+                    const clone = template.content.cloneNode(true);
+                    // 获取最外层的卡片元素
+                    const momentCard = clone.querySelector('.moment-card'); 
                     momentCard.dataset.momentId = moment.id;
 
-                    // 图片处理
-                    let imageHTML = '';
-                    if (moment.type === 'image' && moment.image) {
-                        imageHTML = `<img src="${URL.createObjectURL(moment.image)}" class="moment-image">`;
-                    } 
-                    // ▼▼▼ ✨✨✨ 核心修改：修复描述图片的结构 ✨✨✨ ▼▼▼
-                    else if (moment.type === 'text_with_described_image' && moment.describedImage) {
-                        // ✨ 核心修改：动态里的文字卡片，尺寸稍微固定一点，类似九宫格图
-                        imageHTML = `
-                            <div class="imaginary-image-card" style="width: 120px; height: 120px; margin-top: 8px; font-size: 12px; padding: 10px;">
-                                ${escapeHtml(moment.describedImage.description)}
-                            </div>`;
-                    }
-                    // ▲▲▲ 修改结束 ▲▲▲
+                    // 2. 填充文本数据
+                    momentCard.querySelector('.name').textContent = publisher.name;
+                    momentCard.querySelector('.time').textContent = formatTimestamp(moment.createdAt);
+                    momentCard.querySelector('.moment-text').textContent = moment.content;
+                    momentCard.querySelector('.like-count').textContent = moment.likedBy?.length || 0;
+                    
+                    // 3. 填充 data-id 到按钮 (用于后续事件绑定)
+                    momentCard.querySelector('.moment-interact-btn').dataset.id = moment.id;
+                    momentCard.querySelector('.moment-favorite-btn').dataset.id = moment.id;
+                    momentCard.querySelector('.moment-delete-btn').dataset.id = moment.id;
 
-                    momentCard.innerHTML = `
-                        <div class="moment-header">
-                            <div class="moment-publisher-avatar avatar-display"></div>
-                            <div>
-                                <div class="name">${escapeHtml(publisher.name)}</div>
-                                <div class="time">${formatTimestamp(moment.createdAt)}</div>
-                            </div>
-                            <button class="moment-menu-btn buttonlike" title="更多选项">···</button>
-                            <div class="moment-menu-popup">
-                                <button class="moment-interact-btn buttonlike" data-id="${moment.id}"><i class="fa-solid fa-wand-magic-sparkles"></i> 互动</button>
-                                <button class="moment-favorite-btn buttonlike" data-id="${moment.id}"><i class="fa-regular fa-star"></i> 收藏</button>
-                                <button class="moment-delete-btn buttonlike" data-id="${moment.id}"><i class="fa-regular fa-trash-can"></i> 删除</button>
-                            </div>
-                        </div>
-                        <p class="moment-text">${escapeHtml(moment.content)}</p>
-                        ${imageHTML}
-                        <div class="moment-actions">
-                            <button class="moment-like-btn buttonlike"><i class="fa-regular fa-heart"></i> <span class="like-count">${moment.likedBy?.length || 0}</span></button>
-                            <button class="moment-comment-btn buttonlike"><i class="fa-regular fa-comment"></i> <span class="comment-count">0</span></button>
-                            <button class="moment-discuss-btn buttonlike" title="和TA聊聊这条动态"><i class="fa-solid fa-share"></i></button>
-                        </div>
-                        <div class="moment-comments-section" style="display:none;"> <!-- 默认隐藏评论区 -->
-                            <div class="moment-comments-list"></div>
-                            <div class="comment-input-area">
-                                <div class="comment-user-avatar avatar-display"></div>
-                                <input type="text" class="comment-input form-input" placeholder="留下你的评论...">
-                                <button class="comment-send-btn btn btn-primary buttonlike"><i class="fa-solid fa-paper-plane"></i></button>
-                            </div>
-                        </div>
-                    `;
+                    // 4. 处理图片/文字卡片逻辑 (插入到 media-container 中)
+                    const mediaContainer = momentCard.querySelector('.moment-media-container');
+                    
+                    if (moment.type === 'image' && moment.image) {
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(moment.image);
+                        img.className = 'moment-image';
+                        mediaContainer.appendChild(img);
+                    } 
+                    else if (moment.type === 'text_with_described_image' && moment.describedImage) {
+                        const imaginaryCard = document.createElement('div');
+                        imaginaryCard.className = 'imaginary-image-card';
+                        // 这里的样式建议写到 CSS 文件里，不过保留内联也可以
+                        imaginaryCard.style.cssText = "width: 120px; height: 120px; margin-top: 8px; font-size: 12px; padding: 10px;";
+                        imaginaryCard.textContent = moment.describedImage.description;
+                        mediaContainer.appendChild(imaginaryCard);
+                    }
+
+
 
                     feedEl.appendChild(momentCard);
 
@@ -19277,179 +19584,221 @@ ${JAILBREAK_PROMPT}
 
                     // 互动按钮 (这里只保留事件绑定框架，具体逻辑复用你原来的代码，为了精简省略了AI部分)
                     const interactBtn = momentCard.querySelector('.moment-interact-btn');
-// --- 互动按钮点击事件 (完整版) ---
-                    interactBtn.addEventListener('click', async (e) => {
-                        e.stopPropagation();
-                        menuPopup.style.display = 'none';
+// ==========================================================
+// --- ✨✨✨【升级版 V3】动态互动引擎 (支持点赞+评论) ✨✨✨ ---
+// ==========================================================
+interactBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    menuPopup.style.display = 'none'; // 关闭菜单
 
-                        // 1. 获取候选人
-                        const allChars = await db.characters.toArray();
-                        let candidates = allChars.filter(c => c.id !== moment.contactId && !c.id.startsWith('npc-'));
+    // 1. 获取基础数据
+    const currentMoment = await db.moments.get(moment.id); // 获取最新状态
+    const likedByIds = currentMoment.likedBy || [];
+    
+    // 获取所有可用角色
+    const allChars = await db.characters.toArray();
+    let candidates = allChars.filter(c => c.id !== moment.contactId && !c.id.startsWith('npc-'));
 
-                        if (candidates.length === 0) {
-                            showNotification("没有好友", "快去添加一些角色吧！");
-                            return;
-                        }
-                        
-                        candidates = candidates.sort(() => 0.5 - Math.random()).slice(0, 8);
+    if (candidates.length === 0) {
+        showNotification("没有好友", "快去添加一些角色吧！");
+        return;
+    }
+    
+    // 随机选几个幸运观众参与互动
+    candidates = candidates.sort(() => 0.5 - Math.random()).slice(0, 8);
 
-                        // 2. 构建“演员表”
-                        const castListText = candidates.map(c => {
-                            const shortPersona = (c.persona || "").substring(0, 50).replace(/\n/g, " ");
-                            return `- ${c.name}: ${shortPersona}`;
-                        }).join('\n');
-                        
-                        const nameToIdMap = {};
-                        candidates.forEach(c => nameToIdMap[c.name] = c.id);
+    // 2. 构建“已点赞名单”字符串 (告诉AI谁已经点过了)
+    const likedNames = [];
+    candidates.forEach(c => {
+        if (likedByIds.includes(c.id)) {
+            likedNames.push(c.name);
+        }
+    });
+    const likedContext = likedNames.length > 0 ? likedNames.join('、') : "无";
 
-                        // 3. 获取评论上下文
-                        const existingComments = await db.comments.where({ momentId: moment.id }).sortBy('createdAt');
-                        let commentsContext = "(评论区目前是空的)";
-                        if (existingComments.length > 0) {
-                            const recentComments = existingComments.slice(-15);
-                            const commentLines = await Promise.all(recentComments.map(async (c) => {
-                                let authorName = '未知用户';
-                                if (c.authorId === window.currentUser.id) {
-                                    authorName = window.currentUser.name;
-                                } else {
-                                    const char = allChars.find(char => char.id === c.authorId);
-                                    if (char) authorName = char.name;
-                                }
-                                return `[${authorName}]: ${c.content}`;
-                            }));
-                            commentsContext = commentLines.join('\n');
-                        }
+    // 构建“演员表”
+    const castListText = candidates.map(c => {
+        const shortPersona = (c.persona || "").substring(0, 50).replace(/\n/g, " ");
+        return `- ${c.name}: ${shortPersona}`;
+    }).join('\n');
+    
+    const nameToIdMap = {};
+    candidates.forEach(c => nameToIdMap[c.name] = c.id);
 
-                        // --- ✨✨✨ 呼叫通用灵动岛 ✨✨✨ ---
-                        const island = document.getElementById('universal-dynamic-island');
-                        const islandText = document.getElementById('universal-island-text');
-                        let animationInterval = null;
+    // 3. 获取评论上下文
+    const existingComments = await db.comments.where({ momentId: moment.id }).sortBy('createdAt');
+    let commentsContext = "(评论区目前是空的)";
+    if (existingComments.length > 0) {
+        // ... (此处省略原有的评论拼接逻辑，保持不变) ...
+        const recentComments = existingComments.slice(-15);
+        // 为了省代码空间，这里简写，请保留你原有的逻辑
+        const commentLines = await Promise.all(recentComments.map(async (c) => {
+            let authorName = '未知用户';
+            if (c.authorId === window.currentUser.id) authorName = window.currentUser.name;
+            else { const char = allChars.find(char => char.id === c.authorId); if (char) authorName = char.name; }
+            return `[${authorName}]: ${c.content}`;
+        }));
+        commentsContext = commentLines.join('\n');
+    }
 
-                        if (island && islandText) {
-                            // a. 显示灵动岛
-                            island.classList.add('visible');
-                            
-                            // b. 定义轮播逻辑
-                            const actions = ["正在刷朋友圈...", "正在组织语言...", "正在吃瓜...", "准备点赞..."];
-                            const updateText = () => {
-                                const char = candidates[Math.floor(Math.random() * candidates.length)];
-                                const action = actions[Math.floor(Math.random() * actions.length)];
-                                islandText.textContent = `${char.name} ${action}`;
-                            };
-                            
-                            // c. 启动轮播
-                            updateText();
-                            animationInterval = setInterval(updateText, 1500);
-                        }
-                        // -----------------------------------------------------
+    // --- 启动灵动岛 ---
+    const island = document.getElementById('universal-dynamic-island');
+    const islandText = document.getElementById('universal-island-text');
+    let animationInterval = null;
+    if (island && islandText) {
+        island.classList.add('visible');
+        const actions = ["正在点赞...", "正在组织语言...", "正在吃瓜..."];
+        const updateText = () => {
+            const char = candidates[Math.floor(Math.random() * candidates.length)];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+            islandText.textContent = `${char.name} ${action}`;
+        };
+        updateText();
+        animationInterval = setInterval(updateText, 1500);
+    }
 
-                        // 4. 身份识别
-                        let publisherIdentity = "";
-                        let relationshipContext = "";
+    // 4. 身份识别 (保持不变)
+    let publisherIdentity = "";
+    let relationshipContext = "";
+    if (publisher.id === window.currentUser.id) {
+        publisherIdentity = `你的特别关注对象 {{user}} (${publisher.name})`;
+        relationshipContext = "注意：这是 {{user}} 发的动态。大家通常会表现得比较关注，或者根据对 {{user}} 的好感度来互动。";
+    } else {
+        publisherIdentity = `列表里的好友 “${publisher.name}”`;
+        relationshipContext = `注意：这是角色 “${publisher.name}” 发的动态。`;
+    }
 
-                        if (publisher.id === window.currentUser.id) {
-                            publisherIdentity = `你的特别关注对象 {{user}} (${publisher.name})`;
-                            relationshipContext = "注意：这是 {{user}} 发的动态。大家通常会表现得比较关注，或者根据对 {{user}} 的好感度来互动。";
-                        } else {
-                            publisherIdentity = `列表里的好友 “${publisher.name}”`;
-                            relationshipContext = `注意：这是角色 “${publisher.name}” 发的动态。请根据其他角色与 TA 的关系（朋友、死对头、陌生人）来决定态度。`;
-                        }
-
-                        try {
-                            const taskDescription = `
-【社交网络评论区模拟器 (连续剧模式)】
+    // 5. ✨ 核心修改：升级 Prompt，增加点赞指令 ✨
+    try {
+        const taskDescription = `
+【社交网络互动模拟器 (点赞 + 评论版)】
 **事件**：朋友圈里，【${publisherIdentity}】 更新了一条动态。
-现在有一群好友看到了这条动态，以及**现有的评论区内容**。
-请你作为“上帝/编剧”，基于他们的人设和当前的讨论氛围，模拟出接下来的反应。
+请模拟好友们的反应。
 
 [动态内容]: “${moment.content}”
 [发布者身份]: ${publisherIdentity}
 
-【当前评论区现状 (Context)】:
+【当前状态 (Context)】
+- [已点赞的人]: ${likedContext} (这些人**不需要**再次点赞)
+- [现有评论]:
 ${commentsContext}
 
-【当前在线的好友名单 (Cast)】:
+【在线好友 (Cast)】:
 ${castListText}
 
 【模拟规则】
-1. **身份识别 (最重要)**：${relationshipContext}
-2. **上下文连贯**：不要重复角色自己说过的废话。
-3. **互动性**：角色之间可以互相回复（盖楼）。
-4. **真实性**：不需要每个人都说话。只输出那些**有话要说**的角色。
+1. **点赞逻辑**：
+   - 如果角色之前**没点赞**，且符合人设（比如关系好、或者单纯已阅），请执行点赞。
+   - 如果角色**已经点赞**，请忽略点赞操作（不要取消，也不要重复）。
+2. **评论逻辑**：
+   - 不需要每个人都评论，只有**有话要说**的角色才输出评论。
+   - 可以只点赞不评论，也可以只评论不点赞，也可以两者都做。
 
 【输出格式 (JSON Array)】
+请输出一个 JSON 数组，包含每个互动的角色的动作：
 [
-  { "name": "角色名字", "content": "评论内容" },
-  { "name": "角色名字", "content": "回复 @某人: 你的观点..." }
+  { "name": "角色A", "action": "like", "content": null }, 
+  { "name": "角色B", "action": "comment", "content": "哈哈哈哈！" },
+  { "name": "角色C", "action": "like_and_comment", "content": "真不错！" }
 ]
 `;
-                            const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat || candidates[0], window.currentUser, taskDescription);
-                            const responseList = await getAiGeneratedJson(finalPrompt);
+        const finalPrompt = await generateUnifiedSystemPrompt(window.currentChat || candidates[0], window.currentUser, taskDescription);
+        const responseList = await getAiGeneratedJson(finalPrompt);
 
-                            // --- ✨ 成功处理：停止动画，显示结果 ---
-                            if (island && islandText) {
-                                clearInterval(animationInterval);
-                                if (Array.isArray(responseList) && responseList.length > 0) {
-                                    islandText.textContent = `新增 ${responseList.length} 条互动`;
-                                } else {
-                                    islandText.textContent = "大家似乎都很高冷...";
-                                }
-                                setTimeout(() => { island.classList.remove('visible'); }, 2000);
-                            }
-                            // ------------------------------------
+        // --- 停止动画 ---
+        if (island && islandText) {
+            clearInterval(animationInterval);
+            if (Array.isArray(responseList) && responseList.length > 0) {
+                islandText.textContent = `新增 ${responseList.length} 条互动`;
+            } else {
+                islandText.textContent = "大家似乎都很高冷...";
+            }
+            setTimeout(() => { island.classList.remove('visible'); }, 2000);
+        }
 
-                            if (Array.isArray(responseList) && responseList.length > 0) {
-                                let delayIndex = 0;
-                                for (const item of responseList) {
-                                    const charId = nameToIdMap[item.name];
-                                    if (!charId) continue; 
+        // 6. ✨ 核心修改：处理结果 (含点赞去重) ✨
+        if (Array.isArray(responseList) && responseList.length > 0) {
+            
+            // 重新获取最新的 likedBy (防止并发问题)
+            const latestMoment = await db.moments.get(moment.id);
+            let latestLikedBy = new Set(latestMoment.likedBy || []);
+            let likeCountChanged = false;
+            let delayIndex = 0;
 
-                                    let replyToName = null;
-                                    let finalContent = item.content;
-                                    const replyMatch = item.content.match(/回复\s*@?(.+?)[:：]\s*(.*)/);
-                                    if (replyMatch) {
-                                        replyToName = replyMatch[1];
-                                        finalContent = replyMatch[2];
-                                    }
+            for (const item of responseList) {
+                const charId = nameToIdMap[item.name];
+                if (!charId) continue; 
 
-                                    const delay = (delayIndex++) * 1500 + Math.random() * 1500;
+                // --- A. 处理点赞 ---
+                if (item.action === 'like' || item.action === 'like_and_comment') {
+                    // ✨ 核心去重：只有 ID 不在 Set 里才添加
+                    if (!latestLikedBy.has(charId)) {
+                        latestLikedBy.add(charId);
+                        likeCountChanged = true;
+                    }
+                }
 
-                                    setTimeout(async () => {
-                                        const newComment = {
-                                            momentId: moment.id,
-                                            authorId: charId,
-                                            content: finalContent,
-                                            replyToAuthorName: replyToName,
-                                            createdAt: new Date().toISOString()
-                                        };
-                                        const newId = await db.comments.add(newComment);
+                // --- B. 处理评论 ---
+                if ((item.action === 'comment' || item.action === 'like_and_comment') && item.content) {
+                    let replyToName = null;
+                    let finalContent = item.content;
+                    const replyMatch = item.content.match(/回复\s*@?(.+?)[:：]\s*(.*)/);
+                    if (replyMatch) {
+                        replyToName = replyMatch[1];
+                        finalContent = replyMatch[2];
+                    }
 
-                                        if (typeof addCommentToUI === 'function') {
-                                            addCommentToUI({ id: newId, ...newComment });
-                                        }
+                    const delay = (delayIndex++) * 1000 + 500;
+                    setTimeout(async () => {
+                        const newComment = {
+                            momentId: moment.id,
+                            authorId: charId,
+                            content: finalContent,
+                            replyToAuthorName: replyToName,
+                            createdAt: new Date().toISOString()
+                        };
+                        const newId = await db.comments.add(newComment);
 
-                                        const countSpan = momentCard.querySelector('.comment-count');
-                                        if (countSpan) {
-                                            const currentCount = parseInt(countSpan.textContent) || 0;
-                                            countSpan.textContent = currentCount + 1;
-                                        }
-                                        await db.characters.update(charId, { lastCommentAt: new Date().toISOString() });
-
-                                    }, delay);
-                                }
-                            }
-
-                        } catch (error) {
-                            // --- ✨ 出错处理：显示失败 ---
-                            if (island && islandText) {
-                                clearInterval(animationInterval);
-                                islandText.textContent = "互动失败...";
-                                setTimeout(() => island.classList.remove('visible'), 2000);
-                            }
-
-                            console.error("动态评论失败:", error);
+                        // 更新UI
+                        if (typeof addCommentToUI === 'function') {
+                            addCommentToUI({ id: newId, ...newComment });
                         }
-                    });
+                        const countSpan = momentCard.querySelector('.comment-count');
+                        if (countSpan) countSpan.textContent = parseInt(countSpan.textContent) + 1;
+                        
+                        await db.characters.update(charId, { lastCommentAt: new Date().toISOString() });
+                    }, delay);
+                }
+            }
+
+            // --- C. 统一保存点赞数据 ---
+            if (likeCountChanged) {
+                const newLikedByArray = Array.from(latestLikedBy);
+                await db.moments.update(moment.id, { likedBy: newLikedByArray });
+                
+                // 立即更新 UI 上的点赞数
+                const likeCountSpan = momentCard.querySelector('.like-count');
+                if (likeCountSpan) likeCountSpan.textContent = newLikedByArray.length;
+                
+                // 如果恰好我自己也点赞了，确保心是红的
+                const likeBtn = momentCard.querySelector('.moment-like-btn');
+                const likeIcon = likeBtn.querySelector('i');
+                if (newLikedByArray.includes(window.currentUser.id)) {
+                    likeBtn.classList.add('liked');
+                    likeIcon.className = 'fa-solid fa-heart';
+                }
+            }
+        }
+
+    } catch (error) {
+        if (island && islandText) {
+            clearInterval(animationInterval);
+            islandText.textContent = "互动失败...";
+            setTimeout(() => island.classList.remove('visible'), 2000);
+        }
+        console.error("动态互动失败:", error);
+    }
+});
                     // 点赞按钮
                     const likeBtn = momentCard.querySelector('.moment-like-btn');
                     const likeCountSpan = likeBtn.querySelector('.like-count');
@@ -20191,32 +20540,67 @@ window.getActiveWorldBookEntriesForTurn = getActiveWorldBookEntriesForTurn;
         }
 
 
-        // ==========================================================
-        // --- ✨✨✨【全新】消息列表“精准更新”引擎 V1.0 ✨✨✨ ---
-        // ==========================================================
-        function updateChatItemPreview(characterId, message, timestamp) {
-            const listContainer = document.getElementById('qq-content').querySelector('div');
-            if (!listContainer) return;
-
-            // 1. 根据“身份证”找到需要更新的那一行
-            const itemToUpdate = listContainer.querySelector(`.account-item[data-character-id="${characterId}"]`);
-
-            if (itemToUpdate) {
-                // 2. 精准地找到内部的“最后消息”和“时间戳”元素
-                const lastMessageEl = itemToUpdate.querySelector('.chat-last');
-                const timestampEl = itemToUpdate.querySelector('.chat-timestamp');
-
-                // 3. 只更新这两个元素的文字内容
-                if (lastMessageEl) lastMessageEl.innerHTML = escapeHtml(message); // 使用 innerHTML 以便未来支持 [图片] 等富文本
-                if (timestampEl) timestampEl.textContent = formatLastMessageTime(timestamp);
-
-                // 4. (体验优化) 把更新后的这一行移动到列表的最顶部
-                listContainer.prepend(itemToUpdate);
-            } else {
-                // 如果列表里原本没有这一项（比如是和新角色的第一次聊天），那就只能暴力刷新一次了
-                if (typeof renderChatList === 'function') renderChatList(window.currentUser);
-            }
+// ==========================================================
+// --- ✨✨✨【最终修复版】消息列表“精准更新”引擎 V2.0 ✨✨✨ ---
+// ==========================================================
+function updateChatItemPreview(characterId, rawMessage, timestamp) {
+    // 1. ✨ 核心修复：现在的列表在 'qq-view-messages' 里，而不是直接在 qq-content
+    const listContainer = document.getElementById('qq-view-messages');
+    
+    // 如果找不到容器（比如还没加载过），或者容器是空的，直接调用全量渲染兜底
+    if (!listContainer || listContainer.children.length === 0) {
+        if (typeof renderChatList === 'function' && window.currentUser) {
+            renderChatList(window.currentUser);
         }
+        return;
+    }
+
+    // 2. 根据 ID 找到对应的行
+    const itemToUpdate = listContainer.querySelector(`.account-item[data-character-id="${characterId}"]`);
+
+    if (itemToUpdate) {
+        // 3. 找到内部元素
+        const lastMessageEl = itemToUpdate.querySelector('.chat-last');
+        const timestampEl = itemToUpdate.querySelector('.chat-timestamp');
+
+        // 4. ✨ 智能处理预览文本：如果是 HTML 标签（比如图片/表情），转为文字提示
+        let previewText = rawMessage;
+        
+        // 检查是否是图片/表情/卡片等特殊格式
+        if (rawMessage.includes('<img') || rawMessage.includes('chat-sticker-img')) {
+            previewText = '[图片/表情]';
+        } else if (rawMessage.includes('voice-message') || rawMessage.includes('<svg class="voice-icon-svg"')) {
+            previewText = '[语音]';
+        } else if (rawMessage.startsWith('<div') || rawMessage.includes('class="special-card-container"')) {
+            // 简单的正则判断是否是文件或转账卡片
+            if(rawMessage.includes('data-card-type="file"')) previewText = '[文件]';
+            else if(rawMessage.includes('data-card-type="transfer"')) previewText = '[转账]';
+            else previewText = '[卡片消息]';
+        } else if (rawMessage.includes('image-description-message')) {
+            previewText = '[图片]';
+        }
+
+        // 5. 更新 DOM
+        if (lastMessageEl) lastMessageEl.textContent = previewText; // 使用 textContent 自动去除潜在的 HTML 标签，更安全
+        if (timestampEl) timestampEl.textContent = formatLastMessageTime(new Date(timestamp));
+
+        // 6. ✨ 视觉反馈：将这一行移动到列表最顶部 (置顶效果)
+        // 只有当它不是第一个时才移动，减少抖动
+        if (listContainer.firstElementChild !== itemToUpdate) {
+            listContainer.prepend(itemToUpdate);
+        }
+        
+        // 7. 可选：给个高亮闪烁，提示有新消息
+        // itemToUpdate.style.backgroundColor = '#f3f4f6';
+        // setTimeout(() => itemToUpdate.style.backgroundColor = '#fff', 300);
+
+    } else {
+        // 7. 如果列表里没有这一行（比如是新聊的角色），暴力刷新列表
+        if (typeof renderChatList === 'function' && window.currentUser) {
+            renderChatList(window.currentUser);
+        }
+    }
+}
 
 
 // ==========================================================
@@ -20594,192 +20978,8 @@ window.getActiveWorldBookEntriesForTurn = getActiveWorldBookEntriesForTurn;
                 reader.readAsText(file);
             });
         }
-// ==========================================================
-        // --- ✨✨✨【全新 V3】Auing 底部导航切换引擎 (含“我的”界面) ✨✨✨ ---
-        // ==========================================================
-        document.querySelectorAll('.qq-tab').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                // 1. 高亮切换
-                document.querySelectorAll('.qq-tab').forEach(tab => tab.classList.remove('active'));
-                btn.classList.add('active');
 
-                const tab = btn.getAttribute('data-tab');
-                lastActiveQQTab = tab;
 
-                const qqMainPage = document.getElementById('qq-main');
-                const content = document.getElementById('qq-content');
-                if (!qqMainPage || !content) return;
-
-                const sharedHeader = qqMainPage.querySelector('.page-header');
-                const headerCenter = sharedHeader.querySelector('.header-center .chat-title-container div:first-child');
-                const headerRight = sharedHeader.querySelector('.header-right');
-                const backBtn = document.getElementById('qq-main-back-btn');
-
-                sharedHeader.style.display = 'flex';
-                content.innerHTML = ''; // 清空内容
-
-                // --- 场景 A: 消息列表 ---
-                if (tab === 'message') {
-                    headerCenter.textContent = '消息';
-                    headerRight.innerHTML = `
-                        <button id="open-global-stickers-from-main-btn" class="btn-icon buttonlike" title="角色表情包"><i class="fa-solid fa-grin-wink"></i></button>
-                        <button id="qq-add-btn" class="btn-icon buttonlike"><i class="fa-solid fa-plus"></i></button>
-                    `;
-                    // 恢复返回按钮功能
-                    const newBackBtn = backBtn.cloneNode(true);
-                    backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-                    newBackBtn.addEventListener('click', () => showPage('home'));
-
-                    renderChatList(window.currentUser);
-                } 
-                // --- 场景 B: 动态 ---
-                else if (tab === 'moments') {
-                    headerCenter.textContent = '动态';
-                    // ✨ 这里的收藏入口可以先留着，或者删掉，因为“我的”里面也有了
-                    headerRight.innerHTML = `
-                        <button id="moments-open-editor-btn" class="btn-icon buttonlike" title="发布动态"><i class="fa-solid fa-plus"></i></button>
-                    `;
-                    
-                    const newBackBtn = backBtn.cloneNode(true);
-                    backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-                    newBackBtn.addEventListener('click', () => {
-                        document.querySelector('.qq-tab[data-tab="message"]').click();
-                    });
-
-                    renderMoments(window.currentUser);
-                } 
-                // --- ✨✨✨ 场景 C: 我的 (全新界面) ✨✨✨ ---
-// --- 场景 C: 我的 (全新界面) ---
-else if (tab === 'me') {
-    headerCenter.textContent = '我的';
-    headerRight.innerHTML = '';
-    
-    // 绑定返回按钮
-    const newBackBtn = backBtn.cloneNode(true);
-    backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-    newBackBtn.addEventListener('click', () => {
-        document.querySelector('.qq-tab[data-tab="message"]').click();
-    });
-
-    // ✨ 渲染“我的”界面内容
-    const user = window.currentUser;
-    
-    // 1. 生成 HTML (注意：按钮 ID 必须是 auing-btn-favorites)
-    content.innerHTML = `
-        <div class="me-page-container" style="padding: 20px;">
-            <!-- 个人信息卡片 -->
-            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                <div id="auing-me-avatar" class="avatar-display" style="width: 64px; height: 64px; border-radius: 50%;"></div>
-                <div>
-                    <div style="font-weight: bold; font-size: 20px; color: #333;">${escapeHtml(user.name)}</div>
-                    <div style="font-size: 13px; color: #9ca3af; margin-top: 4px;">ID: ${user.displayId || '未设置'}</div>
-                </div>
-            </div>
-
-            <!-- 功能按钮组 -->
-            <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                
-                <!-- ✨✨✨ 重点：收藏按钮 ID 必须正确 ✨✨✨ -->
-                <button id="auing-btn-favorites" class="buttonlike" style="width: 100%; padding: 16px 20px; text-align: left; border: none; background: white; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 32px; height: 32px; background: #fffbeb; border-radius: 8px; display: grid; place-items: center;">
-                        <i class="fa-solid fa-star" style="color: #fbbf24; font-size: 16px;"></i>
-                    </div>
-                    <span style="font-size: 15px; font-weight: 500; color: #374151;">我的收藏</span>
-                    <i class="fa-solid fa-chevron-right" style="margin-left: auto; color: #d1d5db; font-size: 12px;"></i>
-                </button>
-
-                <!-- 账户按钮 -->
-                <button id="auing-btn-account" class="buttonlike" style="width: 100%; padding: 16px 20px; text-align: left; border: none; background: white; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 32px; height: 32px; background: #eff6ff; border-radius: 8px; display: grid; place-items: center;">
-                        <i class="fa-solid fa-user-gear" style="color: #3b82f6; font-size: 16px;"></i>
-                    </div>
-                    <span style="font-size: 15px; font-weight: 500; color: #374151;">账户设置</span>
-                    <i class="fa-solid fa-chevron-right" style="margin-left: auto; color: #d1d5db; font-size: 12px;"></i>
-                </button>
-            </div>
-            
-            <p style="text-align: center; color: #d1d5db; font-size: 12px; margin-top: 30px;">Auing OS v2.0</p>
-        </div>
-    `;
-
-    // 渲染头像
-    const avatarEl = content.querySelector('#auing-me-avatar');
-    renderAvatar(avatarEl, user.avatar, user.name.charAt(0));
-
-    // ======================================================
-    // --- ✨✨✨ 修复核心：在这里立刻绑定事件！ ✨✨✨ ---
-    // ======================================================
-
-    // 1. 获取刚刚生成的按钮
-    const favBtn = content.querySelector('#auing-btn-favorites');
-    
-    if (favBtn) {
-        console.log("✅ [探针A] 成功在 DOM 中找到了收藏按钮 (renderMePage)"); 
-        
-        // 2. 绑定点击事件
-        favBtn.addEventListener('click', () => {
-            console.log("🖱️ [探针B] 用户点击了收藏按钮！");
-            
-            // 3. 调用全局引擎函数
-            if (typeof window.openFavoritesApp === 'function') {
-                console.log("🚀 [探针C] 正在调用 window.openFavoritesApp()...");
-                window.openFavoritesApp();
-            } else {
-                console.error("❌ [探针FAIL] window.openFavoritesApp 未定义！引擎没加载？");
-                alert("错误：收藏功能引擎未加载，请刷新页面重试。");
-            }
-        });
-    } else {
-        console.error("❌ [探针ERROR] 找不到 id='auing-btn-favorites' 的按钮！HTML生成可能出错。");
-    }
-
-    // 绑定账户按钮
-    content.querySelector('#auing-btn-account').addEventListener('click', () => {
-        if (typeof window.openDefaultUserEditor === 'function') {
-            window.openDefaultUserEditor();
-        }
-    });
-}
-            });
-        });
-        // (事件委托部分保持不变)
-        document.querySelector('#qq-main .page-header .header-right').addEventListener('click', (e) => {
-            const targetBtnId = e.target.closest('.btn-icon')?.id;
-            if (!targetBtnId) return;
-            switch (targetBtnId) {
-                case 'open-global-stickers-from-main-btn': if (typeof openGlobalStickerManager === 'function') openGlobalStickerManager(); break;
-                case 'qq-add-btn': if (typeof openContactEditor === 'function') openContactEditor(null, false); break;
-                case 'moments-goto-favorites-tab': if (typeof renderFavoritesPage === 'function') renderFavoritesPage(window.currentUser); break;
-                case 'moments-open-editor-btn': if (typeof openUnifiedMomentEditor === 'function') openUnifiedMomentEditor(); break;
-            }
-        });
-        // ==========================================================
-        // ▲▲▲ 替换到这里结束 ▲▲▲
-
-        // --- 为动态变化的 header-right 容器绑定统一的事件委托 ---
-        document.querySelector('#qq-main .page-header .header-right').addEventListener('click', (e) => {
-            // 根据被点击按钮的 ID 执行不同操作
-            const targetBtnId = e.target.closest('.btn-icon')?.id;
-            if (!targetBtnId) return;
-
-            switch (targetBtnId) {
-                // 消息页的按钮
-                case 'open-global-stickers-from-main-btn':
-                    if (typeof openGlobalStickerManager === 'function') openGlobalStickerManager();
-                    break;
-                case 'qq-add-btn':
-                    if (typeof openContactEditor === 'function') openContactEditor(null, false);
-                    break;
-                // 动态页的按钮
-                case 'moments-goto-favorites-tab':
-                    if (typeof renderFavoritesPage === 'function') renderFavoritesPage(window.currentUser);
-                    break;
-                case 'moments-open-editor-btn':
-                    if (typeof openUnifiedMomentEditor === 'function') openUnifiedMomentEditor();
-                    break;
-            }
-        });
-        // ==========================================================
 // ==========================================================
         // --- ✨✨✨【全新 V2 - 页面版】CSS美化功能核心引擎 ✨✨✨ ---
         // ==========================================================
@@ -21013,7 +21213,6 @@ else if (tab === 'me') {
             }
             // ▲▲▲ 粘贴到这里结束 ▲▲▲
             await updateStatusbarFeatureIcons(); // ✨ 添加在这里
-
             showPage('home');
             document.querySelector('.page-layer').classList.add('visible');
 
@@ -26993,23 +27192,6 @@ async function generateMemoData() {
             // 3. 将任务清单交给渲染引擎去逐个执行
             await executeRenderingQueue(renderingQueue, user, chat, quotedMessageContext);
 
-            // 4. 精准更新预览 (保持不变)
-            if (typeof updateChatItemPreview === 'function') {
-                const bubbles = [...aiResponseText.matchAll(/\[s\](.*?)\[\/s\]/gs)].map(match => match[1].trim());
-                let lastMessageForPreview = '';
-                for (let i = bubbles.length - 1; i >= 0; i--) {
-                    const bubbleContent = bubbles[i];
-                    if (!bubbleContent.startsWith('<')) { 
-                        lastMessageForPreview = bubbleContent;
-                        break;
-                    }
-                }
-                if (!lastMessageForPreview) {
-                    lastMessageForPreview = `[${chat.name} 发送了多媒体消息]`;
-                }
-                updateChatItemPreview(chat.id, lastMessageForPreview, new Date());
-            }
-
             scrollToBottom(document.getElementById('chat-messages'));
         }
 
@@ -30481,7 +30663,7 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
             if (backBtn) {
                 const newBackBtn = backBtn.cloneNode(true);
                 backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-                newBackBtn.addEventListener('click', () => showPage('home'));
+                newBackBtn.addEventListener('click', () => navigateBack());
             }
             if (prevBtn) prevBtn.onclick = () => { currentViewDate.setMonth(currentViewDate.getMonth() - 1); renderPage(); };
             if (nextBtn) nextBtn.onclick = () => { currentViewDate.setMonth(currentViewDate.getMonth() + 1); renderPage(); };
@@ -32369,8 +32551,10 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
 
             // --- 2. 核心函数 ---
 
-            async function openOfflineApp() {
-                showPage('offline-app-page');
+async function openOfflineApp() {
+                // ✨ 改为 navigateTo
+                navigateTo('offline-app-page'); 
+                
                 listView.style.display = 'flex';
                 chatView.classList.add('hidden');
                 await renderContactList();
@@ -32609,7 +32793,7 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
 
             // --- 3. 绑定事件 ---
             if (offlineAppBtn) offlineAppBtn.addEventListener('click', openOfflineApp);
-            if (listBackBtn) listBackBtn.addEventListener('click', () => showPage('home'));
+            if (listBackBtn) listBackBtn.addEventListener('click', () => navigateBack());
             if (chatBackBtn) chatBackBtn.addEventListener('click', () => {
                 chatView.classList.add('hidden');
                 listView.style.display = 'flex';
@@ -32837,13 +33021,17 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
                 renderAppCalendar();
             });
 
-            if (appBtn) appBtn.addEventListener('click', () => {
+if (appBtn) appBtn.addEventListener('click', () => {
                 currentDate = new Date();
                 selectedDate = new Date();
                 renderAppCalendar();
-                showPage('calendar-app-page');
+                // ✨ 改为 navigateTo 以触发果冻进场动画
+                navigateTo('calendar-app-page'); 
             });
-            if (backBtn) backBtn.addEventListener('click', () => showPage('home'));
+           if (backBtn) backBtn.addEventListener('click', () => {
+                // ✨ 改为 navigateBack 以触发果冻退场动画
+                navigateBack(); 
+            });
             if (todayBtn) todayBtn.addEventListener('click', () => {
                 const now = new Date();
                 currentDate = new Date(now);
@@ -35017,8 +35205,10 @@ ${emailThreadText}
 
     // --- 核心函数 ---
 
-    async function openMailApp() {
-        showPage(pageId);
+async function openMailApp() {
+        // ✨ 改为 navigateTo
+        navigateTo(pageId); 
+        
         showListView();
         switchTab('inbox');
     }
@@ -35255,7 +35445,7 @@ ${emailThreadText}
     // --- 事件绑定 ---
     // (基础导航事件保持不变，略)
     if (appBtn) appBtn.addEventListener('click', openMailApp);
-    if (listBackBtn) { const n = listBackBtn.cloneNode(true); listBackBtn.parentNode.replaceChild(n, listBackBtn); n.addEventListener('click', () => showPage('home')); }
+    if (listBackBtn) { const n = listBackBtn.cloneNode(true); listBackBtn.parentNode.replaceChild(n, listBackBtn); n.addEventListener('click', () => navigateBack()); }
     tabs.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.type)));
     if (searchInput) searchInput.addEventListener('input', renderMailList);
     if (composeFab) composeFab.addEventListener('click', showComposeView);
@@ -35445,9 +35635,11 @@ async function retrieveRelevantEmails(chatHistory, characterId, userId) {
         });
     }
 
-    // --- 核心函数 1: 打开应用 ---
+// --- 核心函数 1: 打开应用 ---
     async function openForumApp() {
-        showPage('forum-app-page');
+        // ✨ 改为 navigateTo
+        navigateTo('forum-app-page');
+        
         detailView.classList.add('hidden'); 
         switchTab('realname'); 
     }
@@ -35652,15 +35844,23 @@ async function retrieveRelevantEmails(chatHistory, characterId, userId) {
 
         return card;
     }
-// --- 核心函数 5: 打开详情页 (修复头像版) ---
+// --- 核心函数 5: 打开详情页 (修复回顶 + 修复头像版) ---
     async function openForumDetail(data, type) { 
         currentViewingId = data.id;
         currentViewingType = type === 'fanfic' ? 'fanfic' : 'post'; 
         currentPostContentForAi = (data.title ? `标题：${data.title}\n` : '') + data.content;
 
+        // 1. 显示视图
         detailView.classList.remove('hidden');
+
+        // ▼▼▼ ✨✨✨ 核心修复：强制滚动条回到顶部 ✨✨✨ ▼▼▼
+        const scrollContainer = document.getElementById('forum-detail-content');
+        if (scrollContainer) {
+            scrollContainer.scrollTop = 0;
+        }
+        // ▲▲▲ 修复结束 ▲▲▲
         
-        // 1. 准备数据
+        // 2. 准备数据
         let avatarBlob = null;
         let nameDisplay = data.authorName;
         let isAnon = false;
@@ -35688,7 +35888,7 @@ async function retrieveRelevantEmails(chatHistory, characterId, userId) {
 
         let titleBlock = data.title ? `<div class="forum-post-title">${type === 'fanfic' ? '<span class="fanfic-tag">同人</span>' : ''}${escapeHtml(data.title)}</div>` : '';
         
-        // 2. 渲染 HTML (头像留空容器)
+        // 3. 渲染 HTML (头像留空容器)
         detailMainPost.innerHTML = `
             <div class="forum-post-card" style="box-shadow:none; margin-bottom:0; padding-bottom:20px;">
                 <div class="forum-post-header">
@@ -35706,7 +35906,7 @@ async function retrieveRelevantEmails(chatHistory, characterId, userId) {
             </div>
         `;
 
-        // 3. ✨ 填充头像
+        // 4. ✨ 填充头像
         const avatarContainer = document.getElementById('detail-main-avatar');
         if (isAnon) {
             avatarContainer.classList.add('anon');
@@ -35719,7 +35919,6 @@ async function retrieveRelevantEmails(chatHistory, characterId, userId) {
 
         await renderComments(data.id, currentViewingType);
     }
-// --- 核心函数 6: 渲染评论列表 (V5 - 楼层 + 编辑/删除菜单版) ---
     async function renderComments(id, type) { 
         // 1. 获取评论数据
         const comments = await db.forum_comments
@@ -36288,7 +36487,7 @@ ${ANTI_DUPLICATION_RULE}
     if (backBtn) {
         const newBackBtn = backBtn.cloneNode(true);
         backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-        newBackBtn.addEventListener('click', () => showPage('home'));
+        newBackBtn.addEventListener('click', () => navigateBack());
     }
     
 // 绑定右上角按钮点击事件
@@ -36581,7 +36780,7 @@ if (addInspBtn) {
                 `;
                 const newBackBtn = backBtn.cloneNode(true);
                 backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-                newBackBtn.addEventListener('click', () => showPage('home'));
+                newBackBtn.addEventListener('click', () => navigateBack());
                 window.renderChatList(window.currentUser); 
             } 
             else if (tab === 'moments') {
@@ -36618,6 +36817,30 @@ if (addInspBtn) {
     setTimeout(rebindMePageEvents, 1000); 
 
 })();
+
+
+        document.querySelector('#qq-main .page-header .header-right').addEventListener('click', (e) => {
+            // 根据被点击按钮的 ID 执行不同操作
+            const targetBtnId = e.target.closest('.btn-icon')?.id;
+            if (!targetBtnId) return;
+
+            switch (targetBtnId) {
+                case 'open-global-stickers-from-main-btn':
+                    if (typeof openGlobalStickerManager === 'function') openGlobalStickerManager();
+                    break;
+                case 'qq-add-btn':
+                    if (typeof openContactEditor === 'function') openContactEditor(null, false);
+                    break;
+    
+                case 'moments-goto-favorites-tab':
+                    if (typeof renderFavoritesPage === 'function') renderFavoritesPage(window.currentUser);
+                    break;
+                case 'moments-open-editor-btn':
+                    if (typeof openUnifiedMomentEditor === 'function') openUnifiedMomentEditor();
+                    break;
+            }
+        });
+
 // ==========================================================
 // --- ✨✨✨【全新 V5 - 完整功能版】收藏中心核心引擎 ✨✨✨ ---
 // ==========================================================
@@ -36926,6 +37149,7 @@ if (addInspBtn) {
     if (feedContainer) feedContainer.addEventListener('click', handleImageClick);
     if (meFeedContainer) meFeedContainer.addEventListener('click', handleImageClick);
 })();
+
 
 
 
