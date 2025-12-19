@@ -818,8 +818,8 @@ background-color: #f9fafb;
 
 
         .msg.right {
-            background: var(--color-primary-accent);
-            color: var(--color-tertiary-accent);
+            background: black;
+            color: white;
             /* 确保右侧气泡文字是白色，对比度更高 */
         }
 
@@ -1658,56 +1658,6 @@ background-color: #f9fafb;
             color: #6b7280;
         }
 
-        #cancel-quote-btn {
-            font-size: 14px;
-            color: #a1a1aa;
-        }
-
-        /* --- 消息气泡内的引用内容 --- */
-        .msg-quote-preview {
-            background: rgba(0, 0, 0, 0.05);
-            /* 这里保持不变，因为它在任何背景下效果都很好 */
-            padding: 6px 10px;
-            border-radius: 8px 8px 0 0;
-            margin: -8px -12px 8px;
-            border-left: 3px solid var(--color-primary-accent);
-            /* ✨ 修改这里 */
-            font-size: 12px;
-        }
-
-        /* 右侧消息气泡内的引用 */
-        .msg.right .msg-quote-preview {
-            border-left-color: var(--color-ui-base);
-            /* ✨ 修改这里 */
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .msg-quote-sender {
-            font-weight: bold;
-            color: var(--color-primary-accent);
-        }
-
-        .msg.right .msg-quote-sender {
-            /* 使用一个在主色调背景上清晰可见的颜色 */
-            color: var(--color-ui-base);
-            opacity: 0.9;
-        }
-
-        .msg-quote-text {
-            margin: 2px 0 0;
-            color: #4b5563;
-            /* ✨ 防止引用内容过长，最多显示两行 */
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            /* ✨✨✨ 新增这一行即可 ✨✨✨ */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            word-break: break-all;
-            /* 强制长单词或链接换行 */
-        }
-
 
         /* 当 home-grid 元素拥有 .labels-hidden 这个类时... */
         .home-grid.labels-hidden .app .label {
@@ -2508,23 +2458,6 @@ background-color: #f9fafb;
             background: var(--chat-bubble-color, white);
             color: var(--chat-font-color, var(--color-tertiary-accent));
         }
-
-        .msg.left .msg-quote-text {
-            color: var(--chat-font-color, #4b5563);
-        }
-
-        .msg.right {
-            background: var(--user-chat-bubble-color, var(--color-primary-accent));
-            color: var(--user-chat-font-color, white);
-        }
-
-        .msg.right .msg-quote-text {
-            color: var(--user-chat-font-color, #f1f5f9);
-        }
-
-
-
-
         .msg.sticker-message {
 
             background: transparent;
@@ -2999,7 +2932,7 @@ background-color: #f9fafb;
         .msg.right .edit-actions .btn-primary {
             background-color: white;
             color: var(--color-primary-accent);
-            /* 使用主题粉色作为文字颜色，形成对比 */
+       
         }
 
 
@@ -4468,51 +4401,54 @@ background-color: #f9fafb;
             gap: 15px;
         }
 
-        /* 4. 单个颜色选择器的容器 */
-        .color-picker-wrapper {
+/* ========================================================== */
+        /* --- ✨✨✨【修复版】颜色选择器容器样式 (类名修正) ✨✨✨ --- */
+        /* ========================================================== */
+
+        /* 4. 单个颜色选择器包装 (修正类名 picker -> input) */
+        .color-input-wrapper {
             display: flex;
             flex-direction: column;
-            /* 图标/文字在上方，圆形选择器在下方 */
             align-items: center;
-            gap: 8px;
+            gap: 4px;
+            position: relative; /* 确保定位稳定 */
         }
 
-        /* 5. 颜色选择器上方的标签/图标 */
-        .color-picker-label {
-            font-size: 12px;
-            color: var(--color-secondary-accent);
-            opacity: 0.8;
+        .color-input-wrapper span {
+            font-size: 10px;
+            color: #9ca3af;
         }
 
-        /* 6. 圆形的颜色选择器 (复用并微调旧样式) */
-        .color-picker-wrapper .color-picker-input {
-            position: static;
-            /* 不再需要绝对定位 */
-            opacity: 1;
-            /* 恢复可见 */
-            width: 40px;
-            /* 尺寸可以小一些 */
-            height: 40px;
+        /* 5. 颜色选择器本体 (强制可见) */
+        /* ✨ 核心修复：确保这里的类名与 HTML 中的 .color-input-wrapper 对应 */
+        .color-input-wrapper .color-picker-input {
+            position: static !important; /* 覆盖全局的 absolute */
+            opacity: 1 !important;       /* 覆盖全局的 hidden */
+            width: 36px;
+            height: 36px;
             border: 1px solid var(--color-ui-border);
             border-radius: 50%;
             padding: 0;
+            margin: 0;
             cursor: pointer;
             -webkit-appearance: none;
-            -moz-appearance: none;
             appearance: none;
             background-color: transparent;
+            display: block; /* 确保它是块级元素 */
+            z-index: 10;    /* 确保在最上层 */
         }
 
-        /* 隐藏原生颜色选择器的边框和填充 */
-        .color-picker-wrapper .color-picker-input::-webkit-color-swatch-wrapper {
+        /* 6. 针对 Webkit 浏览器的颜色圆盘美化 */
+        .color-input-wrapper .color-picker-input::-webkit-color-swatch-wrapper {
             padding: 0;
         }
 
-        .color-picker-wrapper .color-picker-input::-webkit-color-swatch {
+        .color-input-wrapper .color-picker-input::-webkit-color-swatch {
             border: none;
             border-radius: 50%;
+            /* 稍微加一点阴影，让白色在白底上也能看见 */
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); 
         }
-
 
         /* ========================================================== */
         /* --- ✨✨✨【新增】动态编辑器底部操作栏专属样式 ✨✨✨ --- */
@@ -7872,33 +7808,38 @@ font-size: 17px;
             display: none !important;
         }
 
-        /* 1. 仿真预览区容器：限制高度 + 滚动 */
-        .chat-simulation-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            /* 消息之间的垂直间距 */
-            padding: 15px 10px;
-            /* 给内部留点呼吸空间，防止气泡贴边 */
+/* ========================================================== */
+/* --- ✨✨✨【优化版】气泡预览容器样式 (仿真屏幕) ✨✨✨ --- */
+/* ========================================================== */
+.chat-simulation-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 增加气泡之间的间距，更透气 */
+    padding: 25px 15px; /* 增加内边距，模拟屏幕边缘 */
+    
+    /* 尺寸控制 */
+    height: 240px; /* 稍微增高，视野更开阔 */
+    overflow-y: auto;
+    overflow-x: hidden;
 
-            /* ✨ 核心修改：变成可滚动的窗口 ✨ */
-            height: 240px;
-            /* 1. 固定高度 (您可以改成 250px 或 400px) */
-            overflow-y: auto;
-            /* 2. 内容多了自动允许滚动 */
-            overflow-x: hidden;
-            /* 3. 禁止横向滚动 */
+    /* 背景处理：默认浅灰，支持背景图覆盖 */
+    background-color: #f2f4f6; 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* 外观：圆角与质感 */
+    border-radius: 24px; /* 更大的圆角 */
+    border: 1px solid rgba(0, 0, 0, 0.08); /* 极细的边框 */
+    /* 添加内阴影，营造“屏幕内凹”的视觉层次感 */
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.03); 
+    
+    /* 确保内容在背景之上 */
+    position: relative;
+    z-index: 1;
+}
 
-            /* ✨ 视觉升级：给这个区域加个半透明框框，看起来像个手机屏幕 */
-            background-color: rgba(255, 255, 255, 0.2);
-            /* 淡淡的白色背景 */
-            border-radius: 12px;
-            /* 圆角 */
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            /* 淡淡的边框 */
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
-            /* 内阴影，增加深度感 */
-        }
+
 
         /* 2. 颜色控制面板容器 */
         .bubble-color-control-panel {
@@ -9350,44 +9291,74 @@ body.fullscreen-mode #phone {
     background: #f3f4f6;
 }
 /* ========================================================== */
-/* --- ✨✨✨【全新】极简文字画面卡片样式 ✨✨✨ --- */
+/* --- ✨✨✨【全新】电影感画面描述卡片样式 ✨✨✨ --- */
 /* ========================================================== */
 .imaginary-image-card {
-    /* 1. 外观：深色渐变背景，模拟“未显影的胶片”或“黑屏” */
-    background: linear-gradient(135deg, #374151, #1f2937); 
-    color: #e5e7eb; /* 浅灰色文字 */
+    /* 1. 尺寸控制：固定宽度，高度自适应 */
+    width: 160px; 
+    min-height: 160px; /* 最小保持一个长方形，像一张照片 */
+    height: auto;      /* 关键：允许高度随文字撑开，防止截断 */
     
-    /* 2. 布局：文字居中 */
+    /* 2. 视觉质感：深色胶片风 */
+    background: linear-gradient(160deg, #323236, #1a1a1d);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 极细的微光边框 */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    /* 3. 布局：垂直居中 */
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    padding: 15px;
-    text-align: center;
+    align-items: center;
     
-    /* 3. 形状与质感 */
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    font-size: 13px;
-    line-height: 1.5;
+    /* 4. 内边距：留足呼吸空间 */
+    padding: 30px 20px 20px 20px; /* 顶部多留一点给标签 */
     position: relative;
-    overflow: hidden;
-    
-    /* 4. 尺寸限制 */
-    min-width: 120px;
-    max-width: 240px;
-    min-height: 120px; /* 保持一定的方形感 */
+    box-sizing: border-box;
 }
 
-/* 左上角的小标签，提示这是画面描述 */
+/* 左上角的“画面”标签 (装饰性) */
 .imaginary-image-card::before {
-    content: '🖼️ 画面';
+    content: 'SCENE'; /* 英文显得更像电影分镜脚本 */
     position: absolute;
-    top: 6px;
-    left: 8px;
-    font-size: 10px;
-    color: #9ca3af;
-    opacity: 0.6;
-    font-weight: bold;
+    top: 10px;
+    left: 12px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 700;
+    font-family: sans-serif;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 2px;
+}
+
+/* 右上角的图标 (装饰性) */
+.imaginary-image-card::after {
+    content: '\f03e'; /* FontAwesome 的图片图标代码 */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* 内部文字样式 */
+.imaginary-card-text {
+    color: #e5e7eb;
+    font-size: 14px;
+    line-height: 1.7; /* 增加行高，更易阅读 */
+    text-align: center; /* 居中对齐，更有诗意 */
+    
+    /* 字体：优先使用宋体/衬线体，营造文学感 */
+    font-family: "Songti SC", "SimSun", "Times New Roman", serif;
+    font-style: italic; /* 斜体，表示这是想象内容 */
+    
+    /* ✨ 核心：防止长文本溢出 */
+    word-break: break-word; 
+    white-space: pre-wrap;
+    width: 100%;
 }
 /* ========================================================== */
 /* --- ✨✨✨【旗舰级】iOS 视差滑动动画 CSS (Parallax) ✨✨✨ --- */
@@ -9804,7 +9775,7 @@ body.fullscreen-mode #phone {
     overflow-y: hidden; /* 内容少时隐藏滚动条 */
     min-height: 36px;   /* 最小高度 (单行) */
     max-height: 120px;  /* 最大高度 (约4-5行)，超过出滚动条 */
-    line-height: 1.5;
+   
     display: block;
 }
 
@@ -10636,11 +10607,10 @@ body.fullscreen-mode #phone {
 }
 
 /* ========================================================== */
-/* --- ✨✨✨【组件库 V1.1】通用弹窗系统 (信笺卡片风格) ✨✨✨ --- */
+/* --- ✨✨✨【组件库 V1.1】通用弹窗系统 (墨白风格版) ✨✨✨ --- */
 /* ========================================================== */
 
 /* --- 1. 遮罩层 (Overlay) --- */
-/* (这段代码来自您文件中的 .modal-overlay，保持不变) */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -10648,11 +10618,7 @@ body.fullscreen-mode #phone {
     align-items: center;
     justify-content: center;
     z-index: 1010;
-    background: rgba(0, 0, 0, 0.4); /* 半透明黑色背景 */
-    backdrop-filter: blur(8px);     /* 背景模糊效果 */
-    -webkit-backdrop-filter: blur(8px);
-
-    /* 动画 */
+ 
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -10662,14 +10628,11 @@ body.fullscreen-mode #phone {
     pointer-events: auto;
 }
 
-/* --- 2. 弹窗主体动画 (Animation) --- */
-/* (这段代码来自您文件中的 .modal-content 动画部分，保持不变) */
+/* --- 2. 弹窗主体动画 --- */
 .modal-overlay .modal-content {
     transform: scale(0.95) translateY(15px);
     opacity: 0;
-    transition: 
-        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
-        opacity 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
     will-change: transform, opacity;
 }
 .modal-overlay.visible .modal-content {
@@ -10677,52 +10640,55 @@ body.fullscreen-mode #phone {
     opacity: 1;
 }
 
-/* --- 3. 【核心】信笺卡片外观 (Stationery Card Skin) --- */
+/* --- 3. 【核心】墨白卡片外观 (Ink & White Skin) --- */
 .modal-content.stationery-card {
-    /* 纸张质感 */
-    background-color: #FDFCF7 !important;
-    background-image: linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px), 
-                      linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px);
-    background-size: 2px 2px;
+    /* 背景：极简纯白 */
+    background-color: #FFFFFF !important;
+    background-image: none; /* 去除纹理 */
     
-    /* 硬壳边框与阴影 */
-    border-radius: 2px !important;
-    border: 1.5px solid #626262;
-    box-shadow: 6px 6px 0px rgba(41, 37, 36, 0.15) !important;
+    /* 边框：深墨色硬边框 */
+    border-radius: 4px !important;
+    border: 2px solid #1F2937; 
     
-    /* 基础布局与尺寸 */
+    /* 阴影：冷灰色实心投影 */
+    box-shadow: 8px 8px 0px rgba(31, 41, 55, 0.15) !important;
+    
+    /* 基础布局 */
     width: 280px;
     max-width: 90%;
     text-align: center;
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 0 !important; /* 内边距由内部组件控制 */
-    overflow: hidden; /* 隐藏内部超出的部分 */
+    padding: 0 !important;
+    overflow: visible; /* 允许角标溢出 */
+    color: #1F2937;
 }
 
-/* 装饰性角标 */
+/* 装饰性角标：深墨色 */
 .stationery-card::before {
     content: '';
     position: absolute;
-    top: 6px; left: 6px;
-    width: 10px; height: 10px;
-    border-top: 1.5px solid #C8C0B8;
-    border-left: 1.5px solid #C8C0B8;
+    top: -6px; left: -6px;
+    width: 12px; height: 12px;
+    border-top: 2px solid #1F2937;
+    border-left: 2px solid #1F2937;
+    pointer-events: none;
 }
 .stationery-card::after {
     content: '';
     position: absolute;
-    bottom: 6px; right: 6px;
-    width: 10px; height: 10px;
-    border-bottom: 1.5px solid #C8C0B8;
-    border-right: 1.5px solid #C8C0B8;
+    bottom: -6px; right: -6px;
+    width: 12px; height: 12px;
+    border-bottom: 2px solid #1F2937;
+    border-right: 2px solid #1F2937;
+    pointer-events: none;
 }
 
-/* --- 4. 卡片内部布局组件 (Layout Components) --- */
+/* --- 4. 内部布局组件 --- */
 .stationery-card-header {
     padding: 16px 20px;
-    border-bottom: 1px solid #EAE0D6;
+    border-bottom: 1px solid #E5E7EB; /* 浅灰分割线 */
     flex-shrink: 0;
 }
 .stationery-card-content {
@@ -10732,162 +10698,159 @@ body.fullscreen-mode #phone {
 }
 .stationery-card-footer {
     padding: 15px 20px;
-    border-top: 1px dashed #EAE0D6;
+    border-top: 1px solid #E5E7EB; /* 浅灰分割线 */
     display: flex;
     gap: 12px;
     flex-shrink: 0;
 }
 
-/* --- 5. 卡片内部元素样式 (Element Styles) --- */
+/* --- 5. 元素样式 (Elements) --- */
 
 /* 标题 */
 .header-title-paper, .dialog-title {
     font-size: 16px;
-    font-weight: 600;
-    color: #4A4A4A;
+    font-weight: bold;
+    color: #111827; /* 纯黑 */
     margin: 0;
 }
 
 /* 正文 */
 .dialog-text {
-    font-family: inherit; 
-    font-size: 16px;
-    font-weight: 600;
-    color: #5a524c;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    color: #374151; /* 深灰 */
     margin: 0;
     line-height: 1.6;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 
-/* 输入框 */
+/* 输入框：灰白极简 */
 .form-input-paper {
     width: 100%;
     padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #E5E0D9;
-    background-color: #F7F4EF;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB; /* 浅灰边框 */
+    background-color: #F9FAFB; /* 极淡灰底 */
     font-family: inherit;
     font-size: 14px;
-    color: #4A4A4A;
+    color: #1F2937;
     outline: none;
     transition: all 0.2s ease;
 }
 .form-input-paper:focus {
-    border-color: #C8C0B8;
-    background-color: #fff;
-    box-shadow: 0 0 0 3px rgba(200, 192, 184, 0.3);
+    background-color: #FFFFFF;
+    border-color: #1F2937; /* 聚焦变黑 */
+    box-shadow: 0 0 0 2px rgba(31, 41, 55, 0.1);
 }
 
-/* 按钮 */
-.stationery-card-footer .btn {
-    flex: 1;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px;
-    transition: all 0.1s ease-in-out;
-}
-.btn-primary-paper {
-    background-color: #5a524c;
-    color: #FDFCF7;
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.btn-primary-paper:active {
-    background-color: #443e39;
-    transform: translateY(1px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-.btn-secondary-paper {
-    background-color: transparent;
-    color: #79716a;
-    border: 1px solid #D7CEC3;
-}
-.btn-secondary-paper:active {
-    background-color: #F7F4EF;
-    border-color: #C8C0B8;
-}
- 
-
-/* 6. 信笺卡片风格的表单标签 */
+/* 标签 */
 .form-label-paper {
     display: block;
     margin-bottom: 6px;
     font-size: 13px;
     font-weight: 600;
-    color: #79716a; /* 柔和的棕褐色 */
-    text-align: left; /* 标签左对齐，更专业 */
+    color: #4B5563; /* 次要灰 */
+    text-align: left;
 }
- 
 
-/* 7. 信笺卡片风格的下拉菜单 */
+/* --- 6. 按钮样式 (墨白版) --- */
+.stationery-card-footer .btn {
+    flex: 1;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px;
+    transition: all 0.1s ease-in-out;
+}
+
+/* 主按钮：黑底白字 */
+.btn-primary-paper {
+    background-color: #1F2937;
+    color: #FFFFFF;
+    border: 1px solid #1F2937;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.btn-primary-paper:active {
+    background-color: #000000;
+    transform: translateY(1px);
+}
+
+/* 次要按钮：白底灰框 */
+.btn-secondary-paper {
+    background-color: #FFFFFF;
+    color: #374151;
+    border: 1px solid #D1D5DB;
+}
+.btn-secondary-paper:active {
+    background-color: #F3F4F6;
+    border-color: #374151;
+}
+
+/* 下拉菜单箭头适配 */
 .select-paper {
-    /* 移除浏览器默认外观 */
     -webkit-appearance: none;
     appearance: none;
-    
-    /* 添加自定义的下拉箭头图标 */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2379716a'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23374151'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 1.2em;
-    
-    /* 增加右侧内边距，防止文字和箭头重叠 */
     padding-right: 30px !important;
 }
- 
 
-/* 8. 灵感弹窗中的快捷插入标签 */
+/* 标签插入按钮 */
 .insp-tag-insert {
     font-size: 11px;
     padding: 3px 8px;
-    border-radius: 12px; /* 胶囊形状 */
-    background-color: #F7F4EF; /* 淡淡的纸张背景色 */
-    color: #79716a;
-    border: 1px solid #E5E0D9;
+    border-radius: 6px;
+    background-color: #F3F4F6;
+    color: #4B5563;
+    border: 1px solid #E5E7EB;
     cursor: pointer;
     transition: all 0.1s;
 }
 .insp-tag-insert:active {
-    background-color: #E5E0D9;
+    background-color: #E5E7EB;
+    color: #1F2937;
 }
- 
 
-/* 9. 日期选择器网格按钮样式 */
-.picker-item-paper {
-    padding: 8px 0;
-    text-align: center;
-    border-radius: 6px;
-    border: 1px solid #E5E0D9;
-    background-color: #F7F4EF;
-    font-size: 14px;
-    color: #79716a;
-    cursor: pointer;
-    transition: all 0.2s;
+/* 列表式按钮 */
+.btn-list-paper {
+    width: 100%;
+    padding: 15px 0;
+    border: none;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 16px;
     font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 8px;
 }
-.picker-item-paper:hover {
-    border-color: #C8C0B8;
+.btn-list-paper:active {
+    background-color: #F3F4F6;
 }
-.picker-item-paper.selected {
-    background-color: #5a524c; /* 主题深棕色 */
-    color: #FDFCF7;
-    border-color: #5a524c;
-    font-weight: 600;
-}
- 
 
-/* 10. “搏一搏”按钮专属样式 - 警告/机会并存 */
+/* 列表分割线 */
+.dialog-divider {
+    border: none;
+    border-top: 1px solid #F3F4F6;
+    margin: 4px 10px;
+}
+
+/* 搏一搏按钮 (警告色适配) */
 .btn-gamble-paper {
-    background-color: #fef3c7 !important; /* 淡淡的警告黄色 */
-    color: #92400e !important;          /* 深琥珀色文字 */
-    border: 1px solid #fde68a !important;
-    font-weight: bold !important;
+    background-color: #FEF2F2 !important;
+    color: #DC2626 !important;
+    border: 1px solid #FECACA !important;
 }
 .btn-gamble-paper:active {
-    background-color: #fde68a !important;
+    background-color: #FEE2E2 !important;
 }
- 
 
 /* 11. 批量表情添加弹窗专属样式 */
 
@@ -11059,6 +11022,117 @@ body.fullscreen-mode #phone {
 .fab-paper:active {
     background-color: #443e39;
     transform: scale(0.95);
+}
+/* ========================================================== */
+/* --- ✨✨✨ CSS 代码编辑器专属样式 (防溢出版) ✨✨✨ --- */
+/* ========================================================== */
+#bubble-css-input {
+    min-height: 240px;
+    resize: none; /* 只允许垂直拉伸 */
+    
+    /* 字体设置：等宽字体，更适合写代码 */
+    font-family: 'Menlo', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+
+    /* ✨ 核心布局控制：防止横向溢出 */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box; /* 确保内边距不撑大宽度 */
+
+    /* ✨ 核心换行控制：让长代码自动换行 */
+    white-space: pre-wrap; 
+    word-break: break-all;
+
+    border-radius: 8px;
+    border: 1px solid var(--color-ui-border);
+}
+
+#bubble-css-input:focus {
+    border-color: var(--color-primary-accent); /* 聚焦时高亮边框 */
+}
+/* ========================================================== */
+/* --- ✨✨✨ 气泡内时间戳样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 默认隐藏气泡内时间 */
+.bubble-in-time {
+    display: none; 
+    font-size: 10px;
+    opacity: 0.6;
+    margin-left: 8px;
+    margin-bottom: -2px; /* 微调垂直对齐 */
+    float: right; /* 让时间靠右浮动 */
+    line-height: 1.4;
+    user-select: none;
+}
+
+/* 当父容器开启了 .show-time 类时，显示时间 */
+.chat-simulation-container.show-time .bubble-in-time,
+#chat-messages.show-time .bubble-in-time {
+    display: inline-block;
+}
+
+/* 修复浮动导致的塌陷 (可选，视具体气泡布局而定) */
+.msg::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+/* ========================================================== */
+/* --- ✨✨✨ 动态列表中的“画面缩略卡”样式 ✨✨✨ --- */
+/* ========================================================== */
+.moment-scene-thumbnail {
+    /* 固定尺寸，整齐划一 */
+    width: 100%;
+    max-width: 160px; /* 限制最大宽度 */
+    height: 100px;    /* 固定高度 */
+    
+    /* 视觉风格：深色胶片感 */
+    background: linear-gradient(160deg, #323236, #1a1a1d);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    
+    /* 布局 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+/* 装饰：左上角标签 */
+.moment-scene-thumbnail::before {
+    content: 'SCENE';
+    position: absolute;
+    top: 6px; left: 8px;
+    font-size: 8px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+/* 装饰：中心图标 */
+.moment-scene-thumbnail i {
+    font-size: 24px;
+    color: rgba(255,255,255,0.6);
+}
+
+/* 装饰：底部文字提示 */
+.moment-scene-thumbnail span {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+}
+
+/* 鼠标悬浮效果 */
+.moment-scene-thumbnail:active {
+    opacity: 0.8;
+    transform: scale(0.98);
 }
     </style>
 
@@ -12082,12 +12156,6 @@ body.fullscreen-mode #phone {
     <span class="arrow" style="font-size:13px; color:#9ca3af;">更换背景 <i class="fa-solid fa-chevron-right" style="font-size:12px; margin-left:4px;"></i></span>
 </button>
 
-<!-- 气泡时间戳 (灰色) -->
-<button id="placeholder-timestamp-btn" class="settings-item buttonlike">
-    <span class="icon" style="color: #64748b;"><i class="fa-regular fa-clock"></i></span>
-    <span class="label">气泡时间戳</span>
-    <span class="arrow"><i class="fa-solid fa-chevron-right" style="font-size:12px; color:#d1d5db;"></i></span>
-</button>
 
 <!-- ========================================================== -->
 <!-- 组 3: 增强功能 -->
@@ -13261,157 +13329,171 @@ body.fullscreen-mode #phone {
     <input type="file" id="global-sticker-input" accept="image/*" class="hidden" multiple />
 </div>
                 <!-- ========================================================== -->
-                <!-- --- ✨✨✨【全新】气泡自定义 (页面版) V1.1 ✨✨✨ --- -->
-                <!-- ========================================================== -->
-                <div id="bubble-settings-page" class="page" style="display:none; flex-direction: column;">
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】气泡自定义 (页面版) V1.2 - 按钮移至页眉 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="bubble-settings-page" class="page" style="display:none; flex-direction: column;">
 
-                    <!-- 1. 页面头部 -->
-                    <header class="page-header">
-                        <div class="header-left">
-                            <button id="bubble-settings-page-back-btn" class="btn-icon btn-back buttonlike">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </button>
-                        </div>
-                        <div class="header-center">
-                            <div class="chat-title-container">
-                                <div style="font-weight: bold; font-size: 18px;">气泡自定义</div>
-                            </div>
-                        </div>
-                        <div class="header-right"></div>
-                    </header>
-                    <!-- ✨ 修复版：增加了 flex: 1 和 overflow-y: auto，让整个页面可以滚动 -->
-                    <!-- 2. 可滚动的主内容区 (最终版：按钮跟随滚动) -->
-                    <main class="page-content" id="bubble-settings-page-content"
-                        style="padding: 15px; background-color: #ffffff; display: flex; flex-direction: column; gap: 20px;">
+    <!-- 1. 页面头部 -->
+    <header class="page-header">
+        <div class="header-left">
+            <button id="bubble-settings-page-back-btn" class="btn-icon btn-back buttonlike">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="chat-title-container">
+                <div style="font-weight: bold; font-size: 18px;">气泡自定义</div>
+            </div>
+        </div>
+        <!-- ✨ 核心修改：导入导出按钮移到了这里 ✨ -->
+        <div class="header-right" style="display: flex; gap: 8px;">
+            <button id="import-bubble-css-btn" class="btn-icon buttonlike" title="导入配置">
+                <i class="fa-solid fa-file-import"></i>
+            </button>
+            <button id="export-bubble-css-btn" class="btn-icon buttonlike" title="导出配置">
+                <i class="fa-solid fa-file-export"></i>
+            </button>
+        </div>
+    </header>
 
-                        <!-- A. 仿真预览舞台 -->
-<div class="profile-section-glass"
-    style="margin:0; padding: 20px 15px; background-color: #e5e7eb; border-radius: 16px;">
-    <div id="bubble-editor-preview-area" class="chat-simulation-container">
+    <!-- 2. 可滚动的主内容区 -->
+    <main class="page-content" id="bubble-settings-page-content"
+        style="padding: 15px; background-color: #ffffff; display: flex; flex-direction: column; gap: 20px;">
 
-                                <!-- 1. 系统通知与时间 -->
-                                <div class="msg-timestamp">这是一条系统通知</div>
-                                <div class="msg-timestamp">12:00</div>
-
-                                <!-- 2. 对方 - 普通消息 -->
-                                <div class="msg-row left">
-                                    <div class="msg-avatar avatar-display preview-char-avatar"></div>
-                                    <div class="msg left preview-bubble-char">普通消息：你好呀！今天天气真不错。</div>
-                                </div>
-
-                                <!-- 3. 我 - 普通消息 -->
-                                <div class="msg-row right">
-                                    <div class="msg right preview-bubble-user">普通消息：是啊，非常适合改代码！</div>
-                                    <div class="msg-avatar avatar-display preview-user-avatar"></div>
-                                </div>
-
-                                <!-- 4. 对方 - 引用消息 -->
-                                <div class="msg-row left">
-                                    <div class="msg-avatar avatar-display preview-char-avatar"></div>
-                                    <div class="msg left preview-bubble-char">
-                                        <div class="msg-quote-preview">
-                                            <div class="msg-quote-sender">我</div>
-                                            <p class="msg-quote-text">非常适合改代码！</p>
-                                        </div>
-                                        这是带引用的回复预览。
-                                    </div>
-                                </div>
-
-                                <!-- 5. 我 - 引用消息 -->
-                                <div class="msg-row right">
-                                    <div class="msg right preview-bubble-user">
-                                        <div class="msg-quote-preview">
-                                            <div class="msg-quote-sender">对方</div>
-                                            <p class="msg-quote-text">这是带引用的回复预览。</p>
-                                        </div>
-                                        我也是带引用的回复哦。
-                                    </div>
-                                    <div class="msg-avatar avatar-display preview-user-avatar"></div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- B. 颜色控制台 -->
-                        <div class="bubble-color-control-panel">
-                            <div class="control-group">
-                                <label class="group-label">对方 (Character)</label>
-                                <div class="color-pickers-row">
-                                    <div class="color-input-wrapper">
-                                        <input type="color" id="profile-char-bubble-color-input"
-                                            class="color-picker-input">
-                                        <span>气泡底色</span>
-                                    </div>
-                                    <div class="color-input-wrapper">
-                                        <input type="color" id="profile-char-font-color-input"
-                                            class="color-picker-input">
-                                        <span>文字颜色</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="divider-vertical"></div>
-                            <div class="control-group">
-                                <label class="group-label">我 (User)</label>
-                                <div class="color-pickers-row">
-                                    <div class="color-input-wrapper">
-                                        <input type="color" id="profile-user-bubble-color-input"
-                                            class="color-picker-input">
-                                        <span>气泡底色</span>
-                                    </div>
-                                    <div class="color-input-wrapper">
-                                        <input type="color" id="profile-user-font-color-input"
-                                            class="color-picker-input">
-                                        <span>文字颜色</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- C. CSS 编辑器 -->
-                        <div>
-                            <label class="form-label" style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">高级
-                                CSS 编辑器:</label>
-                            <textarea id="bubble-css-input" class="form-input form-textarea"
-                                style="min-height: 180px; resize: vertical; font-family: 'Menlo', 'Consolas', monospace; font-size: 12px; line-height: 1.5; width: 100%; white-space: pre; background-color: #282c34; color: #abb2bf; border-radius: 8px;"
-                                placeholder="/* 在这里输入CSS代码 */&#10;.msg.left {&#10;  border-radius: 4px;&#10;}"></textarea>
-                        </div>
-
-                        <!-- D. 预设管理操作区 -->
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <label class="form-label"
-                                    style="font-size: 14px; font-weight: 600; flex-shrink: 0;">气泡预设:</label>
-                                <select id="profile-bubble-preset-selector" class="form-input"
-                                    style="flex-grow: 1;"></select>
-                                <button id="delete-bubble-css-preset-btn" class="btn buttonlike"
-                                    style="background-color: #fecaca; color: #b91c1c; flex-shrink: 0;"><i
-                                        class="fa-solid fa-trash-can"></i></button>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button id="save-bubble-css-preset-btn" class="btn btn-secondary buttonlike"
-                                    style="flex: 1;">保存改动</button>
-                                <button id="bubble-css-save-as-new-preset-btn" class="btn btn-secondary buttonlike"
-                                    style="flex: 1;">另存为...</button>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button id="import-bubble-css-btn" class="btn btn-secondary buttonlike"
-                                    style="flex: 1;">导入</button>
-                                <button id="export-bubble-css-btn" class="btn btn-secondary buttonlike"
-                                    style="flex: 1;">导出</button>
-                            </div>
-                            <input type="file" id="import-bubble-css-input" accept=".json" class="hidden" />
-                        </div>
-
-                        <!-- E. ✨ 核心修改：保存按钮移到了这里！ -->
-                        <div style="margin-top: 10px; padding-bottom: 20px;">
-                            <button id="save-bubble-config-btn-page" class="btn btn-primary buttonlike btn-full-width"
-                                style="padding: 12px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                                保存所有气泡配置
-                            </button>
-                        </div>
-                    </main>
+ <!-- A. 仿真预览舞台 -->
+        <div class="profile-section-glass"
+            style="margin:0; padding: 20px 15px; background-color: #e5e7eb; border-radius: 16px;">
+            
+            <div id="bubble-editor-preview-area" class="chat-simulation-container">
+                <!-- 1. 时间戳 -->
+                <div class="msg-timestamp">12:00</div>
+                
+                <!-- 2. 对方的消息 (左侧) -->
+                <div class="msg-row left">
+                    <div class="msg-avatar avatar-display preview-char-avatar"></div>
+                    <div class="msg left preview-bubble-char">
+                        你好呀！今天天气真不错。
+                        <!-- ✨ 预埋气泡内时间 -->
+                        <span class="bubble-in-time">12:01</span>
+                    </div>
                 </div>
-                <!-- ========================================================== -->
+
+                <!-- 3. 我的消息 (右侧) -->
+                <div class="msg-row right">
+                    <div class="msg right preview-bubble-user">
+                        是啊，非常适合改代码！
+                        <!-- ✨ 预埋气泡内时间 -->
+                        <span class="bubble-in-time">12:02</span>
+                    </div>
+                    <div class="msg-avatar avatar-display preview-user-avatar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✨✨✨ 新增：气泡时间戳开关卡片 ✨✨✨ -->
+        <div style="background-color: #ffffff; border-radius: 16px; padding: 15px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="icon" style="font-size: 18px; color: #64748b;"><i class="fa-regular fa-clock"></i></span>
+                <span class="label" style="font-size: 14px; font-weight: 600; color: #374151;">显示消息时间</span>
+            </div>
+            <input type="checkbox" id="bubble-timestamp-toggle" class="toggle-switch">
+        </div>
+        <!-- B. 颜色控制台 (默认显示，选预设时隐藏) -->
+        <div class="bubble-color-control-panel" style="display: flex;">
+            <div class="control-group">
+                <label class="group-label">对方 (Character)</label>
+                <div class="color-pickers-row">
+                    <div class="color-input-wrapper">
+                        <input type="color" id="profile-char-bubble-color-input" class="color-picker-input">
+                        <span>气泡底色</span>
+                    </div>
+                    <div class="color-input-wrapper">
+                        <input type="color" id="profile-char-font-color-input" class="color-picker-input">
+                        <span>文字颜色</span>
+                    </div>
+                </div>
+            </div>
+            <div class="divider-vertical"></div>
+            <div class="control-group">
+                <label class="group-label">我 (User)</label>
+                <div class="color-pickers-row">
+                    <div class="color-input-wrapper">
+                        <input type="color" id="profile-user-bubble-color-input" class="color-picker-input">
+                        <span>气泡底色</span>
+                    </div>
+                    <div class="color-input-wrapper">
+                        <input type="color" id="profile-user-font-color-input" class="color-picker-input">
+                        <span>文字颜色</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+  <!-- C & D. 高级编辑卡片 (合并包裹) -->
+        <div style="background-color: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.03);">
+            
+            <!-- 标题栏 -->
+            <div style="margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                <label class="form-label" style="font-size: 14px; font-weight: 700; color: #374151; margin: 0;">
+                    <i class="fa-solid fa-code" style="margin-right: 6px; color: #9ca3af;"></i>高级 CSS 编辑器
+                </label>
+            </div>
+
+            <!-- 编辑器本体 -->
+            <textarea id="bubble-css-input" class="form-input form-textarea"
+                placeholder="/* 在这里输入CSS代码 */&#10;.msg.left {&#10;  border-radius: 4px;&#10;}"></textarea>
+
+            <!-- 分割线 -->
+            <div style="height: 1px; background-color: #f3f4f6; margin: 20px -20px;"></div>
+
+            <!-- 底部操作区 -->
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                
+                <!-- 预设选择行 -->
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <label class="form-label" style="font-size: 13px; font-weight: 600; color: #6b7280; flex-shrink: 0;">当前预设:</label>
+                    
+                    <div style="position: relative; flex-grow: 1;">
+                        <select id="profile-bubble-preset-selector" class="form-input" style="width: 100%; font-weight: 500; appearance: none; background-color: #f9fafb; border: 1px solid #e5e7eb;"></select>
+                        <i class="fa-solid fa-chevron-down" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af; pointer-events: none; font-size: 12px;"></i>
+                    </div>
+
+                    <!-- 删除按钮 (红色小方块) -->
+                    <button id="delete-bubble-css-preset-btn" class="btn buttonlike"
+                        style="background-color: #fee2e2; color: #ef4444; flex-shrink: 0; display: none; width: 36px; height: 36px; border-radius: 10px; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+                
+                <!-- 按钮组 -->
+                <div style="display: flex; gap: 12px;">
+                    <button id="save-bubble-css-preset-btn" class="btn btn-secondary buttonlike"
+                        style="flex: 1; font-size: 13px; background-color: #f9fafb; border: 1px solid #e5e7eb;" disabled>
+                        <i class="fa-solid fa-floppy-disk" style="margin-right: 6px;"></i>保存改动
+                    </button>
+                    <button id="bubble-css-save-as-new-preset-btn" class="btn btn-secondary buttonlike"
+                        style="flex: 1; font-size: 13px; background-color: #f9fafb; border: 1px solid #e5e7eb;">
+                        <i class="fa-solid fa-clone" style="margin-right: 6px;"></i>另存为...
+                    </button>
+                </div>
+            </div>
+
+        </div>
+            
+            <!-- 隐藏的文件选择器 (保留在这里即可) -->
+            <input type="file" id="import-bubble-css-input" accept=".json" class="hidden" />
+        </div>
+
+        <!-- E. 底部大按钮: 保存所有配置 -->
+        <div style="margin-top: 10px; padding-bottom: 20px;">
+            <button id="save-bubble-config-btn-page" class="btn btn-primary buttonlike btn-full-width"
+                style="padding: 12px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                保存所有气泡配置
+            </button>
+        </div>
+    </main>
+</div>
 <!-- ========================================================== -->
 <!-- --- ✨✨✨【全新】记忆陈列室 (Page版) ✨✨✨ --- -->
 <!-- ========================================================== -->
@@ -15506,27 +15588,6 @@ body.fullscreen-mode #phone {
     </div>
 </div>
 <!-- 替换结束 -->
-    <!-- ========================================================== -->
-    <!-- --- ✨✨✨【全新】表情包来源选择弹窗 ✨✨✨ --- -->
-    <!-- ========================================================== -->
-    <div id="sticker-source-choice-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="width: 300px;">
-            <header class="page-header" style="justify-content: center;">
-                <span>选择添加方式</span>
-            </header>
-            <main class="page-content" style="display: flex; flex-direction: column; gap: 12px; padding: 20px;">
-                <button id="sticker-choice-url" class="btn btn-primary buttonlike" style="font-size: 16px;">
-                    <i class="fa-solid fa-link"></i> URL网络上传
-                </button>
-                <button id="sticker-choice-local" class="btn btn-secondary buttonlike" style="font-size: 16px;">
-                    <i class="fa-solid fa-folder-open"></i> 本地图片上传
-                </button>
-            </main>
-            <footer class="page-footer">
-                <button id="sticker-choice-cancel" class="btn btn-secondary buttonlike btn-full-width">取消</button>
-            </footer>
-        </div>
-    </div>
 
 <!-- 【请用这一整块全新的代码，替换旧的 #sticker-batch-add-modal】 -->
 <div id="sticker-batch-add-modal" class="modal-overlay hidden">
@@ -15900,7 +15961,34 @@ body.fullscreen-mode #phone {
     </div>
 </div>
 
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】画面描述详情弹窗 (沉浸式) ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="scene-detail-modal" class="modal-overlay hidden" style="background-color: rgba(0,0,0,0.85); backdrop-filter: blur(10px);">
+    <div class="scene-modal-content" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative;">
+        
+        <!-- 关闭按钮 -->
+        <button id="scene-modal-close" class="buttonlike" style="position: absolute; top: 40px; right: 20px; color: white; font-size: 24px; z-index: 20; background: none; border: none;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
 
+        <!-- 1. 占位大图 (模拟电影画面) -->
+        <div class="scene-image-wrapper" style="width: 100%; max-width: 500px; aspect-ratio: 16/9; background: #1a1a1d; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <!-- 这里放一张通用的概念占位图，或者渐变背景 -->
+            <div style="position: absolute; inset: 0; background: linear-gradient(135deg, #2b2b2b, #000000); opacity: 0.8;"></div>
+            <i class="fa-solid fa-image" style="font-size: 48px; color: rgba(255,255,255,0.1);"></i>
+            <span style="position: absolute; top: 10px; left: 15px; color: rgba(255,255,255,0.4); font-size: 10px; letter-spacing: 2px;">CONCEPT ART</span>
+        </div>
+
+        <!-- 2. 可滚动的文字描述区域 -->
+        <div class="scene-text-scroll-area" style="width: 100%; max-width: 500px; margin-top: 20px; max-height: 40vh; overflow-y: auto; padding: 0 10px;">
+            <p id="scene-detail-text" style="color: #e5e7eb; font-size: 15px; line-height: 1.8; text-align: justify; font-family: 'Songti SC', serif; white-space: pre-wrap;">
+                <!-- JS 填充内容 -->
+            </p>
+        </div>
+
+    </div>
+</div>
 
 <script>
 
@@ -18686,6 +18774,17 @@ function showDeleteDialog(message, onConfirm, options = {}) {
                     }
                 });
             }
+
+// ✨ 应用气泡时间戳设置
+            const msgBox = document.getElementById('chat-messages');
+            if (msgBox) {
+                if (characterOrGroup.showBubbleTimestamp === true) {
+                    msgBox.classList.add('show-time');
+                } else {
+                    msgBox.classList.remove('show-time');
+                }
+            }
+
         }
 
 // ==========================================================
@@ -20983,6 +21082,21 @@ if (blockBtnLabel) {
                 const page = document.getElementById('bubble-settings-page');
                 if (!page) return;
 
+// --- ✨✨✨ 新增步骤：渲染当前聊天背景 ✨✨✨ ---
+                const previewArea = document.getElementById('bubble-editor-preview-area');
+                if (previewArea) {
+                    // 1. 尝试获取角色的自定义聊天背景
+                    if (character.chatWallpaper instanceof Blob) {
+                        const bgUrl = URL.createObjectURL(character.chatWallpaper);
+                        previewArea.style.backgroundImage = `url(${bgUrl})`;
+                        // 如果背景很暗，可能需要调整文字颜色（这里暂不处理，交给CSS控制）
+                    } else {
+                        // 2. 如果没有自定义背景，清除背景图，恢复默认 CSS 背景色
+                        previewArea.style.backgroundImage = '';
+                    }
+                }
+
+
                 // --- 步骤 A: 渲染所有头像 (✨ 升级了这里) ---
                 const userPersona = character.activeUserPersona || window.currentUser;
 
@@ -21014,28 +21128,107 @@ if (blockBtnLabel) {
                         }
                     });
                 });
+// --- 步骤 E: 绑定CSS编辑器 (强力修复版) ---
+                const cssInput = document.getElementById('bubble-css-input');
+                let previewStyleTag = document.getElementById('custom-bubble-preview-style');
 
-                // --- 步骤 E: 绑定CSS编辑器 ---
-                const cssInput = page.querySelector('#bubble-css-input');
-                const previewStyleTag = document.getElementById('custom-bubble-preview-style');
+                // 1. 确保 style 标签存在
+                if (!previewStyleTag) {
+                    previewStyleTag = document.createElement('style');
+                    previewStyleTag.id = 'custom-bubble-preview-style';
+                    document.head.appendChild(previewStyleTag);
+                }
 
-                if (cssInput && previewStyleTag) {
+                if (cssInput) {
+                    // 2. 定义更新函数
                     const updateCssPreview = () => {
-                        const rawCss = cssInput.value;
+                        const rawCss = cssInput.value || '';
+                        
+                        // 使用正则，在每个 CSS 选择器前加上 #bubble-editor-preview-area ID
+                        // 这样样式就只会限制在预览区域内生效
                         const scopedCss = rawCss.replace(
-                            /(^|\})([^{]+)\{/g,
-                            '$1 #bubble-editor-preview-area $2 {'
+                            /(^|\})([\s\S]*?)\{/g, 
+                            (match, p1, p2) => {
+                                // p1 是上一个结束的大括号 '}' 或开头
+                                // p2 是选择器部分
+                                if (!p2.trim()) return match;
+                                
+                                // 处理逗号分隔的多重选择器 (例如: .a, .b {)
+                                // 排除掉注释内容，防止破坏注释语法
+                                const prefixedSelector = p2.split(',').map(s => {
+                                    if (s.trim().startsWith('/*')) return s; 
+                                    return `#bubble-editor-preview-area ${s}`; 
+                                }).join(',');
+                                
+                                return `${p1} ${prefixedSelector} {`;
+                            }
                         );
+                        
+                        // 将处理后的 CSS 写入 style 标签
                         previewStyleTag.innerHTML = scopedCss;
                     };
 
-                    const newCssInput = cssInput.cloneNode(true);
-                    cssInput.parentNode.replaceChild(newCssInput, cssInput);
-                    newCssInput.addEventListener('input', updateCssPreview);
+                    // 3. ✨ 关键修复：直接使用 oninput 覆盖绑定，无需克隆，实时响应且稳定
+                    cssInput.oninput = updateCssPreview;
+                    
+                    // 4. 初始化：立即执行一次，确保打开时就能看到效果
                     updateCssPreview();
                 }
 
+// --- ✨✨✨ 新增：气泡时间戳交互逻辑 ✨✨✨ ---
+                const timeToggle = document.getElementById('bubble-timestamp-toggle');
+                const previewContainer = document.getElementById('bubble-editor-preview-area');
+                
+                if (timeToggle && previewContainer) {
+                    // 1. 回显状态
+                    // 读取 character.showBubbleTimestamp，默认为 false
+                    const isShowTime = character.showBubbleTimestamp === true;
+                    timeToggle.checked = isShowTime;
+                    
+                    // 2. 立即更新预览区状态
+                    if (isShowTime) {
+                        previewContainer.classList.add('show-time');
+                    } else {
+                        previewContainer.classList.remove('show-time');
+                    }
+
+                    // 3. 绑定点击事件 (移除旧监听器，防止重复)
+                    const newTimeToggle = timeToggle.cloneNode(true);
+                    timeToggle.parentNode.replaceChild(newTimeToggle, timeToggle);
+
+                    newTimeToggle.addEventListener('change', async (e) => {
+                        const checked = e.target.checked;
+                        
+                        // A. 实时更新预览
+                        if (checked) {
+                            previewContainer.classList.add('show-time');
+                        } else {
+                            previewContainer.classList.remove('show-time');
+                        }
+
+                        // B. 保存到数据库
+                        await db.characters.update(character.id, { showBubbleTimestamp: checked });
+                        
+                        // C. 同步全局状态
+                        if (window.currentChat && window.currentChat.id === character.id) {
+                            window.currentChat.showBubbleTimestamp = checked;
+                            
+                            // D. 如果正在聊天，实时刷新聊天列表的显示类
+                            const chatMsgBox = document.getElementById('chat-messages');
+                            if (chatMsgBox) {
+                                if (checked) chatMsgBox.classList.add('show-time');
+                                else chatMsgBox.classList.remove('show-time');
+                            }
+                        }
+                    });
+                }
+
+
             }, 50);
+
+
+
+
         }
         // 绑定关闭按钮
         const bubbleSettingsCloseBtn = document.getElementById('bubble-settings-close-btn');
@@ -21502,13 +21695,22 @@ ${JAILBREAK_PROMPT}
                         img.className = 'moment-image';
                         mediaContainer.appendChild(img);
                     } 
-                    else if (moment.type === 'text_with_described_image' && moment.describedImage) {
-                        const imaginaryCard = document.createElement('div');
-                        imaginaryCard.className = 'imaginary-image-card';
-                        // 这里的样式建议写到 CSS 文件里，不过保留内联也可以
-                        imaginaryCard.style.cssText = "width: 120px; height: 120px; margin-top: 8px; font-size: 12px; padding: 10px;";
-                        imaginaryCard.textContent = moment.describedImage.description;
-                        mediaContainer.appendChild(imaginaryCard);
+else if (moment.type === 'text_with_described_image' && moment.describedImage) {
+                        // ✨ 核心修改：渲染为固定尺寸的缩略卡片
+                        const thumbnail = document.createElement('div');
+                        thumbnail.className = 'moment-scene-thumbnail buttonlike';
+                        thumbnail.innerHTML = `
+                            <i class="fa-solid fa-film"></i>
+                            <span>点击查看画面</span>
+                        `;
+                        
+                        // 绑定点击事件：打开详情弹窗
+                        thumbnail.addEventListener('click', (e) => {
+                            e.stopPropagation(); // 防止触发卡片其他点击
+                            openSceneDetailModal(moment.describedImage.description);
+                        });
+
+                        mediaContainer.appendChild(thumbnail);
                     }
 
 
@@ -23917,15 +24119,17 @@ async function openContactEditor(contact = null, isFriend = false) {
                         contentContainer.appendChild(img);
                     }
                     break;
- case 'image_description':
-                        // ✨ 核心修改：移除占位图结构，直接使用纯文字卡片
+case 'image_description':
+                        // ✨ 核心修改：移除气泡背景，应用新的卡片结构
                         contentContainer.style.background = 'transparent'; 
                         contentContainer.style.padding = '0';
-                        contentContainer.style.boxShadow = 'none'; // 移除气泡自带阴影，用卡片的阴影
+                        contentContainer.style.boxShadow = 'none'; 
+                        contentContainer.style.border = 'none'; // 确保没有边框干扰
 
+                        // 生成卡片 HTML
                         contentContainer.innerHTML = `
                             <div class="imaginary-image-card">
-                                ${escapeHtml(msg.imageData.description)}
+                                <div class="imaginary-card-text">${escapeHtml(msg.imageData.description)}</div>
                             </div>`;
                         contentRendered = true;
                         break;
@@ -23986,9 +24190,19 @@ async function openContactEditor(contact = null, isFriend = false) {
                 row.appendChild(wrapper); 
                 if (failIcon) row.appendChild(failIcon); // ✨ 放在最后，就在气泡右边了
             }
-
-            // (如果有之前那段 "if (msg.isBlockedFail) { ... row.appendChild(failIcon) }" 的旧代码，请务必删除，防止重复添加)
-
+// ✨✨✨ 注入气泡内时间戳 ✨✨✨
+            if (contentContainer && !['system', 'date'].includes(msg.type)) {
+                // 格式化 HH:mm
+                const dateObj = new Date(msg.time);
+                const timeStr = `${String(dateObj.getHours()).padStart(2,'0')}:${String(dateObj.getMinutes()).padStart(2,'0')}`;
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'bubble-in-time';
+                timeSpan.textContent = timeStr;
+                
+                // 将时间戳放入气泡内容容器中
+                contentContainer.appendChild(timeSpan);
+            }
             return row;
         }
 
@@ -24093,8 +24307,7 @@ async function openContactEditor(contact = null, isFriend = false) {
         // ==========================================================
         // --- ✨✨✨【全新】消息编辑核心引擎 ✨✨✨ ---
         // ==========================================================
-
-        /**
+/**
          * 核心函数 1: 让指定的消息气泡进入“编辑模式”
          * @param {number} messageId - 要编辑的消息的ID
          * @param {HTMLElement} rowElement - 消息所在的整个行元素(.msg-row)
@@ -24103,23 +24316,33 @@ async function openContactEditor(contact = null, isFriend = false) {
             const bubble = rowElement.querySelector('.msg');
             if (!bubble) return;
 
-            // 1. 从数据库获取最原始、最干净的消息内容
+            // ▼▼▼ ✨✨✨ 核心修复：样式重置 ✨✨✨ ▼▼▼
+            // 1. 清除内联样式 (修复图片描述卡片的透明背景问题)
+            bubble.removeAttribute('style');
+
+            // 2. 重置类名 (修复表情包等特殊类型的透明背景问题)
+            // 只保留基础的 .msg 和方向类 (.left 或 .right)
+            const isRight = bubble.classList.contains('right');
+            bubble.className = `msg ${isRight ? 'right' : 'left'}`;
+            // ▲▲▲ 修复结束 ▲▲▲
+
+            // 3. 从数据库获取最原始、最干净的消息内容
             const message = await db.messages.get(messageId);
             if (!message) return;
             const originalText = message.content;
 
-            // 2. 动态创建编辑界面，并替换掉气泡的原始内容
+            // 4. 动态创建编辑界面
             bubble.innerHTML = `
-        <textarea class="edit-textarea">${originalText}</textarea>
-        <div class="edit-actions">
-            <button class="btn-cancel-edit btn btn-secondary buttonlike">取消</button>
-            <button class="btn-save-edit btn btn-primary buttonlike">保存</button>
-        </div>
-    `;
+                <textarea class="edit-textarea">${originalText}</textarea>
+                <div class="edit-actions">
+                    <button class="btn-cancel-edit btn btn-secondary buttonlike">取消</button>
+                    <button class="btn-save-edit btn btn-primary buttonlike">保存</button>
+                </div>
+            `;
 
+            // 5. 自动聚焦并调整高度
             const textarea = bubble.querySelector('.edit-textarea');
             textarea.focus();
-            // 自动调整textarea的高度以适应内容
             textarea.style.height = 'auto';
             textarea.style.height = (textarea.scrollHeight) + 'px';
             textarea.addEventListener('input', () => {
@@ -24127,35 +24350,30 @@ async function openContactEditor(contact = null, isFriend = false) {
                 textarea.style.height = (textarea.scrollHeight) + 'px';
             });
 
-            // 3. 为“保存”和“取消”按钮绑定一次性事件
+            // 6. 绑定按钮事件
             bubble.querySelector('.btn-save-edit').onclick = async () => {
                 const newText = textarea.value.trim();
                 if (newText && newText !== originalText) {
                     try {
-                        // 更新数据库，并增加一个 isEdited 标记
                         await db.messages.update(messageId, {
                             content: newText,
                             isEdited: true
                         });
-                        // ✨ 使用我们早已写好的 updateMessageUI 函数来局部刷新这条消息
                         await updateMessageUI(messageId);
                     } catch (error) {
                         console.error("保存编辑失败:", error);
                         alert("保存失败！");
-                        await updateMessageUI(messageId); // 即使失败也恢复原状
+                        await updateMessageUI(messageId);
                     }
                 } else {
-                    // 如果内容没变，也直接恢复
                     await updateMessageUI(messageId);
                 }
             };
 
             bubble.querySelector('.btn-cancel-edit').onclick = async () => {
-                // 取消编辑，直接刷新这条消息的UI即可恢复
                 await updateMessageUI(messageId);
             };
         }
-
         // ✨ 关键一步：为我们新添加的“编辑”按钮绑定功能
         // ==========================================================
         // --- ✨✨✨【全新】无限制编辑按钮引擎 ✨✨✨ ---
@@ -25995,7 +26213,7 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
                 });
             }
 
-            /**
+/**
              * 核心函数 2: 加载选中的预设到编辑器，并更新UI状态
              */
             window.loadPresetToEditor = async function () {
@@ -26004,26 +26222,37 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
                 const cssInput = document.getElementById('bubble-css-input');
                 const deleteBtn = document.getElementById('delete-bubble-css-preset-btn');
                 const saveBtn = document.getElementById('save-bubble-css-preset-btn');
+                
+                // ✨ 1. 获取颜色控制面板 DOM
+                const colorPanel = document.querySelector('.bubble-color-control-panel');
 
                 if (!presetSelect || !cssInput || !deleteBtn || !saveBtn) return;
 
                 const selectedId = presetSelect.value;
 
                 if (selectedId === '') {
+                    // --- 🌟 场景 A: 选择了“默认样式” ---
                     cssInput.value = '';
                     deleteBtn.style.display = 'none';
                     saveBtn.disabled = true;
+                    
+                    // ✨ 显示颜色面板：允许用户自己调色
+                    if (colorPanel) colorPanel.style.display = 'flex';
+                    
                 } else {
+                    // --- 🌟 场景 B: 选择了具体预设 ---
                     const preset = await db.bubble_css_presets.get(parseInt(selectedId, 10));
                     if (preset) cssInput.value = preset.cssCode || '';
                     deleteBtn.style.display = 'inline-block';
                     saveBtn.disabled = false;
+                    
+                    // ✨ 隐藏颜色面板：预设自带样式，不需要手动调色
+                    if (colorPanel) colorPanel.style.display = 'none';
                 }
 
                 // 强制触发input事件，确保实时预览被更新
                 cssInput.dispatchEvent(new Event('input', { bubbles: true }));
             }
-
             /**
              * 核心函数 3: "另存为新预设"
              */
@@ -39235,8 +39464,148 @@ function estimateTokensAdvanced(text, mode = 'standard') {
     return Math.ceil((cjkCount * cjkRatio) + (otherCount * otherRatio));
 }
 
+// ==========================================================
+// --- ✨✨✨【补丁】批量修改标签弹窗交互逻辑修复 ✨✨✨ ---
+// ==========================================================
+(function() {
+    const modalId = 'sticker-bulk-edit-tags-modal';
+    const closeBtnId = 'bulk-edit-tags-close-btn';
+    const saveBtnId = 'bulk-edit-tags-save-btn';
 
+    const modal = document.getElementById(modalId);
+    const closeBtn = document.getElementById(closeBtnId);
+    const saveBtn = document.getElementById(saveBtnId);
 
+    // 1. 修复关闭按钮
+    if (closeBtn && modal) {
+        // 使用克隆法移除可能存在的旧绑定，确保干净
+        const newCloseBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+
+        newCloseBtn.addEventListener('click', () => {
+            hideModal(modalId);
+        });
+
+        // 点击背景关闭
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hideModal(modalId);
+        });
+    }
+
+    // 2. 修复“确认修改”按钮逻辑
+    if (saveBtn && modal) {
+        const newSaveBtn = saveBtn.cloneNode(true);
+        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+        newSaveBtn.addEventListener('click', async () => {
+            // 获取输入的新标签
+            const t1 = document.getElementById('bulk-edit-tag-1').value.trim();
+            const t2 = document.getElementById('bulk-edit-tag-2').value.trim();
+            const t3 = document.getElementById('bulk-edit-tag-3').value.trim();
+            
+            // 过滤掉空标签
+            const newTags = [t1, t2, t3].filter(Boolean);
+
+            if (newTags.length === 0) {
+                // 如果没填标签，默认为“通用”
+                newTags.push('通用'); 
+            }
+
+            // 获取当前选中的表情ID (通过DOM查找)
+            const selectedItems = document.querySelectorAll('#global-sticker-grid-container .sticker-item.selected');
+            const idsToUpdate = Array.from(selectedItems).map(el => parseInt(el.dataset.stickerId, 10));
+
+            if (idsToUpdate.length === 0) {
+                hideModal(modalId);
+                return;
+            }
+
+            showLoadingModal('正在更新标签...');
+
+            try {
+                // 批量获取并更新
+                const stickers = await db.global_stickers.bulkGet(idsToUpdate);
+                const updatedStickers = stickers.map(s => {
+                    s.tags = newTags; // 覆盖旧标签
+                    return s;
+                });
+
+                // 存回数据库
+                await db.global_stickers.bulkPut(updatedStickers);
+
+                hideLoadingModal();
+                hideModal(modalId);
+                showNotification('修改成功', `已更新 ${idsToUpdate.length} 个表情的标签。`);
+
+                // 刷新标签栏 (如果有刷新按钮的话，或者重新渲染)
+                // 这里简单地触发一下当前激活标签的点击，以刷新视图
+                const activeTab = document.querySelector('.sticker-tag-btn.active');
+                if (activeTab) activeTab.click();
+
+            } catch (error) {
+                console.error(error);
+                hideLoadingModal();
+                showNotification('修改失败', error.message);
+            }
+        });
+    }
+})();
+// ==========================================================
+// --- ✨✨✨【修复版】画面详情弹窗逻辑 ✨✨✨ ---
+// ==========================================================
+(function() {
+    const modal = document.getElementById('scene-detail-modal');
+    const closeBtn = document.getElementById('scene-modal-close');
+    const textEl = document.getElementById('scene-detail-text');
+
+    // 核心函数：打开弹窗
+    window.openSceneDetailModal = function(description) {
+        if (!modal || !textEl) return;
+        
+        // 1. 填充文字
+        textEl.textContent = description || "（暂无描述）";
+        
+        // 2. 显示逻辑 (关键修复：必须添加 visible 类，否则无法点击)
+        modal.classList.remove('hidden');
+        
+        // 稍微延迟添加 visible 类以触发 CSS 动画
+        setTimeout(() => {
+            modal.classList.add('visible');
+            // 确保样式强制允许点击 (防止被全局样式覆盖)
+            modal.style.pointerEvents = 'auto'; 
+        }, 10);
+    };
+
+    // 核心函数：关闭弹窗
+    function closeSceneModal() {
+        if (!modal) return;
+        
+        // 1. 移除可见状态 (触发淡出动画)
+        modal.classList.remove('visible');
+        modal.style.pointerEvents = 'none';
+        
+        // 2. 等待动画结束后隐藏 DOM
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+    // 绑定事件
+    if (closeBtn) {
+        // 使用 onclick 确保覆盖旧事件，防止重复
+        closeBtn.onclick = (e) => {
+            e.stopPropagation(); // 防止冒泡
+            closeSceneModal();
+        };
+    }
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            // 点击遮罩层背景也可以关闭
+            if (e.target === modal || e.target.classList.contains('scene-modal-content')) {
+                closeSceneModal();
+            }
+        });
+    }
+})();
 
 </script>
 
