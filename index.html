@@ -492,11 +492,7 @@ background-color: #f9fafb;
             top: 45%;
             left: 60%;
         }
-        /* 线下 */
-        #app-offline {
-            top: 45%;
-            left: 85%;
-        }
+
   /* 邮箱*/
          #app-muzi-mail{
             top: 70%;
@@ -1444,10 +1440,6 @@ background-color: #f9fafb;
         /* 1. 父容器：成为所有“贴纸”定位的“舞台” */
         .chat-input-bar {
             position: relative;
-            /* 核心：成为内部绝对定位元素的“锚点” */
-            height: 55px;
-            /* 核心：给一个固定的高度，因为所有子元素都将“浮动” */
-
             /* (其他背景、边框样式保持不变) */
             padding: 0;
             /* 我们不再需要内边距来撑开高度 */
@@ -1534,23 +1526,19 @@ background-color: #f9fafb;
             overflow-x: auto;
             /* 核心：允许横向滚动 */
             overflow-y: hidden;
-            padding: 12px 0;
+            padding: 6px 0;
             /* 上下留出间距 */
 
         }
 
-
-
         /* 2. 内层容器：使用flex布局让所有按钮排成一行 */
         .quick-actions-inner {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             /* 按钮之间的间距 */
             padding: 0 10px;
             /* 左右两端留出边距，防止贴边 */
         }
-
-
 
         /* 4. 修改输入框左侧按钮的ID */
         #chat-emoji-btn {
@@ -7448,124 +7436,8 @@ background-color: #f9fafb;
             white-space: nowrap;
         }
 
-        /* ========================================================== */
-        /* --- ✨✨✨ 线下App (Offline) 专属样式 ✨✨✨ --- */
-        /* ========================================================== */
 
-        /* 1. 线下模式页眉 - 中间部分 */
-        .offline-header-center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-        }
 
-        /* 2. 双头像容器 */
-        .offline-avatars-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: -10px;
-            /* 让两个头像稍微重叠一点，显得亲密 */
-        }
-
-        .offline-header-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            /* 白色边框区分重叠部分 */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            background-color: #e5e7eb;
-        }
-
-        /* 3. 双名字容器 */
-        .offline-names-row {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-secondary-accent);
-            margin-top: 4px;
-            display: flex;
-            gap: 8px;
-        }
-
-        /* 4. 线下模式底部输入栏 (极简版) */
-        .offline-input-bar {
-            position: relative;
-            height: 50px;
-            padding: 0;
-            border-top: 1px solid var(--color-ui-border);
-            background: var(--color-ui-subtle);
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            gap: 10px;
-        }
-
-        .offline-input-bar input {
-            flex: 1;
-            padding: 8px 14px;
-            border-radius: 18px;
-            border: 1px solid var(--color-ui-border);
-            outline: none;
-            font-size: 14px;
-            background-color: var(--color-ui-base);
-            color: var(--color-tertiary-accent);
-        }
-
-        /* 线下模式的消息容器背景，可以稍微不一样一点区分 */
-        #offline-chat-messages {
-            background-color: #f3f4f6;
-            /* 稍微深一点的灰色背景 */
-        }
-
-        /* ========================================================== */
-        /* --- ✨✨✨ 线下App 底部样式修正 (统一风格) ✨✨✨ --- */
-        /* ========================================================== */
-
-        /* 1. 输入栏容器 */
-        .offline-input-bar {
-            position: relative;
-            height: 50px;
-            /* 与主聊天一致 */
-            padding: 0 10px;
-            border-top: 1px solid var(--color-ui-border);
-            background: var(--color-ui-subtle);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 20;
-            /* 确保在最上层 */
-        }
-
-        /* 2. 输入框 */
-        .offline-input-bar input {
-            flex: 1;
-            height: 36px;
-            /* 固定高度 */
-            padding: 0 14px;
-            border-radius: 18px;
-            border: 1px solid var(--color-ui-border);
-            outline: none;
-            font-size: 14px;
-            background-color: var(--color-ui-base);
-            color: var(--color-tertiary-accent);
-        }
-
-        /* 3. 发送按钮 (强制圆形，与主界面一致) */
-        #offline-send-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            font-size: 14px;
-            background: var(--color-primary-accent);
-            color: white;
-            flex-shrink: 0;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
 
         /* ========================================================== */
         /* --- ✨✨✨【修复】视频通话滚动条修复补丁 ✨✨✨ --- */
@@ -10291,11 +10163,10 @@ body.fullscreen-mode #phone {
 /* --- ✨✨✨ 聊天输入框 (多行文本域) 专属样式 ✨✨✨ --- */
 /* ========================================================== */
 #chat-input {
-    position: relative;
-    left: 50px;
-    width: calc(100% - 140px); /* 自动计算宽度，留出左右按钮的空间 */
+
+
     padding: 10px 12px;
-    border-radius: 18px;
+    border-radius: 15px;
     border: 1px solid var(--color-ui-border);
     outline: none;
     font-size: 14px;
@@ -10306,13 +10177,21 @@ body.fullscreen-mode #phone {
     min-height: 36px;   /* 最小高度 (单行) */
     max-height: 120px;  /* 最大高度 (约4-5行)，超过出滚动条 */
     display: block;
+    position: relative !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding-left: 36px !important; /* ✨ 预留给麦克风图标的空间 */
+    transition: padding-left 0.3s ease, border-color 0.2s;
+
 }
 
 /* --- ✨✨✨ 输入框自动增高补丁 ✨✨✨ --- */
 .chat-input-bar {
     /* 让父容器的高度随内容自动撑开 */
     height: auto !important;
-    min-height: 50px;
+    min-height: 60px;
     display: flex !important;
     align-items: flex-end !important; /* 底部对齐，确保按钮在下方 */
     padding-top: 8px;
@@ -12512,10 +12391,157 @@ body.fullscreen-mode #phone {
     -webkit-tap-highlight-color: transparent !important;
     outline: none !important;
 }
+/* ========================================================== */
+/* --- 📜 通用列表弹窗高度限制修复 (防止歌单撑破屏幕) --- */
+/* ========================================================== */
 
-/* 3. (可选) 如果觉得缩放动画也卡，可以把下面这就话也加上 */
-/* 加上这行，点击就是瞬时的，没有任何动画 */
-/* .btn-list-paper { transition: none !important; } */
+/* 1. 限制弹窗整体最大高度 */
+#universal-list-dialog .modal-content {
+    max-height: 60vh !important; /* 限制为屏幕高度的 60% */
+    display: flex !important;
+    flex-direction: column !important; /* 确保页眉和列表垂直排列 */
+    overflow: hidden !important; /* 防止圆角被内部滚动条破坏 */
+}
+
+/* 2. 让内部的列表区域可以滚动 */
+#list-dialog-items {
+    overflow-y: auto !important; /* 开启垂直滚动 */
+    flex: 1 !important;          /* 占据剩余空间 */
+    min-height: 0 !important;    /* Flex 布局滚动的关键属性 */
+    
+    /* 美化：增加一点内边距，防止滚动条贴着文字 */
+    padding: 5px 0 !important; 
+    
+    /* iOS 惯性滚动 */
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 3. (可选) 美化滚动条，让它在列表里不那么突兀 */
+#list-dialog-items::-webkit-scrollbar {
+    width: 4px;
+}
+#list-dialog-items::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+/* 1. 调整输入框的左边距：由 50px 增加到 90px，为两个按钮留位 */
+.chat-input-bar input {
+    left: 90px !important; 
+    width: calc(100% - 180px) !important; /* 相应减小宽度 */
+}
+
+/* 2. 定义语音按钮在输入栏的绝对位置 */
+#chat-voice-btn {
+    left: 48px; /* 紧贴表情按钮 (8px + 34px + 6px 间距) */
+    background: var(--color-ui-border);
+    color: var(--color-secondary-accent);
+}
+/* ========================================================== */
+/* --- ✨✨✨ 输入栏内嵌语音按钮样式 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 输入框包裹容器：占据剩余空间 */
+.chat-input-container {
+    position: absolute;
+    left: 50px;    /* 避开左侧笑脸按钮 */
+    right: 90px;   /* 避开右侧发送按钮组 */
+    top: 10px;
+    bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+
+
+/* 3. 当输入框不为空时，缩小左侧间距 (动画效果) */
+#chat-input.not-empty {
+    padding-left: 14px !important;
+}
+
+/* 4. 内嵌语音按钮：绝对定位在输入框左侧 */
+#chat-voice-btn {
+    position: absolute;
+    left: 6px;
+    z-index: 10;
+    background: transparent !important; /* 透明背景，融入输入框 */
+    color: #9ca3af; /* 淡淡的灰色 */
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 14px !important;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+/* 5. 隐藏状态：淡出并缩小 */
+#chat-voice-btn.hidden {
+    opacity: 0;
+    transform: scale(0.5);
+    visibility: hidden;
+    pointer-events: none; /* 隐藏时不可点击 */
+}
+/* --- 音乐搜索列表项样式 --- */
+.music-search-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.music-search-item:active {
+    background-color: #f3f4f6;
+    transform: scale(0.98);
+}
+
+.music-search-item-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.music-search-item-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-search-item-artist {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+/* --- VIP 标记样式 --- */
+.vip-badge {
+    font-size: 10px;
+    background-color: #fee2e2;
+    color: #ef4444;
+    padding: 1px 4px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-weight: bold;
+    border: 1px solid #fecaca;
+}
+
+/* VIP 歌曲禁用样式 */
+.music-search-item.disabled {
+    opacity: 0.6;
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+.music-search-item.disabled .music-search-item-title {
+    color: #9ca3af;
+}
+
+
+
     </style>
 
     <!-- 【请将这个新的 style 标签粘贴到旧 style 标签的紧后方】 -->
@@ -12674,15 +12700,6 @@ body.fullscreen-mode #phone {
                         </button>
 
 
-                        <!-- 线下 -->
-                        <button class="app" role="listitem" aria-label="线下应用" id="app-offline" data-app-id="offline">
-                            <div class="app-visuals">
-                                <span class="icon buttonlike" aria-hidden="true">
-                                    <i class="fa-solid fa-heart-pulse"></i>
-                                </span>
-                                <span class="label">线下</span>
-                            </div>
-                        </button>
 
                         <!-- 论坛 -->
                         <button class="app" role="listitem" aria-label="论坛应用" id="app-forum" data-app-id="forum">
@@ -13186,10 +13203,7 @@ body.fullscreen-mode #phone {
                         <div id="quick-actions-bar" class="quick-actions-bar-scrollable">
                             <!-- ▼▼▼ 请用这一整块全新的代码进行替换 ▼▼▼ -->
                             <div class="quick-actions-inner">
-                                <!-- 语音 -->
-                                <button id="quick-btn-voice" class="quick-action-btn buttonlike" title="语音">
-                                    <i class="fa-solid fa-microphone"></i>
-                                </button>
+
                                 <!-- 图片 -->
                                 <button id="quick-btn-picture" class="quick-action-btn buttonlike" title="图片">
                                     <i class="fa-solid fa-image"></i>
@@ -13220,45 +13234,37 @@ body.fullscreen-mode #phone {
     <i class="fa-solid fa-music"></i>
 </button>
 
-<!-- ✨✨✨ 新增：线下模式按钮 (心跳) ✨✨✨ -->
-<button id="quick-btn-offline-mode" class="quick-action-btn buttonlike" title="线下模式">
-    <i class="fa-solid fa-heart-pulse"></i>
-</button>
+
 
                             </div>
                             <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
                         </div>
+<!-- 找到 .chat-input-bar -->
+<div class="chat-input-bar">
+    <!-- 1. 笑脸图标保持在最左侧 -->
+    <button id="chat-emoji-btn" class="btn-icon buttonlike">
+        <i class="fa-regular fa-face-smile"></i>
+    </button>
 
+    <!-- ✨ 核心修改：创建一个包裹容器 -->
+    <div class="chat-input-container">
+        <!-- 语音按钮现在被放进来了，且增加一个内部 ID -->
+        <button id="chat-voice-btn" class="btn-icon buttonlike" title="语音">
+            <i class="fa-solid fa-microphone"></i>
+        </button>
+        
+        <!-- 输入框 -->
+        <textarea id="chat-input" rows="1" placeholder="输入消息..."></textarea>
+    </div>
 
-
-                        <!-- 聊天输入条 (✨ 核心修改：左侧按钮已更换) -->
-                        <!-- ▼▼▼ 请用这一整块全新的代码，替换旧的 chat-input-bar ▼▼▼ -->
-                        <div class="chat-input-bar">
-                            <!-- 将 "+" 号按钮替换为 "表情" 按钮 -->
-                            <button id="chat-emoji-btn" class="btn-icon buttonlike">
-                                <i class="fa-regular fa-face-smile"></i>
-                            </button>
-        <!-- ✨ 核心修改：换成了 textarea，支持多行 -->
-    <!-- rows="1" 设定初始为1行高 -->
-    <textarea id="chat-input" rows="1" placeholder="输入消息后点击爱心接收回复..." ></textarea>
-
-                            <!-- ✨ 核心修改：替换发送按钮的图标 -->
-                            <button id="chat-send-user" class="btn-icon buttonlike" type="button">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </button>
-
-                            <!-- ✨ 核心修改：替换触发AI按钮的图标 -->
-                            <button id="chat-trigger-ai" class="btn-icon buttonlike">
-                                <i class="fa-solid fa-heart"></i>
-                            </button>
-
-
-
-
-                        </div>
-                        <!-- ▲▲▲ 替换到这里结束 ▲▲▲ -->
-                        <!-- 表情面板 (唯一保留的面板) -->
-                        <!-- ▼▼▼ 请将这一整块全新的代码，粘贴到聊天界面 footer 的正上方 ▼▼▼ -->
+    <!-- 2. 右侧按钮保持不变 -->
+    <button id="chat-send-user" class="btn-icon buttonlike">
+        <i class="fa-solid fa-paper-plane"></i>
+    </button>
+    <button id="chat-trigger-ai" class="btn-icon buttonlike">
+        <i class="fa-solid fa-heart"></i>
+    </button>
+</div>
                         <!-- ========================================================== -->
                         <!-- --- ✨✨✨【全新】左下角表情包浮动弹窗 ✨✨✨ --- -->
                         <!-- ========================================================== -->
@@ -13667,6 +13673,17 @@ body.fullscreen-mode #phone {
     <!-- 组 5: 主动互动 (Interact) -->
     <div class="settings-section-wrapper" data-category="interact">
         <div class="settings-section-header-ios">主动互动</div>
+
+ <!-- ✨ 核心修改：由按钮改为开关样式 -->
+    <div class="settings-item">
+        <span class="icon" style="color: #f43f5e;"><i class="fa-solid fa-heart-pulse"></i></span>
+        <span class="label">线下模式</span>
+        <input type="checkbox" id="profile-offline-toggle" class="toggle-switch">
+    </div>
+    <p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
+        开启后，对话环境将切换为面对面场景。
+    </p>
+
 
         <button id="profilesetting-trigger-email-btn" class="settings-item buttonlike">
             <span class="icon" style="color: #8b5cf6;"><i class="fa-solid fa-envelope-open-text"></i></span>
@@ -15884,16 +15901,15 @@ body.fullscreen-mode #phone {
         <!-- 区域A: 顶部信息 (头像 + 名字 + 计时器) -->
         <header id="video-call-header">
             <div class="vc-participants-row">
-                <!-- 左侧：我 -->
-                <div class="vc-participant">
-                    <div id="vc-user-avatar" class="vc-avatar avatar-display"></div>
-                    <span id="vc-user-name" class="vc-name">我</span>
-                </div>
-
-                <!-- 右侧：对方 -->
+                <!-- 左侧：对方 -->
                 <div class="vc-participant">
                     <div id="vc-char-avatar" class="vc-avatar avatar-display"></div>
                     <span id="vc-char-name" class="vc-name">对方</span>
+                </div>
+                <!-- 右侧：我 -->
+                <div class="vc-participant">
+                    <div id="vc-user-avatar" class="vc-avatar avatar-display"></div>
+                    <span id="vc-user-name" class="vc-name">我</span>
                 </div>
             </div>
             
@@ -15982,118 +15998,7 @@ body.fullscreen-mode #phone {
     </div>
 </div>
 <!-- 替换结束 -->
-            <!-- ========================================================== -->
-            <!-- --- ✨✨✨【全新】线下App (Offline) 页面结构 ✨✨✨ --- -->
-            <!-- ========================================================== -->
-            <div id="offline-app-page" class="page" style="display:none; flex-direction: column;">
 
-                <!-- 视图 A: 角色列表 (首页) -->
-                <!-- 视图 A: 角色列表 (首页) -->
-                <div id="offline-list-view" style="display: flex; flex-direction: column; height: 100%;">
-
-                    <header class="page-header">
-                        <!-- 左侧：返回按钮 -->
-                        <div class="header-left">
-                            <button id="offline-list-back-btn" class="btn-icon btn-back buttonlike">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </button>
-                        </div>
-
-                        <!-- 中间：标题 (带占位符，确保高度统一) -->
-                        <div class="header-center">
-                            <div class="chat-title-container">
-                                <!-- 第一行：标题文本 -->
-                                <div style="font-weight: bold; font-size: 18px;">线下</div>
-                                <!-- ✨ 核心修改：第二行隐形占位符 (用于和主界面的双行结构对齐) -->
-                                <div style="height: 7px;"></div>
-                            </div>
-                        </div>
-
-                        <!-- 右侧：留空占位 (确保标题居中) -->
-                        <div class="header-right">
-                            <div style="width: 32px;"></div>
-                        </div>
-                    </header>
-
-                    <main id="offline-contact-list" class="page-content"
-                        style="padding: 10px; background-color: #f9fafb;">
-                        <!-- 角色列表将由JS渲染 -->
-                    </main>
-                </div>
-                <div id="offline-chat-view" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
-
-                    <header class="page-header">
-                        <!-- 左侧：返回 -->
-                        <div class="header-left">
-                            <button id="offline-chat-back-btn" class="btn-icon btn-back buttonlike">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </button>
-                        </div>
-
-                        <!-- 中间：双头像 + 名字 -->
-                        <div class="header-center offline-header-center">
-                            <div class="offline-avatars-row">
-                                <div id="offline-header-user-avatar" class="offline-header-avatar avatar-display"></div>
-                                <div id="offline-header-char-avatar" class="offline-header-avatar avatar-display"
-                                    style="margin-left: -10px; z-index: 1;"></div>
-                            </div>
-                            <div class="offline-names-row">
-                                <span id="offline-header-names-text">User & Char</span>
-                            </div>
-                        </div>
-
-                        <!-- 右侧：只保留角色主页 -->
-                        <div class="header-right">
-                            <button id="offline-btn-profile" class="btn-icon buttonlike" title="角色主页">
-                                <i class="fa-solid fa-address-card"></i>
-                            </button>
-                        </div>
-                    </header>
-
-                    <!-- 消息内容区 -->
-                    <main id="offline-chat-messages" class="chat-messages"
-                        style="flex: 1; overflow-y: auto; padding: 10px;"></main>
-
-                    <footer class="chat-footer">
-                        <!-- 快捷操作栏：现在包含 记忆、手机、重Roll -->
-                        <div class="quick-actions-bar-scrollable"
-                            style="padding: 8px 0; min-height: auto; background-color: var(--color-ui-subtle); border-top: 1px solid var(--color-ui-border);">
-                            <!-- 使用 gap 控制按钮间距，justify-content: center 让它们居中 -->
-                            <div class="quick-actions-inner" style="justify-content: center; gap: 20px;">
-
-                                <!-- 记忆管理 -->
-                                <button id="offline-btn-memory" class="quick-action-btn buttonlike" title="记忆管理">
-                                    <i class="fa-solid fa-brain"></i>
-                                </button>
-
-                                <!-- 查手机 -->
-                                <button id="offline-btn-phone" class="quick-action-btn buttonlike" title="查手机">
-                                    <i class="fa-solid fa-mobile-screen"></i>
-                                </button>
-
-                                <!-- 重新生成 -->
-                                <button id="offline-quick-reroll" class="quick-action-btn buttonlike" title="重新生成">
-                                    <i class="fa-solid fa-arrows-rotate"></i>
-                                </button>
-
-                            </div>
-                        </div>
-
-                        <!-- 输入栏 -->
-                        <div class="offline-input-bar">
-                            <input id="offline-chat-input" type="text" placeholder="描述线下的互动..." />
-                            <button id="offline-send-btn" class="btn-icon buttonlike"
-                                style="background: var(--color-primary-accent); color: white;">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </footer>
-                </div>
-
-
-
-
-            </div>
     <!-- 消息长按操作菜单 -->
     <div id="message-menu" class="hidden">
         <button id="quote-message-btn" class="message-menu-item">引用</button>
@@ -16213,7 +16118,7 @@ body.fullscreen-mode #phone {
 <!-- ========================================================== -->
 <div id="favorites-collection-modal" class="modal-overlay hidden">
     <!-- ✨ 应用 stationery-card 皮肤 -->
-    <div class="modal-content stationery-card" style="width: 95%; max-width: 32px; height: 85%; max-height: 700px; display: flex; flex-direction: column;">
+    <div class="modal-content stationery-card" style="width: 95%; max-width: 320px; height: 85%; max-height: 700px; display: flex; flex-direction: column;">
         
         <!-- 1. 页眉 -->
         <header class="stationery-card-header" style="display: flex; justify-content: space-between; align-items: center;">
@@ -17706,21 +17611,24 @@ body.fullscreen-mode #phone {
     <div class="modal-content music-player-card">
         
 <!-- 1. 顶部操作区 (修复版：各司其职，互不打架) -->
+<!-- 1. 顶部操作区 (UI 调整版) -->
         <div class="music-top-bar">
-            <!-- 左侧：关闭按钮 -->
-            <button id="music-player-close-btn" class="buttonlike" style="color: #b2bec3; font-size: 20px; background: transparent; border: none; padding: 10px;">
-                <i class="fa-solid fa-chevron-down"></i>
+            <!-- 左侧：上传按钮 (替换了原来的关闭箭头) -->
+            <button id="music-btn-upload" class="buttonlike" style="color: #b2bec3; font-size: 18px; background: transparent; border: none; padding: 10px;" title="上传本地歌曲">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
             </button>
             
             <!-- 中间：标题 (绝对居中) -->
             <div class="music-top-title">正在一起听</div>
             
-            <!-- 右侧：工具栏 -->
-            <div style="display: flex; gap: 8px;">
-                <button id="music-btn-upload" class="buttonlike" style="color: #b2bec3; background: transparent; border: none; padding: 8px;" title="上传本地">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
+            <!-- 右侧：搜索 + 歌词 -->
+            <div style="display: flex; gap: 5px;">
+                <!-- ✨ 新增：搜索按钮 -->
+                <button id="open-music-search-btn" class="buttonlike" style="color: #b2bec3; background: transparent; border: none; padding: 8px;" title="搜索网络歌曲">
+                    <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
-                <button id="music-btn-lyrics" class="buttonlike" style="color: #b2bec3; background: transparent; border: none; padding: 8px;" title="歌词">
+                <!-- 歌词按钮 -->
+                <button id="music-btn-lyrics" class="buttonlike" style="color: #b2bec3; background: transparent; border: none; padding: 8px;" title="显示歌词">
                     词
                 </button>
             </div>
@@ -17728,9 +17636,9 @@ body.fullscreen-mode #phone {
 
 <!-- 2. 情侣头像胶囊 -->
         <div class="music-header-capsule">
-            <div id="music-user-avatar" class="avatar-display" title="我"></div>
+             <div id="music-char-avatar" class="avatar-display" title="TA"></div>
             <i class="fa-solid fa-heart music-heart-beat"></i>
-            <div id="music-char-avatar" class="avatar-display" title="TA"></div>
+           <div id="music-user-avatar" class="avatar-display" title="我"></div>
         </div>
         
         <!-- ✨✨✨ 新增：累计陪伴计时器 (放在头像下面，唱片上面) ✨✨✨ -->
@@ -17799,7 +17707,42 @@ body.fullscreen-mode #phone {
     <input type="file" id="music-upload-input" accept="audio/*,.lrc" class="hidden" multiple>
 </div>
 
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】音乐搜索弹窗 (带VIP标记) ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="music-search-modal" class="modal-overlay hidden" style="z-index: 2050;">
+    <!-- 使用墨白卡片风格 -->
+    <div class="modal-content stationery-card" style="width: 90%; max-width: 340px; height: 80%; max-height: 600px; display: flex; flex-direction: column;">
+        
+        <!-- 1. 页眉 -->
+        <header class="stationery-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="music-search-title" class="header-title-paper">搜你想听</h3>
+            <button id="music-search-close-btn" class="btn-icon buttonlike" style="font-size: 16px; color: #9ca3af;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </header>
 
+        <!-- 2. 搜索框区域 -->
+        <div style="padding: 15px 20px 0;">
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="music-search-keyword-input" class="form-input-paper" placeholder="输入歌名或歌手..." style="flex:1;">
+                <button id="do-music-search-btn" class="btn btn-primary-paper buttonlike" style="width: auto; padding: 0 15px;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. 结果列表 (可滚动) -->
+        <main id="music-search-results-list" class="stationery-card-content" style="flex: 1; padding: 10px 20px; display: flex; flex-direction: column; gap: 10px;">
+            <!-- 搜索结果将显示在这里 -->
+            <div id="music-search-placeholder" style="text-align: center; color: #9ca3af; margin-top: 40px; font-size: 13px;">
+                <i class="fa-solid fa-music" style="font-size: 32px; opacity: 0.2; margin-bottom: 10px;"></i>
+                <p>支持搜索网易云音乐曲库<br>VIP歌曲将无法播放</p>
+            </div>
+        </main>
+        
+    </div>
+</div>
 <!-- =================以下，不要改========================================= -->
             </div>
         </section>
@@ -19939,19 +19882,17 @@ async function saveRealTokenUsage(characterId, usageData) {
 // --- ✨✨✨【全新 V3 - 修复版】AI 动态操作按钮引擎 ✨✨✨ ---
 // ==========================================================
 (function() {
-    // 1. 定义核心状态判断函数
-    // 逻辑：检查最后一条非系统消息。如果是AI发的 -> 显示重绘；否则 -> 显示心动
+
     window.updateAiButtonState = async function() {
         // ✨✨✨ 核心修复：每次运行都重新获取当前页面上真正的按钮 ✨✨✨
         const currentBtn = document.getElementById('chat-trigger-ai');
         if (!currentBtn || !window.currentChat) return;
         
         try {
-            // 获取最后一条【非系统、非旁白、非线下】的消息
-            const lastMsg = await db.messages.where({ chatId: window.currentChat.id })
-                .filter(m => m.senderId !== 'system' && m.type !== 'system' && m.sceneName !== 'offline') 
-                .reverse()
-                .first();
+const lastMsg = await db.messages.where({ chatId: window.currentChat.id })
+    .filter(m => m.senderId !== 'system' && m.type !== 'system') 
+    .reverse()
+    .first();
 
             // 默认为“心动模式” (Heart)
             let mode = 'trigger'; 
@@ -20220,33 +20161,34 @@ async function saveRealTokenUsage(characterId, usageData) {
         });
 
 // ==========================================================
-// --- ✨✨✨【V2 - 统一弹窗版】语音输入核心引擎 ✨✨✨ ---
+// --- ✨✨✨【V3.0 - 移动版】语音输入核心引擎 ✨✨✨ ---
 // ==========================================================
 (function() {
-    const voicePanelBtn = document.getElementById('quick-btn-voice');
-    if (!voicePanelBtn) return;
+    // 核心修改：改用输入框旁边的新按钮 ID
+    const voiceBtn = document.getElementById('chat-voice-btn');
+    if (!voiceBtn) return;
 
-    voicePanelBtn.addEventListener('click', async () => {
+    voiceBtn.addEventListener('click', async () => {
+        // 1. 关闭可能打开的表情面板
         if (typeof closeAllPanels === 'function') closeAllPanels();
 
-        // 1. ✨ 核心修改：调用我们强大的 showInputDialog 函数
+        // 2. 调用输入弹窗
         const voiceText = await showInputDialog(
-            '录入语音内容',    // 弹窗标题
-            '',                  // 默认值 (空)
-            true,                // 开启多行模式
+            '录入语音内容', 
+            '', 
+            true, 
             { 
-                confirmText: '发送语音', // 自定义确认按钮文字
-                placeholder: '请在这里输入你想“说”的话...' // 自定义占位符
+                confirmText: '发送语音', 
+                placeholder: '请在这里输入你想“说”的话...' 
             }
         );
 
-        // 2. 如果用户输入了内容并点击了“发送语音”
+        // 3. 执行发送逻辑
         if (voiceText) {
-            // (这里的发送逻辑和之前完全一样，我们只是把它移到这里)
             const duration = Math.max(1, Math.round(voiceText.length / 5));
-
             const user = window.currentChat.activeUserPersona || window.currentUser;
             const chat = window.currentChat;
+
             const voiceMsg = {
                 userId: user.id,
                 chatId: chat.id,
@@ -20267,7 +20209,6 @@ async function saveRealTokenUsage(characterId, usageData) {
         }
     });
 })();
-
 // ==========================================================
 // --- ✨✨✨【三合一版】美化中心核心引擎 (图标+字体+CSS) ✨✨✨ ---
 // ==========================================================
@@ -20809,7 +20750,7 @@ async function saveRealTokenUsage(characterId, usageData) {
         (function () {
 
             const pages = [
-                'home', 'qq-main', 'qq-chat', 'settings-menu', 'offline-app-page',
+                'home', 'qq-main', 'qq-chat', 'settings-menu', 
                 'calendar-app-page', 'bubble-settings-page', 'character-profile-page',
                 'period-tracker-page', 'period-history-page', 'prompt-viewer-page',
                 'prompt-preset-page', 'world-book-page', 'data-management-page',
@@ -21071,7 +21012,7 @@ function updateChatInputState(character) {
     } else {
         // --- 场景 C: 正常状态 ---
         chatInput.disabled = false;
-        chatInput.placeholder = "输入消息后点击爱心接收回复...";
+        chatInput.placeholder = "点击爱心接收回复...";
         chatInput.style.backgroundColor = "var(--color-ui-base)";
         sendBtn.disabled = false;
         triggerAiBtn.disabled = false;
@@ -21126,9 +21067,9 @@ function updateChatInputState(character) {
             currentMessageOffset = 0;
 
             try {
-                // 过滤线下消息
-                const onlineMsgs = allMsgs.filter(m => m.sceneName !== 'offline');
-                const totalMessages = onlineMsgs.length;
+// 不再过滤，全部显示
+const onlineMsgs = allMsgs; 
+const totalMessages = onlineMsgs.length;
 
                 // 取最近一页
                 const history = onlineMsgs
@@ -21800,38 +21741,34 @@ ${formatInstruction}
         finalComponents.push({ id: 'final_instructions', title: '最终输出指令', icon: '<i class="fa-solid fa-table-list"></i>', content: FINAL_INSTRUCTIONS_PROMPT });
 
 // ==========================================================
-        // --- ✨✨✨ 音乐歌词模块 (位置调整：紧贴小剧场之前) ✨✨✨ ---
+        // --- ✨✨✨ 音乐模块 (纯场景描述版：无指令干扰) ✨✨✨ ---
         // ==========================================================
-        
-        // ✨ 核心修改：增加 && window.musicPlayerController.isPlaying() 判断
-        // 只有当音乐正在播放时，才把歌词塞进 Prompt
         if (window.musicPlayerController && window.musicPlayerController.isPlaying()) {
-            
             const currentSong = window.musicPlayerController.getCurrentSongDetail();
             
-            if (currentSong && currentSong.lyrics) {
-                // 清洗时间轴，保留完整歌词
-                const cleanLyrics = currentSong.lyrics.replace(/\[\d{2}:\d{2}\.\d{2,3}\]/g, '').trim();
-
-                if (cleanLyrics) {
-                    const musicPromptContent = `
-【当前状态：正在一起听《${currentSong.name}》】
-【完整歌词内容】：
-"""
-${cleanLyrics}
-"""
-
-`;
-                    finalComponents.push({ 
-                        id: 'music_lyrics', 
-                        title: '正在播放的音乐 (含歌词)', 
-                        icon: '<i class="fa-solid fa-music"></i>', 
-                        content: musicPromptContent 
-                    });
+            if (currentSong) {
+                // 1. 基础场景描述
+                let musicPromptContent = `【当前状态：正在一起听歌曲《${currentSong.name}》】`;
+                
+                // 2. 如果有歌词，直接附带在后面，不做任何引导
+                if (currentSong.lyrics) {
+                    const cleanLyrics = currentSong.lyrics.replace(/\[\d{2}:\d{2}\.\d{2,3}\]/g, '').trim();
+                    if (cleanLyrics) {
+                        musicPromptContent += `\n【歌词】：\n${cleanLyrics}`;
+                    }
                 }
+
+                // 3. 推入模块
+                finalComponents.push({ 
+                    id: 'music_lyrics', 
+                    title: '正在播放的音乐', 
+                    icon: '<i class="fa-solid fa-music"></i>', 
+                    content: musicPromptContent 
+                });
             }
         }
-        // --- 小剧场模块 (紧随歌词之后) ---
+
+
         if (ctxChar.enableSmallTheater !== false) {
             const userContent = ctxChar.smallTheaterContent || DEFAULT_THEATER_CONTENT;
             const finalCardPrompt = DYNAMIC_CARD_PROMPT_TEMPLATE.replace('{{user_content}}', userContent);
@@ -22040,7 +21977,7 @@ ${cleanLyrics}
     
     // ✨ 新增的按钮也加在这里
     const quickMusicBtn = document.getElementById('quick-btn-music');
-    const quickOfflineBtn = document.getElementById('quick-btn-offline-mode');
+
     const quickLocationBtn = document.getElementById('quick-btn-location');
     const quickFileBtn = document.getElementById('quick-btn-file');
     const quickTransferBtn = document.getElementById('quick-btn-transfer');
@@ -22048,7 +21985,7 @@ ${cleanLyrics}
  // --- ✨ 新增：音乐按钮 ---
 // ... 
    
-            // ✨ ID 更新为新的 music-player-modal
+// ✨ ID 更新为新的 music-player-modal
             const musicModal = document.getElementById('music-player-modal');
             const musicCloseBtn = document.getElementById('music-player-close-btn');
 
@@ -22061,11 +21998,18 @@ ${cleanLyrics}
                         const userAvatar = document.getElementById('music-user-avatar');
                         const charAvatar = document.getElementById('music-char-avatar');
                         
+                        // ▼▼▼ ✨✨✨ 核心修复：优先使用专属人设 ✨✨✨ ▼▼▼
+                        // 如果当前角色有 activeUserPersona，就用它；否则用全局 currentUser
+                        const userPersona = window.currentChat.activeUserPersona || window.currentUser;
+
                         // 使用 renderAvatar 填充头像
                         if (typeof renderAvatar === 'function') {
-                            renderAvatar(userAvatar, window.currentUser.avatar, window.currentUser.name.charAt(0));
+                            // 这里改成了 userPersona.avatar
+                            renderAvatar(userAvatar, userPersona.avatar, userPersona.name.charAt(0));
+                            // 对方头像保持不变
                             renderAvatar(charAvatar, window.currentChat.avatar, window.currentChat.name.charAt(0));
                         }
+                        // ▲▲▲ 修复结束 ▲▲▲
                     }
 
                     showModal('music-player-modal');
@@ -22076,22 +22020,6 @@ ${cleanLyrics}
                 }
                 musicModal.addEventListener('click', (e) => {
                     if (e.target === musicModal) hideModal('music-player-modal');
-                });
-            }
-            // ...
-            // --- ✨ 新增：线下模式按钮 (占位) ---
-   
-            if (quickOfflineBtn) {
-                quickOfflineBtn.addEventListener('click', () => {
-                    closeAllPanels();
-                    
-                    // 这里我们先做一个酷炫的提示，告诉用户即将发生什么
-                    showNotification(
-                        "🕊️ 线下模式 (Coming Soon)", 
-                        "即将把桌面上的“线下App”无缝集成到这里，\n实现沉浸式的面对面交流体验！"
-                    );
-                    
-                    // (后续我们会在这里写代码，直接把用户传送到 Offline 界面)
                 });
             }
 
@@ -23182,7 +23110,12 @@ async function openContactProfileModal(characterId) {
                 bgDiv.style.backgroundColor = '#F9FAFB';
             }
 
-   
+       // --- ✨ 新增：初始化线下模式开关状态 ---
+    const offlineToggle = document.getElementById('profile-offline-toggle');
+    if (offlineToggle) {
+        // 目前设为纯占位，默认不开启
+        offlineToggle.checked = false; 
+    }
 
 // --- ✨ 新增：处理小剧场开关与自定义内容 ✨ ---
     const theaterToggle = document.getElementById('profile-theater-toggle');
@@ -27692,92 +27625,101 @@ function enterSelectionMode(initialMessageId) {
             const titleEl = document.getElementById('collection-modal-title');
             const listEl = document.getElementById('collection-modal-list');
 
-            /**
-             * 核心函数：打开弹窗并渲染消息列表
-             */
-            async function openFavoritesCollectionModal(favoriteCollection) {
-                if (!modal || !favoriteCollection) return;
+// ==========================================================
+// --- ✨✨✨【V2.0 - 全情境身份校准版】收藏合集引擎 ✨✨✨ ---
+// ==========================================================
+async function openFavoritesCollectionModal(favoriteCollection) {
+    if (!modal || !favoriteCollection) return;
 
-                const messageIds = favoriteCollection.contentId || [];
-                // 获取角色信息（用于显示头像和名字）
-                const character = await db.characters.get(favoriteCollection.chatId);
-                const charName = character ? character.name : '未知角色';
+    const messageIds = favoriteCollection.contentId || [];
+    // 1. 获取这个收藏合集【所属的频道ID】
+    const currentChannelId = favoriteCollection.chatId;
+    
+    // 2. 获取该角色的资料（包含它的头像和它的专属人设）
+    const character = await db.characters.get(currentChannelId);
+    const charName = character ? character.name : '未知角色';
 
-                titleEl.textContent = `与 ${charName} 的对话`;
-                listEl.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div>';
-                
-                showModal('favorites-collection-modal'); // 使用通用动画显示
+    titleEl.textContent = `与 ${charName} 的对话`;
+    listEl.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div>';
+    
+    showModal('favorites-collection-modal');
 
-                try {
-                    // 批量获取消息
-                    const messages = await db.messages.bulkGet(messageIds);
+    try {
+        const messages = await db.messages.bulkGet(messageIds);
+        listEl.innerHTML = ''; 
 
-                    listEl.innerHTML = ''; // 清空加载动画
+        if (messages.length === 0) {
+            listEl.innerHTML = '<p style="text-align:center; color:#a1a1aa; margin-top:20px;">原消息已在时光中消散...</p>';
+            return;
+        }
 
-                    if (messages.length === 0) {
-                        listEl.innerHTML = '<p style="text-align:center; color:#a1a1aa; margin-top:20px;">找不到原消息内容（可能已被删除）。</p>';
-                        return;
-                    }
+        for (const msg of messages) {
+            if (!msg) continue; 
 
-                    // ✨ 核心修复：遍历渲染每一条消息
-                    for (const msg of messages) {
-                        if (!msg) continue; 
+            // --- 阶段 A: 判定身份属性 ---
+            const isSystem = msg.senderId === 'system' || msg.type === 'system';
+            // ✨ 核心修正：判断是否为该频道的“主角色”
+            const isCharacter = msg.senderId === currentChannelId;
 
-                        // 1. 判断发送者是谁
-                        const isMe = msg.senderId === window.currentUser.id;
-
-                        // 2. 创建行容器
-                        const row = document.createElement('div');
-                        // 左右对齐逻辑：是我发的在 right，不是我发的在 left
-                        row.className = "msg-row " + (isMe ? "right" : "left");
-                        
-                        // 3. 创建头像容器
-                        const avatarBox = document.createElement('div');
-                        avatarBox.className = "msg-avatar avatar-display";
-
-                        // 4. 创建气泡容器
-                        const bubbleWrapper = document.createElement('div');
-                        bubbleWrapper.className = 'msg-content-wrapper'; // 复用新的 wrapper 结构
-
-                        // 5. 渲染气泡内容 (简易版渲染，支持文本和图片)
-                        let contentHtml = '';
-                        if (msg.type === 'image') {
-                            const src = makeAvatarSrc(msg.image);
-                            contentHtml = `<img src="${src}" style="max-width: 100%; border-radius: 8px;">`;
-                        } else if (msg.type === 'voice') {
-                            contentHtml = `[语音 ${msg.duration}s]`;
-                        } else {
-                            // 普通文本
-                            contentHtml = escapeHtml(msg.content).replace(/\n/g, '<br>');
-                        }
-
-                        const bubble = document.createElement('div');
-                        bubble.className = "msg " + (isMe ? "right" : "left");
-                        bubble.innerHTML = contentHtml;
-                        bubbleWrapper.appendChild(bubble);
-
-                        // 6. ✨ 核心修复：根据 isMe 正确分配头像数据 ✨
-                        if (isMe) {
-                            // 如果是我发的 -> 显示我的头像，排列顺序：[内容] [头像]
-                            renderAvatar(avatarBox, window.currentUser.avatar, '我');
-                            row.appendChild(bubbleWrapper);
-                            row.appendChild(avatarBox);
-                        } else {
-                            // 如果是对方发的 -> 显示角色头像，排列顺序：[头像] [内容]
-                            // 注意：这里用 character.avatar
-                            renderAvatar(avatarBox, character ? character.avatar : null, charName.charAt(0));
-                            row.appendChild(avatarBox);
-                            row.appendChild(bubbleWrapper);
-                        }
-
-                        listEl.appendChild(row);
-                    }
-                } catch (e) {
-                    console.error("加载合集失败:", e);
-                    listEl.innerHTML = '<p style="text-align:center; color:red;">加载失败</p>';
-                }
+            // --- 阶段 B: 处理旁白消息 (居中) ---
+            if (isSystem) {
+                const sysEl = document.createElement('div');
+                sysEl.className = 'msg-timestamp';
+                sysEl.style.margin = '10px 0';
+                sysEl.textContent = (msg.displayContent || msg.content || "").replace(/\[|\]/g, '');
+                listEl.appendChild(sysEl);
+                continue; // 旁白处理完，跳过后面逻辑
             }
 
+            // --- 阶段 C: 处理普通对话 (左/右) ---
+            const row = document.createElement('div');
+            // 如果是角色 ID -> 靠左；否则（用户 ID 或 伪造 ID） -> 靠右
+            row.className = "msg-row " + (isCharacter ? "left" : "right");
+            
+            const avatarBox = document.createElement('div');
+            avatarBox.className = "msg-avatar avatar-display";
+
+            const bubbleWrapper = document.createElement('div');
+            bubbleWrapper.className = 'msg-content-wrapper';
+
+            // 内容渲染 (文字/图片/语音)
+            let contentHtml = '';
+            if (msg.type === 'image') {
+                const src = makeAvatarSrc(msg.image);
+                contentHtml = `<img src="${src}" style="max-width: 100%; border-radius: 8px;">`;
+            } else if (msg.type === 'voice') {
+                contentHtml = `[语音 ${msg.duration || 0}s]`;
+            } else {
+                contentHtml = escapeHtml(msg.content).replace(/\n/g, '<br>');
+            }
+
+            const bubble = document.createElement('div');
+            bubble.className = "msg " + (isCharacter ? "left" : "right");
+            bubble.innerHTML = contentHtml;
+            bubbleWrapper.appendChild(bubble);
+
+            // --- 阶段 D: 动态精准分配头像 ---
+            if (isCharacter) {
+                // 情况 1: 这是该频道的角色发的
+                renderAvatar(avatarBox, character?.avatar, charName.charAt(0));
+                row.appendChild(avatarBox);
+                row.appendChild(bubbleWrapper);
+            } else {
+                // 情况 2: 这是你（用户）发的
+                // ✨ 核心修复：优先寻找该频道下的“专属人设头像”，没有则用全局头像
+                const userPersona = character?.activeUserPersona || window.currentUser;
+                renderAvatar(avatarBox, userPersona.avatar, '我');
+                row.appendChild(bubbleWrapper);
+                row.appendChild(avatarBox);
+            }
+
+            listEl.appendChild(row);
+        }
+    } catch (e) {
+        console.error("加载合集失败:", e);
+        listEl.innerHTML = '<p style="text-align:center; color:red;">加载失败</p>';
+    }
+}
             function closeFavoritesCollectionModal() {
                 hideModal('favorites-collection-modal');
             }
@@ -29193,186 +29135,199 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
         })();
 
         // ==========================================================
-        // --- 引擎结束 ---
-        // ==========================================================
-        // ▲▲▲ 粘贴到这里结束 ▲▲▲
-
-        // ==========================================================
-        // --- ✨✨✨【全新】音乐搜索核心引擎 V1.4 (备用代理修复版) ✨✨✨ ---
+// ==========================================================
+        // --- ✨✨✨【稳定版】音乐搜索核心引擎 (Vercel源/需梯子) ✨✨✨ ---
         // ==========================================================
         (function () {
-            // --- 1. 获取所有相关的 DOM 元素 ---
+            // 1. 获取所有相关的 DOM 元素
             const openSearchBtn = document.getElementById('open-music-search-btn');
             const searchModal = document.getElementById('music-search-modal');
+            
+            // 安全检查
             if (!openSearchBtn || !searchModal) return;
 
-            const searchModalTitle = document.getElementById('music-search-title');
             const closeSearchBtn = document.getElementById('music-search-close-btn');
+            const inputEl = document.getElementById('music-search-keyword-input');
+            const doSearchBtn = document.getElementById('do-music-search-btn');
             const resultsList = document.getElementById('music-search-results-list');
             const placeholder = document.getElementById('music-search-placeholder');
 
-            // --- 2. API地址保持不变 ---
-            const API_BASE_URL = 'https://netease-cloud-music-api-lyart.vercel.app';
-
-            // ✨✨✨ 核心修正：更换为一个不需要手动激活的CORS代理 ✨✨✨
-            const PROXY_URL = 'https://cors.eu.org/';
-
+            // --- 2. API 地址设置 (回退到 Vercel 源) ---
+            // ⚠️ 注意：此地址在中国大陆无法直接访问，请确保你的网络环境可以访问 vercel.app
+            const API_BASE_URL = 'https://netease-cloud-music-api-lyart.vercel.app'; 
 
             /**
-             * 核心函数 1: 打开搜索弹窗并触发搜索流程
+             * 核心函数 1: 打开搜索弹窗
              */
-            async function openMusicSearchModal() {
-                try {
-                    const keyword = await showInputDialog("想听点什么？", "");
-                    if (keyword && keyword.trim()) {
-                        showModal('music-search-modal');
-                        searchModalTitle.textContent = `搜索“${keyword}”`;
-                        await searchMusic(keyword.trim());
-                    }
-                } catch (error) {
-                    console.error("搜索流程出错:", error);
-                    showNotification("搜索时发生错误。");
-                }
-            }
-
-            /**
-             * 核心函数 2: 根据关键词调用API并渲染结果
-             */
-            // ▼▼▼ 请用这个【全新的、带VIP过滤功能的版本】替换旧的 searchMusic 函数 ▼▼▼
-            async function searchMusic(keyword) {
+            openSearchBtn.addEventListener('click', () => {
+                inputEl.value = '';
                 resultsList.innerHTML = '';
-                placeholder.textContent = '正在努力搜索中...';
-                resultsList.appendChild(placeholder);
+                if(placeholder) resultsList.appendChild(placeholder);
+                
+                searchModal.classList.remove('hidden');
+                setTimeout(() => {
+                    searchModal.classList.add('visible');
+                    inputEl.focus();
+                }, 10);
+            });
+
+            function closeSearchModal() {
+                searchModal.classList.remove('visible');
+                setTimeout(() => searchModal.classList.add('hidden'), 300);
+            }
+            if(closeSearchBtn) closeSearchBtn.addEventListener('click', closeSearchModal);
+
+            /**
+             * 核心函数 2: 执行搜索
+             */
+            async function performSearch() {
+                const keyword = inputEl.value.trim();
+                if (!keyword) return;
+
+                resultsList.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div><p style="text-align:center;color:#999;font-size:12px;">正在连接 Vercel 服务器...</p>';
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/search?keywords=${encodeURIComponent(keyword)}&limit=20`);
-                    if (!response.ok) throw new Error(`网络请求失败 (${response.status})`);
+                    // 直接请求 Vercel API
+                    const targetUrl = `${API_BASE_URL}/search?keywords=${encodeURIComponent(keyword)}&limit=30`;
+                    
+                    const response = await fetch(targetUrl);
+                    
+                    if (!response.ok) {
+                        throw new Error(`API 请求失败: ${response.status}`);
+                    }
 
                     const data = await response.json();
                     const songs = data.result?.songs || [];
-
-                    // ▼▼▼ ✨✨✨ 核心修改就在这里！ ✨✨✨ ▼▼▼
-
-                    // 1. 使用 .filter() 方法，筛选出所有 fee 不等于 1 (非VIP) 的歌曲
-                    const freeSongs = songs.filter(song => song.fee !== 1);
-
-                    // 2. 检查筛选后的歌曲列表是否为空
-                    if (freeSongs.length === 0) {
-                        placeholder.textContent = '抱歉，没有找到可免费播放的相关歌曲。'; // 提示信息也更精准
+                    
+                    if (songs.length === 0) {
+                        resultsList.innerHTML = '<div style="text-align:center; color:#999; margin-top:20px;">未找到相关歌曲</div>';
                         return;
                     }
 
-                    // 3. 将筛选后的、干净的歌曲列表交给渲染函数
-                    renderSearchResults(freeSongs);
-
-                    // ▲▲▲ ✨✨✨ 修改结束 ✨✨✨ ▲▲▲
+                    renderSearchResults(songs);
 
                 } catch (error) {
-                    console.error("API搜索失败:", error);
-                    placeholder.textContent = '搜索失败，请检查网络或稍后再试。';
+                    console.error("搜索出错:", error);
+                    resultsList.innerHTML = `
+                        <div style="text-align:center; color:#ef4444; margin-top:20px; padding:0 20px;">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size:24px; margin-bottom:10px;"></i><br>
+                            连接超时 / 搜索失败<br>
+                            <span style="font-size:12px; color:#9ca3af;">请检查您的网络是否开启了代理 (VPN)，<br>或者该 Vercel 节点可能暂时不可用。</span>
+                        </div>`;
                 }
             }
-            // ▲▲▲ 替换到这里结束 ▲▲▲
+
+            // 绑定搜索按钮和回车
+            if(doSearchBtn) doSearchBtn.addEventListener('click', performSearch);
+            if(inputEl) inputEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
 
             /**
-             * 核心函数 3: 将搜索结果渲染成一个可点击的列表
+             * 核心函数 3: 渲染列表 (含VIP识别)
              */
             function renderSearchResults(songs) {
-                resultsList.innerHTML = ''; // 清空加载提示
+                resultsList.innerHTML = ''; 
                 songs.forEach(song => {
-                    const artistName = song.ar?.map(a => a.name).join('/') || '未知艺术家';
+                    // 网易云 fee: 1 为 VIP, 0 为免费, 8 为低音质免费
+                    const isVip = song.fee === 1; 
+                    const artistName = song.ar?.map(a => a.name).join('/') || '未知';
+                    const albumName = song.al?.name || '';
 
                     const item = document.createElement('div');
-                    item.className = 'music-search-item buttonlike';
-                    item.dataset.id = song.id;
-                    item.dataset.title = song.name;
-                    item.dataset.artist = artistName;
+                    // 如果是 VIP，我们加上 disabled 样式，但也允许点击（点击后弹提示）
+                    item.className = `music-search-item buttonlike ${isVip ? 'disabled' : ''}`;
+                    
+                    // VIP 标记 HTML
+                    let titleHtml = escapeHtml(song.name);
+                    if (isVip) titleHtml += `<span class="vip-badge">VIP</span>`;
 
                     item.innerHTML = `
-                <div class="music-search-item-info">
-                    <div class="music-search-item-title">${song.name}</div>
-                    <div class="music-search-item-artist">${artistName}</div>
-                </div>
-            `;
+                        <div class="music-search-item-info">
+                            <div class="music-search-item-title">${titleHtml}</div>
+                            <div class="music-search-item-artist">${escapeHtml(artistName)} - ${escapeHtml(albumName)}</div>
+                        </div>
+                        <div style="font-size: 14px; color: var(--color-primary-accent);">
+                            ${isVip ? '<i class="fa-solid fa-lock" style="color:#d1d5db;"></i>' : '<i class="fa-solid fa-circle-play"></i>'}
+                        </div>
+                    `;
+
+                    // 点击事件
+                    item.addEventListener('click', () => {
+                        if (isVip) {
+                            showNotification("无法播放 VIP 歌曲", "受版权保护，无法直接播放。请尝试搜索 Live 版或翻唱版。");
+                        } else {
+                            handleSongSelection(song.id, song.name, artistName);
+                        }
+                    });
+
                     resultsList.appendChild(item);
                 });
             }
 
-            // ▼▼▼ 请用这个【流媒体版】的 handleSongSelection 函数，替换旧版本 ▼▼▼
+            /**
+             * 核心函数 4: 选中歌曲处理 (直链播放 + Vercel抓歌词)
+             */
             async function handleSongSelection(songId, title, artist) {
-                showLoadingModal("正在获取播放链接...");
+                showLoadingModal("正在解析资源...");
+                
                 try {
-                    // 步骤 1: 获取播放链接 (这部分不变)
-                    const urlResponse = await fetch(`${API_BASE_URL}/song/url/v1?id=${songId}&level=standard`);
-                    const urlData = await urlResponse.json();
-                    let songUrl = urlData.data?.[0]?.url;
-
-                    if (!songUrl) {
-                        throw new Error("抱歉，这首歌暂时无法播放（可能需要VIP）");
-                    }
-                    songUrl = songUrl.replace(/^http:/, 'https:');
-
-                    // ▼▼▼ ✨✨✨ 核心修改就在这里！ ✨✨✨ ▼▼▼
-
-                    // 步骤 2: 不再下载 Blob，而是直接准备要存入数据库的数据
+                    // 1. 音频源：依然使用官方直链 (最稳，且不需要消耗 Vercel 流量)
+                    const songUrl = `https://music.163.com/song/media/outer/url?id=${songId}.mp3`;
+                    
                     const newSongEntry = {
                         title: title,
                         artist: artist,
-                        songUrl: songUrl, // <--- 我们现在保存的是 URL 字符串
-                        audioData: null,  // <--- audioData 字段存为 null
+                        songUrl: songUrl,
+                        audioData: null,
                         coverArt: null,
                         lyrics: null
                     };
 
-                    // 步骤 3: 保存歌曲信息到数据库
-                    const newSongId = await db.songs.add(newSongEntry);
-
-                    // ▲▲▲ ✨✨✨ 修改结束 ✨✨✨ ▲▲▲
-
-                    // (后续的播放逻辑保持不变)
-                    window.currentPlaylist = await db.songs.toArray();
-                    const newIndex = window.currentPlaylist.findIndex(s => s.id === newSongId);
-                    if (newIndex !== -1) {
-                        window.currentTrackIndex = newIndex;
-                        window.loadSong(window.currentPlaylist[newIndex]);
-                        window.playSong();
+                    // 2. 歌词源：使用 Vercel API 抓取
+                    try {
+                        const lrcRes = await fetch(`${API_BASE_URL}/lyric?id=${songId}`);
+                        const lrcData = await lrcRes.json();
+                        if (lrcData.lrc && lrcData.lrc.lyric) {
+                            newSongEntry.lyrics = lrcData.lrc.lyric;
+                        } else {
+                            newSongEntry.lyrics = "[暂无歌词]";
+                        }
+                    } catch (e) {
+                        console.warn("歌词获取失败", e);
+                        newSongEntry.lyrics = "[歌词加载失败]";
                     }
 
-                    hideModal('music-search-modal');
+                    // 3. 存入数据库
+                    const newSongId = await db.songs.add(newSongEntry);
+
+                    // 4. 播放
+                    if (window.musicPlayerController) {
+                        window.currentPlaylist = await db.songs.toArray();
+                        const newIndex = window.currentPlaylist.findIndex(s => s.id === newSongId);
+                        
+                        if (newIndex !== -1 && typeof window.loadSong === 'function') {
+                            window.currentTrackIndex = newIndex;
+                            window.loadSong(newIndex);
+                            setTimeout(() => window.playSong(), 300);
+                        }
+                    }
+
+                    closeSearchModal();
 
                 } catch (error) {
-                    console.error("处理歌曲选择失败:", error);
-                    showNotification(error.message);
+                    console.error(error);
+                    showNotification("添加失败", error.message);
                 } finally {
                     hideLoadingModal();
                 }
             }
+            
+            // 挂载全局调用
+            window.openMusicSearchModal = () => openSearchBtn.click();
+            window.searchMusic = performSearch;
 
-            // --- 3. 绑定所有事件 ---
-            openSearchBtn.addEventListener('click', openMusicSearchModal);
-
-            closeSearchBtn.addEventListener('click', () => hideModal('music-search-modal'));
-            searchModal.addEventListener('click', (e) => {
-                if (e.target === searchModal) hideModal('music-search-modal');
-            });
-
-            resultsList.addEventListener('click', (e) => {
-                const selectedItem = e.target.closest('.music-search-item');
-                if (selectedItem) {
-                    const songId = selectedItem.dataset.id;
-                    const title = selectedItem.dataset.title;
-                    const artist = selectedItem.dataset.artist;
-                    if (songId) {
-                        handleSongSelection(songId, title, artist);
-                    }
-                }
-            });
-            // ✨✨✨ 在这里粘贴下面的新代码 ✨✨✨
-            window.openMusicSearchModal = openMusicSearchModal;
-            window.searchMusic = searchMusic;
-            // ✨✨✨ 粘贴结束 ✨✨✨
         })();
-
 // ==========================================================
         // --- ✨✨✨【终极重构版】表情包仓库：页面+5列+页眉交互 ✨---
         // ==========================================================
@@ -31655,18 +31610,33 @@ else if (content.startsWith('<mem>')) {
 
 // ... (接在其他 case 之后) ...
 
-                    // --- 🎵 音乐控制指令 ---
+// --- 🎵 音乐控制指令 (AI 触发时才发消息) ---
                     case 'music_control': {
                         if (window.musicPlayerController) {
+                            const charName = chat.name;
+                            let sysText = "";
+
                             if (task.action === 'open') {
                                 window.musicPlayerController.open();
-                                showNotification("AI 打开了播放器");
+                                sysText = `[${charName} 打开了音乐播放器，邀请你一起听]`;
                             } else if (task.action === 'close') {
                                 window.musicPlayerController.close();
-                                showNotification("AI 关闭了播放器");
+                                sysText = `[${charName} 关闭了播放器，音乐停止了]`;
                             } else if (task.action === 'play') {
                                 const success = window.musicPlayerController.playSongByName(task.target);
-                                if (success) showNotification(`AI 切歌: ${task.target}`);
+                                if (success) {
+                                    sysText = `[${charName} 切换了音乐：正在一起听《${task.target}》]`;
+                                }
+                            }
+
+                            // ✨ 只有在此时，才真正发送系统旁白
+                            if (sysText) {
+                                const sysMsg = {
+                                    userId: user.id, chatId: chat.id, senderId: 'system', type: 'system',
+                                    content: sysText, time: new Date().toISOString()
+                                };
+                                const newId = await db.messages.add(sysMsg);
+                                await addMessageToUI({ id: newId, ...sysMsg });
                             }
                         }
                         break;
@@ -36355,307 +36325,7 @@ function executePlotFastForward() {
         window.insertAtCursor = insertAtCursor;
 
 
-        // ==========================================================
-        // --- ✨✨✨【全新 V2 - 隔离版】线下App (Offline) 核心引擎 ✨✨✨ ---
-        // ==========================================================
-        (function () {
-            // 1. 获取 DOM 元素
-            const offlineAppBtn = document.getElementById('app-offline');
-            const listView = document.getElementById('offline-list-view');
-            const listContainer = document.getElementById('offline-contact-list');
-            const listBackBtn = document.getElementById('offline-list-back-btn');
-
-            const chatView = document.getElementById('offline-chat-view');
-            const chatBackBtn = document.getElementById('offline-chat-back-btn');
-
-            const userAvatarEl = document.getElementById('offline-header-user-avatar');
-            const charAvatarEl = document.getElementById('offline-header-char-avatar');
-            const namesTextEl = document.getElementById('offline-header-names-text');
-            const btnMemory = document.getElementById('offline-btn-memory');
-            const btnPhone = document.getElementById('offline-btn-phone');
-            const btnProfile = document.getElementById('offline-btn-profile');
-
-            const msgContainer = document.getElementById('offline-chat-messages');
-            const inputEl = document.getElementById('offline-chat-input');
-            const sendBtn = document.getElementById('offline-send-btn');
-            const rerollBtn = document.getElementById('offline-quick-reroll');
-
-            let currentOfflineChar = null;
-
-            // --- 2. 核心函数 ---
-
-async function openOfflineApp() {
-                // ✨ 改为 navigateTo
-                navigateTo('offline-app-page'); 
-                
-                listView.style.display = 'flex';
-                chatView.classList.add('hidden');
-                await renderContactList();
-            }
-
-            /**
-             * 渲染线下角色列表 (只预览线下消息)
-             */
-            async function renderContactList() {
-                listContainer.innerHTML = '';
-                const characters = await db.characters.toArray();
-                const validChars = characters.filter(c => !c.id.startsWith('npc-'));
-
-                if (validChars.length === 0) {
-                    listContainer.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:50px;">暂无角色，请先去QQ添加。</p>';
-                    return;
-                }
-
-                // ✨ 核心：只获取“线下”消息用于排序和预览
-                const allMessages = await db.messages.where({ userId: window.currentUser.id }).toArray();
-                const offlineMessages = allMessages.filter(m => m.sceneName === 'offline');
-
-                const chatsMap = new Map();
-                offlineMessages.forEach(msg => {
-                    const lastMsg = chatsMap.get(msg.chatId);
-                    if (!lastMsg || new Date(msg.time) > new Date(lastMsg.time)) {
-                        chatsMap.set(msg.chatId, msg);
-                    }
-                });
-
-                validChars.sort((a, b) => {
-                    const timeA = chatsMap.get(a.id) ? new Date(chatsMap.get(a.id).time) : new Date(0);
-                    const timeB = chatsMap.get(b.id) ? new Date(chatsMap.get(b.id).time) : new Date(0);
-                    return timeB - timeA;
-                });
-
-                for (const char of validChars) {
-                    const item = document.createElement('div');
-                    item.className = 'account-item';
-
-                    const lastMsg = chatsMap.get(char.id);
-                    const preview = lastMsg ? (lastMsg.content || '...') : '准备好开始线下面基了吗？';
-                    const timeStr = lastMsg ? formatLastMessageTime(new Date(lastMsg.time)) : '';
-
-                    item.innerHTML = `
-                <div class="account-content chat-item" style="background: #fff;">
-                    <div class="avatar-display" style="width: 48px; height: 48px;"></div>
-                    <div class="chat-info">
-                        <div class="chat-name-line">
-                            <div class="chat-name">${escapeHtml(char.name)}</div>
-                            <div class="chat-timestamp">${timeStr}</div>
-                        </div>
-                        <div class="chat-last">${escapeHtml(preview)}</div>
-                    </div>
-                </div>
-            `;
-                    renderAvatar(item.querySelector('.avatar-display'), char.avatar, char.name.charAt(0));
-                    item.addEventListener('click', () => openOfflineChat(char));
-                    listContainer.appendChild(item);
-                }
-            }
-
-            /**
-             * 打开线下聊天 (只加载线下记录)
-             */
-            async function openOfflineChat(character) {
-                currentOfflineChar = character;
-                window.currentChat = character;
-
-                const userPersona = character.activeUserPersona || window.currentUser;
-
-                listView.style.display = 'none';
-                chatView.classList.remove('hidden');
-
-                renderAvatar(userAvatarEl, userPersona.avatar, USER_FALLBACK_ICON);
-                renderAvatar(charAvatarEl, character.avatar, CHAR_FALLBACK_ICON);
-                namesTextEl.textContent = `${userPersona.name} & ${character.name}`;
-
-                msgContainer.innerHTML = '';
-
-                try {
-                    // ✨ 核心：只过滤出 sceneName === 'offline' 的消息
-                    const allMsgs = await db.messages
-                        .where({ userId: window.currentUser.id, chatId: character.id })
-                        .sortBy('time');
-
-                    const offlineHistory = allMsgs.filter(m => m.sceneName === 'offline');
-
-                    let lastTime = null;
-                    for (const msg of offlineHistory) {
-                        const currentTime = new Date(msg.time);
-                        if (!lastTime || (currentTime - lastTime) > 5 * 60 * 1000) {
-                            const ts = document.createElement('div');
-                            ts.className = 'msg-timestamp';
-                            ts.textContent = formatTimestamp(msg.time);
-                            msgContainer.appendChild(ts);
-                        }
-                        lastTime = currentTime;
-
-                        const row = await createMessageRowElement(msg);
-                        if (row) msgContainer.appendChild(row);
-                    }
-                    scrollToBottom(msgContainer);
-                } catch (e) {
-                    console.error("加载线下聊天记录失败:", e);
-                }
-            }
-
-            /**
-             * 发送消息 (线下隔离版)
-             */
-            async function handleOfflineSend() {
-                const text = inputEl.value.trim();
-                if (!text) return;
-                if (!currentOfflineChar) return;
-
-                inputEl.value = '';
-                const user = currentOfflineChar.activeUserPersona || window.currentUser;
-                const userMsg = {
-                    userId: user.id,
-                    chatId: currentOfflineChar.id,
-                    senderId: user.id,
-                    content: text,
-                    time: new Date().toISOString(),
-                    sceneName: 'offline' // 标记为线下
-                };
-
-                const newId = await db.messages.add(userMsg);
-                const row = await createMessageRowElement({ ...userMsg, id: newId });
-                msgContainer.appendChild(row);
-                scrollToBottom(msgContainer);
-
-                // Loading 占位
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = 'msg-timestamp';
-                loadingDiv.textContent = '对方正在反应...';
-                msgContainer.appendChild(loadingDiv);
-                scrollToBottom(msgContainer);
-
-                try {
-                    const offlineTaskDescription = `
-【当前特殊模式：线下见面 (Face-to-Face / Offline)】
-⚠️ 重要：你现在不是在手机上聊天，而是与“{{user}}”在**现实世界中面对面**。
-【环境感知】
-- 你们现在的距离很近。
-- 你能看到{{user}}的表情，听到呼吸，甚至感受到体温。
-- 请忽略所有关于“网聊”、“打字”、“表情包”的概念。
-【行动指南】
-1.  **多维度描写**：请重点描写你的**肢体动作**、**微表情**、**眼神交流**以及**环境氛围**。
-2.  **语言风格**：使用口语化的对白。不要使用颜文字（如 (lol)、QwQ），除非你是在纸上写字给对方看。
-3.  **沉浸体验**：像写小说一样，交织“动作描写”与“语言对话”。
-【回复格式】
-直接输出你的行动和语言。
-`;
-
-                    const finalPrompt = await generateUnifiedSystemPrompt(
-                        currentOfflineChar,
-                        user,
-                        offlineTaskDescription,
-                        { isChatReply: false }
-                    );
-
-                    // ✨ 核心：获取上下文时，也只获取线下的记录！
-                    // 防止 AI 混淆线上和线下的对话
-                    const allHistory = await db.messages
-                        .where({ userId: user.id, chatId: currentOfflineChar.id })
-                        .toArray();
-
-                    // 只取最近的 8 条线下记录
-                    const offlineContext = allHistory
-                        .filter(m => m.sceneName === 'offline')
-                        .slice(-8);
-
-                    const historyForAi = offlineContext.map(m => {
-                        const speaker = m.senderId === user.id ? 'user' : 'model';
-                        return { role: speaker, parts: [{ text: m.content }] };
-                    });
-
-                    // 把用户刚才发的那句加进去
-                    historyForAi.push({ role: 'user', parts: [{ text: text }] });
-
-                    const response = await getAiReply(historyForAi, finalPrompt);
-
-                    // 流式渲染
-                    let aiResponseText = '';
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-
-                    loadingDiv.remove();
-                    const aiRow = document.createElement('div');
-                    aiRow.className = "msg-row left";
-                    const aiBubble = document.createElement('div');
-                    aiBubble.className = "msg left";
-                    const avatarBox = document.createElement('div');
-                    avatarBox.className = "msg-avatar avatar-display";
-                    renderAvatar(avatarBox, currentOfflineChar.avatar, CHAR_FALLBACK_ICON);
-                    aiRow.appendChild(avatarBox);
-                    aiRow.appendChild(aiBubble);
-                    msgContainer.appendChild(aiRow);
-
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
-                        const chunk = decoder.decode(value, { stream: true });
-                        const lines = chunk.split('\n');
-                        for (const line of lines) {
-                            if (line.startsWith('data: ')) {
-                                const data = line.substring(6).trim();
-                                if (data === '[DONE]') continue;
-                                try {
-                                    const parsed = JSON.parse(data);
-                                    const delta = parsed.choices?.[0]?.delta?.content || '';
-                                    aiResponseText += delta;
-                                    aiBubble.innerText = aiResponseText;
-                                    scrollToBottom(msgContainer);
-                                } catch (e) { }
-                            }
-                        }
-                    }
-
-                    // 存入数据库 (带标记)
-                    await db.messages.add({
-                        userId: user.id,
-                        chatId: currentOfflineChar.id,
-                        senderId: currentOfflineChar.id,
-                        content: aiResponseText,
-                        time: new Date().toISOString(),
-                        sceneName: 'offline'
-                    });
-
-                } catch (error) {
-                    console.error("线下互动失败:", error);
-                    if (loadingDiv) loadingDiv.textContent = "（连接中断...）";
-                }
-            }
-
-            // --- 3. 绑定事件 ---
-            if (offlineAppBtn) offlineAppBtn.addEventListener('click', openOfflineApp);
-            if (listBackBtn) listBackBtn.addEventListener('click', () => navigateBack());
-            if (chatBackBtn) chatBackBtn.addEventListener('click', () => {
-                chatView.classList.add('hidden');
-                listView.style.display = 'flex';
-                window.currentChat = null;
-            });
-
-            if (btnMemory) btnMemory.addEventListener('click', () => {
-                if (window.currentChat && typeof openMemoriesViewer === 'function') openMemoriesViewer(window.currentChat);
-            });
-            if (btnPhone) btnPhone.addEventListener('click', () => {
-                if (window.currentChat && typeof openCheckPhoneModal === 'function') openCheckPhoneModal();
-            });
-            if (btnProfile) btnProfile.addEventListener('click', () => {
-                if (window.currentChat && typeof openContactProfileModal === 'function') openContactProfileModal(window.currentChat.id);
-            });
-
-            if (sendBtn) sendBtn.addEventListener('click', handleOfflineSend);
-            if (inputEl) inputEl.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleOfflineSend();
-            });
-
-            if (rerollBtn) rerollBtn.addEventListener('click', async () => {
-                // 重roll 暂时使用全局逻辑，可能会导致线上聊天刷新，暂不完美适配
-                if (typeof handleReroll === 'function') {
-                    await handleReroll();
-                    if (currentOfflineChar) openOfflineChat(currentOfflineChar);
-                }
-            });
-        })();
+      
         // ==========================================================
         // --- ✨✨✨【V5 - 角色关联版】日历App核心引擎 ✨✨✨ ---
         // ==========================================================
@@ -37371,7 +37041,25 @@ else if (e.target.closest('#profilesetting-token-count-btn')) {
             );
         }
 
+// 2. ✨ 添加新的开关监听逻辑 (建议放在 DOMContentLoaded 里的交互引擎部分)
+const offlineToggle = document.getElementById('profile-offline-toggle');
+if (offlineToggle) {
+    // 克隆去重
+    const newToggle = offlineToggle.cloneNode(true);
+    offlineToggle.parentNode.replaceChild(newToggle, offlineToggle);
 
+    newToggle.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            // 当用户开启时，弹出占位提示
+            showNotification(
+                "🕊️ 线下模式 (开发中)", 
+                "该功能正在内部测试，\n敬请期待后续版本更新！"
+            );
+            // 提示完后自动拨回关闭，或者保留开启状态（仅视觉）
+            // e.target.checked = false; 
+        }
+    });
+}
 // --- 按钮 6: 拉黑/解除 (核心逻辑) ---
         else if (e.target.closest('#profilesetting-block-user-btn')) {
             const btn = e.target.closest('#profilesetting-block-user-btn');
@@ -41618,19 +41306,23 @@ if (addInspBtn) {
                 }
             }
             // --- 情况 C: 单条消息/图片/语音 ---
-            else if (['message', 'image', 'voice', 'file'].includes(fav.type)) {
-                
-                // ✨✨✨ 防报错修复 3：安全转换 ID ✨✨✨
-                const msgId = parseInt(fav.contentId, 10);
+// --- 找到 createFavCard 内部处理 message/image 的部分 ---
+if (['message', 'image', 'voice', 'file'].includes(fav.type)) {
+    const msgId = parseInt(fav.contentId, 10);
+    if (!isNaN(msgId)) {
+        const msg = await db.messages.get(msgId);
+        if (msg) {
+            // ✨✨✨ 核心修复：更鲁棒的身份判断 ✨✨✨
+            // 逻辑：如果发送者 ID 不等于聊天 ID，那它一定是用户（无论是 default 还是专属人设）
+            const isMe = msg.senderId !== fav.chatId; 
+            
+            // 获取角色对象以获取名字
+            const char = await db.characters.get(fav.chatId);
+            const charName = char ? char.name : '未知角色';
 
-                // 只有当 msgId 是有效数字时，才去查数据库
-                if (!isNaN(msgId)) {
-                    const msg = await db.messages.get(msgId);
-                    
-                    if (msg) {
-                        const isMe = msg.senderId === window.currentUser.id;
-                        title = isMe ? `我 发送给 ${charName}` : `${charName} 的消息`;
-                        
+            title = isMe ? `我 发送给 ${charName}` : `${charName} 的消息`;
+            
+            // ... (后续渲染内容的代码保持不变)
                         if (fav.type === 'message') {
                             icon = '<i class="fa-regular fa-comment-dots"></i>';
                             contentPreview = msg.content;
@@ -43401,27 +43093,16 @@ async function simulateBuildAiRequestContext(character, user, currentMode) {
         return text;
     }
 
-// B. ✨✨✨ 触发 AI 听歌反应 (状态更新版) ✨✨✨
-async function triggerAiMusicReaction(song) {
-    // 1. 防刷屏检查
-    if (!window.currentChat || currentSongIdForAi === song.id) return;
-    currentSongIdForAi = song.id; 
-    
-    const char = window.currentChat;
-    const user = char.activeUserPersona || window.currentUser;
+// B. ✨✨✨ 触发 AI 听歌状态更新 (纯净版) ✨✨✨
+    async function triggerAiMusicReaction(song) {
+        // 1. 基础检查
+        if (!window.currentChat || currentSongIdForAi === song.id) return;
+        
+        // 2. 仅仅更新标记，不再在这里发送 db.messages.add
+        currentSongIdForAi = song.id; 
 
-    // 2. ✨ 只发送系统提示 (告诉用户切歌了，同时也作为历史记录留底)
-    // 这一步很重要，因为这行系统消息会被放入 chat_history，AI 也能看到“切歌了”这个事实
-    const sysMsgContent = `[正在和 ${char.name} 一起听《${song.name}》]`;
-    const sysMsg = {
-        userId: user.id, chatId: char.id, senderId: 'system', type: 'system',
-        content: sysMsgContent, time: new Date().toISOString()
-    };
-    await db.messages.add(sysMsg);
-    if(typeof addMessageToUI === 'function') addMessageToUI({id: await db.messages.orderBy('id').last().then(m=>m.id), ...sysMsg});
-    if(document.getElementById('chat-messages')) scrollToBottom(document.getElementById('chat-messages'));
+    }
 
-}
 
     async function loadPlaylistFromDB() {
         try {
@@ -43789,12 +43470,70 @@ async function triggerAiMusicReaction(song) {
              window.musicPlayerController.open();
         }
     };
-
-
-
-
     loadPlaylistFromDB();
 })();
+
+// ==========================================================
+// --- ✨✨✨【补丁】输入栏动态交互引擎 (文字/语音自动切换) ✨✨✨ ---
+// ==========================================================
+(function() {
+    const chatInput = document.getElementById('chat-input');
+    const voiceBtn = document.getElementById('chat-voice-btn');
+    const sendBtn = document.getElementById('chat-send-user');
+
+    if (!chatInput || !voiceBtn) return;
+
+    // --- 1. 核心状态切换函数 ---
+    function updateInputUI() {
+        const hasText = chatInput.value.trim().length > 0;
+
+        if (hasText) {
+            // A. 有文字：隐藏语音按钮，缩小左边距
+            voiceBtn.classList.add('hidden');
+            chatInput.classList.add('not-empty');
+        } else {
+            // B. 无文字：显示语音按钮，恢复左边距
+            voiceBtn.classList.remove('hidden');
+            chatInput.classList.remove('not-empty');
+        }
+        
+        // C. 顺便处理高度自适应 (防止被覆盖)
+        chatInput.style.height = 'auto';
+        chatInput.style.height = chatInput.scrollHeight + 'px';
+    }
+
+    // --- 2. 绑定输入监听 ---
+    // 只要用户打字或删除，立即触发检查
+    chatInput.addEventListener('input', updateInputUI);
+
+    // --- 3. 绑定发送重置 ---
+    // 当点击发送按钮时，强制恢复初始状态
+    if (sendBtn) {
+        // 使用 capture 捕获事件，确保在消息发送逻辑执行后 UI 能归位
+        sendBtn.addEventListener('click', () => {
+            // 稍微延迟 10ms，等待主逻辑清空 chatInput.value
+            setTimeout(() => {
+                voiceBtn.classList.remove('hidden');
+                chatInput.classList.remove('not-empty');
+                chatInput.style.height = 'auto'; // 恢复高度
+            }, 10);
+        });
+        
+        // 兼容原代码可能使用的 mousedown 发送逻辑
+        sendBtn.addEventListener('mousedown', () => {
+            setTimeout(() => {
+                voiceBtn.classList.remove('hidden');
+                chatInput.classList.remove('not-empty');
+                chatInput.style.height = 'auto';
+            }, 10);
+        });
+    }
+
+    // --- 4. 初始化运行一次 (防止刷新页面后状态不对) ---
+    updateInputUI();
+
+})();
+
 
 </script>
 
