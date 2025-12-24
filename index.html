@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
+
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>qianyiii</title>
@@ -524,11 +525,8 @@ background-color: #f9fafb;
             display: flex;
             justify-content: space-around;
 
-            /* ✨ 核心修改 1: 移除不固定的 padding-top 和 padding-bottom */
-            /* padding: 8px 0;  <-- 删除了这一行 */
-
             /* ✨ 核心修改 2: 赋予一个与聊天输入框完全相同的固定高度 */
-            height: 50px;
+            height: 60px;
 
             /* ✨ 核心修改 3: 使用 Flexbox 的 align-items 属性让内部按钮垂直居中 */
             align-items: center;
@@ -8402,10 +8400,12 @@ font-size: 17px;
 #data-management-page .page-content,
 #character-profile-page .page-content,
 #memory-page .page-content,
+#global-ui-customization-page .page-content,
 #user-profile-editor-page .page-content,
 #contact-editor-page .page-content,
 #muzi-mail-app-page .page-content,
 #api-settings-page .page-content,
+#chat-ui-customization-page .page-content,
 #global-sticker-manager-page .page-content,
 #bonds-list-page .page-content {
     /* 定位核心 */
@@ -8691,7 +8691,7 @@ body.fullscreen-mode #phone {
     bottom: 0;            /* 钉在底部 */
     left: 0;
     width: 100%;
-    height: 50px;         /* 固定高度 */
+    height: 60px;         /* 固定高度 */
     background: #fff;     /* 白色背景 */
     display: flex;        /* 横向排列 */
     border-top: 1px solid #e5e7eb; /* 顶部加一条细线，区分内容区 */
@@ -10165,7 +10165,7 @@ body.fullscreen-mode #phone {
 #chat-input {
 
 
-    padding: 10px 12px;
+    padding: 7px 6px;
     border-radius: 15px;
     border: 1px solid var(--color-ui-border);
     outline: none;
@@ -12110,8 +12110,7 @@ body.fullscreen-mode #phone {
 }
 
 .music-disc-cover {
-    width: 150px;
-    height: 150px;
+
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid #111;
@@ -12256,8 +12255,8 @@ body.fullscreen-mode #phone {
 
 /* 2. 封面图尺寸适配 */
 .music-disc-cover {
-    width: 110px !important;
-    height: 110px !important;
+    width: 140px !important;
+    height: 140px !important;
 }
 
 /* 3. 唱片容器：作为弹性空间 (flex: 1) */
@@ -12539,9 +12538,292 @@ body.fullscreen-mode #phone {
 .music-search-item.disabled .music-search-item-title {
     color: #9ca3af;
 }
+/* ========================================================== */
+/* --- ✨✨✨ 系统消息/时间戳气泡美化 ✨✨✨ --- */
+/* ========================================================== */
+.msg-timestamp {
+    /* 1. 布局定位 */
+    align-self: center;        /* 在 Flex 容器中水平居中 */
+    display: inline-block;     /* 让背景色只包裹文字，不撑满整行 */
+    margin: 15px 0;            /* 上下间距 */
+    
+    /* 2. 气泡外观 (胶囊风格) */
+    background-color: rgba(255, 255, 255, 0.45); /* 半透明的乳白色背景 */
+    backdrop-filter: blur(4px);                  /* 增加一点毛玻璃模糊 */
+    border-radius: 6px;                          /* 稍微圆润一点的边角 */
+    padding: 3px 8px;                            /* 内部留白，紧凑精致 */
+    
+    /* 3. 文字样式 */
+    font-size: 11px;           /* 字号稍微小一点点，更像系统提示 */
+    color: #666;               /* 文字颜色加深一点，防止在浅色背景看不清 */
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6); /* 给文字加个白边，防止壁纸太花 */
+    
+    /* 4. 其他 */
+    user-select: none;         /* 禁止选中 */
+    max-width: 90%;            /* 防止字数太多撑破屏幕 */
+    line-height: 1.5;
+    text-align: center;
+}
 
+/* 鼠标悬浮时的效果 (可选) */
+.msg-timestamp:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+/* ========================================================== */
+/* --- ✨✨✨ 聊天美化中心：自定义背景变量绑定 ✨✨✨ --- */
+/* ========================================================== */
 
+:root {
+    /* 默认值为 none，即无背景 */
+    --custom-bg-header: none;
+    --custom-bg-input: none;
+    
+    /* 图标按钮 */
+    --custom-bg-btn-back: #FFFFFF;    /* 默认白色 */
+    --custom-bg-btn-phone: #FFFFFF;
+    --custom-bg-btn-more: #FFFFFF;
+    --custom-bg-btn-emoji: #FFFFFF;
+    --custom-bg-btn-send: #FFFFFF;
+    --custom-bg-btn-trigger: #000000; /* 接受/心动 */
 
+    /* 卡片 */
+    --custom-bg-card-file: #FFFFFF;
+    --custom-bg-card-transfer: #FFFFFF;
+    --custom-bg-card-location: #FFFFFF;
+    --custom-bg-card-music: linear-gradient(145deg, #2d2d2d, #1a1a1a); /* 音乐卡片默认是深色 */
+}
+
+/* 1. 全局页眉背景 */
+.page-header {
+    background-image: var(--custom-bg-header) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+/* 2. 输入栏背景 */
+.chat-input-bar {
+    background-image: var(--custom-bg-input) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+/* 3. 图标按钮自定义 (针对特定 ID 或上下文) */
+/* 返回 */
+.btn-back.btn-icon {
+    background: var(--custom-bg-btn-back) !important;
+    background-size: cover !important;
+}
+/* 查手机 */
+#chat-header-check-phone-btn {
+    background: var(--custom-bg-btn-phone) !important;
+    background-size: cover !important;
+}
+/* 更多 */
+#goto-contact-profile {
+    background: var(--custom-bg-btn-more) !important;
+    background-size: cover !important;
+}
+/* 表情 (笑脸) */
+#chat-emoji-btn {
+    background: var(--custom-bg-btn-emoji) !important;
+    background-size: cover !important;
+}
+/* 发送 (纸飞机) */
+#chat-send-user {
+    background: var(--custom-bg-btn-send) !important;
+    background-size: cover !important;
+}
+/* 接受/心动 (爱心/刷新) */
+#chat-trigger-ai {
+    background: var(--custom-bg-btn-trigger) !important;
+    background-size: cover !important;
+}
+
+/* 4. 消息卡片自定义 */
+/* 文件卡片 */
+.special-card-container[data-card-type="file"] {
+    background: var(--custom-bg-card-file) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+/* 转账卡片 */
+.special-card-container[data-card-type="transfer"] {
+    background: var(--custom-bg-card-transfer) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+/* 定位卡片 */
+.special-card-container[data-card-type="location"] {
+    background: var(--custom-bg-card-location) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+/* 音乐卡片 (特殊处理，因为它原本有渐变) */
+.special-card-container[data-card-type="music"] {
+    background: var(--custom-bg-card-music) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+/* --- 美化中心设置页样式 --- */
+.ui-custom-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 10px 0;
+}
+.ui-custom-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+.ui-preview-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    border: 1px solid var(--color-ui-border);
+    background-color: #fff;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.ui-preview-box:active { transform: scale(0.95); }
+.ui-preview-box i {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: #cbd5e1;
+    font-size: 20px;
+}
+.ui-item-label {
+    font-size: 12px;
+    color: #6b7280;
+    text-align: center;
+}
+/* 宽版预览 (页眉/输入栏) */
+.ui-preview-box.wide {
+    width: 100%;
+    height: 60px;
+}
+/* ========================================================== */
+/* --- ✨✨✨ 修复：自定义图标背景时隐藏原图标 ✨✨✨ --- */
+/* ========================================================== */
+
+/* 1. 返回按钮 */
+.btn-back.btn-icon i {
+    display: var(--custom-icon-display-btn-back, inline-block) !important;
+}
+
+/* 2. 查手机按钮 */
+#chat-header-check-phone-btn i {
+    display: var(--custom-icon-display-btn-phone, inline-block) !important;
+}
+
+/* 3. 更多按钮 */
+#goto-contact-profile i {
+    display: var(--custom-icon-display-btn-more, inline-block) !important;
+}
+
+/* 4. 表情按钮 */
+#chat-emoji-btn i {
+    display: var(--custom-icon-display-btn-emoji, inline-block) !important;
+}
+
+/* 5. 发送按钮 */
+#chat-send-user i {
+    display: var(--custom-icon-display-btn-send, inline-block) !important;
+}
+
+/* 6. 接受/心动按钮 */
+#chat-trigger-ai i {
+    display: var(--custom-icon-display-btn-trigger, inline-block) !important;
+}
+/* ========================================================== */
+/* --- ✨✨✨ 全局外观 (APP Skin) 变量绑定 ✨✨✨ --- */
+/* ========================================================== */
+
+:root {
+    /* 默认值 */
+    --app-bg-msg-page: #f9fafb;
+    --app-bg-me-page: #f9fafb;
+    
+    --app-bg-msg-item: #ffffff; /* 列表条目背景 */
+    --app-bg-moment-card: #ffffff; /* 动态卡片背景 */
+    
+    --app-bg-navbar: #ffffff;
+    --app-bg-plus-btn: transparent; /* 加号按钮默认透明 */
+    
+    /* 控制加号图标的显示/隐藏 */
+    --app-display-plus-icon: inline-block;
+}
+
+/* 1. 消息页面背景 */
+/* 使用 ID 提高优先级，并覆盖原有的 background-color */
+#qq-view-messages {
+    background: var(--app-bg-msg-page) !important; 
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important; /* 背景固定，内容滚动 */
+}
+
+/* 2. 我的页面背景 */
+#qq-view-me {
+    background: var(--app-bg-me-page) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+}
+
+/* 3. 消息列表条目背景 (Account Item) */
+.account-item, 
+.account-content {
+    background: var(--app-bg-msg-item) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+/* 顺便处理一下点击态，防止闪烁 */
+.chat-item:active {
+    filter: brightness(0.95);
+}
+
+/* 4. 动态卡片背景 */
+.moment-card {
+    background: var(--app-bg-moment-card) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+/* 5. 底部导航栏背景 */
+.qq-nav {
+    background: var(--app-bg-navbar) !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+/* 6. 全局加号按钮 (统一换肤 - 最终版) */
+/* 包含：消息页添加(页眉)、动态页发布(页眉)、动态页发布(悬浮)、邮箱写信(悬浮) */
+#qq-add-btn,
+#moments-add-btn,
+#mail-compose-fab,
+#moments-open-editor-btn {  /* ✨✨✨ 加上了这个 ID ✨✨✨ */
+    background: var(--app-bg-plus-btn) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    border: none !important;
+    box-shadow: none !important; /* 页眉按钮通常不需要阴影，或者您可以保留 */
+}
+
+/* 当设置了背景图时，隐藏内部的图标 */
+#qq-add-btn i,
+#moments-add-btn i,
+#mail-compose-fab i,
+#moments-open-editor-btn i { /* ✨✨✨ 加上了这个 ID ✨✨✨ */
+    display: var(--app-display-plus-icon) !important;
+}
     </style>
 
     <!-- 【请将这个新的 style 标签粘贴到旧 style 标签的紧后方】 -->
@@ -12897,7 +13179,7 @@ body.fullscreen-mode #phone {
         <input type="file" id="moments-avatar-input" accept="image/*" class="hidden">
     </main>
 
-<main id="qq-view-me" class="qq-tab-view page-content hidden" style="height: 100%; overflow-y: auto; background-color: #f9fafb;">
+<main id="qq-view-me" class="qq-tab-view page-content hidden" style="height: 100%; overflow-y: auto;">
     <div class="me-page-container">
         
         <!-- 1. 个人信息卡片 -->
@@ -12947,6 +13229,17 @@ body.fullscreen-mode #phone {
                 <i class="fa-solid fa-chevron-right me-arrow"></i>
             </button>
 
+<!-- ✨✨✨ 新增：全局外观入口 ✨✨✨ -->
+            <button id="btn-open-global-customization" class="buttonlike me-action-btn">
+                <!-- 图标框：使用淡紫色 -->
+                <div class="me-icon-box" style="background: #f3e8ff; color: #9333ea;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <span class="me-btn-text">全局外观</span>
+                <i class="fa-solid fa-chevron-right me-arrow"></i>
+            </button>
+
+
         </div>
         
         <p class="me-footer-text">Auing OS v2.0</p>
@@ -12957,7 +13250,7 @@ body.fullscreen-mode #phone {
                     <!-- ========================================================== -->
                     <!-- --- ✨✨✨【改造后】QQ底部导航栏 V2 ✨✨✨ --- -->
                     <!-- ========================================================== -->
-<!-- ▼▼▼ 替换旧的 qq-nav ▼▼▼ -->
+
 <nav class="qq-nav">
     <button class="qq-tab active" data-tab="message">消息</button>
     <button class="qq-tab" data-tab="moments">动态</button>
@@ -12967,6 +13260,97 @@ body.fullscreen-mode #phone {
 <!-- ▲▲▲ 替换结束 ▲▲▲ -->
                 </div>
 
+
+
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】全局外观设置页面 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="global-ui-customization-page" class="page" style="display:none; flex-direction: column;">
+    <!-- 1. 页眉 -->
+    <header class="page-header">
+        <div class="header-left">
+            <button id="global-ui-back-btn" class="btn-icon btn-back buttonlike">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="chat-title-container">
+                <span style="font-weight: bold; font-size: 18px;">全局外观</span>
+            </div>
+        </div>
+        <div class="header-right">
+             <button id="reset-global-ui-btn" class="btn-icon buttonlike" title="重置所有" style="color: #ef4444;">
+                <i class="fa-solid fa-rotate-left"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 2. 内容区 -->
+    <main class="page-content" style="background-color: #f9fafb; padding: 20px; display: flex; flex-direction: column; gap: 25px;">
+        
+        <!-- A. 页面大背景 -->
+        <div class="api-section-card">
+            <div class="api-section-title"><i class="fa-regular fa-image"></i> 页面大背景</div>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="ui-custom-item" style="width: 100%;">
+                    <div class="ui-preview-box wide" data-target="msg-page-bg" title="点击上传" style="height: 80px;">
+                        <i class="fa-solid fa-comment-dots"></i>
+                    </div>
+                    <span class="ui-item-label">消息列表页背景</span>
+                </div>
+                <div class="ui-custom-item" style="width: 100%;">
+                    <div class="ui-preview-box wide" data-target="me-page-bg" title="点击上传" style="height: 80px;">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span class="ui-item-label">"我的"页面背景</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- B. 列表组件 -->
+        <div class="api-section-card">
+            <div class="api-section-title"><i class="fa-solid fa-list-ul"></i> 列表组件背景</div>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="ui-custom-item" style="width: 100%;">
+                    <div class="ui-preview-box wide" data-target="msg-item-bg" title="点击上传" style="height: 60px;">
+                        <i class="fa-solid fa-bars"></i>
+                    </div>
+                    <span class="ui-item-label">消息列表条目 (单个对话框)</span>
+                </div>
+                <div class="ui-custom-item" style="width: 100%;">
+                    <div class="ui-preview-box wide" data-target="moment-card-bg" title="点击上传" style="height: 60px;">
+                        <i class="fa-regular fa-clone"></i>
+                    </div>
+                    <span class="ui-item-label">动态卡片</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- C. 导航与按钮 -->
+        <div class="api-section-card">
+            <div class="api-section-title"><i class="fa-solid fa-compass"></i> 导航与按钮</div>
+            <div style="display: flex; gap: 15px;">
+                 <div class="ui-custom-item" style="flex: 2;">
+                    <div class="ui-preview-box wide" data-target="navbar-bg" title="点击上传" style="height: 60px;">
+                        <i class="fa-solid fa-border-none"></i>
+                    </div>
+                    <span class="ui-item-label">底部导航栏</span>
+                </div>
+                <div class="ui-custom-item" style="flex: 1;">
+                    <div class="ui-preview-box" data-target="plus-btn-bg" style="width: 60px; height: 60px; border-radius: 50%;">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <span class="ui-item-label">加号按钮</span>
+                </div>
+            </div>
+        </div>
+        
+        <div style="height: 30px;"></div>
+    </main>
+
+    <!-- 隐藏的文件上传器 (复用聊天美化的逻辑) -->
+    <input type="file" id="global-ui-file-input" accept="image/*" class="hidden">
+</div>
 
 <!-- ========================================================== -->
 <!-- --- ✨✨✨【全新 - 滚动修复版】钱包 App 页面 ✨✨✨ --- -->
@@ -13526,7 +13910,13 @@ body.fullscreen-mode #phone {
             <span class="label">聊天背景</span>
             <span class="arrow" style="font-size:13px; color:#9ca3af;">更换背景 <i class="fa-solid fa-chevron-right" style="font-size:12px; margin-left:4px;"></i></span>
         </button>
-
+<!-- ✨✨✨ 新增：聊天美化中心入口 ✨✨✨ -->
+        <button id="goto-chat-ui-customization" class="settings-item buttonlike">
+            <span class="icon" style="color: #db2777;"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+            <span class="label">聊天美化中心</span>
+            <span class="arrow"><i class="fa-solid fa-chevron-right" style="font-size:12px; color:#d1d5db;"></i></span>
+        </button>
+        <!-- ✨✨✨ 插入结束 ✨✨✨ -->
         <!-- 语音设置 (紫色) -->
         <div class="settings-item">
             <span class="icon" style="color: #8b5cf6;"><i class="fa-solid fa-microphone-lines"></i></span>
@@ -14646,9 +15036,12 @@ body.fullscreen-mode #phone {
                     <main id="moments-feed" style="flex:1; overflow-y:auto; padding:12px;"></main>
 
                     <!-- 右下角加号按钮 -->
-                    <button id="moments-add-btn"
-                        style="position:absolute; right:20px; bottom:20px; width:56px; height:56px; border-radius:50%; background:#1f2937; color:white; border:none; font-size:32px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor:pointer;">+</button>
-                </div>
+
+                    <button id="moments-add-btn" class="buttonlike"
+                        style="position:absolute; right:20px; bottom:20px; width:56px; height:56px; border-radius:50%; background:#1f2937; color:white; border:none; font-size:24px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display:grid; place-items:center; z-index:10;">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    </div>
 
 <!-- 【请用这一整块全新的代码，替换旧的 #moment-editor-modal】 -->
 <div id="moment-editor-modal" class="modal-overlay hidden">
@@ -15371,6 +15764,31 @@ body.fullscreen-mode #phone {
 
             </div>
         </div>
+
+<!-- === 卡片: 全局界面 (新加的) === -->
+        <div>
+            <div class="settings-section-header-ios" style="padding-left: 5px; padding-bottom: 10px;">全局界面</div>
+            <div style="background: white; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
+                
+                <!-- 1. 更换页眉背景 -->
+                <button id="btn-change-global-header" class="settings-item buttonlike" data-target="header">
+                    <div id="preview-global-header" class="settings-icon-preview" style="width: 48px; height: 48px; border-radius: 8px; margin-right: 12px; background-color: #e5e7eb; background-size: cover; background-position: center;"></div>
+                    <span class="label">更换全局页眉背景</span>
+                    <span class="arrow"><i class="fa-solid fa-chevron-right" style="font-size:12px; color:#d1d5db;"></i></span>
+                </button>
+
+                <!-- 2. 更换返回按钮 -->
+                <button id="btn-change-global-back-btn" class="settings-item buttonlike" data-target="btn-back" style="border-bottom: none;">
+                    <div id="preview-global-back-btn" class="settings-icon-preview" style="width: 48px; height: 48px; border-radius: 8px; margin-right: 12px; background-color: #e5e7eb; background-size: cover; background-position: center; display: grid; place-items: center;">
+                        <i class="fa-solid fa-chevron-left" style="color: #999;"></i>
+                    </div>
+                    <span class="label">更换返回按钮背景</span>
+                    <span class="arrow"><i class="fa-solid fa-chevron-right" style="font-size:12px; color:#d1d5db;"></i></span>
+                </button>
+
+            </div>
+        </div>
+
         <!-- === 卡片 : 应用图标 === -->
         <div>
             <div class="settings-section-header-ios" style="padding-left: 5px; padding-bottom: 10px;">应用图标</div>
@@ -15436,11 +15854,124 @@ body.fullscreen-mode #phone {
 
         <div style="height: 40px;"></div> <!-- 底部垫高 -->
     </main>
-
+<input type="file" id="global-ui-file-input" accept="image/*" class="hidden">
     <!-- 隐藏的文件上传控件 -->
     <input type="file" id="icon-input" accept="image/*" class="hidden" />
     <input type="file" id="import-beautify-input" accept=".json" class="hidden" />
 </div>
+
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】聊天美化中心页面 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="chat-ui-customization-page" class="page" style="display:none; flex-direction: column;">
+    <!-- 1. 页眉 -->
+    <header class="page-header">
+        <div class="header-left">
+            <button id="chat-ui-back-btn" class="btn-icon btn-back buttonlike">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+        </div>
+        <div class="header-center">
+            <div class="chat-title-container">
+                <span style="font-weight: bold; font-size: 18px;">聊天美化中心</span>
+            </div>
+        </div>
+        <div class="header-right">
+             <button id="reset-all-ui-btn" class="btn-icon buttonlike" title="重置所有" style="color: #ef4444;">
+                <i class="fa-solid fa-rotate-left"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 2. 内容区 -->
+    <main class="page-content" style="background-color: #f9fafb; padding: 20px; display: flex; flex-direction: column; gap: 25px;">
+        
+        <!-- A. 界面框架 -->
+        <div class="api-section-card">
+            <div class="api-section-title"><i class="fa-solid fa-window-maximize"></i> 界面框架</div>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+
+                <div class="ui-custom-item" style="width: 100%;">
+                    <div class="ui-preview-box wide" data-target="input" title="点击上传背景图">
+                        <i class="fa-regular fa-keyboard"></i>
+                    </div>
+                    <span class="ui-item-label">底部输入栏</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- B. 按钮图标 (圆形背景) -->
+        <div class="api-section-card">
+            <div class="api-section-title"><i class="fa-regular fa-circle-dot"></i> 按钮图标背景</div>
+            <div class="ui-custom-grid">
+
+                <div class="ui-custom-item">
+                    <div class="ui-preview-box" data-target="btn-phone" style="border-radius: 50%;"><i class="fa-solid fa-tablet-screen-button"></i></div>
+                    <span class="ui-item-label">查手机</span>
+                </div>
+                <div class="ui-custom-item">
+                    <div class="ui-preview-box" data-target="btn-more" style="border-radius: 50%;"><i class="fa-solid fa-ellipsis"></i></div>
+                    <span class="ui-item-label">更多</span>
+                </div>
+                <div class="ui-custom-item">
+                    <div class="ui-preview-box" data-target="btn-emoji" style="border-radius: 50%;"><i class="fa-regular fa-face-smile"></i></div>
+                    <span class="ui-item-label">表情</span>
+                </div>
+                <div class="ui-custom-item">
+                    <div class="ui-preview-box" data-target="btn-send" style="border-radius: 50%;"><i class="fa-solid fa-paper-plane"></i></div>
+                    <span class="ui-item-label">发送</span>
+                </div>
+                <div class="ui-custom-item">
+                    <div class="ui-preview-box" data-target="btn-trigger" style="border-radius: 50%;"><i class="fa-solid fa-heart"></i></div>
+                    <span class="ui-item-label">接受/心动</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- C. 消息卡片 -->
+        <div class="api-section-card">
+            <div class="api-section-title"><i class="fa-solid fa-layer-group"></i> 消息卡片背景</div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- 双列 -->
+                <div style="display: flex; gap: 10px;">
+                     <div class="ui-custom-item" style="flex: 1;">
+                        <div class="ui-preview-box wide" data-target="card-file" style="height: 80px;">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                        <span class="ui-item-label">文件卡片</span>
+                    </div>
+                    <div class="ui-custom-item" style="flex: 1;">
+                        <div class="ui-preview-box wide" data-target="card-transfer" style="height: 80px;">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                        </div>
+                        <span class="ui-item-label">转账卡片</span>
+                    </div>
+                </div>
+                <!-- 双列 -->
+                <div style="display: flex; gap: 10px;">
+                     <div class="ui-custom-item" style="flex: 1;">
+                        <div class="ui-preview-box wide" data-target="card-location" style="height: 80px;">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span class="ui-item-label">定位卡片</span>
+                    </div>
+                    <div class="ui-custom-item" style="flex: 1;">
+                        <div class="ui-preview-box wide" data-target="card-music" style="height: 80px; background-color: #1a1a1a;">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <span class="ui-item-label">音乐卡片</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="height: 30px;"></div>
+    </main>
+
+    <!-- 隐藏的通用文件上传器 -->
+    <input type="file" id="ui-custom-file-input" accept="image/*" class="hidden">
+</div>
+
 <!-- ========================================================== -->
 <!-- --- ✨✨✨【全新】世界书管理页面 (Page版) ✨✨✨ --- -->
 <!-- ========================================================== -->
@@ -16164,7 +16695,7 @@ body.fullscreen-mode #phone {
     <!-- --- ✨✨✨【全新】全局加载状态弹窗 ✨✨✨ --- -->
     <!-- ========================================================== -->
     <div id="loading-modal" class="hidden"
-        style="position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1050; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);">
+        style="position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2060; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);">
 
         <div
             style="background: var(--color-ui-base); border-radius: 16px; padding: 24px 32px; display: flex; align-items: center; gap: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
@@ -20218,6 +20749,8 @@ const lastMsg = await db.messages.where({ chatId: window.currentChat.id })
     const openBtn = document.getElementById('goto-icon-settings'); // 设置页入口
     const backBtn = document.getElementById('icon-settings-back-btn');
     
+
+
     // === 模块 A: 图标相关元素 ===
     const iconGridContainer = document.getElementById('icon-grid-container');
     const iconFileInput = document.getElementById('icon-input');
@@ -20242,6 +20775,14 @@ const lastMsg = await db.messages.where({ chatId: window.currentChat.id })
     const importCssBtn = document.getElementById('import-beautify-btn');
     const exportCssBtn = document.getElementById('export-beautify-btn');
     const cssFileInput = document.getElementById('import-beautify-input');
+
+// === 模块 D: 全局界面 (新加的) ===
+const btnGlobalHeader = document.getElementById('btn-change-global-header');
+const btnGlobalBack = document.getElementById('btn-change-global-back-btn');
+// 复用已有的 icon-input 或者新建一个
+// 为了不和图标逻辑冲突，我们直接复用 ui-custom-file-input (如果它在全局范围) 
+// 或者简单点，我们直接在这里创建一个临时的 file input 逻辑，或者复用 page 内的
+const globalUiInput = document.getElementById('ui-custom-file-input'); // 确保这个 input 是存在的（它在聊天美化页定义过，如果是全局ID就能用）
 
     // ==========================================================
     // --- 图标逻辑 ---
@@ -20551,7 +21092,108 @@ const lastMsg = await db.messages.where({ chatId: window.currentChat.id })
             if (typeof navigateBack === 'function') navigateBack();
         });
     }
+
+// ==========================================================
+    // --- 全局界面美化逻辑 (页眉 & 返回) ---
+    // ==========================================================
+    const globalUiInputLocal = document.getElementById('global-ui-file-input');
+    let currentGlobalUiTarget = null; // 'header' or 'btn-back'
+
+    const GLOBAL_UI_MAP = {
+        'header':   { key: 'ui_bg_header',   var: '--custom-bg-header',   preview: 'preview-global-header' },
+        'btn-back': { key: 'ui_bg_btn_back', var: '--custom-bg-btn-back', preview: 'preview-global-back-btn' }
+    };
+
+    // 1. 渲染预览图
+    async function renderGlobalUiPreviews() {
+        for (const [target, config] of Object.entries(GLOBAL_UI_MAP)) {
+            const el = document.getElementById(config.preview);
+            if (!el) continue;
+            
+            const setting = await db.global_settings.get(config.key);
+            if (setting && setting.value instanceof Blob) {
+                el.style.backgroundImage = `url(${URL.createObjectURL(setting.value)})`;
+                // 如果是返回按钮，有图时隐藏中间的图标，或者保留看你喜好。这里隐藏图标让背景更清晰
+                const icon = el.querySelector('i');
+                if(icon) icon.style.display = 'none';
+            } else {
+                el.style.backgroundImage = '';
+                const icon = el.querySelector('i');
+                if(icon) icon.style.display = 'block';
+            }
+        }
+    }
+
+    // 2. 绑定点击事件
+    if (btnGlobalHeader) {
+        btnGlobalHeader.addEventListener('click', () => {
+            handleGlobalUiClick('header', '页眉背景');
+        });
+    }
+    if (btnGlobalBack) {
+        btnGlobalBack.addEventListener('click', () => {
+            handleGlobalUiClick('btn-back', '返回按钮背景');
+        });
+    }
+
+    async function handleGlobalUiClick(target, name) {
+        // 弹出选择框
+        await showListDialog(`设置: ${name}`, [
+            { label: '<i class="fa-regular fa-image"></i> 上传图片', callback: () => {
+                currentGlobalUiTarget = target;
+                if(globalUiInputLocal) globalUiInputLocal.click();
+            }},
+            { label: '<i class="fa-solid fa-rotate-left"></i> 还原默认', color: '#ef4444', callback: async () => {
+                const config = GLOBAL_UI_MAP[target];
+                await db.global_settings.delete(config.key);
+                if(typeof window.applyChatUITheme === 'function') await window.applyChatUITheme();
+                await renderGlobalUiPreviews();
+                showNotification("已还原默认样式");
+            }},
+            { label: '取消', color: '#888', callback: () => {} }
+        ]);
+    }
+
+    // 3. 处理文件上传
+    if (globalUiInputLocal) {
+        globalUiInputLocal.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentGlobalUiTarget) return;
+
+            showLoadingModal("正在处理素材...");
+            try {
+                const blob = await compressImage(file, { type: 'background' });
+                const config = GLOBAL_UI_MAP[currentGlobalUiTarget];
+                
+                await db.global_settings.put({ key: config.key, value: blob });
+                
+                if(typeof window.applyChatUITheme === 'function') await window.applyChatUITheme(); // 立即应用
+                await renderGlobalUiPreviews();        // 刷新预览
+                
+                showNotification("美化成功！");
+            } catch (err) {
+                console.error(err);
+                showNotification("图片处理失败");
+            } finally {
+                hideLoadingModal();
+                e.target.value = '';
+                currentGlobalUiTarget = null;
+            }
+        });
+    }
+
+    // 4. 将渲染函数挂载到 openBtn 的点击事件里
+    // 找到上面 openBtn.addEventListener('click', ...) 那里，把 await renderGlobalUiPreviews(); 加进去
+    // 或者简单点，我们追加一个监听器：
+    if (openBtn) {
+        openBtn.addEventListener('click', () => {
+            renderGlobalUiPreviews();
+        });
+    }
+
+
 })();
+
 
 
 // =========================================================
@@ -21611,6 +22253,7 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
     const toolsPrompt = `
 【聊天扩展功能】
 - 在聊天中，你可以主动使用以下【功能指令】（必须严格使用尖括号包裹）：
+  - 使用 <share_music>歌名</share_music> 来【分享音乐】。
   - 使用 <music_play song="歌名"/> 来【切歌】(仅限上方歌单中存在的歌曲)。
   - 使用 <music_open/> 来【打开音乐播放器】(邀请一起听)。
   - 使用 <music_close/> 来【关闭音乐播放器】。
@@ -25594,6 +26237,16 @@ function updateChatItemPreview(characterId, rawMessage, timestamp) {
             }
             await loadUser(user);
             // ▼▼▼ 在这里粘贴下面这行新代码 ▼▼▼
+// ✨ 初始化聊天 UI 美化
+            if (typeof window.applyChatUITheme === 'function') {
+                await window.applyChatUITheme();
+            }
+
+// ✨ 初始化全局外观 (App Skin)
+            if (typeof window.applyAppSkin === 'function') {
+                await window.applyAppSkin();
+            }
+
             await upgradePromptPresets(); // 检查并升级提示词预设
             // ▲▲▲ 粘贴到这里结束 ▲▲▲
             applyAppearanceSettings();
@@ -26619,6 +27272,72 @@ case 'image_description':
                         
                         contentRendered = true;
                         break;
+
+// ▼▼▼ ✨✨✨ 音乐卡片渲染逻辑 (带空状态处理) ✨✨✨ ▼▼▼
+                case 'music_card':
+                    const mData = msg.fileData || {};
+                    // 样式：仿网易云分享卡片 (红黑胶唱片风)
+                    contentContainer.innerHTML = `
+                        <div class="special-card-container" data-card-type="music" style="width: 220px; background: linear-gradient(145deg, #2d2d2d, #1a1a1a); border: 1px solid #333; color: white; border-radius: 12px; overflow: hidden; position: relative;">
+                            
+                            <!-- 背景模糊封面 -->
+                            <div style="position: absolute; inset: 0; background-image: url('${mData.musicCover}'); background-size: cover; opacity: 0.2; filter: blur(10px);"></div>
+                            
+                            <div style="position: relative; z-index: 1; padding: 12px; display: flex; align-items: center; gap: 12px;">
+                                <!-- 封面图 (唱片圆角) -->
+                                <div style="width: 48px; height: 48px; border-radius: 50%; background-image: url('${mData.musicCover}'); background-size: cover; border: 2px solid #000; box-shadow: 0 0 0 1px rgba(255,255,255,0.2); flex-shrink: 0;">
+                                    <div style="width: 12px; height: 12px; background: #1a1a1a; border-radius: 50%; margin: 16px auto;"></div>
+                                </div>
+                                
+                                <!-- 文字信息 -->
+                                <div style="flex: 1; overflow: hidden;">
+                                    <div style="font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(mData.musicName)}</div>
+                                    <div style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px;">${escapeHtml(mData.musicArtist)}</div>
+                                </div>
+                                
+                                <!-- 播放按钮图标 (根据状态变色) -->
+                                <div style="font-size: 20px; color: ${mData.musicUrl ? '#ff3a3a' : '#666'};">
+                                    <i class="fa-solid ${mData.musicUrl ? 'fa-circle-play' : 'fa-circle-exclamation'}"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- 底部来源标 -->
+                            <div style="position: relative; z-index: 1; padding: 4px 12px;  font-size: 10px; color: rgba(255,255,255,0.4); text-align: right;">
+                                <i class="fa-solid fa-music"></i> 网易云音乐
+                            </div>
+                        </div>`;
+                    
+                    // 样式调整
+                    contentContainer.style.padding = '0';
+                    contentContainer.style.background = 'transparent';
+                    contentContainer.style.border = 'none';
+                    contentContainer.style.cursor = 'pointer';
+                    
+                    // ✨ 核心交互：点击判断
+                    contentContainer.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        // A. 如果有链接，正常播放
+                        if (mData.musicUrl) {
+                            if (window.musicPlayerController) {
+                                window.musicPlayerController.addAndPlay({
+                                    name: mData.musicName,
+                                    artist: mData.musicArtist,
+                                    url: mData.musicUrl,
+                                    cover: mData.musicCover 
+                                });
+                                showNotification("正在播放", `《${mData.musicName}》`);
+                            }
+                        } 
+                        // B. 如果没有链接 (搜索失败的卡片)，弹出提示
+                        else {
+                            showNotification("暂无音源", "自动搜索未找到该歌曲，您可以尝试点击右上角手动搜索。");
+
+                        }
+                    });
+                    break;
+                // ▲▲▲ 修改结束 ▲▲▲
+
 case 'voice':
                         contentContainer.classList.add('voice-message');
                         
@@ -29134,16 +29853,13 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
 
         })();
 
-        // ==========================================================
 // ==========================================================
-        // --- ✨✨✨【稳定版】音乐搜索核心引擎 (Vercel源/需梯子) ✨✨✨ ---
+        // --- ✨✨✨【稳定修复版】音乐搜索核心引擎 (兼容字段 + 防盗链) ✨✨✨ ---
         // ==========================================================
         (function () {
-            // 1. 获取所有相关的 DOM 元素
+            // 1. 获取 DOM
             const openSearchBtn = document.getElementById('open-music-search-btn');
             const searchModal = document.getElementById('music-search-modal');
-            
-            // 安全检查
             if (!openSearchBtn || !searchModal) return;
 
             const closeSearchBtn = document.getElementById('music-search-close-btn');
@@ -29152,18 +29868,14 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
             const resultsList = document.getElementById('music-search-results-list');
             const placeholder = document.getElementById('music-search-placeholder');
 
-            // --- 2. API 地址设置 (回退到 Vercel 源) ---
-            // ⚠️ 注意：此地址在中国大陆无法直接访问，请确保你的网络环境可以访问 vercel.app
+            // 2. API 地址 (使用 Vercel 源)
             const API_BASE_URL = 'https://netease-cloud-music-api-lyart.vercel.app'; 
 
-            /**
-             * 核心函数 1: 打开搜索弹窗
-             */
+            // --- 打开/关闭弹窗 ---
             openSearchBtn.addEventListener('click', () => {
                 inputEl.value = '';
                 resultsList.innerHTML = '';
                 if(placeholder) resultsList.appendChild(placeholder);
-                
                 searchModal.classList.remove('hidden');
                 setTimeout(() => {
                     searchModal.classList.add('visible');
@@ -29177,28 +29889,21 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
             }
             if(closeSearchBtn) closeSearchBtn.addEventListener('click', closeSearchModal);
 
-            /**
-             * 核心函数 2: 执行搜索
-             */
+            // --- 搜索逻辑 ---
             async function performSearch() {
                 const keyword = inputEl.value.trim();
                 if (!keyword) return;
 
-                resultsList.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div><p style="text-align:center;color:#999;font-size:12px;">正在连接 Vercel 服务器...</p>';
+                resultsList.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div><p style="text-align:center;color:#999;font-size:12px;">正在连接云端...</p>';
 
                 try {
-                    // 直接请求 Vercel API
-                    const targetUrl = `${API_BASE_URL}/search?keywords=${encodeURIComponent(keyword)}&limit=30`;
+                    // 请求 API
+                    const response = await fetch(`${API_BASE_URL}/search?keywords=${encodeURIComponent(keyword)}&limit=30`);
+                    if (!response.ok) throw new Error("API连接失败");
                     
-                    const response = await fetch(targetUrl);
-                    
-                    if (!response.ok) {
-                        throw new Error(`API 请求失败: ${response.status}`);
-                    }
-
                     const data = await response.json();
                     const songs = data.result?.songs || [];
-                    
+
                     if (songs.length === 0) {
                         resultsList.innerHTML = '<div style="text-align:center; color:#999; margin-top:20px;">未找到相关歌曲</div>';
                         return;
@@ -29208,44 +29913,40 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
 
                 } catch (error) {
                     console.error("搜索出错:", error);
-                    resultsList.innerHTML = `
-                        <div style="text-align:center; color:#ef4444; margin-top:20px; padding:0 20px;">
-                            <i class="fa-solid fa-triangle-exclamation" style="font-size:24px; margin-bottom:10px;"></i><br>
-                            连接超时 / 搜索失败<br>
-                            <span style="font-size:12px; color:#9ca3af;">请检查您的网络是否开启了代理 (VPN)，<br>或者该 Vercel 节点可能暂时不可用。</span>
-                        </div>`;
+                    resultsList.innerHTML = '<div style="text-align:center; color:#ef4444; margin-top:20px;">搜索失败，请检查梯子或网络连接</div>';
                 }
             }
 
-            // 绑定搜索按钮和回车
             if(doSearchBtn) doSearchBtn.addEventListener('click', performSearch);
-            if(inputEl) inputEl.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') performSearch();
-            });
+            if(inputEl) inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
 
-            /**
-             * 核心函数 3: 渲染列表 (含VIP识别)
-             */
+            // --- 渲染列表 (✨ 核心修复：兼容多种字段格式) ---
             function renderSearchResults(songs) {
                 resultsList.innerHTML = ''; 
                 songs.forEach(song => {
-                    // 网易云 fee: 1 为 VIP, 0 为免费, 8 为低音质免费
+                    // 1. VIP 判断 (fee: 1=VIP, 0=免费, 8=免费低音质)
                     const isVip = song.fee === 1; 
-                    const artistName = song.ar?.map(a => a.name).join('/') || '未知';
-                    const albumName = song.al?.name || '';
+
+                    // 2. ✨✨✨ 字段兼容修复 ✨✨✨
+                    // API 返回的可能是 ar 也可能是 artists
+                    const artistsArray = song.ar || song.artists || [];
+                    const artistName = artistsArray.map(a => a.name).join('/') || '未知歌手';
+
+                    // API 返回的可能是 al 也可能是 album
+                    const albumObj = song.al || song.album || {};
+                    const albumName = albumObj.name || '';
 
                     const item = document.createElement('div');
-                    // 如果是 VIP，我们加上 disabled 样式，但也允许点击（点击后弹提示）
                     item.className = `music-search-item buttonlike ${isVip ? 'disabled' : ''}`;
                     
-                    // VIP 标记 HTML
+                    // VIP 标记
                     let titleHtml = escapeHtml(song.name);
                     if (isVip) titleHtml += `<span class="vip-badge">VIP</span>`;
 
                     item.innerHTML = `
                         <div class="music-search-item-info">
                             <div class="music-search-item-title">${titleHtml}</div>
-                            <div class="music-search-item-artist">${escapeHtml(artistName)} - ${escapeHtml(albumName)}</div>
+                            <div class="music-search-item-artist">${escapeHtml(artistName)} ${albumName ? '- ' + escapeHtml(albumName) : ''}</div>
                         </div>
                         <div style="font-size: 14px; color: var(--color-primary-accent);">
                             ${isVip ? '<i class="fa-solid fa-lock" style="color:#d1d5db;"></i>' : '<i class="fa-solid fa-circle-play"></i>'}
@@ -29255,7 +29956,7 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
                     // 点击事件
                     item.addEventListener('click', () => {
                         if (isVip) {
-                            showNotification("无法播放 VIP 歌曲", "受版权保护，无法直接播放。请尝试搜索 Live 版或翻唱版。");
+                            showNotification("无法播放", "VIP 歌曲受版权保护，无法通过直链播放。");
                         } else {
                             handleSongSelection(song.id, song.name, artistName);
                         }
@@ -29265,69 +29966,110 @@ function showInputDialog(title, defaultValue = '', isMultiline = false, options 
                 });
             }
 
-            /**
-             * 核心函数 4: 选中歌曲处理 (直链播放 + Vercel抓歌词)
-             */
+      
+// ▼▼▼ 【最终同步版】搜索选中处理：交给播放器管家接管 ▼▼▼
             async function handleSongSelection(songId, title, artist) {
-                showLoadingModal("正在解析资源...");
+                showLoadingModal("正在解析音频和歌词...");
                 
                 try {
-                    // 1. 音频源：依然使用官方直链 (最稳，且不需要消耗 Vercel 流量)
+                    // 1. 准备数据对象
                     const songUrl = `https://music.163.com/song/media/outer/url?id=${songId}.mp3`;
                     
-                    const newSongEntry = {
-                        title: title,
+                    // 构造一个干净的歌曲对象
+                    const songData = {
+                        name: title,      // 注意：播放器那边用的字段名是 name 不是 title
                         artist: artist,
-                        songUrl: songUrl,
-                        audioData: null,
-                        coverArt: null,
+                        url: songUrl,
                         lyrics: null
                     };
 
-                    // 2. 歌词源：使用 Vercel API 抓取
+                    // 2. 尝试抓取歌词
                     try {
                         const lrcRes = await fetch(`${API_BASE_URL}/lyric?id=${songId}`);
                         const lrcData = await lrcRes.json();
                         if (lrcData.lrc && lrcData.lrc.lyric) {
-                            newSongEntry.lyrics = lrcData.lrc.lyric;
+                            songData.lyrics = lrcData.lrc.lyric;
                         } else {
-                            newSongEntry.lyrics = "[暂无歌词]";
+                            songData.lyrics = "[暂无歌词]";
                         }
                     } catch (e) {
                         console.warn("歌词获取失败", e);
-                        newSongEntry.lyrics = "[歌词加载失败]";
+                        songData.lyrics = "[歌词加载失败]";
                     }
 
-                    // 3. 存入数据库
-                    const newSongId = await db.songs.add(newSongEntry);
-
-                    // 4. 播放
+                    // 3. ✨✨✨ 核心修改：直接呼叫播放器控制器来干活 ✨✨✨
+                    // 我们不再这里操作数据库了，而是把数据交给播放器
+                    // 播放器会自动：存入数据库 -> 更新内存列表 -> 立即播放 -> 弹出界面
                     if (window.musicPlayerController) {
-                        window.currentPlaylist = await db.songs.toArray();
-                        const newIndex = window.currentPlaylist.findIndex(s => s.id === newSongId);
-                        
-                        if (newIndex !== -1 && typeof window.loadSong === 'function') {
-                            window.currentTrackIndex = newIndex;
-                            window.loadSong(newIndex);
-                            setTimeout(() => window.playSong(), 300);
-                        }
+                        await window.musicPlayerController.addAndPlay(songData);
+                    } else {
+                        // 如果播放器还没初始化（极少情况），手动存一下
+                        await db.songs.add({
+                            title: songData.name,
+                            artist: songData.artist,
+                            songUrl: songData.url,
+                            lyrics: songData.lyrics,
+                            createdAt: new Date().toISOString()
+                        });
+                        showNotification("已添加", "请刷新页面以更新播放列表");
                     }
 
                     closeSearchModal();
 
                 } catch (error) {
-                    console.error(error);
-                    showNotification("添加失败", error.message);
+                    console.error("歌曲处理失败:", error);
+                    showNotification("添加失败", "网络不稳定，请重试");
                 } finally {
                     hideLoadingModal();
                 }
             }
-            
-            // 挂载全局调用
+
+            // 挂载
             window.openMusicSearchModal = () => openSearchBtn.click();
             window.searchMusic = performSearch;
 
+
+// ▼▼▼ ✨✨✨ 新增：后台搜歌辅助函数 (供AI使用) ✨✨✨ ▼▼▼
+            window.findBestMatchSong = async function(keyword) {
+                // 既然我们已经确立了 API 地址，这里直接复用
+                // 推荐使用官方接口+代理，或者你刚才确认能用的那个 API
+                const API_URL = 'https://music.cyrilstudio.top'; // 或你刚才用的能用的那个
+                
+                try {
+                    const response = await fetch(`${API_URL}/search?keywords=${encodeURIComponent(keyword)}&limit=5`);
+                    if (!response.ok) return null;
+                    
+                    const data = await response.json();
+                    const songs = data.result?.songs || [];
+                    
+                    // 1. 优先找非 VIP 的
+                    let bestSong = songs.find(s => s.fee !== 1);
+                    
+                    // 2. 如果全是 VIP，就只好硬着头皮拿第一个（虽然可能播不了，但至少有卡片）
+                    if (!bestSong && songs.length > 0) bestSong = songs[0];
+                    
+                    if (bestSong) {
+                        return {
+                            name: bestSong.name,
+                            artist: bestSong.ar?.map(a => a.name).join('/') || '未知歌手',
+                            id: bestSong.id,
+                            // 获取封面图 (网易云API通常在 al.picUrl)
+                            cover: bestSong.al?.picUrl || 'https://i.postimg.cc/Prtb1wZc/pyq-1.jpg'
+                        };
+                    }
+                    return null;
+                } catch (e) {
+                    console.error("AI搜歌失败:", e);
+                    return null;
+                }
+            };
+            // ▲▲▲ 新增结束 ▲▲▲
+
+
+
         })();
+
+
 // ==========================================================
         // --- ✨✨✨【终极重构版】表情包仓库：页面+5列+页眉交互 ✨---
         // ==========================================================
@@ -31260,6 +32002,30 @@ else if (content.startsWith('<mem>')) {
                     renderingQueue.push({ type: 'block' });
                 }
 
+// ... (接在 <block/> 之后) ...
+
+                // ▼▼▼ ✨✨✨ 新增：音乐分享指令解析 ✨✨✨ ▼▼▼
+                else if (content.startsWith('<share_music')) {
+                    // 支持两种格式：
+                    // 1. <share_music>歌名</share_music>
+                    // 2. <share_music keyword="歌名"/>
+                    let keyword = "";
+                    const tagMatch = content.match(/<share_music>(.*?)<\/share_music>/);
+                    const attrMatch = content.match(/keyword="([^"]*)"/);
+                    
+                    if (tagMatch) keyword = tagMatch[1];
+                    else if (attrMatch) keyword = attrMatch[1];
+                    
+                    if (keyword) {
+                        // 推入队列，标记类型为 music_card_search
+                        renderingQueue.push({ type: 'music_card_search', keyword: keyword.trim() });
+                    }
+                }
+                // ▲▲▲ 新增结束 ▲▲▲
+                
+                // ... (后面是 else { renderingQueue.push... } ) ...
+
+
                 // 2. 切歌
                 else if (content.startsWith('<music_play')) {
                     const match = content.match(/song="([^"]*)"/);
@@ -31607,9 +32373,55 @@ else if (content.startsWith('<mem>')) {
                         await addMessageToUI({ id: newMsgId, ...systemMessage });
                         break;
                     }
+// ▼▼▼ ✨✨✨ 核心修改：搜不到也要发卡片 (占位模式) ✨✨✨ ▼▼▼
+                    case 'music_card_search': {
+                        // 1. 调用后台搜歌
+                        const songData = await window.findBestMatchSong(task.keyword);
+                        
+                        // 2. 准备卡片数据 (无论有没有搜到，都初始化一个对象)
+                        let cardData = {};
 
-// ... (接在其他 case 之后) ...
+                        if (songData) {
+                            // A. 搜到了：填入真实数据
+                            cardData = {
+                                musicName: songData.name,
+                                musicArtist: songData.artist,
+                                musicId: songData.id,
+                                musicCover: songData.cover,
+                                musicUrl: `https://music.163.com/song/media/outer/url?id=${songData.id}.mp3`,
+                                status: 'valid' // 标记有效
+                            };
+                        } else {
+                            // B. 没搜到：填入“伪造”数据 (占位符)
+                            cardData = {
+                                musicName: task.keyword, // 直接用AI想搜的词做歌名
+                                musicArtist: "暂无音源",   // 歌手显示提示
+                                musicId: null,
+                                // 使用默认黑胶封面
+                                musicCover: "https://i.postimg.cc/Prtb1wZc/pyq-1.jpg", 
+                                musicUrl: null, // 链接为空
+                                status: 'not_found' // 标记未找到
+                            };
+                        }
 
+                        // 3. 构建并保存消息 (不再发纯文本道歉了)
+                        const musicMsg = {
+                            userId: user.id,
+                            chatId: chat.id,
+                            senderId: chat.id,
+                            type: 'music_card',
+                            content: `[分享了音乐：${cardData.musicName}]`,
+                            fileData: cardData, // 存入数据
+                            time: new Date().toISOString()
+                        };
+                        
+                        const newId = await db.messages.add(musicMsg);
+                        await addMessageToUI({ id: newId, ...musicMsg });
+                        lastBubbleIdInThisTurn = newId;
+                        
+                        break;
+                    }
+                    // ▲▲▲ 修改结束 ▲▲▲
 // --- 🎵 音乐控制指令 (AI 触发时才发消息) ---
                     case 'music_control': {
                         if (window.musicPlayerController) {
@@ -43534,6 +44346,359 @@ async function simulateBuildAiRequestContext(character, user, currentMode) {
 
 })();
 
+// ==========================================================
+// --- ✨✨✨【全新 V1.1】聊天美化中心核心引擎 (含图标隐藏) ✨✨✨ ---
+// ==========================================================
+(function () {
+    // 1. 获取 DOM 元素
+    const pageId = 'chat-ui-customization-page';
+    const entryBtn = document.getElementById('goto-chat-ui-customization');
+    const backBtn = document.getElementById('chat-ui-back-btn');
+    const resetBtn = document.getElementById('reset-all-ui-btn');
+    const fileInput = document.getElementById('ui-custom-file-input');
+    const previewBoxes = document.querySelectorAll('.ui-preview-box');
+
+    // 状态变量
+    let currentTargetKey = null; 
+    
+    // ✨✨✨ 核心修改：配置映射表中增加了 iconVar 字段 ✨✨✨
+    // iconVar 用于控制对应按钮内部图标的 display 属性
+    const UI_MAP = {
+        'header':       { key: 'ui_bg_header',       var: '--custom-bg-header' }, // 页眉不需要隐藏子元素
+        'input':        { key: 'ui_bg_input',        var: '--custom-bg-input' },
+        
+        // 按钮组 (都有 iconVar)
+        'btn-back':     { key: 'ui_bg_btn_back',     var: '--custom-bg-btn-back',    iconVar: '--custom-icon-display-btn-back' },
+        'btn-phone':    { key: 'ui_bg_btn_phone',    var: '--custom-bg-btn-phone',   iconVar: '--custom-icon-display-btn-phone' },
+        'btn-more':     { key: 'ui_bg_btn_more',     var: '--custom-bg-btn-more',    iconVar: '--custom-icon-display-btn-more' },
+        'btn-emoji':    { key: 'ui_bg_btn_emoji',    var: '--custom-bg-btn-emoji',   iconVar: '--custom-icon-display-btn-emoji' },
+        'btn-send':     { key: 'ui_bg_btn_send',     var: '--custom-bg-btn-send',    iconVar: '--custom-icon-display-btn-send' },
+        'btn-trigger':  { key: 'ui_bg_btn_trigger',  var: '--custom-bg-btn-trigger', iconVar: '--custom-icon-display-btn-trigger' },
+        
+        // 卡片组 (不需要隐藏子元素)
+        'card-file':    { key: 'ui_bg_card_file',    var: '--custom-bg-card-file' },
+        'card-transfer':{ key: 'ui_bg_card_transfer',var: '--custom-bg-card-transfer' },
+        'card-location':{ key: 'ui_bg_card_location',var: '--custom-bg-card-location' },
+        'card-music':   { key: 'ui_bg_card_music',   var: '--custom-bg-card-music' }
+    };
+
+    /**
+     * 核心函数 1: 应用所有已保存的美化设置
+     */
+    window.applyChatUITheme = async function() {
+        try {
+            const rootStyle = document.documentElement.style;
+            
+            for (const [target, config] of Object.entries(UI_MAP)) {
+                const setting = await db.global_settings.get(config.key);
+                
+                if (setting && setting.value instanceof Blob) {
+                    // 有自定义背景图
+                    const url = URL.createObjectURL(setting.value);
+                    rootStyle.setProperty(config.var, `url(${url})`);
+                    
+                    // ✨ 核心逻辑：如果有自定义背景，且该元素配置了 iconVar，则隐藏原图标
+                    if (config.iconVar) {
+                        rootStyle.setProperty(config.iconVar, 'none');
+                    }
+                } else {
+                    // 无自定义背景，恢复默认
+                    rootStyle.removeProperty(config.var);
+                    
+                    // ✨ 恢复显示原图标
+                    if (config.iconVar) {
+                        rootStyle.removeProperty(config.iconVar);
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("应用 UI 主题失败:", e);
+        }
+    };
+
+    /**
+     * 核心函数 2: 渲染设置页面的预览图
+     */
+    async function renderUIPreviews() {
+        for (const box of previewBoxes) {
+            const target = box.dataset.target;
+            const config = UI_MAP[target];
+            if (!config) continue;
+
+            const setting = await db.global_settings.get(config.key);
+            
+            box.style.backgroundImage = '';
+            const icon = box.querySelector('i');
+            if (icon) icon.style.display = 'block'; 
+
+            if (setting && setting.value instanceof Blob) {
+                const url = URL.createObjectURL(setting.value);
+                box.style.backgroundImage = `url(${url})`;
+                if (icon) icon.style.display = 'none'; 
+            }
+        }
+    }
+
+    // --- 事件绑定 (保持不变) ---
+    if (entryBtn) {
+        entryBtn.addEventListener('click', async () => {
+            await renderUIPreviews();
+            navigateTo(pageId);
+        });
+    }
+
+    if (backBtn) {
+        const newBackBtn = backBtn.cloneNode(true);
+        backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+        newBackBtn.addEventListener('click', () => navigateBack());
+    }
+
+    previewBoxes.forEach(box => {
+        box.addEventListener('click', async () => {
+            const target = box.dataset.target;
+            
+            const choice = await showListDialog(`设置: ${target}`, [
+                { label: '<i class="fa-regular fa-image"></i> 上传图片', callback: () => {
+                    currentTargetKey = target;
+                    fileInput.click();
+                }},
+                { label: '<i class="fa-solid fa-rotate-left"></i> 还原默认', color: '#ef4444', callback: async () => {
+                    const config = UI_MAP[target];
+                    await db.global_settings.delete(config.key);
+                    await window.applyChatUITheme();
+                    await renderUIPreviews();
+                    showNotification("已还原默认样式");
+                }},
+                { label: '取消', color: '#888', callback: () => {} }
+            ]);
+        });
+    });
+
+    if (fileInput) {
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentTargetKey) return;
+
+            showLoadingModal("正在处理素材...");
+            try {
+                const blob = await compressImage(file, { type: 'background' });
+                
+                const config = UI_MAP[currentTargetKey];
+                await db.global_settings.put({ key: config.key, value: blob });
+                
+                await window.applyChatUITheme(); 
+                await renderUIPreviews();        
+                
+                showNotification("美化成功！");
+
+            } catch (error) {
+                console.error("美化失败:", error);
+                showNotification("图片处理失败");
+            } finally {
+                hideLoadingModal();
+                fileInput.value = '';
+                currentTargetKey = null;
+            }
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            showDeleteDialog("确定要重置所有美化设置吗？\n所有自定义背景都将丢失。", async () => {
+                const keys = Object.values(UI_MAP).map(c => c.key);
+                await db.global_settings.bulkDelete(keys);
+                
+                await window.applyChatUITheme();
+                await renderUIPreviews();
+                
+                showNotification("所有样式已重置");
+            });
+        });
+    }
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof window.applyChatUITheme === 'function') {
+            window.applyChatUITheme();
+        }
+    });
+
+})();
+// ==========================================================
+// --- ✨✨✨【全新 V1.0】全局外观 (App Skin) 核心引擎 ✨✨✨ ---
+// ==========================================================
+(function () {
+    // 1. 获取 DOM
+    const pageId = 'global-ui-customization-page';
+    const entryBtn = document.getElementById('btn-open-global-customization');
+    const backBtn = document.getElementById('global-ui-back-btn');
+    const resetBtn = document.getElementById('reset-global-ui-btn');
+    const fileInput = document.getElementById('global-ui-file-input');
+    const previewBoxes = document.querySelectorAll('#global-ui-customization-page .ui-preview-box');
+
+    let currentTargetKey = null;
+
+    // 配置映射
+    const APP_UI_MAP = {
+        'msg-page-bg':    { key: 'app_skin_msg_page',    var: '--app-bg-msg-page' },
+        'me-page-bg':     { key: 'app_skin_me_page',     var: '--app-bg-me-page' },
+        'msg-item-bg':    { key: 'app_skin_msg_item',    var: '--app-bg-msg-item' },
+        'moment-card-bg': { key: 'app_skin_moment_card', var: '--app-bg-moment-card' },
+        'navbar-bg':      { key: 'app_skin_navbar',      var: '--app-bg-navbar' },
+        // 加号按钮特殊：有关联的 icon 变量
+        'plus-btn-bg':    { key: 'app_skin_plus_btn',    var: '--app-bg-plus-btn', iconVar: '--app-display-plus-icon' }
+    };
+
+    /**
+     * 核心函数 1: 应用全局皮肤
+     */
+    window.applyAppSkin = async function() {
+        try {
+            const rootStyle = document.documentElement.style;
+            
+            for (const [target, config] of Object.entries(APP_UI_MAP)) {
+                const setting = await db.global_settings.get(config.key);
+                
+                if (setting && setting.value instanceof Blob) {
+                    const url = URL.createObjectURL(setting.value);
+                    
+                    // 应用背景图
+                    rootStyle.setProperty(config.var, `url(${url})`);
+                    
+                    // 如果有图标控制变量，隐藏图标
+                    if (config.iconVar) {
+                        rootStyle.setProperty(config.iconVar, 'none');
+                    }
+                } else {
+                    // 恢复默认
+                    rootStyle.removeProperty(config.var);
+                    if (config.iconVar) {
+                        rootStyle.removeProperty(config.iconVar);
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("应用全局皮肤失败:", e);
+        }
+    };
+
+    /**
+     * 核心函数 2: 渲染预览
+     */
+    async function renderSkinPreviews() {
+        for (const box of previewBoxes) {
+            const target = box.dataset.target;
+            const config = APP_UI_MAP[target];
+            if (!config) continue;
+
+            const setting = await db.global_settings.get(config.key);
+            
+            box.style.backgroundImage = '';
+            const icon = box.querySelector('i');
+            if (icon) icon.style.display = 'block';
+
+            if (setting && setting.value instanceof Blob) {
+                const url = URL.createObjectURL(setting.value);
+                box.style.backgroundImage = `url(${url})`;
+                if (icon) icon.style.display = 'none';
+            }
+        }
+    }
+
+    // --- 事件绑定 ---
+
+    // 1. 进入页面
+    if (entryBtn) {
+        // ✨ 这里我们使用事件委托或者延时绑定，因为"我的"页面可能被重绘
+        // 但由于我们放在了 html 静态部分，通常可以直接绑定
+        // 如果失效，可以使用 document.body 代理
+        document.body.addEventListener('click', async (e) => {
+            if (e.target.closest('#btn-open-global-customization')) {
+                await renderSkinPreviews();
+                navigateTo(pageId);
+            }
+        });
+    }
+
+    // 2. 返回
+    if (backBtn) {
+        const newBackBtn = backBtn.cloneNode(true);
+        backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+        newBackBtn.addEventListener('click', () => navigateBack());
+    }
+
+    // 3. 点击预览框 -> 上传/还原
+    previewBoxes.forEach(box => {
+        box.addEventListener('click', async () => {
+            const target = box.dataset.target;
+            
+            await showListDialog(`设置: ${target}`, [
+                { label: '<i class="fa-regular fa-image"></i> 上传图片', callback: () => {
+                    currentTargetKey = target;
+                    fileInput.click();
+                }},
+                { label: '<i class="fa-solid fa-rotate-left"></i> 还原默认', color: '#ef4444', callback: async () => {
+                    const config = APP_UI_MAP[target];
+                    await db.global_settings.delete(config.key);
+                    await window.applyAppSkin();
+                    await renderSkinPreviews();
+                    showNotification("已还原默认样式");
+                }},
+                { label: '取消', color: '#888', callback: () => {} }
+            ]);
+        });
+    });
+
+    // 4. 处理文件
+    if (fileInput) {
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentTargetKey) return;
+
+            showLoadingModal("正在处理素材...");
+            try {
+                const blob = await compressImage(file, { type: 'background' });
+                const config = APP_UI_MAP[currentTargetKey];
+                
+                await db.global_settings.put({ key: config.key, value: blob });
+                
+                await window.applyAppSkin();
+                await renderSkinPreviews();
+                
+                showNotification("设置成功！");
+
+            } catch (error) {
+                console.error(error);
+                showNotification("图片处理失败");
+            } finally {
+                hideLoadingModal();
+                fileInput.value = '';
+                currentTargetKey = null;
+            }
+        });
+    }
+
+    // 5. 重置所有
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            showDeleteDialog("确定要重置所有全局外观吗？", async () => {
+                const keys = Object.values(APP_UI_MAP).map(c => c.key);
+                await db.global_settings.bulkDelete(keys);
+                await window.applyAppSkin();
+                await renderSkinPreviews();
+                showNotification("已全部重置");
+            });
+        });
+    }
+
+    // --- 初始化 ---
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof window.applyAppSkin === 'function') {
+            window.applyAppSkin();
+        }
+    });
+
+})();
 
 </script>
 
