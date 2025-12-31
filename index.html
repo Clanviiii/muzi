@@ -40328,9 +40328,93 @@ async function renderMemoryList() {
             };
         }
 
-        // --- D. 填充配置数据 (逻辑不变) ---
-        // (为了节省篇幅，配置保存逻辑保持不变，此处省略，请保留您原代码中 freqInput, promptInput 等的绑定逻辑)
-        // ... [保留原本的配置绑定代码] ...
+    // --- D. 填充配置数据 & 绑定保存事件 (修复版) ---
+        
+        // 1. 触发阈值 (Frequency)
+        if (freqInput) {
+            // 回显数据
+            freqInput.value = freshChar.summaryFrequency || 8;
+            if (targetCountEl) targetCountEl.textContent = freshChar.summaryFrequency || 8;
+            if (currentCountEl) currentCountEl.textContent = freshChar.summaryTurnCount || 0;
+
+            // 绑定保存
+            const newFreqInput = freqInput.cloneNode(true);
+            freqInput.parentNode.replaceChild(newFreqInput, freqInput);
+            
+            newFreqInput.addEventListener('change', async (e) => {
+                let val = parseInt(e.target.value, 10);
+                if (val < 1) val = 1; // 最小为1
+                
+                await db.characters.update(currentTargetChar.id, { summaryFrequency: val });
+                
+                // 同步全局
+                if (window.currentChat && window.currentChat.id === currentTargetChar.id) {
+                    window.currentChat.summaryFrequency = val;
+                }
+                
+                // 更新UI显示
+                if (targetCountEl) targetCountEl.textContent = val;
+                showNotification("触发阈值已更新");
+            });
+        }
+
+        // 2. 自定义总结提示词 (Prompt)
+        if (promptInput) {
+            promptInput.value = freshChar.summaryPrompt || '';
+            
+            const newPromptInput = promptInput.cloneNode(true);
+            promptInput.parentNode.replaceChild(newPromptInput, promptInput);
+            
+            newPromptInput.addEventListener('change', async (e) => {
+                const val = e.target.value.trim();
+                await db.characters.update(currentTargetChar.id, { summaryPrompt: val });
+                
+                if (window.currentChat && window.currentChat.id === currentTargetChar.id) {
+                    window.currentChat.summaryPrompt = val;
+                }
+                showNotification("总结提示词已保存");
+            });
+        }
+
+        // 3. 回溯深度 (Depth)
+        if (depthInput) {
+            depthInput.value = freshChar.memorySearchDepth || 3;
+            
+            const newDepthInput = depthInput.cloneNode(true);
+            depthInput.parentNode.replaceChild(newDepthInput, depthInput);
+            
+            newDepthInput.addEventListener('change', async (e) => {
+                let val = parseInt(e.target.value, 10);
+                if (val < 1) val = 1;
+                
+                await db.characters.update(currentTargetChar.id, { memorySearchDepth: val });
+                
+                if (window.currentChat && window.currentChat.id === currentTargetChar.id) {
+                    window.currentChat.memorySearchDepth = val;
+                }
+                showNotification("回溯深度已更新");
+            });
+        }
+
+        // 4. 最大命中数 (Max Count)
+        if (maxCountInput) {
+            maxCountInput.value = freshChar.memoryMaxCount || 15;
+            
+            const newMaxInput = maxCountInput.cloneNode(true);
+            maxCountInput.parentNode.replaceChild(newMaxInput, maxCountInput);
+            
+            newMaxInput.addEventListener('change', async (e) => {
+                let val = parseInt(e.target.value, 10);
+                if (val < 1) val = 1;
+                
+                await db.characters.update(currentTargetChar.id, { memoryMaxCount: val });
+                
+                if (window.currentChat && window.currentChat.id === currentTargetChar.id) {
+                    window.currentChat.memoryMaxCount = val;
+                }
+                showNotification("最大命中数已更新");
+            });
+        }
     }
 
     // --- 2. 渲染记忆列表 ---
