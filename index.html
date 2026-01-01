@@ -22,7 +22,8 @@
     <!-- ▼▼▼ ✨✨✨ 新增：Supabase 客户端 SDK ✨✨✨ ▼▼▼ -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- ▲▲▲ 粘贴结束 ▲▲▲ -->
-
+<!-- ✨✨✨ 新增：JSZip 压缩库 ✨✨✨ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- ✨✨✨【iOS全屏适配 - 核心代码】✨✨✨ -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes"> <!-- ✨ 就是增加了这一行 ✨ -->
@@ -13240,7 +13241,63 @@ input[type="password"] {
 .memory-page-list.batch-mode .memory-card .actions {
     display: none !important;
 }
+/* 让时间轴上的日期看起来可点击 */
+.timeline-date-header span {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
 
+/* 悬浮效果：加个光晕或者稍微放大 */
+.timeline-date-header span:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* 弹窗内的加载动画覆盖层 */
+.summary-loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    backdrop-filter: blur(2px);
+}
+
+/* --- 时间轴：已归档日期的高亮样式 (金色传说) --- */
+.timeline-date-header span.archived {
+    color: #fcd34d; /* 亮金色文字 */
+    border-color: #fcd34d !important; /* 强制金色边框 */
+    background: rgba(252, 211, 77, 0.15); /* 微透金色背景 */
+    box-shadow: 0 0 15px rgba(252, 211, 77, 0.3); /* 金色光晕 */
+    font-weight: bold;
+    padding-left: 28px; /* 为图标留位置 */
+    position: relative;
+}
+
+/* 加上一个小图标装饰 */
+.timeline-date-header span.archived::before {
+    content: '\f02d'; /* FontAwesome 的书本图标代码 */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+}
+
+/* 悬浮加强光效 */
+.timeline-date-header span.archived:hover {
+    background: rgba(252, 211, 77, 0.3);
+    box-shadow: 0 0 20px rgba(252, 211, 77, 0.6);
+    transform: scale(1.1);
+    text-shadow: 0 0 5px rgba(252, 211, 77, 0.8);
+}
 
     </style>
 
@@ -15230,8 +15287,6 @@ input[type="password"] {
 
     <!-- 2. 主内容区 -->
     <main class="page-content" style="padding: 0; flex-grow: 1; overflow-y: auto; background-color: #F2F4F6;">
-        
-<!-- style 留空或者只留 z-index，样式全靠 CSS 类 -->
 <div id="api-filter-bar" class="settings-filter-bar" style="position: relative; z-index: 5;">
     <button class="filter-tag-btn buttonlike active" data-target="all">
         <i class="fa-solid fa-layer-group"></i> 全部
@@ -15239,6 +15294,11 @@ input[type="password"] {
     <button class="filter-tag-btn buttonlike" data-target="chat">
         <i class="fa-regular fa-comments"></i> 聊天
     </button>
+    <!-- ✨✨✨ 新增：归档标签 ✨✨✨ -->
+    <button class="filter-tag-btn buttonlike" data-target="archive">
+        <i class="fa-solid fa-box-archive"></i> 归档
+    </button>
+    <!-- ✨✨✨ 插入结束 ✨✨✨ -->
     <button class="filter-tag-btn buttonlike" data-target="voice">
         <i class="fa-solid fa-microphone-lines"></i> 语音
     </button>
@@ -15382,12 +15442,66 @@ input[type="password"] {
                 </div>
             </div>
 
+
+
             <!-- ✨ 装饰性分隔 (筛选时会隐藏) ✨ -->
             <div class="api-global-divider" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; opacity: 0.6;">
                 <div style="height: 1px; background: #cbd5e1; width: 30px;"></div>
                 <span style="font-size: 12px; color: #64748b;">以下为全局功能设置</span>
                 <div style="height: 1px; background: #cbd5e1; width: 30px;"></div>
             </div>
+
+
+<!-- ✨ 分类：记忆归档 (Archive) - 全局设置版 -->
+<div class="api-section-card" data-category="archive">
+    <div class="api-section-title">
+        <i class="fa-solid fa-file-zipper"></i> 记忆归档全局配置
+    </div>
+    
+    <!-- 全局开关：跟随主配置 -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; background: #f9fafb; padding: 8px 12px; border-radius: 8px;">
+        <div>
+            <label class="form-label" style="margin:0; font-size:13px;">跟随当前激活的主预设</label>
+            <div style="font-size:10px; color:#9ca3af;">(自动使用聊天用的 API Key 和模型)</div>
+        </div>
+        <input type="checkbox" id="global-summary-follow-toggle" class="toggle-switch" checked>
+    </div>
+
+    <!-- 独立配置区域 -->
+    <div id="global-summary-config-area" class="hidden">
+        
+        <!-- 1. 接口地址 -->
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">归档用接口地址</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="global-summary-endpoint" class="form-input" placeholder="例如：https://api.openai.com/v1" style="font-family: monospace; flex: 1;">
+                <button id="global-fetch-summary-btn" class="buttonlike" style="padding: 0 15px; font-size: 12px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; color: #4b5563;">拉取</button>
+            </div>
+        </div>
+
+        <!-- 2. API Key -->
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">归档用 API Key</label>
+            <input type="password" id="global-summary-key" class="form-input" placeholder="sk-..." style="font-family: monospace;">
+        </div>
+
+        <!-- 3. 模型选择 -->
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">归档用模型</label>
+            <input type="text" id="global-summary-model" class="form-input" placeholder="例如：gpt-4o-mini" style="font-weight: 500;">
+            
+            <div style="position: relative; margin-top: 8px;">
+                <select id="global-summary-model-select" class="form-input" style="appearance: none; font-size: 13px; color: #6b7280; background: #f9fafb;">
+                    <option value="">— 点击上方“拉取”加载列表 —</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; pointer-events: none; font-size: 12px;"></i>
+            </div>
+            
+            <p style="font-size: 10px; color: #9ca3af; margin-top: 4px;">* 推荐使用 gpt-4o-mini、haiku 或 deepseek-chat 等高性价比模型。</p>
+        </div>
+    </div>
+</div>
+
 
             <!-- ✨ 分类：语音 (Voice) -->
             <div class="api-section-card" data-category="voice">
@@ -16108,7 +16222,7 @@ input[type="password"] {
     <main class="page-content" style="background-color: #f3f4f6; display: flex; flex-direction: column; gap: 20px;">
         
         <!-- 区域 1: 本地备份 (卡片样式) -->
-        <div style="background: #fff; padding: 20px; border-radius: 12px; border: 1px solid var(--color-ui-border); box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div style="background: #fff; padding: 20px;margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--color-ui-border); box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
                 <i class="fa-solid fa-hard-drive" style="color: var(--color-secondary-accent);"></i>
                 <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: var(--color-primary-accent);">本地文件备份</h4>
@@ -16126,13 +16240,13 @@ input[type="password"] {
             </div>
         </div>
 
-        <!-- 区域 2: 云端同步 (卡片样式) -->
+<!-- 区域 2: 云端同步 (Supabase Storage 版) -->
         <div style="background: #fff; padding: 20px; border-radius: 12px; border: 1px solid var(--color-ui-border); box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-cloud" style="color: #3b82f6;"></i>
-                    <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: var(--color-primary-accent);">云端同步 (Supabase)</h4>
+                    <i class="fa-solid fa-cloud-arrow-up" style="color: #3b82f6;"></i>
+                    <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: var(--color-primary-accent);">云端备份 (lizi.zip)</h4>
                 </div>
                 <span id="cloud-status-badge" style="font-size: 11px; background: #e5e7eb; color: #666; padding: 3px 8px; border-radius: 12px; font-weight: 500;">未连接</span>
             </div>
@@ -16146,6 +16260,11 @@ input[type="password"] {
                     <label style="font-size: 12px; color: #666; font-weight: 500; margin-bottom: 5px; display: block;">API Key (anon/public)</label>
                     <input type="password" id="supabase-key-input" class="form-input" placeholder="eyJh..." style="background: #f9fafb;">
                 </div>
+                <!-- ✨ 新增：存储桶名称 -->
+                <div>
+                    <label style="font-size: 12px; color: #666; font-weight: 500; margin-bottom: 5px; display: block;">Storage Bucket Name (存储桶名)</label>
+                    <input type="text" id="supabase-bucket-input" class="form-input" value="backups" placeholder="默认为 backups" style="background: #f9fafb;">
+                </div>
                 
                 <button id="btn-save-cloud-config" class="btn btn-primary buttonlike" style="width: 100%; margin-top: 5px;">
                     保存配置并连接
@@ -16155,21 +16274,21 @@ input[type="password"] {
 
                 <div style="display: flex; gap: 12px;">
                     <button id="btn-cloud-upload" class="btn btn-secondary buttonlike" style="flex: 1;" disabled>
-                        <i class="fa-solid fa-cloud-arrow-up"></i> 上传到云端
+                        <i class="fa-solid fa-file-zipper"></i> 压缩并上传
                     </button>
                     <button id="btn-cloud-download" class="btn btn-secondary buttonlike" style="flex: 1;" disabled>
-                        <i class="fa-solid fa-cloud-arrow-down"></i> 下载到本地
+                        <i class="fa-solid fa-cloud-arrow-down"></i> 下载并恢复
                     </button>
                 </div>
             </div>
             
             <details style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #e5e7eb; font-size: 12px; color: #9ca3af; cursor: pointer;">
-                <summary>如何获取配置信息？</summary>
+                <summary>使用说明 (必读)</summary>
                 <p style="margin-top: 8px; line-height: 1.6; padding-left: 10px;">
-                    1. 访问 supabase.com 注册账号。<br>
-                    2. 进入 Project Settings -> API。<br>
-                    3. 复制 URL 和 anon public key。<br>
-                    4. 粘贴到上方输入框即可。
+                    1. 在 Supabase 后台左侧菜单点击 <strong>Storage</strong>。<br>
+                    2. 点击 <strong>New Bucket</strong>，输入名称 (例如 <code>backups</code>)。<br>
+                    3. ⚠️ <strong>关键：</strong> 必须将 Bucket 设置为 <strong>Public</strong>，或者在 Policies 中添加允许读写的规则，否则无法上传。<br>
+                    4. 文件将保存为 <code>lizi.zip</code>，每次上传都会覆盖旧文件。
                 </p>
             </details>
         </div>
@@ -18715,7 +18834,7 @@ input[type="password"] {
             <!-- A. 通用内容区 (文本/旁白/语音/图片描述) -->
             <div id="editor-content-area">
                 <label id="editor-main-label" class="form-label-paper">消息内容</label>
-                <textarea id="editor-main-content" class="form-input-paper" style="height: 180px; resize:none;"></textarea>
+                <textarea id="editor-main-content" class="form-input-paper" style="height: 80px; resize:none;"></textarea>
             </div>
 
             <!-- B. 文件专属区 (默认隐藏) -->
@@ -18909,6 +19028,102 @@ input[type="password"] {
         
     </div>
 </div>
+
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】记忆归档/日记生成弹窗 ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="daily-summary-modal" class="modal-overlay hidden" style="z-index: 2200;">
+    <div class="modal-content stationery-card" style="width: 90%; max-width: 400px; height: 85%; max-height: 700px; display:flex; flex-direction:column;">
+        
+        <!-- 1. 页眉 -->
+        <header class="stationery-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="daily-summary-date" class="header-title-paper">2025/12/31</h3>
+            <div style="display:flex; gap:10px;">
+                <!-- 重新生成按钮 -->
+                <button id="daily-summary-regen-btn" class="btn-icon buttonlike" title="使用AI重新生成" style="color:var(--color-primary-accent);">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+                <!-- 关闭按钮 -->
+                <button onclick="hideModal('daily-summary-modal')" class="btn-icon buttonlike" style="font-size: 16px; color: #9ca3af;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- 2. 内容区 (编辑器) -->
+        <main class="stationery-card-content" style="padding: 0; flex-grow: 1; display:flex; flex-direction:column;">
+            <!-- 提示条 -->
+            <div id="daily-summary-tip" style="background:#fefce8; color:#b45309; font-size:12px; padding:8px 15px; border-bottom:1px solid #fef9c3;">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AI 已基于当日记忆生成草稿，你可以手动修改。
+            </div>
+            
+            <!-- 编辑区域 -->
+            <textarea id="daily-summary-input" class="form-input-paper" 
+                style="flex-grow: 1; border: none; padding: 20px; font-size: 15px; line-height: 1.8; resize: none; border-radius: 0; background-color: #fffef9; font-family: 'Songti SC', serif;" 
+                placeholder="正在读取记忆碎片并生成..."></textarea>
+        </main>
+        
+   
+<!-- 3. 页脚 -->
+        <footer class="stationery-card-footer" style="flex-direction: column; gap: 10px;">
+            
+            <!-- ✨✨✨ 新增：替代模式开关 ✨✨✨ -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #f3f4f6; padding: 8px 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-size: 13px; font-weight: 600; color: #374151;">使用归档替代碎片</span>
+                    <span style="font-size: 10px; color: #9ca3af;">开启后，检索时将屏蔽当天的原始碎片，仅提供此档案。</span>
+                </div>
+                <input type="checkbox" id="daily-summary-replace-toggle" class="toggle-switch">
+            </div>
+
+            <button id="daily-summary-save-btn" class="btn btn-primary-paper buttonlike" style="width: 100%;">
+                <i class="fa-solid fa-book-bookmark"></i> 存入记忆库
+            </button>
+        </footer>
+
+    </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- --- ✨✨✨【全新】手动记忆录入弹窗 (带时间选择) ✨✨✨ --- -->
+<!-- ========================================================== -->
+<div id="manual-memory-modal" class="modal-overlay hidden" style="z-index: 2100;">
+    <div class="modal-content stationery-card">
+        
+        <!-- 1. 页眉 -->
+        <header class="stationery-card-header">
+            <h3 class="header-title-paper">记录记忆</h3>
+        </header>
+
+        <!-- 2. 内容区 -->
+        <main class="stationery-card-content" style="display: flex; flex-direction: column; gap: 15px;">
+            
+            <!-- 时间选择 -->
+            <div>
+                <label class="form-label-paper"><i class="fa-regular fa-clock"></i> 发生时间:</label>
+                <input type="datetime-local" id="manual-mem-time" class="form-input-paper" 
+                       style="font-family: monospace; font-weight: bold; color: #5a524c;">
+            </div>
+
+            <!-- 内容输入 -->
+            <div>
+                <label class="form-label-paper"><i class="fa-solid fa-pen-nib"></i> 记忆内容:</label>
+                <textarea id="manual-mem-content" class="form-input-paper" 
+                          style="height: 120px; resize: none; line-height: 1.6;" 
+                          placeholder="发生了什么..."></textarea>
+            </div>
+
+        </main>
+        
+        <!-- 3. 页脚 -->
+        <footer class="stationery-card-footer">
+            <button id="manual-mem-cancel" class="btn btn-secondary-paper buttonlike">取消</button>
+            <button id="manual-mem-save" class="btn btn-primary-paper buttonlike">确定记录</button>
+        </footer>
+
+    </div>
+</div>
+
 <!-- =================以下，不要改========================================= -->
             </div>
         </section>
@@ -18923,7 +19138,7 @@ const db = new Dexie("QQAppDB");
 // ==========================================================
 // --- ✨✨✨【V199 - 绘图预设表】数据库结构 ✨✨✨ ---
 // ==========================================================
-db.version(199).stores({
+db.version(200).stores({
     // ... (保留你原有的所有表定义，不要动它们) ...
     regex_scripts: "++id, type, targetId, name, regex, replace, placement, isActive, [type+targetId]", 
     forum_posts: "++id, type, authorId, authorType, authorName, avatar, content, title, likes, comments, timestamp",
@@ -18934,7 +19149,10 @@ db.version(199).stores({
     persona_presets: '++id, &name',
     period_cycles: '++id, startDate, endDate',
     period_logs: '&date, pain, mood, flow', 
-    memories: '++id, contactId, [userId+contactId+type], [userId+contactId], type, createdAt, *sourceTurnIds',
+     // ✨ 重点检查这一行，确保有 [userId+contactId+type] 和 dateStr
+    memories: '++id, contactId, [userId+contactId], [userId+contactId+type], type, dateStr, createdAt, *sourceTurnIds',
+    
+
     prompt_presets: '++id, &name, isActive',
     character_favorites: '++id, characterId, name, imageBlob, createdAt',
     characters: "id,&name,note,persona,avatar,gender,birthday,age,lastMomentAt,createdAt,status,*linkedEntries,lastCommentAt,sociability,categoryId,customStatusText,*stickerTags,phoneWallpaper,fontColor,userFontColor,bubbleColor,userBubbleColor,chatWallpaper,listenTogetherDuration,bubbleCssPresetId,activeUserPersona,readingNovelId,readingProgress,enablePeriodHelp,enableTimeAwareness,enableSmallTheater,blockStatus,smallTheaterContent,enableStickers",
@@ -19274,104 +19492,129 @@ ${JAILBREAK_PROMPT}
 
 
 // ==========================================================
-// --- ✨✨✨【V4.3 - 时间线重排版】记忆检索引擎 ✨✨✨ ---
+// --- ✨✨✨【V5.0 - 归档替代版】记忆检索引擎 ✨✨✨ ---
 // ==========================================================
 async function retrieveRelevantMemories(chatHistory, characterId, userId) {
     if (!chatHistory || chatHistory.length === 0) return '';
 
-    // 1. 获取角色配置
     const char = await db.characters.get(characterId);
     const SEARCH_DEPTH = char ? (char.memorySearchDepth || 3) : 3;
     const MAX_MEMORIES = char ? (char.memoryMaxCount || 15) : 15;
     const SCORE_THRESHOLD = 20;
 
-    // 2. 构建搜索语料库 (保持清洗逻辑)
+    // 1. 构建搜索语料 (清洗)
     const recentMessages = chatHistory.slice(-SEARCH_DEPTH);
-    
     const searchSourceText = recentMessages.map(m => {
         let content = m.content || '';
         if (content.trim().startsWith('<div')) return ''; 
-        content = content.replace(/<[^>]+>/g, '');
-        content = content.replace(/\[STATUS\][\s\S]*?\[\/STATUS\]/gi, '');
-        content = content.replace(/\[\/?[a-zA-Z]+\]/g, '');
+        content = content.replace(/<[^>]+>/g, '').replace(/\[STATUS\][\s\S]*?\[\/STATUS\]/gi, '').replace(/\[\/?[a-zA-Z]+\]/g, '');
         return content;
     }).join('\n');
-
     if (!searchSourceText.trim()) return '';
 
-    // 3. 获取所有记忆库
-    const allMemories = await db.memories.where({
-        userId: userId,
-        contactId: characterId
-    }).toArray();
-
+    // 2. 获取所有记忆
+    const allMemories = await db.memories.where({ userId: userId, contactId: characterId }).toArray();
     if (allMemories.length === 0) return '';
 
-    // 4. 智能分词与过滤
-    const segmenter = new Intl.Segmenter('zh-CN', { granularity: 'word' });
-    const stopWords = new Set([
-        '的', '了', '呢', '啊', '吗', '我', '你', '他', '她', '它', '是', '在', '有', '和', '去', 
-        '不', '都', '就', '也', '被', '对', '着', '过', '人', '们', '个', '这', '那', '什么', '怎么',
-        '但是', '因为', '所以', '虽然', '如果', '发送', '图片', '表情', 'STATUS', '心情', '位置'
-    ]);
-
-    const keywords = Array.from(segmenter.segment(searchSourceText))
-        .filter(s => s.isWordLike)
-        .map(s => s.segment)
-        .filter(w => !stopWords.has(w) && w.length >= 1);
-    
-    const uniqueKeywords = [...new Set(keywords)];
-
-    // 5. 加权评分匹配
-    const scoredMemories = allMemories.map(memory => {
-        const memText = memory.content;
-        let score = 0;
-        uniqueKeywords.forEach(kw => {
-            if (memText.includes(kw)) {
-                score += Math.pow(kw.length, 1.5) * 10;
-            }
-        });
-        
-        // 上下文连贯加分
-        const lastMsgRaw = recentMessages[recentMessages.length - 1].content || '';
-        const lastMsgClean = lastMsgRaw.replace(/\[STATUS\][\s\S]*?\[\/STATUS\]/gi, '').replace(/<[^>]+>/g, '');
-        if (lastMsgClean.length > 5 && memText.includes(lastMsgClean)) {
-            score += 50;
+    // --- ✨ A. 预处理：建立“归档索引” ---
+    // 找出所有开启了“替代模式”的 daily_summary
+    // Map<DateString, SummaryObject>
+    const activeArchiveMap = new Map();
+    allMemories.forEach(mem => {
+        if (mem.type === 'daily_summary' && mem.isContextActive && mem.dateStr) {
+            activeArchiveMap.set(mem.dateStr, mem);
         }
-
-        return { memory, score };
     });
 
-    // --- ✨✨✨ 核心修改开始 ✨✨✨ ---
+    // 3. 关键词提取 (保持不变)
+    const segmenter = new Intl.Segmenter('zh-CN', { granularity: 'word' });
+    const stopWords = new Set(['的', '了', '呢', '啊', '吗', '我', '你', '他', '她', '它', '是', '在', '有', '和', '去', '不', '都', '就', '也', '被', '对', '着', '过', '人', '们', '个', '这', '那', '什么', '怎么', '但是', '因为', '所以', '虽然', '如果', '发送', '图片', '表情', 'STATUS', '心情', '位置']);
+    const keywords = Array.from(segmenter.segment(searchSourceText)).filter(s => s.isWordLike).map(s => s.segment).filter(w => !stopWords.has(w) && w.length >= 1);
+    const uniqueKeywords = [...new Set(keywords)];
 
-    // 6. 第一步：先按权重【筛选】出最相关的 Top N
-    let topCandidates = scoredMemories
-        .filter(item => item.score >= SCORE_THRESHOLD)
-        .sort((a, b) => b.score - a.score) // 先按分数降序，选出最好的
-        .slice(0, MAX_MEMORIES);
-
-    // 7. 第二步：将选出来的这些记忆，按【时间】正序重排 (Old -> New)
-    // 这样 AI 读到的就是这几件事发生的先后顺序
-    topCandidates.sort((a, b) => new Date(a.memory.createdAt) - new Date(b.memory.createdAt));
-
-    // 8. 格式化输出 (加上日期前缀)
-    if (topCandidates.length > 0) {
-        console.log(`🧠 [记忆命中] 筛选出 ${topCandidates.length} 条，已按时间重排`);
+    // 4. 评分
+    let scoredItems = [];
+    
+    allMemories.forEach(memory => {
+        // 如果是已被“替代”的碎片，理论上我们不需要在这里评分，
+        // 但为了“通过碎片关键词命中 summary”，我们还是需要对它评分。
+        // 关键逻辑在后面的“替换”步骤。
         
-        let promptComponent = "\n【你需要参考的、过去发生过的核心记忆 (按时间顺序排列)】:\n";
+        let score = 0;
+        const memText = memory.content;
+        uniqueKeywords.forEach(kw => {
+            if (memText.includes(kw)) score += Math.pow(kw.length, 1.5) * 10;
+        });
         
-        promptComponent += topCandidates.map((item, index) => {
-            const dateStr = new Date(item.memory.createdAt).toLocaleDateString();
-            return `${index + 1}. [${dateStr}] ${item.memory.content}`;
+        const lastMsgRaw = recentMessages[recentMessages.length - 1].content || '';
+        const lastMsgClean = lastMsgRaw.replace(/\[STATUS\][\s\S]*?\[\/STATUS\]/gi, '').replace(/<[^>]+>/g, '');
+        if (lastMsgClean.length > 5 && memText.includes(lastMsgClean)) score += 50;
+
+        if (score >= SCORE_THRESHOLD) {
+            scoredItems.push({ memory, score });
+        }
+    });
+
+    // 排序并截取 Top N
+    scoredItems.sort((a, b) => b.score - a.score);
+    scoredItems = scoredItems.slice(0, MAX_MEMORIES);
+
+    // --- ✨ B. 核心逻辑：碎片 -> 归档 替换与去重 ---
+    const finalMemoriesMap = new Map(); // 使用 Map 去重，Key 为 memory.id
+
+    scoredItems.forEach(item => {
+        const mem = item.memory;
+        
+        // 计算这条记忆的日期字符串
+        const mDate = new Date(mem.createdAt);
+        const dateStr = `${mDate.getFullYear()}/${String(mDate.getMonth()+1).padStart(2,'0')}/${String(mDate.getDate()).padStart(2,'0')}`;
+
+        // 检查这一天是否有“活跃的归档”
+        if (activeArchiveMap.has(dateStr)) {
+            // !!! 命中归档逻辑 !!!
+            const summary = activeArchiveMap.get(dateStr);
+            
+            // 无论这个碎片是什么，我们都忽略它，改为放入对应的 Summary
+            // Map 的 Key 是 summary.id，这样即使命中了当天的 10 个碎片，Map 里也只会有 1 条 summary
+            if (!finalMemoriesMap.has(summary.id)) {
+                finalMemoriesMap.set(summary.id, summary);
+                // console.log(`🔄 [记忆替换] 碎片(ID:${mem.id}) 触发了 归档(Date:${dateStr})`);
+            }
+        } else {
+            // !!! 普通逻辑 !!!
+            // 没有归档，或者是归档本身（daily_summary 也是一条 memory），直接保留
+            finalMemoriesMap.set(mem.id, mem);
+        }
+    });
+
+    // 转回数组
+    const finalMemories = Array.from(finalMemoriesMap.values());
+
+    // 5. 按时间正序排列
+    finalMemories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    // 6. 格式化输出
+    if (finalMemories.length > 0) {
+        console.log(`🧠 [记忆命中] 最终输出 ${finalMemories.length} 条 (含归档替换)`);
+        
+        let promptComponent = "\n【你需要参考的、过去发生过的核心记忆】:\n";
+        
+        promptComponent += finalMemories.map((mem, index) => {
+            const dateStr = new Date(mem.createdAt).toLocaleDateString();
+            
+            // 如果是归档，给一个特殊的标题
+            if (mem.type === 'daily_summary') {
+                return `\n=== 📁 [记忆档案: ${dateStr}] ===\n${mem.content}\n============================\n`;
+            } else {
+                return `${index + 1}. [${dateStr}] ${mem.content}`;
+            }
         }).join('\n');
         
         return promptComponent;
     }
-    // --- ✨✨✨ 核心修改结束 ✨✨✨ ---
 
     return ''; 
 }
-
 // --- ✨✨✨【V2.5 - 兼容升级版】统一上下文构建核心引擎 ✨✨✨ ---
         // ==========================================================
         async function buildCoreContext(characterId, userId, options = {}) {
@@ -20439,7 +20682,26 @@ async function generateImageFromText(prompt, source = 'char') {
         }
 
 
-
+// ==========================================================
+// --- ✨✨✨【紧急补丁】记忆写入核心函数 ✨✨✨ ---
+// ==========================================================
+/**
+ * 这是一个“占位符”函数。目前我们使用关键词匹配，所以它只负责存入数据库。
+ * 未来如果你想接入真正的向量库，只需要修改这个函数即可，不用动其他地方。
+ */
+window.addMemoryWithVector = async function(memoryData) {
+    // 1. 确保数据完整
+    if (!memoryData.createdAt) {
+        memoryData.createdAt = new Date().toISOString();
+    }
+    
+    // 2. 直接存入本地数据库 (Dexie)
+    const id = await db.memories.add(memoryData);
+    
+    console.log(`🧠 [记忆写入] ID:${id} 内容:${memoryData.content.substring(0, 20)}...`);
+    
+    return id;
+};
 // ==========================================================
 // --- ✨✨✨【V6.0 - 真实账单截获版】AI核心通信引擎 ✨✨✨ ---
 // ==========================================================
@@ -20681,14 +20943,15 @@ async function saveRealTokenUsage(characterId, usageData) {
 
         document.addEventListener('DOMContentLoaded', () => {
 // ==========================================================
-        // --- 引擎 1: API 设置与预设管理 (逻辑分离版) ---
+        // --- 引擎 1: API 设置与预设管理 (全局归档版) ---
         // ==========================================================
         (function () {
-            // --- DOM 元素获取 ---
+            // --- 1. DOM 元素获取 ---
             const pageId = 'api-settings-page';
             const backBtn = document.getElementById('api-settings-page-back-btn');
             const apiSwitchBtn = document.getElementById('statusbar-api-btn');
 
+            // 预设相关
             const presetSelect = document.getElementById('api-preset-select');
             const noPresetsMsg = document.getElementById('no-presets-msg');
             const savePresetBtn = document.getElementById('save-preset-btn');
@@ -20715,30 +20978,7 @@ async function saveRealTokenUsage(characterId, usageData) {
                 presencePenalty: { slider: document.getElementById('api-presence-penalty-slider'), valueEl: document.getElementById('api-presence-penalty-value') }
             };
 
-
-            // ==========================================================
-// --- ✨✨✨【全新补丁】API 滑块实时更新引擎 ✨✨✨ ---
-// ==========================================================
-// 遍历所有滑块配置，为它们一一绑定事件
-for (const key in sliders) {
-    // 解构获取滑块本身(slider)和显示数值的元素(valueEl)
-    const { slider, valueEl } = sliders[key];
-    
-    // 安全检查，确保这两个元素都存在
-    if (slider && valueEl) {
-        // 监听 'input' 事件，这个事件会在用户拖动时持续触发
-        slider.addEventListener('input', () => {
-            // 1. 获取滑块当前的值
-            // 2. 使用 toFixed(2) 格式化为两位小数 (例如 0.9 -> 0.90)
-            // 3. 更新旁边<span>标签的文本内容
-            valueEl.textContent = parseFloat(slider.value).toFixed(2);
-        });
-    }
-}
-// ==========================================================
-// ▲▲▲ 粘贴到这里结束 ▲▲▲
-
-            // 功能设置 DOM (文生图 & 语音)
+            // 全局功能设置 DOM
             const imgGenInputs = {
                 enabled: document.getElementById('api-img-gen-enabled'),
                 details: document.getElementById('api-img-gen-details'),
@@ -20749,6 +20989,17 @@ for (const key in sliders) {
             const voiceInputs = {
                 groupId: document.getElementById('minimax-group-id'),
                 apiKey: document.getElementById('minimax-api-key')
+            };
+
+            // ✨✨✨ 全局记忆归档 DOM ✨✨✨
+            const summaryInputs = {
+                toggle: document.getElementById('global-summary-follow-toggle'),
+                area: document.getElementById('global-summary-config-area'),
+                endpoint: document.getElementById('global-summary-endpoint'),
+                key: document.getElementById('global-summary-key'),
+                model: document.getElementById('global-summary-model'),
+                select: document.getElementById('global-summary-model-select'),
+                fetchBtn: document.getElementById('global-fetch-summary-btn')
             };
 
             // --- 核心入口 ---
@@ -20763,9 +21014,9 @@ for (const key in sliders) {
 
             if (backBtn) backBtn.addEventListener('click', () => navigateBack());
 
-// --- 1. 初始化全局功能设置 (自动读取本地缓存) ---
+            // --- 2. 初始化全局设置 (localStorage 自动保存) ---
             function initGlobalSettings() {
-                // A. 文生图设置
+                // A. 文生图 (保持不变)
                 imgGenInputs.enabled.checked = localStorage.getItem('global_imgGenEnabled') !== 'false';
                 imgGenInputs.details.style.display = imgGenInputs.enabled.checked ? 'block' : 'none';
                 imgGenInputs.charSwitch.checked = localStorage.getItem('global_imgGenChar') !== 'false';
@@ -20782,50 +21033,144 @@ for (const key in sliders) {
                 [imgGenInputs.enabled, imgGenInputs.charSwitch, imgGenInputs.userSwitch].forEach(el => el?.addEventListener('change', saveImgSettings));
                 imgGenInputs.prompt?.addEventListener('input', saveImgSettings);
 
-                // B. 语音设置 (Minimax)
+                // B. 语音 (保持不变)
                 if(voiceInputs.groupId) voiceInputs.groupId.value = localStorage.getItem('global_minimaxGroupId') || '';
                 if(voiceInputs.apiKey) voiceInputs.apiKey.value = localStorage.getItem('global_minimaxApiKey') || '';
-
-                // ▼▼▼ ✨✨✨ 新增：国际版开关逻辑 ✨✨✨ ▼▼▼
+                
                 const mmIntlToggle = document.getElementById('minimax-intl-toggle');
                 if (mmIntlToggle) {
-                    // 读取状态 (默认为 false)
                     mmIntlToggle.checked = localStorage.getItem('global_minimaxIsIntl') === 'true';
-                    
-                    // 绑定保存
-                    mmIntlToggle.addEventListener('change', () => {
-                        localStorage.setItem('global_minimaxIsIntl', mmIntlToggle.checked);
-                    });
+                    mmIntlToggle.addEventListener('change', () => localStorage.setItem('global_minimaxIsIntl', mmIntlToggle.checked));
                 }
-                // ▲▲▲ 新增结束 ▲▲▲
 
                 const saveVoiceSettings = () => {
                     localStorage.setItem('global_minimaxGroupId', voiceInputs.groupId.value.trim());
                     localStorage.setItem('global_minimaxApiKey', voiceInputs.apiKey.value.trim());
                 };
-                voiceInputs.groupId?.addEventListener('input', saveVoiceSettings);
-                voiceInputs.apiKey?.addEventListener('input', saveVoiceSettings);
+                voiceInputs.groupId?.addEventListener('blur', saveVoiceSettings);
+                voiceInputs.apiKey?.addEventListener('blur', saveVoiceSettings);
+
+                // ✨✨✨ C. 记忆归档 (新增：全局失焦保存) ✨✨✨
+                if (summaryInputs.toggle) {
+                    // 读取配置 (默认为 true/开启)
+                    const isFollow = localStorage.getItem('global_summaryFollow') !== 'false';
+                    summaryInputs.toggle.checked = isFollow;
+                    summaryInputs.area.classList.toggle('hidden', isFollow);
+                    
+                    if(summaryInputs.endpoint) summaryInputs.endpoint.value = localStorage.getItem('global_summaryEndpoint') || '';
+                    if(summaryInputs.key) summaryInputs.key.value = localStorage.getItem('global_summaryKey') || '';
+                    if(summaryInputs.model) summaryInputs.model.value = localStorage.getItem('global_summaryModel') || '';
+
+                    // 绑定开关事件
+                    summaryInputs.toggle.addEventListener('change', () => {
+                        const checked = summaryInputs.toggle.checked;
+                        localStorage.setItem('global_summaryFollow', checked);
+                        summaryInputs.area.classList.toggle('hidden', checked);
+                    });
+
+                    // 绑定输入保存事件 (blur)
+                    const saveSummary = () => {
+                        localStorage.setItem('global_summaryEndpoint', summaryInputs.endpoint.value.trim());
+                        localStorage.setItem('global_summaryKey', summaryInputs.key.value.trim());
+                        localStorage.setItem('global_summaryModel', summaryInputs.model.value.trim());
+                    };
+                    
+                    summaryInputs.endpoint.addEventListener('blur', saveSummary);
+                    summaryInputs.key.addEventListener('blur', saveSummary);
+                    summaryInputs.model.addEventListener('blur', saveSummary);
+                    
+                    // 绑定拉取按钮
+                    if (summaryInputs.fetchBtn) {
+                        summaryInputs.fetchBtn.addEventListener('click', async () => {
+                            const endpoint = summaryInputs.endpoint.value.trim();
+                            const key = summaryInputs.key.value.trim();
+                            await fetchModelsLogic(endpoint, key, summaryInputs.fetchBtn, summaryInputs.select);
+                        });
+                    }
+                    
+                    // 绑定下拉选择
+                    if (summaryInputs.select && summaryInputs.model) {
+                        summaryInputs.select.addEventListener('change', () => {
+                            if (summaryInputs.select.value) {
+                                summaryInputs.model.value = summaryInputs.select.value;
+                                saveSummary(); // 选完自动保存
+                            }
+                        });
+                    }
+                }
             }
             initGlobalSettings();
 
+            // --- 3. 辅助函数：滑块/拉取 ---
+            for (const key in sliders) {
+                const { slider, valueEl } = sliders[key];
+                if (slider && valueEl) {
+                    slider.addEventListener('input', () => {
+                        valueEl.textContent = parseFloat(slider.value).toFixed(2);
+                    });
+                }
+            }
 
-            // --- 2. 加载预设 (仅加载 LLM 相关参数) ---
+            async function fetchModelsLogic(endpointVal, keyVal, btnEl, selectEl) {
+                if (!endpointVal || !keyVal) { alert('请先填写 API Endpoint 和 API Key！'); return; }
+                btnEl.disabled = true; btnEl.textContent = '...';
+                selectEl.innerHTML = '<option value="">正在拉取...</option>';
+                try {
+                    let requestUrl = '';
+                    const fetchOptions = { method: 'GET', headers: { 'Content-Type': 'application/json' } };
+                    if (endpointVal.includes('googleapis.com')) {
+                        const baseUrl = endpointVal.replace(/\/chat\/completions$/, '');
+                        requestUrl = `${baseUrl}/models?key=${keyVal}`;
+                    } else {
+                        requestUrl = `${endpointVal.replace(/\/chat\/completions$/, '')}/models`;
+                        fetchOptions.headers['Authorization'] = `Bearer ${keyVal}`;
+                    }
+                    const response = await fetch(requestUrl, fetchOptions);
+                    if (!response.ok) throw new Error('网络请求失败');
+                    const data = await response.json();
+                    const models = data.data || data.models || [];
+                    if (models.length === 0) selectEl.innerHTML = '<option value="">未找到任何模型</option>';
+                    else {
+                        selectEl.innerHTML = '<option value="">— 请选择 —</option>';
+                        models.forEach(model => {
+                            const modelId = model.id || model.name;
+                            const option = document.createElement('option');
+                            option.value = modelId; option.textContent = modelId;
+                            selectEl.appendChild(option);
+                        });
+                    }
+                } catch (error) {
+                    selectEl.innerHTML = '<option value="">拉取失败</option>';
+                    alert(`拉取模型失败: ${error.message}`);
+                } finally { btnEl.disabled = false; btnEl.textContent = '拉取'; }
+            }
+
+            if (fetchModelsBtn) {
+                fetchModelsBtn.addEventListener('click', async () => {
+                    const endpoint = apiEndpointInput.value.trim();
+                    let apiKey = '';
+                    if (presetTypeSelect.value === 'polling') {
+                        const keysString = apiKeysTextarea.value.trim();
+                        if (keysString) apiKey = keysString.split(/[\n,]+/)[0].trim();
+                    } else { apiKey = apiKeyInput.value.trim(); }
+                    await fetchModelsLogic(endpoint, apiKey, fetchModelsBtn, apiModelSelect);
+                });
+            }
+
+            // --- 4. 加载预设 (仅加载聊天参数) ---
             function loadPresetToForm(preset) {
                 const type = preset ? preset.type : 'manual';
                 if(presetTypeSelect) presetTypeSelect.value = type;
                 toggleApiFormUI(type);
 
-                // 基础信息
                 if(apiKeyInput) apiKeyInput.value = preset?.apiKey ?? '';
                 if(apiKeysTextarea) apiKeysTextarea.value = preset?.apiKeys?.join('\n') ?? '';
                 if(apiEndpointInput) apiEndpointInput.value = preset?.apiEndpoint ?? 'https://api.openai.com/v1';
                 if(apiModelInput) apiModelInput.value = preset?.apiModel ?? 'gpt-4o-mini';
 
-                // 高级参数
                 if(contextLengthInput) contextLengthInput.value = preset?.contextLength ?? 50;
                 if(maxOutputTokensInput) maxOutputTokensInput.value = preset?.maxOutputTokens ?? 8192;
 
-                // 滑块
                 if (sliders.temperature.slider) {
                     sliders.temperature.slider.value = preset?.temperature ?? 0.9;
                     sliders.temperature.valueEl.textContent = parseFloat(sliders.temperature.slider.value).toFixed(2);
@@ -20843,9 +21188,7 @@ for (const key in sliders) {
                     sliders.presencePenalty.valueEl.textContent = parseFloat(sliders.presencePenalty.slider.value).toFixed(2);
                 }
                 
-                // ✨ 关键点：这里不再加载 imgGen 和 Minimax 的设置，保持当前 UI 的状态不变
-                // 仅重置模型下拉框
-                if(apiModelSelect) apiModelSelect.innerHTML = '<option value="">— 点击“拉取模型”以显示常用列表 —</option>';
+                if(apiModelSelect) apiModelSelect.innerHTML = '<option value="">— 点击“拉取模型” —</option>';
             }
 
             function toggleApiFormUI(type) {
@@ -20853,7 +21196,6 @@ for (const key in sliders) {
                 pollingSection.style.display = type === 'polling' ? 'block' : 'none';
             }
 
-            // --- 渲染预设列表 ---
             window.renderApiPresets = async function () {
                 const presets = await db.api_presets.toArray();
                 presetSelect.innerHTML = '';
@@ -20889,7 +21231,6 @@ for (const key in sliders) {
                 loadPresetToForm(activePreset);
             }
 
-            // --- 事件绑定 ---
             presetTypeSelect.addEventListener('change', () => toggleApiFormUI(presetTypeSelect.value));
             presetSelect.addEventListener('change', async () => {
                 const selectedId = presetSelect.value;
@@ -20906,64 +21247,12 @@ for (const key in sliders) {
                 apiModelSelect.addEventListener('change', () => { if (apiModelSelect.value) apiModelInput.value = apiModelSelect.value; });
             }
 
-            // 拉取模型
-            if (fetchModelsBtn) {
-                fetchModelsBtn.addEventListener('click', async () => {
-                    const endpoint = apiEndpointInput.value.trim();
-                    let apiKey = '';
-                    if (presetTypeSelect.value === 'polling') {
-                        const keysString = apiKeysTextarea.value.trim();
-                        if (keysString) apiKey = keysString.split(/[\n,]+/)[0].trim();
-                    } else { apiKey = apiKeyInput.value.trim(); }
-
-                    if (!endpoint || !apiKey) { alert('请先填写 API Endpoint 和 API Key！'); return; }
-
-                    fetchModelsBtn.disabled = true;
-                    fetchModelsBtn.textContent = '拉取中...';
-                    apiModelSelect.innerHTML = '<option value="">正在拉取...</option>';
-
-                    try {
-                        let requestUrl = '';
-                        const fetchOptions = { method: 'GET', headers: { 'Content-Type': 'application/json' } };
-                        if (endpoint.includes('googleapis.com')) {
-                            const baseUrl = endpoint.replace(/\/chat\/completions$/, '');
-                            requestUrl = `${baseUrl}/models?key=${apiKey}`;
-                        } else {
-                            requestUrl = `${endpoint.replace(/\/chat\/completions$/, '')}/models`;
-                            fetchOptions.headers['Authorization'] = `Bearer ${apiKey}`;
-                        }
-                        const response = await fetch(requestUrl, fetchOptions);
-                        if (!response.ok) throw new Error('网络请求失败');
-                        const data = await response.json();
-                        const models = data.data || data.models || [];
-                        if (models.length === 0) {
-                            apiModelSelect.innerHTML = '<option value="">未找到任何模型</option>';
-                        } else {
-                            apiModelSelect.innerHTML = '<option value="">— 请选择一个模型 —</option>';
-                            models.forEach(model => {
-                                const modelId = model.id || model.name;
-                                const option = document.createElement('option');
-                                option.value = modelId;
-                                option.textContent = modelId;
-                                apiModelSelect.appendChild(option);
-                            });
-                        }
-                    } catch (error) {
-                        apiModelSelect.innerHTML = '<option value="">拉取失败</option>';
-                        alert(`拉取模型失败: ${error.message}`);
-                    } finally {
-                        fetchModelsBtn.disabled = false;
-                        fetchModelsBtn.textContent = '拉取模型';
-                    }
-                });
-            }
-
-            // --- 3. 保存逻辑 (仅保存 LLM 参数到数据库) ---
+            // --- 5. 保存逻辑 (只保存聊天预设) ---
             const saveLogic = async (isNew = false) => {
                 const type = presetTypeSelect.value;
                 const apiModel = apiModelInput.value.trim();
                 const apiEndpoint = apiEndpointInput.value.trim();
-
+                
                 const presetData = {
                     type, apiEndpoint, apiModel, isActive: 1,
                     contextLength: parseInt(contextLengthInput.value, 10) || 50,
@@ -20972,10 +21261,9 @@ for (const key in sliders) {
                     topP: parseFloat(sliders.topP.slider.value),
                     frequencyPenalty: parseFloat(sliders.frequencyPenalty.slider.value),
                     presencePenalty: parseFloat(sliders.presencePenalty.slider.value),
-                    
-                    // ✨ 核心修改：不再保存 imgGen 和 Minimax 字段到预设
-                    // 它们已经通过上面的 initGlobalSettings 自动保存到 localStorage 了
                 };
+
+                // ✨ 核心变化：这里不再保存 summary_* 字段，因为它们已经由 initGlobalSettings 自动保存到 localStorage 了
 
                 if (type === 'manual') {
                     presetData.apiKey = apiKeyInput.value.trim();
@@ -21007,9 +21295,10 @@ for (const key in sliders) {
                     }
                 });
 
-                showNotification("保存成功", `预设「${presetName}」已更新并激活。\n(功能性配置已作为全局设置保存)`);
+                showNotification("保存成功", `预设「${presetName}」已更新。`);
                 await window.renderApiPresets();
             };  
+
             savePresetBtn.addEventListener('click', () => saveLogic(false));
             saveAsNewBtn.addEventListener('click', () => saveLogic(true));
 
@@ -21017,14 +21306,12 @@ for (const key in sliders) {
                 const selectedId = parseInt(presetSelect.value);
                 if (isNaN(selectedId)) return;
                 const preset = await db.api_presets.get(selectedId);
-                
                 showDeleteDialog(`确定要删除预设「${preset.name}」吗？`, async () => {
                     await db.api_presets.delete(selectedId);
                     showNotification('预设已删除');
                     await renderApiPresets();
                 });
             });
-
         })();
             document.getElementById('profile-page-back-btn').addEventListener('click', () => navigateBack());
 
@@ -39415,7 +39702,7 @@ item.innerHTML = `
     window.updateDesktopWidgetPeriodDisplay();
 })();
 // ==========================================================
-// --- ✨✨✨【全新 V4 - 自定义弹窗版】云同步核心引擎 ✨✨✨ ---
+// --- ✨✨✨【全新 V6.1 - 修复版】云同步核心引擎 ✨✨✨ ---
 // ==========================================================
 (function() {
     const saveBtn = document.getElementById('btn-save-cloud-config');
@@ -39424,49 +39711,24 @@ item.innerHTML = `
     const statusBadge = document.getElementById('cloud-status-badge');
     const urlInput = document.getElementById('supabase-url-input');
     const keyInput = document.getElementById('supabase-key-input');
+    const bucketInput = document.getElementById('supabase-bucket-input');
 
-// 1. 核心配置 (已修复：加入了论坛)
-const TABLES_TO_SYNC = [
-    'users', 'characters', 'messages', 'moments', 'comments', 
-    'schedules', 'memories', 'bonds', 'diaries', 'novels', 
-    'novel_inspirations', 'world_books', 'world_entries', 
-    'period_cycles', 'period_logs', 'global_settings', 
-    'api_presets', 'prompt_presets', 'persona_presets', 
-    'global_stickers', 'character_favorites', 'beautify_presets',
-    'bubble_css_presets', 'world_book_settings', 'songs', 'favorites',
-    'mails',
-    'forum_posts',      // ✨✨✨ 新增
-    'forum_comments'    // ✨✨✨ 新增
-];
-    const TABLES_WITH_BLOBS = ['users', 'characters', 'moments', 'messages', 'app_icons', 'global_stickers', 'character_favorites', 'global_settings'];
+    // ✨ 基础配置 (统一变量名，修复报错)
+    const BACKUP_FILENAME = 'lizi.zip';
+    // ✨ 设定分片大小：45MB
+    const CHUNK_SIZE = 45 * 1024 * 1024; 
 
-    // --- 辅助工具函数 (保持不变) ---
-    function blobToBase64(blob) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
-    }
-
-    function base64ToBlob(dataURL) {
-        if (typeof dataURL !== 'string' || !dataURL.startsWith('data:image')) return null;
-        const arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]);
-        let n = bstr.length, u8arr = new Uint8Array(n);
-        while(n--) u8arr[n] = bstr.charCodeAt(n);
-        return new Blob([u8arr], {type:mime});
-    }
-
-    // --- 初始化与连接 (保持不变) ---
+    // --- 初始化与连接 ---
     function initSupabase() {
         window.supabaseClient = null;
         const savedUrl = localStorage.getItem('supabaseUrl');
         const savedKey = localStorage.getItem('supabaseKey');
+        const savedBucket = localStorage.getItem('supabaseBucket') || 'backups';
 
         if (savedUrl && savedKey) {
             if (urlInput) urlInput.value = savedUrl;
             if (keyInput) keyInput.value = savedKey;
+            if (bucketInput) bucketInput.value = savedBucket;
             try {
                 window.supabaseClient = supabase.createClient(savedUrl, savedKey);
                 testConnection();
@@ -39481,22 +39743,17 @@ const TABLES_TO_SYNC = [
         if (!window.supabaseClient) return;
         updateStatus("连接中...", "loading");
         try {
-            const { data, error } = await window.supabaseClient.from('users').select('count').limit(1);
-            if (error && (error.code === 'PGRST301' || error.message.includes('fetch'))) throw error;
+            const bucketName = bucketInput.value.trim() || 'backups';
+            const { data, error } = await window.supabaseClient.storage.from(bucketName).list();
+            if (error) throw error;
             
-            updateStatus("已连接", "success");
+            updateStatus("已连接 (Storage)", "success");
             if(uploadBtn) uploadBtn.disabled = false;
             if(downloadBtn) downloadBtn.disabled = false;
-            
         } catch (error) {
             console.error("连接测试失败:", error);
-            if (error.message && error.message.includes('relation "public.users" does not exist')) {
-                 updateStatus("已连接 (未建表)", "warning");
-                 if(uploadBtn) uploadBtn.disabled = false; 
-                 if(downloadBtn) downloadBtn.disabled = false;
-            } else {
-                updateStatus("连接失败", "error");
-            }
+            updateStatus("连接失败/桶不存在", "error");
+            showNotification("连接失败", "请检查 URL、Key 以及存储桶(Bucket)名称。");
         }
     }
 
@@ -39505,252 +39762,231 @@ const TABLES_TO_SYNC = [
         statusBadge.textContent = text;
         if (type === 'success') { statusBadge.style.background = '#d1fae5'; statusBadge.style.color = '#059669'; } 
         else if (type === 'error') { statusBadge.style.background = '#fee2e2'; statusBadge.style.color = '#dc2626'; }
-        else if (type === 'warning') { statusBadge.style.background = '#fef3c7'; statusBadge.style.color = '#d97706'; }
+        else if (type === 'loading') { statusBadge.style.background = '#e0f2fe'; statusBadge.style.color = '#0369a1'; }
         else { statusBadge.style.background = '#e5e7eb'; statusBadge.style.color = '#666'; }
     }
 
-// ======================================================
-    // --- ✨✨✨【V5 - 智能增量同步版】上传 (Push) ✨✨✨ ---
-    // ======================================================
-    async function performUpload() {
-        if (!window.supabaseClient) return showNotification("请先保存配置并连接 Supabase！");
+    // --- 辅助：清理旧备份 ---
+    async function cleanOldBackups(bucketName) {
+        // 列出所有以 lizi.zip 开头的文件
+        const { data: files, error } = await window.supabaseClient
+            .storage
+            .from(bucketName)
+            .list('', { search: BACKUP_FILENAME }); // 修复：使用统一变量名
+
+        if (error) throw error;
         
-        showDeleteDialog(
-            "⬆️ 准备智能上传\n\n系统将自动对比时间，仅上传**有变动**的数据。\n这比全量上传更快、更省流量。\n\n确定要开始吗？",
-            async () => {
-                showLoadingModal("正在计算差异...");
-                try {
-                    // 1. 获取上次同步的时间点
-                    const lastSyncTime = localStorage.getItem('lastCloudPushTime') || '1970-01-01T00:00:00.000Z';
-                    let totalUploadCount = 0;
+        if (files && files.length > 0) {
+            const filesToDelete = files.map(f => f.name);
+            await window.supabaseClient.storage.from(bucketName).remove(filesToDelete);
+            console.log(`🧹 已清理旧分片: ${filesToDelete.length} 个`);
+        }
+    }
+
+    // --- 辅助：获取全部数据 ---
+    async function getAllDataForBackup() {
+        const data = {};
+        for (const table of db.tables) {
+            const tableName = table.name;
+            const tableData = await db[tableName].toArray();
+            
+            const tablesWithBlobs = ['users', 'characters', 'moments', 'messages', 'app_icons', 'stickers', 'global_stickers', 'global_settings', 'character_favorites', 'songs'];
+
+            if (tablesWithBlobs.includes(tableName)) {
+                for (const item of tableData) {
+                    if (item.avatar instanceof Blob) item.avatar = await blobToDataURL(item.avatar);
+                    if (item.background instanceof Blob) item.background = await blobToDataURL(item.background);
+                    if (item.image instanceof Blob) item.image = await blobToDataURL(item.image);
+                    if (item.chatWallpaper instanceof Blob) item.chatWallpaper = await blobToDataURL(item.chatWallpaper);
+                    if (item.imageBlob instanceof Blob) item.imageBlob = await blobToDataURL(item.imageBlob);
+                    if (item.audioData instanceof Blob) item.audioData = await blobToDataURL(item.audioData);
                     
-                    console.log(`上次同步时间: ${lastSyncTime}`);
-
-                    for (const tableName of TABLES_TO_SYNC) {
-                        // 2. ✨ 核心逻辑：只查询 updatedAt 晚于上次同步时间的数据
-                        // 注意：如果数据是旧版本没有 updatedAt 字段，我们视为新数据上传一次以防万一
-                        const allData = await db[tableName].toArray();
-                        
-                        // 筛选出 新增的 或 修改过的 数据
-                        const changedData = allData.filter(item => {
-                            // 如果没有时间戳，或者时间戳晚于上次同步，就上传
-                            return !item.updatedAt || item.updatedAt > lastSyncTime;
-                        });
-
-                        if (changedData.length > 0) {
-                            showLoadingModal(`正在上传 ${tableName} (${changedData.length}条变动)...`);
-                            
-                            // 3. 处理 Blob 转 Base64 (保持不变)
-                            const dataToUpload = await Promise.all(changedData.map(async (item) => {
-                                const processedItem = { ...item };
-                                
-                                // 确保云端也有 updated_at 字段
-                                processedItem.updated_at = processedItem.updatedAt || new Date().toISOString(); 
-
-                                if (TABLES_WITH_BLOBS.includes(tableName)) {
-                                    for (let key in processedItem) {
-                                        if (processedItem[key] instanceof Blob) processedItem[key] = await blobToBase64(processedItem[key]);
-                                        if (key === 'activeUserPersona' && processedItem[key]?.avatar instanceof Blob) {
-                                            processedItem[key].avatar = await blobToBase64(processedItem[key].avatar);
-                                        }
-                                    }
-                                }
-                                
-                                // 确定主键
-                                let primaryKey = processedItem.id;
-                                if (tableName === 'period_logs') primaryKey = processedItem.date;
-                                if (tableName.includes('settings')) primaryKey = processedItem.key;
-                                
-                                return {
-                                    [tableName === 'period_logs' ? 'date' : (tableName.includes('settings') ? 'key' : 'id')]: primaryKey,
-                                    data: processedItem,
-                                    updated_at: processedItem.updated_at // 显式写入云端的时间字段
-                                };
-                            }));
-
-                            // 4. 分批上传
-                            const BATCH_SIZE = 10; // 稍微调小一点，防止大包超时
-                            for (let i = 0; i < dataToUpload.length; i += BATCH_SIZE) {
-                                const batch = dataToUpload.slice(i, i + BATCH_SIZE);
-                                const { error } = await window.supabaseClient.from(tableName).upsert(batch);
-                                if (error) throw error;
-                            }
-                            totalUploadCount += changedData.length;
-                        }
+                    if (tableName === 'characters' && item.activeUserPersona && item.activeUserPersona.avatar instanceof Blob) {
+                        item.activeUserPersona.avatar = await blobToDataURL(item.activeUserPersona.avatar);
                     }
+                    if (tableName === 'global_settings' && item.value instanceof Blob) {
+                        item.value = await blobToDataURL(item.value);
+                    }
+                }
+            }
+            data[tableName] = tableData;
+        }
+        return data;
+    }
 
-                    // 5. 记录本次同步时间
-                    localStorage.setItem('lastCloudPushTime', new Date().toISOString());
+    // --- ✨ 核心：分片上传 (Upload) ---
+    async function performZipUpload() {
+        if (!window.supabaseClient) return showNotification("请先连接 Supabase！");
+        const bucketName = bucketInput.value.trim();
+
+        showDeleteDialog(
+            `⬆️ 准备上传\n\n数据将被压缩为「${BACKUP_FILENAME}」。\n如果超过 45MB，系统将自动分片上传。\n\n⚠️ 云端旧备份将被覆盖。`,
+            async () => {
+                showLoadingModal("1/4 正在打包数据...");
+                try {
+                    // 1. 获取并打包
+                    const allData = await getAllDataForBackup();
+                    const jsonString = JSON.stringify(allData);
+
+                    showLoadingModal("2/4 正在压缩...");
+                    const zip = new JSZip();
+                    zip.file("data.json", jsonString);
+                    const zipBlob = await zip.generateAsync({
+                        type: "blob",
+                        compression: "DEFLATE",
+                        compressionOptions: { level: 9 }
+                    });
+
+                    // 2. 清理旧文件
+                    showLoadingModal("3/4 清理云端旧数据...");
+                    await cleanOldBackups(bucketName);
+
+                    // 3. 计算分片
+                    const totalSize = zipBlob.size;
+                    const totalChunks = Math.ceil(totalSize / CHUNK_SIZE);
+                    
+                    console.log(`📦 文件大小: ${(totalSize/1024/1024).toFixed(2)}MB, 分片数: ${totalChunks}`);
+
+                    // 4. 循环上传分片
+                    for (let i = 0; i < totalChunks; i++) {
+                        const start = i * CHUNK_SIZE;
+                        const end = Math.min(start + CHUNK_SIZE, totalSize);
+                        const chunkBlob = zipBlob.slice(start, end);
+                        
+                        // 文件名格式: lizi.zip.000, lizi.zip.001
+                        // 使用 BACKUP_FILENAME 变量
+                        const chunkName = `${BACKUP_FILENAME}.${String(i).padStart(3, '0')}`;
+                        
+                        showLoadingModal(`4/4 正在上传分片 ${i+1}/${totalChunks}...`);
+                        
+                        const { error } = await window.supabaseClient
+                            .storage
+                            .from(bucketName)
+                            .upload(chunkName, chunkBlob, {
+                                cacheControl: '3600',
+                                upsert: true
+                            });
+
+                        if (error) throw error;
+                    }
 
                     hideLoadingModal();
-                    if (totalUploadCount === 0) {
-                        showNotification("☁️ 云端已是最新", "本地没有检测到新的变动。");
-                    } else {
-                        showNotification("⬆️ 智能上传成功！", `仅同步了 ${totalUploadCount} 条变动的数据。`);
-                    }
+                    showNotification("✅ 上传成功！", `共上传 ${totalChunks} 个分片。`);
 
                 } catch (error) {
                     hideLoadingModal();
-                    console.error("上传出错:", error);
+                    console.error("上传失败:", error);
                     showNotification("上传失败", error.message);
                 }
             }
         );
     }
 
-// ======================================================
-    // --- ✨✨✨【修改版】下载 (Full Pull - 强制覆盖) ✨✨✨ ---
-    // ==========================================================
-    async function performDownload() {
-        if (!window.supabaseClient) return showNotification("请先保存配置并连接 Supabase！");
-        
-        // 1. 定义哪些表有“名字唯一”的限制，需要特殊处理防撞车 (保持不变)
-        const UNIQUE_KEY_MAP = {
-            'persona_presets': 'name',      
-            'prompt_presets': 'name',       
-            'world_books': 'name',          
-            'contact_categories': 'name',   
-            'world_book_categories': 'name',
-            'global_stickers': 'description', 
-            'beautify_presets': 'name',     
-            'bubble_css_presets': 'name',   
-            'novels': 'uuid'                
-        };
+    // --- ✨ 核心：分片下载与合并 (Download) ---
+    async function performZipDownload() {
+        if (!window.supabaseClient) return showNotification("请先连接 Supabase！");
+        const bucketName = bucketInput.value.trim();
 
         showDeleteDialog(
-            "⬇️ 准备【全量覆盖】下载\n\n警告：系统将从云端拉取**所有**数据并覆盖本地同名/同ID的记录。\n这可能会花费较长时间。\n\n确定要开始吗？",
+            `⬇️ 准备恢复\n\n将从云端下载并自动合并分片。\n⚠️ 本地现有数据将全部丢失！`,
             async () => {
-                showLoadingModal("正在连接云端获取全量数据...");
+                showLoadingModal("1/4 正在搜索云端备份...");
                 try {
-                    // ✨ 修改点1：不再获取 lastSyncTime，因为我们要拉取所有数据
+                    // 1. 列出所有相关文件
+                    const { data: files, error } = await window.supabaseClient
+                        .storage
+                        .from(bucketName)
+                        .list('', { search: BACKUP_FILENAME, sortBy: { column: 'name', order: 'asc' } }); // 修复：使用统一变量名
+
+                    if (error) throw error;
+                    if (!files || files.length === 0) throw new Error("云端没有找到备份文件。");
+
+                    // 过滤出 lizi.zip.000, lizi.zip.001 这样的文件
+                    const chunks = files.filter(f => f.name.startsWith(BACKUP_FILENAME))
+                                        .sort((a, b) => a.name.localeCompare(b.name));
+
+                    console.log("找到分片:", chunks.map(c => c.name));
                     
-                    let totalDownloadCount = 0;
-                    const PAGE_SIZE = 1000; 
+                    const downloadedBlobs = [];
 
-                    for (const tableName of TABLES_TO_SYNC) {
-                        let from = 0;
-                        let hasMore = true;
-
-                        // ✨ 可选：如果你想要“1:1 镜像”（即删除本地有但云端没有的数据），
-                        // 请取消下面这行的注释。警告：这会清空本地该表的所有数据！
-                        // await db[tableName].clear(); 
-
-                        while (hasMore) {
-                            const to = from + PAGE_SIZE - 1;
-                            
-                            // ✨ 修改点2：构建查询时，移除了 .gt('updated_at', ...)
-                            let query = window.supabaseClient
-                                .from(tableName)
-                                .select('*')
-                                // .gt('updated_at', lastSyncTime) // <--- 这行被删除了，不再过滤时间
-                                .range(from, to); // 保持分页，防止数据量过大卡死
-
-                            const { data: cloudRows, error } = await query;
-
-                            if (error) throw error;
-
-                            if (cloudRows && cloudRows.length > 0) {
-                                showLoadingModal(`正在覆盖 ${tableName} (${from} - ${to})...`);
-                                
-                                // --- 数据去重与冲突处理 (保持原有的优秀逻辑) ---
-                                let rowsToProcess = cloudRows;
-                                if (UNIQUE_KEY_MAP[tableName]) {
-                                    const uniqueField = UNIQUE_KEY_MAP[tableName];
-                                    const seenValues = new Set();
-                                    
-                                    rowsToProcess = cloudRows.filter(row => {
-                                        const val = row.data[uniqueField];
-                                        if (!val) return true;
-                                        if (seenValues.has(val)) return false; 
-                                        seenValues.add(val);
-                                        return true; 
-                                    });
-
-                                    // 本地冲突清理 (确保名字唯一性)
-                                    for (const row of rowsToProcess) {
-                                        const cloudItemData = row.data;
-                                        const cloudVal = cloudItemData[uniqueField]; 
-                                        if (cloudVal) {
-                                            const localConflict = await db[tableName].where(uniqueField).equals(cloudVal).first();
-                                            if (localConflict) {
-                                                const cloudId = row.id || row.key || row.date; 
-                                                // 如果名字一样但ID不一样，删除本地旧的，给云端让路
-                                                if (localConflict.id !== cloudId) {
-                                                    await db[tableName].delete(localConflict.id);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                // ------------------------------------
-
-                                const dataToSave = rowsToProcess.map(row => {
-                                    const item = row.data;
-                                    // 确保本地也有 updatedAt
-                                    item.updatedAt = row.updated_at; 
-
-                                    if (TABLES_WITH_BLOBS.includes(tableName)) {
-                                        for (let key in item) {
-                                            if (typeof item[key] === 'string' && item[key].startsWith('data:image')) {
-                                                item[key] = base64ToBlob(item[key]);
-                                            }
-                                            if (key === 'activeUserPersona' && typeof item[key]?.avatar === 'string') {
-                                                item[key].avatar = base64ToBlob(item[key].avatar);
-                                            }
-                                        }
-                                    }
-                                    return item;
-                                });
-
-                                // ✨ 核心原理：bulkPut 会根据主键 (id) 自动覆盖已存在的记录
-                                if (dataToSave.length > 0) {
-                                    await db[tableName].bulkPut(dataToSave);
-                                    totalDownloadCount += dataToSave.length;
-                                }
-
-                                if (cloudRows.length < PAGE_SIZE) {
-                                    hasMore = false;
-                                } else {
-                                    from += PAGE_SIZE;
-                                }
-                            } else {
-                                hasMore = false;
-                            }
-                        }
+                    // 2. 依次下载分片
+                    for (let i = 0; i < chunks.length; i++) {
+                        showLoadingModal(`2/4 下载分片 ${i+1}/${chunks.length}...`);
+                        const { data: blob, error: dlError } = await window.supabaseClient
+                            .storage
+                            .from(bucketName)
+                            .download(chunks[i].name);
+                        
+                        if (dlError) throw dlError;
+                        downloadedBlobs.push(blob);
                     }
 
-                    // 3. 记录下载时间 (虽然是全量，但记录一下也没坏处)
-                    localStorage.setItem('lastCloudPullTime', new Date().toISOString());
+                    // 3. 合并 Blob
+                    showLoadingModal("3/4 正在合并与解压...");
+                    const fullBlob = new Blob(downloadedBlobs); 
+                    
+                    const zip = await JSZip.loadAsync(fullBlob);
+                    if (!zip.file("data.json")) throw new Error("压缩包损坏，未找到 data.json");
+
+                    const jsonString = await zip.file("data.json").async("string");
+                    const importedData = JSON.parse(jsonString);
+
+                    // 4. 恢复数据
+                    showLoadingModal("4/4 正在写入数据库...");
+                    await db.transaction('rw', db.tables, async () => {
+                        for (const table of db.tables) { await table.clear(); }
+                        for (const tableName in importedData) {
+                            if (db[tableName]) {
+                                let tableData = importedData[tableName];
+                                const tablesWithBlobs = ['users', 'characters', 'moments', 'messages', 'app_icons', 'stickers', 'global_stickers', 'global_settings', 'character_favorites', 'songs'];
+                                if (tablesWithBlobs.includes(tableName)) {
+                                    for (const item of tableData) {
+                                        if (item.avatar) item.avatar = dataURLToBlob(item.avatar);
+                                        if (item.background) item.background = dataURLToBlob(item.background);
+                                        if (item.image) item.image = dataURLToBlob(item.image);
+                                        if (item.chatWallpaper) item.chatWallpaper = dataURLToBlob(item.chatWallpaper);
+                                        if (item.imageBlob) item.imageBlob = dataURLToBlob(item.imageBlob);
+                                        if (item.audioData) item.audioData = dataURLToBlob(item.audioData);
+                                        if (tableName === 'characters' && item.activeUserPersona && item.activeUserPersona.avatar) item.activeUserPersona.avatar = dataURLToBlob(item.activeUserPersona.avatar);
+                                        if (tableName === 'global_settings' && typeof item.value === 'string' && item.value.startsWith('data:image')) item.value = dataURLToBlob(item.value);
+                                    }
+                                }
+                                if (tableName === 'messages') { for (const item of tableData) { delete item.id; } }
+                                await db[tableName].bulkAdd(tableData);
+                            }
+                        }
+                    });
 
                     hideLoadingModal();
-                    
-                    showNotification("⬇️ 全量覆盖成功！", `已从云端恢复了 ${totalDownloadCount} 条数据。即将刷新...`);
+                    showNotification("✅ 恢复成功！", "即将刷新页面...");
                     setTimeout(() => window.location.reload(), 1500);
 
                 } catch (error) {
                     hideLoadingModal();
-                    console.error("下载出错:", error);
-                    showNotification("下载失败", error.message);
+                    console.error("恢复失败:", error);
+                    showNotification("恢复失败", error.message);
                 }
             }
         );
     }
    
-   
+    // --- 绑定事件 ---
     if (saveBtn) {
         saveBtn.addEventListener('click', () => {
             const url = urlInput.value.trim();
             const key = keyInput.value.trim();
+            const bucket = bucketInput.value.trim();
             if (!url || !key) return showNotification("请输入 URL 和 Key");
             localStorage.setItem('supabaseUrl', url);
             localStorage.setItem('supabaseKey', key);
+            localStorage.setItem('supabaseBucket', bucket || 'backups');
             window.supabaseClient = supabase.createClient(url, key);
             testConnection();
         });
     }
 
-    if (uploadBtn) uploadBtn.addEventListener('click', performUpload);
-    if (downloadBtn) downloadBtn.addEventListener('click', performDownload);
+    if (uploadBtn) uploadBtn.addEventListener('click', performZipUpload);
+    if (downloadBtn) downloadBtn.addEventListener('click', performZipDownload);
 
     initSupabase();
 })();
@@ -40213,152 +40449,133 @@ const TABLES_TO_SYNC = [
     window.openMemoryPage = openMemoryPage;
 
 // ==========================================================
-// --- ✨✨✨【V5.0 - 批量删除版】记忆列表渲染引擎 ✨✨✨ ---
+// --- ✨✨✨【V5.1 - 隐藏归档版】记忆列表渲染引擎 ✨✨✨ ---
 // ==========================================================
 async function renderMemoryList() {
     if (!currentTargetChar) return;
 
-    // --- 1. 获取 DOM 元素 ---
-    // 配置相关
+    // --- 1. 获取 DOM 元素 (保持不变) ---
     const freqInput = document.getElementById('mem-setting-freq');
     const promptInput = document.getElementById('mem-setting-prompt-input');
     const depthInput = document.getElementById('mem-conf-search-depth');
     const maxCountInput = document.getElementById('mem-conf-max-count');
-    
-    // 显示相关
     const currentCountEl = document.getElementById('mem-current-turn-count');
     const targetCountEl = document.getElementById('mem-target-count-display');
     const headerCountEl = document.getElementById('mem-header-count');
-
-    // 折叠 & 批量交互元素
     const consoleHeader = document.getElementById('memory-console-header');
     const consoleContent = document.getElementById('memory-console-content');
-    const consoleArrow = document.getElementById('memory-console-arrow');
-    const btnToggleBatch = document.getElementById('btn-toggle-memory-batch'); // 批量管理按钮
-    
+    const btnToggleBatch = document.getElementById('btn-toggle-memory-batch');
     const batchActionBar = document.getElementById('memory-batch-action-bar');
     const btnBatchCancel = document.getElementById('mem-batch-cancel');
     const btnBatchDelete = document.getElementById('mem-batch-delete');
     const textBatchCount = document.getElementById('mem-batch-count');
-    const listContainer = document.getElementById('memory-page-list'); // 列表容器
+    const listContainer = document.getElementById('memory-page-list');
 
-    // 重新获取角色最新数据
     const freshChar = await db.characters.get(currentTargetChar.id);
 
-
-
     if (freshChar) {
-        // --- A. 绑定折叠/展开事件 ---
+        // --- A. 绑定折叠/展开 ---
         if (consoleHeader) {
             const newHeader = consoleHeader.cloneNode(true);
             consoleHeader.parentNode.replaceChild(newHeader, consoleHeader);
             const newArrow = newHeader.querySelector('#memory-console-arrow');
-            
             newHeader.addEventListener('click', () => {
                 const isHidden = consoleContent.style.display === 'none';
-                if (isHidden) {
-                    consoleContent.style.display = 'block';
-                    newArrow.style.transform = 'rotate(180deg)';
-                } else {
-                    consoleContent.style.display = 'none';
-                    newArrow.style.transform = 'rotate(0deg)';
-                }
+                consoleContent.style.display = isHidden ? 'block' : 'none';
+                if(newArrow) newArrow.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
             });
         }
-
-        // --- B. 绑定批量模式切换事件 ---
+        // --- B/C. 批量操作绑定 (保持不变) ---
         if (btnToggleBatch) {
             const newBtn = btnToggleBatch.cloneNode(true);
             btnToggleBatch.parentNode.replaceChild(newBtn, btnToggleBatch);
-
             newBtn.addEventListener('click', () => {
-                // 1. 收起控制台
                 consoleContent.style.display = 'none';
-                document.getElementById('memory-console-arrow').style.transform = 'rotate(0deg)';
-                
-                // 2. 激活批量模式
                 listContainer.classList.add('batch-mode');
                 batchActionBar.classList.remove('hidden');
-                
-                // 3. 重置选择状态
                 document.querySelectorAll('.mem-batch-checkbox').forEach(cb => cb.checked = false);
                 textBatchCount.textContent = "已选 0 项";
                 btnBatchDelete.disabled = true;
             });
         }
-        
-        // --- C. 绑定批量操作栏事件 ---
-        
-        // 取消按钮
         if (btnBatchCancel) {
             const newCancel = btnBatchCancel.cloneNode(true);
             btnBatchCancel.parentNode.replaceChild(newCancel, btnBatchCancel);
-            newCancel.onclick = () => {
-                listContainer.classList.remove('batch-mode');
-                batchActionBar.classList.add('hidden');
-            };
+            newCancel.onclick = () => { listContainer.classList.remove('batch-mode'); batchActionBar.classList.add('hidden'); };
         }
-
-        // 删除按钮
         if (btnBatchDelete) {
             const newDelete = btnBatchDelete.cloneNode(true);
             btnBatchDelete.parentNode.replaceChild(newDelete, btnBatchDelete);
             newDelete.onclick = () => {
                 const checkedBoxes = listContainer.querySelectorAll('.mem-batch-checkbox:checked');
                 const idsToDelete = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
-
                 if (idsToDelete.length === 0) return;
-
-                showDeleteDialog(
-                    `确定要删除选中的 ${idsToDelete.length} 条记忆吗？\n此操作不可恢复。`,
-                    async () => {
-                        try {
-                            await db.memories.bulkDelete(idsToDelete);
-                            showNotification("删除成功");
-                            // 退出模式并刷新
-                            listContainer.classList.remove('batch-mode');
-                            batchActionBar.classList.add('hidden');
-                            renderMemoryList();
-                        } catch (e) {
-                            console.error(e);
-                            showNotification("删除失败");
-                        }
-                    }
-                );
+                showDeleteDialog(`确定删除这 ${idsToDelete.length} 条记忆吗？`, async () => {
+                    await db.memories.bulkDelete(idsToDelete);
+                    showNotification("删除成功");
+                    listContainer.classList.remove('batch-mode');
+                    batchActionBar.classList.add('hidden');
+                    renderMemoryList();
+                });
             };
         }
 
-    // --- D. 填充配置数据 & 绑定保存事件 (修复版) ---
-        
-        // 1. 触发阈值 (Frequency)
+        // --- D. 配置绑定 (保持不变) ---
+// --- D. 配置绑定 (修复版：补全积压显示) ---
         if (freqInput) {
-            // 回显数据
-            freqInput.value = freshChar.summaryFrequency || 8;
-            if (targetCountEl) targetCountEl.textContent = freshChar.summaryFrequency || 8;
-            if (currentCountEl) currentCountEl.textContent = freshChar.summaryTurnCount || 0;
+            // 1. 回显数据
+            const freqVal = freshChar.summaryFrequency || 8;
+            const currentVal = freshChar.summaryTurnCount || 0;
 
-            // 绑定保存
-            const newFreqInput = freqInput.cloneNode(true);
-            freqInput.parentNode.replaceChild(newFreqInput, freqInput);
+            freqInput.value = freqVal;
             
-            newFreqInput.addEventListener('change', async (e) => {
-                let val = parseInt(e.target.value, 10);
-                if (val < 1) val = 1; // 最小为1
+            // 更新下方小字 "当前: X / Y"
+            if(targetCountEl) targetCountEl.textContent = freqVal;
+            if(currentCountEl) currentCountEl.textContent = currentVal;
+            
+            // ✨✨✨ 修复核心：更新右上角胶囊 "积压: X" ✨✨✨
+            if(headerCountEl) {
+                headerCountEl.textContent = currentVal;
+                // 可选：如果积压超过阈值，变个颜色提醒
+                if (currentVal >= freqVal) {
+                    headerCountEl.style.color = "#ef4444"; // 红色
+                    headerCountEl.style.fontWeight = "bold";
+                } else {
+                    headerCountEl.style.color = "#f59e0b"; // 默认橙色
+                    headerCountEl.style.fontWeight = "normal";
+                }
+            }
+
+            // 2. 绑定保存事件
+            const newInp = freqInput.cloneNode(true); 
+            freqInput.parentNode.replaceChild(newInp, freqInput);
+            
+            newInp.addEventListener('change', async (e) => {
+                let v = parseInt(e.target.value)||8; 
+                if(v<1) v=1;
                 
-                await db.characters.update(currentTargetChar.id, { summaryFrequency: val });
+                await db.characters.update(currentTargetChar.id, {summaryFrequency:v});
                 
-                // 同步全局
-                if (window.currentChat && window.currentChat.id === currentTargetChar.id) {
-                    window.currentChat.summaryFrequency = val;
+                if(window.currentChat && window.currentChat.id===currentTargetChar.id) {
+                    window.currentChat.summaryFrequency=v;
                 }
                 
-                // 更新UI显示
-                if (targetCountEl) targetCountEl.textContent = val;
-                showNotification("触发阈值已更新");
+                // 实时更新UI
+                if(targetCountEl) targetCountEl.textContent = v; 
+                
+                // 重新判断积压颜色
+                if(headerCountEl) {
+                    if ((freshChar.summaryTurnCount || 0) >= v) {
+                        headerCountEl.style.color = "#ef4444";
+                    } else {
+                        headerCountEl.style.color = "#f59e0b";
+                    }
+                }
+
+                showNotification("阈值已更新");
             });
         }
-
-        // 2. 自定义总结提示词 (Prompt)
+     // 2. 自定义总结提示词 (Prompt)
         if (promptInput) {
             promptInput.value = freshChar.summaryPrompt || '';
             
@@ -40417,78 +40634,65 @@ async function renderMemoryList() {
         }
     }
 
-    // --- 2. 渲染记忆列表 ---
-    const searchInput = document.getElementById('memory-page-search');
-    
-    // 如果不是处于批量模式，才显示加载动画，否则会打断操作
-    if (!listContainer.classList.contains('batch-mode')) {
-        listContainer.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div>';
-    }
-    
-    try {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        const userId = window.currentUser.id;
-
-        const allMemories = await db.memories
-            .where('[userId+contactId]')
-            .equals([userId, currentTargetChar.id])
-            .reverse()
-            .sortBy('createdAt');
-
-        const filtered = searchTerm
-            ? allMemories.filter(m => m.content.toLowerCase().includes(searchTerm))
-            : allMemories;
-
-        listContainer.innerHTML = '';
-        // 关键：给容器加上标识类，方便CSS选择
-        listContainer.className = 'memory-page-list'; 
-
-        if (filtered.length === 0) {
-            listContainer.innerHTML = `
-                <div style="text-align: center; color: #9ca3af; margin-top: 50px;">
-                    <i class="fa-solid fa-brain" style="font-size: 48px; opacity: 0.2; margin-bottom: 15px;"></i>
-                    <p>没有找到相关记忆。</p>
-                </div>
-            `;
-            return;
+        // --- 渲染列表 ---
+        const searchInput = document.getElementById('memory-page-search');
+        
+        if (!listContainer.classList.contains('batch-mode')) {
+            listContainer.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div>';
         }
+        
+        try {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const userId = window.currentUser.id;
+
+            // ✨ 核心修改：先获取所有，然后严格排除 daily_summary
+            // 如果你的数据量巨大，可以使用复合索引优化，但目前 filter 足够快
+            let allMemories = await db.memories
+                .where('[userId+contactId]')
+                .equals([userId, currentTargetChar.id])
+                .reverse()
+                .sortBy('createdAt');
+
+            // 🚫 严格过滤：只保留非归档类型的记忆
+            let filtered = allMemories.filter(m => m.type !== 'daily_summary');
+
+            if (searchTerm) {
+                filtered = filtered.filter(m => m.content.toLowerCase().includes(searchTerm));
+            }
+
+            listContainer.innerHTML = '';
+            listContainer.className = 'memory-page-list'; 
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; color: #9ca3af; margin-top: 50px;">
+                        <i class="fa-solid fa-brain" style="font-size: 48px; opacity: 0.2; margin-bottom: 15px;"></i>
+                        <p>没有找到记忆碎片。</p>
+                    </div>
+                `;
+                return;
+            }
+
 
         const macaronColors = ['#fff1f2', '#f0f9ff', '#f0fdf4', '#fffbeb', '#faf5ff', '#fff7ed'];
-
-    
-    
- // ... (前面的代码不变) ...
 
         for (const memory of filtered) {
             const card = document.createElement('div');
             card.className = 'memory-card'; 
             const colorIndex = memory.id % macaronColors.length;
-            const bgColor = macaronColors[colorIndex];
             
-            // 格式化日期：2025/12/31
             const dateObj = new Date(memory.createdAt);
             const dateStr = `${dateObj.getFullYear()}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${String(dateObj.getDate()).padStart(2,'0')}`;
 
-            card.style.cssText = `
-                background: ${bgColor}; 
-                border-radius: 16px; 
-                padding: 18px; 
-                box-shadow: 0 2px 8px rgba(0,0,0,0.02); 
-                border: 1px solid rgba(0,0,0,0.03); 
-                margin-bottom: 12px;
-            `;
+            card.style.cssText = `background: ${macaronColors[colorIndex]}; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); margin-bottom: 12px;`;
             
-            // ✨✨✨ 核心修改：添加 data-date 属性 ✨✨✨
             card.dataset.date = dateStr; 
 
-            // ✨ 核心修改：在卡片里预埋 checkbox
             card.innerHTML = `
                 <input type="checkbox" class="mem-batch-checkbox" value="${memory.id}">
-                
                 <div class="content" style="font-size: 14px; line-height: 1.7; color: #4b5563; margin-bottom: 12px; font-family: 'Songti SC', serif;">
                     ${escapeHtml(memory.content)}
                 </div>
-                
                 <div class="footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 10px;">
                     <span class="timestamp" style="font-size: 12px; color: #6b7280; opacity: 0.8;">
                         <i class="fa-regular fa-clock" style="margin-right:4px;"></i>${formatTimestamp(memory.createdAt)}
@@ -40500,38 +40704,31 @@ async function renderMemoryList() {
                 </div>
             `;
 
-            // ... (后面的绑定事件代码不变) ...
-            
             const editBtn = card.querySelector('.btn-edit-memory');
             const deleteBtn = card.querySelector('.btn-delete-memory');
             editBtn.addEventListener('click', (e) => { e.stopPropagation(); handleEdit(memory); });
             deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); handleDelete(memory); });
 
-            // 批量选择点击事件 (保持不变)
             card.addEventListener('click', (e) => {
                 if (listContainer.classList.contains('batch-mode')) {
                     const cb = card.querySelector('.mem-batch-checkbox');
                     cb.checked = !cb.checked;
-                    
-                    // 更新计数器 (这里建议提取为一个公共函数，后面会用到)
                     updateBatchCounter();
-                    
-                    if (cb.checked) card.style.opacity = '0.8';
-                    else card.style.opacity = '1';
+                    card.style.opacity = cb.checked ? '0.8' : '1';
                 }
             });
             
             if (typeof loadSourceContext === 'function') loadSourceContext(memory, card);
-
             listContainer.appendChild(card);
         }
 
-        // ...
     } catch (error) {
         console.error("加载记忆失败:", error);
         listContainer.innerHTML = '<p style="text-align:center; color:red;">加载失败</p>';
     }
 }
+
+
 /**
      * 辅助：加载来源对话
      */
@@ -40613,26 +40810,87 @@ async function renderMemoryList() {
             navigateBack(); // 返回上一页
         });
     }
-
+// --- 修改：绑定“添加”按钮 (打开高级弹窗) ---
     if (addBtn) {
-        addBtn.addEventListener('click', async () => {
-            const text = await showInputDialog("手动记录一条记忆/事实：", "", true);
-            if (text && text.trim()) {
-// 原代码: await db.memories.add({ ... });
+        // 1. 获取新弹窗元素
+        const memModal = document.getElementById('manual-memory-modal');
+        const memTimeInput = document.getElementById('manual-mem-time');
+        const memContentInput = document.getElementById('manual-mem-content');
+        const memCancelBtn = document.getElementById('manual-mem-cancel');
+        const memSaveBtn = document.getElementById('manual-mem-save');
 
-// ✨ 修改为:
-await addMemoryWithVector({
-    userId: window.currentUser.id,
-    contactId: currentTargetChar.id,
-    type: 'short-term',
-    content: text.trim(),
-    createdAt: new Date().toISOString(),
-    sourceTurnIds: []
-});
-                showNotification("记忆已添加");
-                renderMemoryList();
-            }
+        // 2. 绑定打开事件
+        // (克隆节点以去除旧事件)
+        const newAddBtn = addBtn.cloneNode(true);
+        addBtn.parentNode.replaceChild(newAddBtn, addBtn);
+
+        newAddBtn.addEventListener('click', () => {
+            if (!memModal) return;
+
+            // A. 设置默认时间为当前时间 (注意：datetime-local 需要这种格式 yyyy-MM-ddThh:mm)
+            const now = new Date();
+            // 处理时区偏移，保证显示的是本地时间
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+            
+            memTimeInput.value = localISOTime;
+            memContentInput.value = ""; // 清空内容
+
+            showModal('manual-memory-modal');
+            
+            // 自动聚焦
+            setTimeout(() => memContentInput.focus(), 50);
         });
+
+        // 3. 绑定“取消”
+        // (同样使用克隆法防止重复绑定)
+        if (memCancelBtn) {
+            const newCancel = memCancelBtn.cloneNode(true);
+            memCancelBtn.parentNode.replaceChild(newCancel, memCancelBtn);
+            newCancel.addEventListener('click', () => hideModal('manual-memory-modal'));
+        }
+
+        // 4. 绑定“保存”
+        if (memSaveBtn) {
+            const newSave = memSaveBtn.cloneNode(true);
+            memSaveBtn.parentNode.replaceChild(newSave, memSaveBtn);
+            
+            newSave.addEventListener('click', async () => {
+                const content = memContentInput.value.trim();
+                const timeVal = memTimeInput.value;
+
+                if (!content) {
+                    showNotification("内容不能为空");
+                    return;
+                }
+                if (!timeVal) {
+                    showNotification("时间不能为空");
+                    return;
+                }
+
+                // B. 将用户选择的时间转换为 ISO 字符串
+                const customDate = new Date(timeVal);
+                const customIsoString = customDate.toISOString();
+
+                // C. 存入数据库
+                // 这里的关键是 createdAt 使用了用户自定义的时间，而不是 new Date()
+                // 这样在列表排序和时间轴渲染时，它就会自动插入到正确的位置
+                await addMemoryWithVector({
+                    userId: window.currentUser.id,
+                    contactId: currentTargetChar.id,
+                    type: 'short-term',
+                    content: content,
+                    createdAt: customIsoString, // ✨ 核心：使用自定义时间戳
+                    sourceTurnIds: []
+                });
+
+                hideModal('manual-memory-modal');
+                showNotification("记忆已插入时间轴");
+                
+                // D. 刷新列表
+                renderMemoryList();
+            });
+        }
     }
 
     if (searchInput) {
@@ -45154,23 +45412,47 @@ async function simulateBuildAiRequestContext(character, user, currentMode) {
     }
 
 
-    async function loadPlaylistFromDB() {
+async function loadPlaylistFromDB() {
         try {
             const savedSongs = await db.songs.toArray();
-            playlist = savedSongs.map(song => ({
-                id: song.id,
-                name: song.title || '未知歌曲',
-                url: song.audioData ? URL.createObjectURL(song.audioData) : song.songUrl, 
-                lyrics: song.lyrics
-            }));
+            playlist = savedSongs.map(song => {
+                let audioUrl = song.songUrl; // 默认使用网络链接
+
+                // ✨✨✨ 核心修复逻辑 ✨✨✨
+                if (song.audioData) {
+                    if (song.audioData instanceof Blob || song.audioData instanceof File) {
+                        // 情况 A: 数据是正常的二进制 Blob (刚上传时)
+                        audioUrl = URL.createObjectURL(song.audioData);
+                    } else if (typeof song.audioData === 'string' && song.audioData.startsWith('data:')) {
+                        // 情况 B: 数据是 Base64 字符串 (导入备份后)
+                        // 我们尝试把它转回 Blob
+                        const blob = dataURLToBlob(song.audioData);
+                        if (blob) {
+                            audioUrl = URL.createObjectURL(blob);
+                        }
+                    }
+                }
+                // ✨✨✨ 修复结束 ✨✨✨
+
+                return {
+                    id: song.id,
+                    name: song.title || '未知歌曲',
+                    url: audioUrl,
+                    lyrics: song.lyrics
+                };
+            });
+
             if (playlist.length > 0) {
                 currentIndex = 0; 
+                // 注意：这里默认不自动播放，防止刚进页面就被吓一跳
                 loadSong(currentIndex, false);
             } else {
                 titleEl.textContent = "暂无歌曲";
                 artistEl.textContent = "支持 mp3/wav + lrc 批量上传";
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error("加载歌单出错:", e); 
+        }
     }
 
     function loadSong(index, autoPlay = true) {
@@ -46226,96 +46508,123 @@ async function simulateBuildAiRequestContext(character, user, currentMode) {
         return period.cssClass;
     }
 
-    // --- 核心函数：渲染时间轴 ---
+// ==========================================================
+    // --- ✨✨✨【V3.0 - 双轨查询版】记忆时间轴引擎 ✨✨✨ ---
+    // ==========================================================
     async function renderTimeline() {
-        // 1. 获取当前角色
         const character = window.currentProfileContact || window.currentChat;
         if (!character) return;
         const userId = window.currentUser.id;
 
         container.innerHTML = '<div class="loading-spinner" style="border-top-color: white; margin: 150px auto;"></div>';
 
-        // 2. 获取所有记忆，按时间排序
-        const memories = await db.memories
-            .where('[userId+contactId]')
-            .equals([userId, character.id])
-            .sortBy('createdAt');
+        try {
+            // --- ✨ 核心修改：并行发起两次独立查询 ✨ ---
             
-        // ✨ 核心修改：倒序排列 (最新的在最上面)
-        memories.reverse(); 
+            const [allSummaries, allFragments] = await Promise.all([
+                // 1. 查询归档 (用于高亮日期)
+                db.memories.where('[userId+contactId+type]')
+                    .equals([userId, character.id, 'daily_summary'])
+                    .toArray(),
 
-        container.innerHTML = '<div class="timeline-axis"></div>';
+                // 2. 查询碎片 (用于画星星)
+                // 注意：由于 IndexedDB 不支持“不等于”索引，我们先查全部，再过滤
+                // 但因为我们已经把 summary 分离了，这里的 filter 成本很低
+                db.memories.where('[userId+contactId]')
+                    .equals([userId, character.id])
+                    .filter(m => m.type !== 'daily_summary') 
+                    .sortBy('createdAt')
+            ]);
 
-        if (memories.length === 0) {
-            container.innerHTML += '<div style="text-align:center; color:rgba(255,255,255,0.3); margin-top:150px; font-size:12px;">这里还没有星光...<br>去添加一些记忆吧</div>';
-            return;
-        }
+            // 反转碎片顺序 (最新的在最上面)
+            allFragments.reverse();
 
-        // 3. 数据分组：按日期分组
-        const groupedData = {};
-        // 保持日期的顺序 (因为 memories 已经是倒序了，我们按顺序塞进去即可)
-        const dateKeys = []; 
+            container.innerHTML = '<div class="timeline-axis"></div>';
 
-        memories.forEach(mem => {
-            const dateObj = new Date(mem.createdAt);
-            const dateKey = `${dateObj.getFullYear()}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${String(dateObj.getDate()).padStart(2,'0')}`;
-            
-            if (!groupedData[dateKey]) {
-                groupedData[dateKey] = [];
-                dateKeys.push(dateKey); // 记录顺序
+            if (allFragments.length === 0) {
+                container.innerHTML += '<div style="text-align:center; color:rgba(255,255,255,0.3); margin-top:150px; font-size:12px;">这里还没有星光...<br>去添加一些记忆吧</div>';
+                return;
             }
 
-            groupedData[dateKey].push({
-                ...mem,
-                glowClass: getTimeGlowClass(dateObj),
-                timeStr: `${String(dateObj.getHours()).padStart(2,'0')}:${String(dateObj.getMinutes()).padStart(2,'0')}`
+            // --- 3. 建立“金手指”索引 (Set 查找速度极快) ---
+            const archivedDatesSet = new Set();
+            allSummaries.forEach(s => {
+                if (s.dateStr) archivedDatesSet.add(s.dateStr);
             });
-        });
 
-        // 4. 渲染 DOM
-        let globalIndex = 0; // 用于控制左右交替
+            // --- 4. 数据分组 (按日期) ---
+            const groupedData = {};
+            const dateKeys = []; 
 
-        // 遍历日期 (dateKeys 已经是倒序的日期列表)
-        dateKeys.forEach(dateKey => {
-            // A. 渲染日期头
-            const dateHeader = document.createElement('div');
-            dateHeader.className = 'timeline-date-header';
-            dateHeader.innerHTML = `<span>${dateKey}</span>`;
-            container.appendChild(dateHeader);
+            allFragments.forEach(mem => {
+                const dateObj = new Date(mem.createdAt);
+                const dateKey = `${dateObj.getFullYear()}/${String(dateObj.getMonth()+1).padStart(2,'0')}/${String(dateObj.getDate()).padStart(2,'0')}`;
+                
+                if (!groupedData[dateKey]) {
+                    groupedData[dateKey] = [];
+                    dateKeys.push(dateKey);
+                }
 
-            // B. 渲染该日期下的所有记忆点
-            const dailyMemos = groupedData[dateKey];
+                groupedData[dateKey].push({
+                    ...mem,
+                    glowClass: getTimeGlowClass(dateObj),
+                    timeStr: `${String(dateObj.getHours()).padStart(2,'0')}:${String(dateObj.getMinutes()).padStart(2,'0')}`
+                });
+            });
+
+            // --- 5. 渲染 DOM ---
+            let globalIndex = 0;
+
+            dateKeys.forEach(dateKey => {
+                const dailyMemos = groupedData[dateKey];
+
+                // 判断高亮 (直接查上面的 Set)
+                const hasSummary = archivedDatesSet.has(dateKey);
+                const archiveClass = hasSummary ? 'archived' : '';
+                const tooltipText = hasSummary ? '本日已归档 (点击查看/编辑)' : '点击将本日记忆归档为日记';
+
+                // A. 渲染日期头
+                const dateHeader = document.createElement('div');
+                dateHeader.className = 'timeline-date-header';
+                dateHeader.innerHTML = `<span class="${archiveClass}" title="${tooltipText}">${dateKey}</span>`;
+                
+                dateHeader.querySelector('span').addEventListener('click', () => {
+                    if (typeof window.openDailySummaryModal === 'function') {
+                        window.openDailySummaryModal(dateKey);
+                    }
+                });
+                
+                container.appendChild(dateHeader);
+
+                // B. 渲染星星 (这里只剩下纯净的碎片了)
+                dailyMemos.forEach(mem => {
+                    const row = document.createElement('div');
+                    const positionClass = (globalIndex % 2 === 0) ? 'left' : 'right';
+                    row.className = `memory-node-row ${positionClass}`;
+                    
+                    const delay = Math.random() * 2 + 's';
+
+                    row.innerHTML = `
+                        <div class="memory-star ${mem.glowClass}" style="animation-delay: ${delay};">
+                            <div class="memory-star-time">${mem.timeStr}</div>
+                        </div>
+                    `;
+
+                    row.querySelector('.memory-star').addEventListener('click', () => showTimelineDetail(mem));
+                    container.appendChild(row);
+                    globalIndex++;
+                });
+            });
             
-            dailyMemos.forEach(mem => {
-                const row = document.createElement('div');
-                // 偶数在左，奇数在右
-                const positionClass = (globalIndex % 2 === 0) ? 'left' : 'right';
-                row.className = `memory-node-row ${positionClass}`;
-                
-                // 为了增加视觉随机感，可以给动画加一点随机延迟
-                const delay = Math.random() * 2 + 's';
+            const footerPadding = document.createElement('div');
+            footerPadding.style.height = '60px';
+            container.appendChild(footerPadding);
 
-                row.innerHTML = `
-                    <div class="memory-star ${mem.glowClass}" style="animation-delay: ${delay};">
-                        <div class="memory-star-time">${mem.timeStr}</div>
-                    </div>
-                `;
-
-                // 点击查看详情
-                const star = row.querySelector('.memory-star');
-                star.addEventListener('click', () => showTimelineDetail(mem));
-                
-                container.appendChild(row);
-                globalIndex++;
-            });
-        });
-        
-        // 底部垫高，防止最后一个被遮挡
-        const footerPadding = document.createElement('div');
-        footerPadding.style.height = '60px';
-        container.appendChild(footerPadding);
+        } catch (error) {
+            console.error("时间轴渲染失败:", error);
+        }
     }
-
+    
     // --- 详情弹窗逻辑 (保持不变) ---
     function showTimelineDetail(memory) {
         const timeEl = document.getElementById('timeline-detail-time');
@@ -46643,6 +46952,256 @@ async function simulateBuildAiRequestContext(character, user, currentMode) {
     }
 
 })();
+
+// ==========================================================
+// --- ✨✨✨【全新 V3 - 主API逻辑复刻版】记忆归档引擎 ✨✨✨ ---
+// ==========================================================
+(function() {
+    // DOM 元素
+    const modal = document.getElementById('daily-summary-modal');
+    const dateTitle = document.getElementById('daily-summary-date');
+    const inputArea = document.getElementById('daily-summary-input');
+    const regenBtn = document.getElementById('daily-summary-regen-btn');
+    const saveBtn = document.getElementById('daily-summary-save-btn');
+    
+    const tipEl = document.getElementById('daily-summary-tip');
+    if(tipEl) tipEl.innerHTML = '<i class="fa-solid fa-database"></i> 系统已将今日碎片整理为结构化档案，该档案将作为长期记忆。';
+    if(saveBtn) saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> 存入记忆库';
+
+    let currentTargetDate = null;
+    let currentSourceFragments = [];
+
+// --- 1. 专用 API 调用函数 (全局配置版) ---
+    async function callSummaryApi(prompt) {
+        // 1. 读取全局归档配置
+        const isFollow = localStorage.getItem('global_summaryFollow') !== 'false'; // 默认为 true
+        let apiKey, apiEndpoint, apiModel;
+
+        if (isFollow) {
+            // A. 跟随主配置：从数据库读取当前激活的预设
+            const activePreset = await db.api_presets.where({ isActive: 1 }).first();
+            if (!activePreset) throw new Error("未找到激活的主 API 预设");
+            
+            apiKey = activePreset.apiKey;
+            apiEndpoint = activePreset.apiEndpoint;
+            apiModel = activePreset.apiModel;
+
+            // 处理轮询模式 (简单取第一个Key)
+            if (activePreset.type === 'polling' && activePreset.apiKeys && activePreset.apiKeys.length > 0) {
+                apiKey = activePreset.apiKeys[0];
+            }
+        } else {
+            // B. 使用独立配置：从 localStorage 读取
+            apiKey = localStorage.getItem('global_summaryKey');
+            apiEndpoint = localStorage.getItem('global_summaryEndpoint');
+            apiModel = localStorage.getItem('global_summaryModel');
+            
+            if (!apiKey || !apiEndpoint || !apiModel) {
+                throw new Error("记忆归档配置不完整，请前往 API 设置检查。");
+            }
+        }
+
+        // --- 以下请求逻辑保持不变 ---
+        apiEndpoint = apiEndpoint.replace(/\/$/, "");
+        const headers = { 'Content-Type': 'application/json' };
+        let url = apiEndpoint;
+        let body = {};
+
+        if (url.includes('googleapis.com')) {
+             url = `${url}/v1beta/models/${apiModel}:generateContent?key=${apiKey}`;
+             body = { contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.1 } };
+        } else {
+             headers['Authorization'] = `Bearer ${apiKey}`;
+             if (url.endsWith('/v1/chat/completions')) { } 
+             else if (url.endsWith('/v1')) { url += '/chat/completions'; }
+             else { url += '/v1/chat/completions'; }
+             
+             body = { model: apiModel, messages: [{ role: 'user', content: prompt }], temperature: 0.1, stream: false };
+        }
+
+        console.log(`📝 [记忆归档] 请求: ${url} (Model: ${apiModel})`);
+
+        try {
+            const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
+            if (!response.ok) {
+                const errText = await response.text();
+                try {
+                    const errJson = JSON.parse(errText);
+                    throw new Error(errJson.error?.message || errText);
+                } catch (e) { throw new Error(`HTTP ${response.status}: ${errText}`); }
+            }
+            const data = await response.json();
+            
+            if (data.choices && data.choices.length > 0 && data.choices[0].message) return data.choices[0].message.content;
+            if (data.candidates && data.candidates.length > 0 && data.candidates[0].content) return data.candidates[0].content.parts[0].text;
+            
+            throw new Error("无法识别 API 返回格式");
+        } catch (error) {
+            console.error("归档请求失败:", error);
+            throw error;
+        }
+    }
+    // --- 2. 生成 Prompt (保持不变) ---
+    async function generateSummary(dateStr, fragments) {
+        const character = window.currentChat || window.currentProfileContact;
+        const user = window.currentUser;
+        
+        const fragmentsText = fragments.map(f => {
+            const time = new Date(f.createdAt).toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'});
+            return `- [${time}] ${f.content}`;
+        }).join('\n');
+
+        const prompt = `
+【任务：记忆碎片结构化归档】
+日期：${dateStr}
+对象：${character.name} (Char) 与 ${user.name} (User)
+
+请阅读以下【今日记忆碎片】，将其整理为一份**客观、严谨、结构化**的记忆档案。
+目标是让 AI 系统在未来检索时，能快速掌握这一天发生了什么。
+
+【今日记忆碎片】
+${fragmentsText}
+
+【输出要求】
+1.  **绝对客观**：禁止使用第一人称（“我”），统一使用角色名字。禁止抒情和文学修饰。
+2.  **信息无损**：必须保留具体的**时间点**、**地点**（如果碎片里有）、**关键物品**和**话题**。
+3.  **格式规范**：请严格按照下方模板输出。
+
+【输出模板】
+### 📅 档案日期：${dateStr}
+
+#### 📊 [今日概览]
+(用一句话概括今日核心事件)
+
+#### 📍 [事件时间轴]
+| 时间 | 地点 | 事件/对话摘要 | 状态/情感 |
+| :--- | :--- | :--- | :--- |
+| HH:MM | (推测或空) | (客观描述发生了什么) | (例如：开心/生气) |
+
+#### 🔑 [关键信息提取]
+*   **提及实体**：(列出今天提到的重要人名、物品、书籍等)
+*   **达成共识**：(列出两人达成的一致意见或约定)
+`;
+        
+        inputArea.value = "✨ 正在连接 AI 生成档案...";
+        inputArea.disabled = true;
+        regenBtn.disabled = true;
+        saveBtn.disabled = true;
+
+        try {
+            const result = await callSummaryApi(prompt);
+            inputArea.value = result;
+        } catch (error) {
+            inputArea.value = `⚠️ 生成失败: ${error.message}\n\n请检查 API 配置，或直接在此处手动编写。`;
+        } finally {
+            inputArea.disabled = false;
+            regenBtn.disabled = false;
+            saveBtn.disabled = false;
+        }
+    }
+
+// --- 新增：获取开关 DOM ---
+    const replaceToggle = document.getElementById('daily-summary-replace-toggle');
+
+    // --- 3. 核心入口：打开弹窗 ---
+    window.openDailySummaryModal = async function(dateStr) {
+        const character = window.currentChat || window.currentProfileContact;
+        if (!character) return;
+        
+        currentTargetDate = dateStr;
+        dateTitle.textContent = dateStr;
+
+        // A. 获取当天的碎片 (保持不变)
+        const allMemories = await db.memories
+            .where('[userId+contactId]')
+            .equals([window.currentUser.id, character.id])
+            .toArray();
+
+        const targetFragments = allMemories.filter(m => {
+            const mDate = new Date(m.createdAt);
+            const mDateStr = `${mDate.getFullYear()}/${String(mDate.getMonth()+1).padStart(2,'0')}/${String(mDate.getDate()).padStart(2,'0')}`;
+            return mDateStr === dateStr && m.type !== 'daily_summary';
+        });
+        
+        targetFragments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        currentSourceFragments = targetFragments;
+
+        if (targetFragments.length === 0) {
+            showNotification("无数据", "该日期没有记忆碎片。");
+            return;
+        }
+
+        showModal('daily-summary-modal');
+
+        // B. 检查旧归档 & 回显开关状态
+        const existingSummary = await db.memories
+            .where('[userId+contactId]')
+            .equals([window.currentUser.id, character.id])
+            .filter(m => m.type === 'daily_summary' && m.dateStr === dateStr)
+            .first();
+
+        if (existingSummary) {
+            inputArea.value = existingSummary.content;
+            // ✨ 回显开关状态：如果字段不存在，默认对于久远记忆开启(逻辑可选)，这里默认false
+            replaceToggle.checked = existingSummary.isContextActive === true;
+        } else {
+            generateSummary(dateStr, targetFragments);
+            // 新生成的默认开启替代模式 (你可以根据喜好改成 false)
+            replaceToggle.checked = true;
+        }
+    };
+
+    // --- 4. 事件绑定 ---
+    regenBtn.addEventListener('click', () => {
+        if (currentSourceFragments.length > 0) {
+            generateSummary(currentTargetDate, currentSourceFragments);
+        }
+    });
+
+    saveBtn.addEventListener('click', async () => {
+        const content = inputArea.value.trim();
+        if (!content) return;
+        
+        const character = window.currentChat || window.currentProfileContact;
+        // ✨ 获取开关状态
+        const isContextActive = replaceToggle.checked;
+        
+        try {
+            const existing = await db.memories
+                .where('[userId+contactId]')
+                .equals([window.currentUser.id, character.id])
+                .filter(m => m.type === 'daily_summary' && m.dateStr === currentTargetDate)
+                .first();
+
+            if (existing) {
+                await db.memories.update(existing.id, { 
+                    content: content,
+                    isContextActive: isContextActive // ✨ 更新开关状态
+                });
+            } else {
+                await db.memories.add({
+                    userId: window.currentUser.id,
+                    contactId: character.id,
+                    type: 'daily_summary',
+                    content: content,
+                    dateStr: currentTargetDate,
+                    createdAt: new Date().toISOString(),
+                    isSummary: true,
+                    isContextActive: isContextActive // ✨ 保存开关状态
+                });
+            }
+
+            showNotification("📁 归档成功！", isContextActive ? "已启用替代模式：该日碎片将被屏蔽。" : "已保存：该日碎片仍参与检索。");
+            hideModal('daily-summary-modal');
+        } catch (e) {
+            console.error(e);
+            showNotification("保存失败");
+        }
+    });
+
+})();
+
+
 
 </script>
 
