@@ -14560,15 +14560,6 @@ input[type="password"] {
     <div class="settings-section-wrapper" data-category="interact">
         <div class="settings-section-header-ios">主动互动</div>
 
- <!-- ✨ 核心修改：由按钮改为开关样式 -->
-    <div class="settings-item">
-        <span class="icon" style="color: #f43f5e;"><i class="fa-solid fa-heart-pulse"></i></span>
-        <span class="label">线下模式</span>
-        <input type="checkbox" id="profile-offline-toggle" class="toggle-switch">
-    </div>
-    <p style="font-size: 11px; color: #a1a1aa; text-align: center; margin: -8px 0 10px;">
-        开启后，对话环境将切换为面对面场景。
-    </p>
 
 
         <button id="profilesetting-trigger-email-btn" class="settings-item buttonlike">
@@ -19597,7 +19588,7 @@ async function retrieveRelevantMemories(chatHistory, characterId, userId) {
     if (finalMemories.length > 0) {
         console.log(`🧠 [记忆命中] 最终输出 ${finalMemories.length} 条 (含归档替换)`);
         
-        let promptComponent = "\n【你需要参考的、过去发生过的核心记忆】:\n";
+        let promptComponent = "\n【相关往事回顾】:\n";
         
         promptComponent += finalMemories.map((mem, index) => {
             const dateStr = new Date(mem.createdAt).toLocaleDateString();
@@ -19959,10 +19950,10 @@ function showNotification(title, message = '') {
     };
 }
 // ==========================================================
-// --- ✨✨✨【V3 - 动画集成版】通用确认弹窗引擎 ✨✨✨ ---
+// --- ✨✨✨【V3.1 - 状态自愈版】通用确认弹窗引擎 ✨✨✨ ---
 // ==========================================================
 function showDeleteDialog(message, onConfirm, options = {}) {
-    // 1. 获取元素 (保持不变)
+    // 1. 获取元素
     const dialogId = 'delete-dialog';
     const dialog = document.getElementById(dialogId);
     const text = document.getElementById("delete-dialog-text");
@@ -19971,31 +19962,47 @@ function showDeleteDialog(message, onConfirm, options = {}) {
 
     if (!dialog || !text || !btnCancel || !btnConfirm) return;
 
-    // 2. 设置内容和按钮样式 (保持不变)
+    // --- 🛡️ 核心修复：每次打开前，先强制恢复默认状态 🛡️ ---
+    // 1. 恢复“取消”按钮的显示
+    btnCancel.style.display = ''; // 清空内联样式，恢复CSS默认的 block/inline-block
+    
+    // 2. 恢复“确定”按钮的默认颜色 (墨白风格)
+    btnConfirm.style.backgroundColor = ''; 
+    btnConfirm.style.borderColor = '';
+    btnConfirm.style.color = '';
+    
+    // 3. 恢复文本对齐方式
+    text.style.textAlign = 'center'; 
+    // -----------------------------------------------------
+
+    // 2. 设置内容和按钮文字
     text.innerHTML = message.replace(/\n/g, '<br>');
     btnCancel.textContent = options.cancelText || "取消";
     btnConfirm.textContent = options.confirmText || "确定";
 
+    // 3. 应用自定义颜色 (如果有)
     if (options.confirmColor) {
         btnConfirm.style.backgroundColor = options.confirmColor;
-        btnConfirm.style.borderColor = options.confirmColor; // 顺便也更新边框色
-    } else {
-        // 恢复为手账风格的主按钮样式
-        btnConfirm.style.backgroundColor = "#4A4A4A";
-        btnConfirm.style.borderColor = "#4A4A4A";
+        btnConfirm.style.borderColor = options.confirmColor;
+        btnConfirm.style.color = '#ffffff'; // 确保文字是白色
     }
 
-    // 3. ✨✨✨ 核心修改：使用新的动画函数来显示弹窗 ✨✨✨
+    // 4. 特殊处理：如果明确要求隐藏取消按钮 (兼容之前的统计功能)
+    if (options.cancelText === " ") {
+        btnCancel.style.display = "none";
+    }
+
+    // 5. 显示弹窗
     showModal(dialogId); 
 
-    // 4. 事件绑定 (保持不变，但关闭时也调用新函数)
+    // 6. 事件绑定 (保持不变)
     const newCancelBtn = btnCancel.cloneNode(true);
     const newConfirmBtn = btnConfirm.cloneNode(true);
     btnCancel.parentNode.replaceChild(newCancelBtn, btnCancel);
     btnConfirm.parentNode.replaceChild(newConfirmBtn, btnConfirm);
 
     const closeAndCleanup = (callback) => {
-        hideModal(dialogId); // ✨ 使用新函数关闭
+        hideModal(dialogId);
         if (callback) callback();
     };
 
@@ -20006,10 +20013,9 @@ function showDeleteDialog(message, onConfirm, options = {}) {
 
     newConfirmBtn.onclick = (e) => {
         e.stopPropagation();
-        closeAndCleanup(onConfirm); // 在关闭动画之后再执行确认操作
+        closeAndCleanup(onConfirm);
     };
 }
-
         /**
          * 生成带前缀的唯一ID (例如: "user-1662019200000-0.5")
          * @param {string} prefix - 'user' 或 'contact'
@@ -23184,9 +23190,10 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
         `【核心身份】\n你是“{{char}}”。\n` +
         (charBasicInfo ? `【基础档案】\n${charBasicInfo}` : '') +
         `【人设详情】\n{{persona}}\n` +
-        `你正在和{{user}}进行线上聊天。`
+        `【交流风格】\n你的说话风格和语气应符合你的身份和人设。`
     );
-    dynamicContentMap.set('user_persona', `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是${ctxUser.gender || '未设置'}，你应该称呼{{user}}的名字。\n\n【关于TA的详细档案】\n名字: ${ctxUser.name}\n${ctxUser.gender ? `性别: ${ctxUser.gender}` : ''}\n${ctxUser.birthday ? `生日: ${ctxUser.birthday}` : ''}\n${ctxUser.age ? `年龄: ${ctxUser.age}` : ''}\n${ctxUser.bio ? `人设: ${ctxUser.bio}` : ''}`);
+    dynamicContentMap.set('user_persona', `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是${ctxUser.gender || '未设置'}\n
+    【关于{{user}}】\n名字: ${ctxUser.name}\n${ctxUser.gender ? `性别: ${ctxUser.gender}` : ''}\n${ctxUser.birthday ? `生日: ${ctxUser.birthday}` : ''}\n${ctxUser.age ? `年龄: ${ctxUser.age}` : ''}\n${ctxUser.bio ? `人设: ${ctxUser.bio}` : ''}`);
 
     // c. 世界书与记忆
     const triggeredWorldBook = await getActiveWorldBookEntriesForTurn(chatHistory, ctxChar);
@@ -23216,7 +23223,7 @@ async function buildCharacterSystemPrompt(character, user, options = {}) {
             return [`${speaker}: ${content}`];
         }).join('\n')
         : "（你们最近没有聊天）";
-    dynamicContentMap.set('chat_history', `【最近的聊天记录回顾】\n${historyTranscript}`);
+    dynamicContentMap.set('chat_history', `【当前的聊天记录】\n${historyTranscript}`);
 
     // e. 即时情境 (时间、天气、状态)
     const isTimeWeatherAware = ctxChar.enableTimeAwareness !== false;
@@ -23289,7 +23296,8 @@ ${musicContext}`;
 【铁律】:
 1. **必须使用标签**: 你的每一句话都必须放在 [s]...[/s] 标签内。
 2. **自由分段**: 你可以根据对话节奏，自由决定输出多个气泡。
-3. **绝对禁止**: 不要输出任何标签之外的文字、解释或 markdown 标记。`;
+3. **绝对禁止**: 不要输出任何标签之外的文字、解释或 markdown 标记。
+不描写动作或场景，仅通过对话推动剧情发展。`;
 
 
 
@@ -23358,9 +23366,6 @@ ${musicContext}`;
         if (toolsAndMusicContext) {
             finalComponents.push({ id: 'tools', title: '能力与工具', icon: '<i class="fa-solid fa-comments"></i>', content: toolsAndMusicContext });
         }
-        
-        // B. 特殊功能模块 (音乐歌词、小剧场、记忆总结)
-        // 它们包含很多文本，如果放在最后可能会掩盖格式指令
         
         // 音乐歌词
         if (window.musicPlayerController && window.musicPlayerController.isPlaying()) {
@@ -24759,12 +24764,7 @@ async function openContactProfileModal(characterId) {
                 bgDiv.style.backgroundColor = '#F9FAFB';
             }
 
-       // --- ✨ 新增：初始化线下模式开关状态 ---
-    const offlineToggle = document.getElementById('profile-offline-toggle');
-    if (offlineToggle) {
-        // 目前设为纯占位，默认不开启
-        offlineToggle.checked = false; 
-    }
+
 
 // --- ✨ 新增：处理小剧场开关与自定义内容 ✨ ---
     const theaterToggle = document.getElementById('profile-theater-toggle');
@@ -37274,13 +37274,13 @@ const globalList = document.querySelector('#world-book-page .world-book-section:
                 if (character.gender) charInfoForView += `性别: ${character.gender}\n`;
                 if (character.age) charInfoForView += `年龄: ${character.age}\n`;
                 if (character.birthday) charInfoForView += `生日: ${character.birthday}\n`;
-                const CHAR_PERSONA_TEMPLATE = `【核心身份】\n你是“{{char}}”。\n` + (charInfoForView ? `【基础档案】\n${charInfoForView}` : '') + `【人设详情】\n{{persona}}\n` + `你正在和{{user}}进行线上聊天。`;
+                const CHAR_PERSONA_TEMPLATE = `【核心身份】\n你是“{{char}}”。\n` + (charInfoForView ? `【基础档案】\n${charInfoForView}` : '') + `【人设详情】\n{{persona}}\n` + `【交流风格】\n你的说话风格和语气应符合你的身份和人设。`;
                 content = CHAR_PERSONA_TEMPLATE.replace(/{{persona}}/gi, character.persona).replace(/{{char}}/gi, character.name).replace(/{{user}}/gi, userPersonaForDisplay.name);
                 break;
 
             case 'user_persona':
                 title = '你的信息 (user) 模块';
-                const USER_PERSONA_TEMPLATE = `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是{{gender}}，你应该称呼{{user}}的名字。\n\n【关于TA的详细档案】\n名字: {{name}}\n性别: {{gender}}\n生日: {{birthday}}\n年龄: {{age}}\n人设: {{bio}}`;
+                const USER_PERSONA_TEMPLATE = `【重要提醒】\n正在与你聊天的人名叫“{{user}}”，ta的性别是{{gender}}，\n\n【关于{{user}}】\n名字: {{name}}\n性别: {{gender}}\n生日: {{birthday}}\n年龄: {{age}}\n人设: {{bio}}`;
                 let tempContent = USER_PERSONA_TEMPLATE.replace(/{{name}}/g, user.name || '未设置').replace(/{{gender}}/g, user.gender || '未设置').replace(/{{birthday}}/g, user.birthday || '未设置').replace(/{{age}}/g, user.age || '未设置').replace(/{{bio}}/g, user.bio || '无');
                 content = tempContent.replace(/{{user}}/gi, user.name || '用户').replace(/{{char}}/gi, character.name || '角色');
                 break;
@@ -38707,26 +38707,6 @@ function renderMonths() {
     // 2. 使用事件委托，监听所有按钮的点击
     pageContent.addEventListener('click', async (e) => {
         const character = window.currentProfileContact || window.currentChat;
-
-// 2. ✨ 添加新的开关监听逻辑 (建议放在 DOMContentLoaded 里的交互引擎部分)
-const offlineToggle = document.getElementById('profile-offline-toggle');
-if (offlineToggle) {
-    // 克隆去重
-    const newToggle = offlineToggle.cloneNode(true);
-    offlineToggle.parentNode.replaceChild(newToggle, offlineToggle);
-
-    newToggle.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            // 当用户开启时，弹出占位提示
-            showNotification(
-                "🕊️ 线下模式 (开发中)", 
-                "该功能正在内部测试，\n敬请期待后续版本更新！"
-            );
-            // 提示完后自动拨回关闭，或者保留开启状态（仅视觉）
-            // e.target.checked = false; 
-        }
-    });
-}
 
 
         if (!character) return;
